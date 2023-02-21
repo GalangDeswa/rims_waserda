@@ -38,7 +38,7 @@ class splash extends GetView<splashController> {
                 ),
               ),
               Text(
-                'RIMSCASH',
+                'RIMSWASERDA',
                 style: TextStyle(
                     fontSize: 25,
                     color: color_template().primary_dark,

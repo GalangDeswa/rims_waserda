@@ -24,7 +24,7 @@ class login_card extends GetView<loginController> {
           padding: EdgeInsets.all(5),
           child: Center(
             child: Text(
-              'RIMSCASH',
+              'RIMSWASERDA',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
@@ -68,7 +68,7 @@ class login_card extends GetView<loginController> {
                         child: Column(
                           children: [
                             Text(
-                              'Promo rims',
+                              'Promo RIMS',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
