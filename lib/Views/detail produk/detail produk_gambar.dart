@@ -59,7 +59,7 @@ class detail_produk_gambar extends GetView<detail_produkController> {
                 onPressed: () {
                   controller.getimagev2(ImageSource.camera);
                 },
-                icon: Icons.add,
+                icon: Icons.add_a_photo,
                 icon_color: color_template().primary,
                 container_color: Colors.white,
                 border_color: Colors.white,

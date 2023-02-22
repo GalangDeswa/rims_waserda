@@ -64,6 +64,8 @@ class kasirController extends GetxController {
 
   void refresh() {
     onInit();
+    Get.snackbar('conn', 'refreshed');
+
   }
 
   var barang_list = <Barang>[].obs;

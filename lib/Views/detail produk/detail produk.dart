@@ -23,28 +23,26 @@ class detail_Produk extends GetView<detail_produkController> {
             'Detail Produk',
             style: font().header,
           )),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              header(
-                title: 'Detail produk',
-                icon: Icons.add,
-              ),
-              Card(
-                margin: EdgeInsets.symmetric(horizontal: 100),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Form(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [detail_produk_gambar(), detail_produk_list()],
-                    ),
+      body: Center(
+        child: Column(
+          children: [
+            // header(
+            //   title: 'Detail produk',
+            //   icon: Icons.add,
+            // ),
+            Card(
+              margin: EdgeInsets.all( 10),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: Form(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [detail_produk_gambar(), detail_produk_list()],
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     ));

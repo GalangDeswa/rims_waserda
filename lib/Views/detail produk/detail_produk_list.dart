@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Views/Widgets/popup.dart';
 
 
 import '../../Controllers/Templates/setting.dart';
@@ -95,26 +96,45 @@ class detail_produk_list extends GetView<detail_produkController> {
           Container(
             width: 300,
             margin: EdgeInsets.symmetric(vertical: 5),
-            child: TextFormField(
-              controller: controller.barang_nama.value,
-              onChanged: ((String pass) {}),
-              decoration: InputDecoration(
-                labelText: "Stok",
-                labelStyle: TextStyle(
-                  color: Colors.black87,
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: 230,
+                  child: TextFormField(
+                    controller: controller.barang_nama.value,
+                    onChanged: ((String pass) {}),
+                    decoration: InputDecoration(
+                      labelText: "Stok",
+                      labelStyle: TextStyle(
+                        color: Colors.black87,
+                      ),
+                      border:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                      focusedBorder:
+                          OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                    ),
+                    textAlign: TextAlign.center,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter email';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                focusedBorder:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-              textAlign: TextAlign.center,
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter email';
-                }
-                return null;
-              },
+                Container(
+                  child: icon_button_custom(
+                    onPressed: () {
+                      //controller.getimagev2(ImageSource.camera);
+                      popscreen().popstock(context,controller);
+                    },
+                    icon: Icons.add,
+                    icon_color: Colors.white,
+                    container_color: color_template().primary,
+                    border_color: Colors.white,
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(
@@ -122,10 +142,10 @@ class detail_produk_list extends GetView<detail_produkController> {
           ),
           button_solid_custom(
               onPressed: () {
-                controller.uploadimage();
+               // controller.uploadimage();
               },
               child: Text(
-                'Tambah stock',
+                'Edit Produk',
                 style: font().header,
               ),
               width: 300,
@@ -135,10 +155,11 @@ class detail_produk_list extends GetView<detail_produkController> {
           ),
           button_border_custom(
               onPressed: () {
-                controller.uploadimage();
+                //controller.uploadimage();
+                Get.offAndToNamed('/produk');
               },
               child: Text(
-                'Edit produk',
+                'Kembali',
                 style: font().header_blue,
               ),
               width: 300,

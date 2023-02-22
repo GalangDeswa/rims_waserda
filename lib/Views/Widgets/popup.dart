@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:rims_waserda/Controllers/detail%20produk%20controller/detail_produk_controller.dart';
+import 'package:rims_waserda/Views/detail%20produk/detail%20produk.dart';
+import 'package:rims_waserda/Views/tambah_stock/tambah_stock.dart';
 
 
 import '../../Controllers/Templates/setting.dart';
@@ -754,6 +757,24 @@ class popscreen {
                 ),
               ),
             );
+          },
+        ),
+      ),
+    );
+  }
+
+  void popstock(BuildContext context, detail_produkController controller) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
+        ),
+        content: Builder(
+          builder: (context) {
+            return Container(width: context.width_query,height: context.height_query,child: tambah_stock());
           },
         ),
       ),

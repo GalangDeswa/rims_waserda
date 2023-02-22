@@ -23,7 +23,7 @@ class list_kasir extends GetView<kasirController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Card(
+        Card(margin: EdgeInsets.only(left: 5,top: 10,bottom: 10,right: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -36,52 +36,52 @@ class list_kasir extends GetView<kasirController> {
               SizedBox(
                 width: 10,
               ),
-              Container(
-                  width: context.width_query * 0.54,
-                  //pakai string bisa di cari tp tidak bisa lengkap?
-                  child: DropdownSearch<Barang>(
-                    //asyncItems: (qwe) => api.getproduct(),
-                    //  compareFn: (i, s) => i.isEqual(s),
-                    popupProps: PopupProps.menu(
-                      showSelectedItems: false,
-                      showSearchBox: true,
-                      itemBuilder: customPopupItemBuilderExample2,
-                      /* favoriteItemProps: FavoriteItemProps(
-                        showFavoriteItems: true,
-                        favoriteItems: (us) {
-                          return us
-                              .where((e) => e.name.contains("Blush"))
-                              .toList();
-                        },
-                      ),*/
-                    ),
-
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(
-                        labelText: "scan barcode/cari nama produk",
+              Expanded(
+                child: Container(
+                    width: context.width_query * 0.60,
+                    //pakai string bisa di cari tp tidak bisa lengkap?
+                    child: DropdownSearch<Barang>(
+                      //asyncItems: (qwe) => api.getproduct(),
+                      //  compareFn: (i, s) => i.isEqual(s),
+                      popupProps: PopupProps.menu(
+                        showSelectedItems: false,
+                        showSearchBox: true,
+                        itemBuilder: customPopupItemBuilderExample2,
+                        /* favoriteItemProps: FavoriteItemProps(
+                          showFavoriteItems: true,
+                          favoriteItems: (us) {
+                            return us
+                                .where((e) => e.name.contains("Blush"))
+                                .toList();
+                          },
+                        ),*/
                       ),
-                    ),
 
-                    //items: controller.productlist.map((e) => e.name).toList(),
-                    onChanged: (value) {
-                      controller.listbarang_baru.add(value!);
-                      print(value);
-                      print(controller.listbaru);
-                    },
-                    items: controller.barang_list,
-                    itemAsString: (Barang u) {
-                      return u.idBarang.toString() + "   " + u.namaBarang!;
-                    },
-                  )),
-              icon_button_custom(
-                  onPressed: () {
-                    Get.toNamed('/tambah_user');
-                  },
-                  icon: Icons.person_add,
-                  container_color: color_template().primary),
-              SizedBox(
-                width: 10,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(
+                          labelText: "scan barcode/cari nama produk",
+                        ),
+                      ),
+
+                      //items: controller.productlist.map((e) => e.name).toList(),
+                      onChanged: (value) {
+                        controller.listbarang_baru.add(value!);
+                        print(value);
+                        print(controller.listbaru);
+                      },
+                      items: controller.barang_list,
+                      itemAsString: (Barang u) {
+                        return u.idBarang.toString() + "   " + u.namaBarang!;
+                      },
+                    )),
               ),
+              // icon_button_custom(
+              //     onPressed: () {
+              //       Get.toNamed('/tambah_user');
+              //     },
+              //     icon: Icons.person_add,
+              //     container_color: color_template().primary),
+
               /* Container(
                 width: context.width_query * 0.04,
                 child: TextField(
@@ -91,46 +91,47 @@ class list_kasir extends GetView<kasirController> {
             ],
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
+
         Row(
           children: [
             Obx(() {
-              return Container(
-                //color: Colors.blue,
-                height: 35,
-                width: context.width_query * 0.61,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: controller.num.value,
-                    itemBuilder: (BuildContext context, int index) {
-                      var indexx = index + 1;
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 3),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              indexx.toString(),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                            Icon(
-                              Icons.shopping_cart,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                        height: 35,
-                        width: 55,
-                        decoration: BoxDecoration(
-                            color: color_template().primary,
-                            borderRadius: BorderRadius.circular(5)),
-                      );
-                    }),
+              return Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 5),
+                  //color: Colors.blue,
+                  height: 35,
+                  width: context.width_query * 0.60,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.num.value,
+                      itemBuilder: (BuildContext context, int index) {
+                        var indexx = index + 1;
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 3),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(
+                                indexx.toString(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18),
+                              ),
+                              Icon(
+                                Icons.shopping_cart,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                          height: 35,
+                          width: 55,
+                          decoration: BoxDecoration(
+                              color: color_template().primary,
+                              borderRadius: BorderRadius.circular(5)),
+                        );
+                      }),
+                ),
               );
             }),
             icon_button_circle_custom(
@@ -148,13 +149,15 @@ class list_kasir extends GetView<kasirController> {
                   ? Container(
                       width: context.width_query * 0.65,
                       height: context.height_query * 0.60,
-                      color: color_template().primary.withOpacity(0.2),
+                      //: color_template().primary.withOpacity(0.2),
+                  color: Colors.white,
                       child: SingleChildScrollView(
                           child: ProductTilev2(controller.listbarang_baru)))
                   : Container(
                       width: context.width_query * 0.65,
                       height: context.height_query * 0.60,
-                      color: color_template().primary.withOpacity(0.2),
+                      //color: color_template().primary.withOpacity(0.2),
+                  color: Colors.white,
                       child: Icon(
                         Icons.add_shopping_cart,
                         color: color_template().primary,

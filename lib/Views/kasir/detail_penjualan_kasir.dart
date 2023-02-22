@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-
-
 import '../../Controllers/Templates/setting.dart';
-
 import '../../Controllers/kasir controller/kasir_controller.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/popup.dart';
@@ -17,14 +13,15 @@ class detail_penjualan_kasir extends GetView<kasirController> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
-        // color: Colors.blue,
-        width: context.width_query * 0.25,
+      child: Container(decoration: BoxDecoration(boxShadow:[shadow().reguler]),
+
+        width: context.width_query * 0.26,
+
+        margin: EdgeInsets.all(10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              color: color_template().primary.withOpacity(0.2),
               height: context.height_query * 0.63,
               margin: EdgeInsets.only(bottom: 5),
               child: Column(
@@ -42,7 +39,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                   ),
                   Expanded(
                     child: Container(
-                      //color: Colors.red,
+                      color: Colors.white,
                       padding: EdgeInsets.symmetric(horizontal: 6),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -24,26 +24,30 @@ class tambah_produk_form extends GetView<tambah_produkController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Row(
-                children: [
-                  Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: color_template().primary,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: FaIcon(
-                        FontAwesomeIcons.boxesPacking,
-                        size: 20,
-                        color: Colors.white,
-                      )),
-                  SizedBox(
-                    width: 20,
+              Card(
+                child: Padding(padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: color_template().primary,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: FaIcon(
+                            FontAwesomeIcons.boxesPacking,
+                            size: 20,
+                            color: Colors.white,
+                          )),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text(
+                        'Tambah produk',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      )
+                    ],
                   ),
-                  Text(
-                    'Tambah produk',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                  )
-                ],
+                ),
               ),
               SizedBox(
                 height: 20,
@@ -277,12 +281,12 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                             labelStyle: TextStyle(
                                               color: Colors.black87,
                                             ),
-                                            border: UnderlineInputBorder(
+                                            border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                           ),
                                           textAlign: TextAlign.center,
                                           validator: (value) {
@@ -302,6 +306,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Expanded(
                                       child: Container(
@@ -371,14 +376,12 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                                                     color: Colors
                                                                         .black87,
                                                                   ),
-                                                                  border: UnderlineInputBorder(
+                                                                  border: OutlineInputBorder(
                                                                       borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10)),
-                                                                  focusedBorder:
-                                                                      OutlineInputBorder(
+                                                                      BorderRadius.circular(10)),
+                                                                      focusedBorder: OutlineInputBorder(
                                                                           borderRadius:
-                                                                              BorderRadius.circular(10)),
+                                                                          BorderRadius.circular(10)),
                                                                 ),
                                                                 textAlign:
                                                                     TextAlign
@@ -417,16 +420,12 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                                               color: Colors
                                                                   .black87,
                                                             ),
-                                                            border: UnderlineInputBorder(
+                                                            border: OutlineInputBorder(
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10)),
-                                                            focusedBorder: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10)),
+                                                                BorderRadius.circular(10)),
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(10)),
                                                           ),
                                                           textAlign:
                                                               TextAlign.center,
@@ -552,12 +551,12 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                             labelStyle: TextStyle(
                                               color: Colors.black87,
                                             ),
-                                            border: UnderlineInputBorder(
+                                            border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                           ),
                                           textAlign: TextAlign.center,
                                           validator: (value) {
@@ -591,12 +590,12 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                             labelStyle: TextStyle(
                                               color: Colors.black87,
                                             ),
-                                            border: UnderlineInputBorder(
+                                            border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                           ),
                                           textAlign: TextAlign.center,
                                           validator: (value) {

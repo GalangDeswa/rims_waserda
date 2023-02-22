@@ -20,7 +20,7 @@ class dashboard extends GetView<dashboardController> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      // minimum: EdgeInsets.all(5),
+       minimum: EdgeInsets.all(10),
       child: Scaffold(
         backgroundColor: color_template().primary.withOpacity(0.2),
         body: Center(
@@ -47,13 +47,17 @@ class dashboard extends GetView<dashboardController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Selamat datang',
+                                'RIMSWASERDA',
+                                style: font().header_big,
+                              ),
+                              Text(
+                                "Selamat Datang",
                                 style: font().header,
                               ),
-                              // Text(
-                              //   controller.toko_user['nama'],
-                              //   style: font().header,
-                              // ),
+                              Text(
+                                "TOKO RIMS STORE",
+                                style: font().reguler_white,
+                              ),
                               // Text(
                               //   controller.toko_user['alamat'],
                               //   style: font().reguler_white,

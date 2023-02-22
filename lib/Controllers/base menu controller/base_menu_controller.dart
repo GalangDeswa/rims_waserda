@@ -31,6 +31,7 @@ class base_menuController extends GetxController {
     //test_json(),
   ];
   var selectedIndex = 0.obs;
+  var extended = false.obs;
 
   List<GetPage<dynamic>> route = [
     GetPage(name: "/login", page: () => login(), binding: loginBinding()),

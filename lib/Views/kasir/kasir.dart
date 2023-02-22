@@ -16,7 +16,7 @@ class kasir extends GetView<kasirController> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      // minimum: EdgeInsets.all(5),
+      minimum: EdgeInsets.all(10),
       child: Scaffold(
         backgroundColor: color_template().primary.withOpacity(0.2),
         appBar: appbar_custom(
@@ -38,12 +38,12 @@ class kasir extends GetView<kasirController> {
                     ))
               ],
             )),
-        body: Card(
-            elevation: 3,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [list_kasir(), detail_penjualan_kasir()],
-            )),
+        body: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [Expanded(child: list_kasir()), detail_penjualan_kasir()],
+          ),
+        ),
       ),
     );
   }

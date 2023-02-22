@@ -13,6 +13,7 @@ class color_template {
   var nav = Color.fromRGBO(87, 225, 250, 0.35);
   var base = Color.fromRGBO(252, 252, 252, 1);
   var base_blue = Color.fromRGBO(210, 240, 250, 1);
+  var base_white = Color.fromRGBO(255, 255, 255, 1);
 }
 
 class font {
@@ -24,6 +25,8 @@ class font {
 
   var header =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
+  var header_big =
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
   var header_black =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black);
   var header_blue = TextStyle(

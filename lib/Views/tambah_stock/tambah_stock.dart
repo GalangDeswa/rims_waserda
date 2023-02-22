@@ -19,7 +19,7 @@ class tambah_stock extends GetView<tambah_stockController> {
 
     final email = TextEditingController();
     return SafeArea(
-      //minimum: EdgeInsets.all(5),
+      minimum: EdgeInsets.all(10),
       child: Scaffold(
         backgroundColor: color_template().primary.withOpacity(0.2),
         appBar: appbar_custom(
@@ -28,11 +28,11 @@ class tambah_stock extends GetView<tambah_stockController> {
               'Tambah stock',
               style: font().header,
             )),
-        body: Container(
+        body: Center(
           //color: Colors.red,
 
-          height: context.height_query,
-          child: Card(
+          //height: context.height_query,
+          child: Card(margin: EdgeInsets.all(10),
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -74,120 +74,128 @@ class tambah_stock extends GetView<tambah_stockController> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  width: 200,
-                                  child: TextFormField(
-                                    controller: email,
-                                    onChanged: ((String pass) {}),
-                                    decoration: InputDecoration(
-                                      icon: Icon(Icons.add_box),
-                                      labelText: "cari produk",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 3),
+                                    //width: 200,
+                                    child: TextFormField(
+                                      controller: email,
+                                      onChanged: ((String pass) {}),
+                                      decoration: InputDecoration(
+                                        icon: Icon(Icons.add_box),
+                                        labelText: "cari produk",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                        border: UnderlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
                                       ),
-                                      border: UnderlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                      textAlign: TextAlign.center,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter email';
+                                        }
+                                        return null;
+                                      },
                                     ),
-                                    textAlign: TextAlign.center,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter email';
-                                      }
-                                      return null;
-                                    },
                                   ),
                                 ),
                                 icon_button_custom(
                                     onPressed: () {},
                                     icon: Icons.add,
                                     container_color: color_template().primary),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  width: 200,
-                                  child: TextFormField(
-                                    controller: email,
-                                    onChanged: ((String pass) {}),
-                                    decoration: InputDecoration(
-                                      icon: Icon(Icons.calendar_month),
-                                      labelText: "Tanggal",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 3),
+                                   // width: 200,
+                                    child: TextFormField(
+                                      controller: email,
+                                      onChanged: ((String pass) {}),
+                                      decoration: InputDecoration(
+                                        icon: Icon(Icons.calendar_month),
+                                        labelText: "Tanggal",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                        border: UnderlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
                                       ),
-                                      border: UnderlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                      textAlign: TextAlign.center,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter email';
+                                        }
+                                        return null;
+                                      },
                                     ),
-                                    textAlign: TextAlign.center,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter email';
-                                      }
-                                      return null;
-                                    },
                                   ),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  width: 200,
-                                  child: TextFormField(
-                                    controller: email,
-                                    onChanged: ((String pass) {}),
-                                    decoration: InputDecoration(
-                                      icon: Icon(Icons.receipt),
-                                      labelText: "no faktur",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 3),
+                                    //width: 200,
+                                    child: TextFormField(
+                                      controller: email,
+                                      onChanged: ((String pass) {}),
+                                      decoration: InputDecoration(
+                                        icon: Icon(Icons.receipt),
+                                        labelText: "no faktur",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                        border: UnderlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
                                       ),
-                                      border: UnderlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                      textAlign: TextAlign.center,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter email';
+                                        }
+                                        return null;
+                                      },
                                     ),
-                                    textAlign: TextAlign.center,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter email';
-                                      }
-                                      return null;
-                                    },
                                   ),
                                 ),
-                                Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 3),
-                                  width: 180,
-                                  child: TextFormField(
-                                    controller: email,
-                                    onChanged: ((String pass) {}),
-                                    decoration: InputDecoration(
-                                      icon: Icon(Icons.phone),
-                                      labelText: "no suplier",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 3),
+                                    
+                                    child: TextFormField(
+                                      controller: email,
+                                      onChanged: ((String pass) {}),
+                                      decoration: InputDecoration(
+                                        icon: Icon(Icons.phone),
+                                        labelText: "no suplier",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                        border: UnderlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
                                       ),
-                                      border: UnderlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
+                                      textAlign: TextAlign.center,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Please enter email';
+                                        }
+                                        return null;
+                                      },
                                     ),
-                                    textAlign: TextAlign.center,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter email';
-                                      }
-                                      return null;
-                                    },
                                   ),
                                 ),
                                 icon_button_custom(

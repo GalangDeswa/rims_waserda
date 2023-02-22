@@ -67,7 +67,7 @@ class _base_menuState extends State<base_menu> {
           }
         },
         child: Scaffold(
-          //backgroundColor: color_template().nav,
+          backgroundColor: Colors.white,
           body: Row(
             children: <Widget>[
               Obx(() {
@@ -83,24 +83,36 @@ class _base_menuState extends State<base_menu> {
                           BoxConstraints(minHeight: constraint.maxHeight),
                       child: IntrinsicHeight(
                         child: Obx(() {
-                          return NavigationRail(
-                            minWidth: 3,
-                            backgroundColor: color_template().nav,
-                            leading: Container(
-                              width: 40,
-                              height: 40,
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.white,
-                              ),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: color_template().primary,
+                          return NavigationRail(useIndicator: true,
+                            indicatorColor: color_template().primary,
+                            selectedIconTheme: IconThemeData(color: Colors.white),
+                            selectedLabelTextStyle: TextStyle(color: color_template().primary_dark),
+
+                            minExtendedWidth: context.width_query*0.2,
+                            extended: base_con.extended.value,
+                            minWidth: context.width_query*0.010,
+                            //backgroundColor: color_template().nav,
+                            leading: GestureDetector(onTap: (){
+                             // base_con.extended.value = !base_con.extended.value;
+                            },
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                margin: EdgeInsets.only(top: 10),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white,
+                                ),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: color_template().primary,
+                                ),
                               ),
                             ),
                             selectedIndex: base_con.selectedIndex.value,
                             onDestinationSelected: base_con.selectedIndex,
                             labelType: NavigationRailLabelType.all,
+
                             destinations: [
                               NavigationRailDestination(
                                 icon: Icon(Icons.dashboard),

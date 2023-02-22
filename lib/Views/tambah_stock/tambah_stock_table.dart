@@ -10,7 +10,7 @@ class tambah_stock_table extends GetView<tambah_stockController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 270,
+      height: context.height*0.4,
       // color: Colors.red,
       margin: EdgeInsets.only(top: 15),
       width: double.infinity,
