@@ -101,7 +101,10 @@ class produk_table extends GetView<produkController> {
                     ),
                   ),
                   icon_button_custom(
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.getproduk();
+
+                      },
                       icon: Icons.search,
                       container_color: color_template().primary),
 
