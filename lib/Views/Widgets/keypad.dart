@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Views/Widgets/popup.dart';
 
 import '../../Controllers/Templates/setting.dart';
@@ -103,7 +104,9 @@ class KeyPad extends GetView<kasirController> {
         style: ElevatedButton.styleFrom(primary: color_template().secondary),
         onPressed: () {
           keypadController.text = keypadController.text + buttonText;
-          onChange(keypadController.text);
+          onChange(controller.currencyFormatter
+              .format(int.parse(keypadController.text)));
+          //controller.change();
         },
         child: Center(
           child: Text(

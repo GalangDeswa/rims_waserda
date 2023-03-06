@@ -5,13 +5,13 @@ import 'package:rims_waserda/Controllers/detail%20produk%20controller/detail_pro
 import 'package:rims_waserda/Views/detail%20produk/detail%20produk.dart';
 import 'package:rims_waserda/Views/tambah_stock/tambah_stock.dart';
 
-
 import '../../Controllers/Templates/setting.dart';
 import '../../Controllers/kasir controller/kasir_controller.dart';
 import '../../Controllers/stock controller/tambah_stock.dart';
 import 'buttons.dart';
 import 'keypad.dart';
 import 'package:group_button/group_button.dart';
+import 'package:intl/intl.dart';
 
 class popscreen {
   void popkonfirmasi(BuildContext context, kasirController controller) {
@@ -74,52 +74,50 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total item :', style: font().reguler),
-                      Text('3', style: font().reguler),
+                      Text(controller.totalitem.toString(),
+                          style: font().reguler),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total harga :', style: font().reguler),
-                      Text('20000', style: font().reguler),
+                      Text(controller.subtotal.toString(),
+                          style: font().reguler),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('sales person :', style: font().reguler),
-                      Text('Galang', style: font().reguler),
+                      Text('Pembayaran:', style: font().reguler),
+                      Text(controller.keypadController.value.text,
+                          style: font().reguler),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('total diskon :', style: font().reguler),
-                      Text('0', style: font().reguler),
+                      Text('Kembalian :', style: font().reguler),
+                      Text(controller.kembalian.value.toString(),
+                          style: font().reguler),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('total pajak :', style: font().reguler),
-                      Text('0', style: font().reguler),
-                    ],
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                    color: color_template().primary,
-                    child: Text(
-                      'Total tagihan',
-                      style: font().header,
-                    ),
-                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  //   color: color_template().primary,
+                  //   child: Text(
+                  //     'Kembalian',
+                  //     style: font().header,
+                  //   ),
+                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       button_border_custom(
                           onPressed: () {
-                            Get.back;
+                            Navigator.of(context).pop();
+                            print('back');
                           },
                           child: Text(
                             'Batal',
@@ -129,6 +127,7 @@ class popscreen {
                           height: 50),
                       button_solid_custom(
                           onPressed: () {
+                            controller.tambah_history();
                             popscreen().popberhasil(context);
                           },
                           child: Text('Bayar'),
@@ -157,219 +156,301 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        elevation: elevation().def_elevation,
+        contentPadding: EdgeInsets.all(20),
         shape: const RoundedRectangleBorder(
+          side: BorderSide(color: Colors.blueAccent, width: 3.5),
           borderRadius: BorderRadius.all(
             Radius.circular(12.0),
           ),
         ),
         content: Builder(
           builder: (context) {
-            return Center(
-              child: SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 250,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: color_template().primary),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Icon(
-                                      Icons.attach_money,
-                                      color: Colors.white,
-                                    ),
-                                    Text('total tagihan :',
-                                        style: font().header),
-                                    Obx(() {
-                                      return Text(
-                                        'Rp.' +
-                                            controller.totalharga().toString(),
-                                        style: font().header,
-                                      );
-                                    }),
-                                  ],
+            return Container(
+              //color: Colors.red,
+              width: context.width_query * 0.7,
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: color_template().primary),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Icon(
+                                        Icons.attach_money,
+                                        color: Colors.white,
+                                      ),
+                                      Text('total tagihan :',
+                                          style: font().header),
+                                      Obx(() {
+                                        return Text(
+                                          'Rp.' +
+                                              controller.subtotal.toString(),
+                                          style: font().header,
+                                        );
+                                      }),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                width: 250,
-                                height: 50,
-                                //color: Colors.red,
-                                padding: EdgeInsets.all(10),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GroupButton(
-                                      isRadio: true,
-                                      //onSelected: (index, isSelected) => print('$index button is selected'),
-                                      buttons: [
-                                        "Cash",
-                                        "Transfer",
-                                        "Utang",
-                                      ],
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Container(
+                                  height: 50,
+                                  //color: Colors.red,
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GroupButton(
+                                        isRadio: true,
+                                        onSelected: (string, index, bool) {
+                                          controller.groupindex.value = index;
+                                          print(index);
+                                        },
+                                        buttons: [
+                                          "Cash",
+                                          "Transfer",
+                                          "Utang",
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 50,
+                            ),
+                            Obx(() {
+                              return controller.groupindex.value == null
+                                  ? Center(
+                                      child: Container(
+                                        child: Text(
+                                          "pilih metode bayar",
+                                          style: font().header_black,
+                                        ),
+                                      ),
                                     )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: color_template().primary),
-                                child: GestureDetector(
-                                    onTap: () {
-                                      controller.keypadController.value.text =
-                                          '10000';
-                                    },
-                                    child: Text(
-                                      '10.000',
-                                      style: font().header,
-                                    )),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: color_template().primary),
-                                child: Text('20.000', style: font().header),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: color_template().primary),
-                                child: Text('50.000', style: font().header),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: color_template().primary),
-                                child: Text('100.000', style: font().header),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: TextField(
-                                    readOnly: true,
-                                    onTap: () {
-                                      showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime(2000),
-                                        lastDate: DateTime(2099),
-                                      );
-                                    },
-                                    decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.edit_calendar),
-                                        hintText: dateTime == null
-                                            ? DateTime.now().toString()
-                                            : dateTime.toString()),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: TextFormField(
-                                    controller:
-                                        controller.keypadController.value,
-                                    onChanged: (value) {
-                                      print(value);
-                                    },
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                        prefixIcon:
-                                            Icon(Icons.attach_money_rounded),
-                                        hintText: 'Jumlah bayar'),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: TextField(
-                                    readOnly: true,
-                                    decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.change_circle),
-                                        hintText: '5000'),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: DropdownButton(
-                                    hint: Text('Keterangan'),
-                                    value: val_ongkir,
-                                    items: ongkir.map((item) {
-                                      return DropdownMenuItem(
-                                        child: Text(item),
-                                        value: item,
-                                      );
-                                    }).toList(),
-                                    onChanged: (val) {
-                                      print('lol');
-                                    },
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
+                                  : Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      color_template().primary),
+                                              child: GestureDetector(
+                                                  onTap: () {
+                                                    controller.keypadController
+                                                        .value.text = '10000';
+                                                  },
+                                                  child: Text(
+                                                    '10.000',
+                                                    style: font().header,
+                                                  )),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                controller.keypadController
+                                                    .value.text = '20000';
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: color_template()
+                                                        .primary),
+                                                child: Text('20.000',
+                                                    style: font().header),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                controller.keypadController
+                                                    .value.text = '50000';
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: color_template()
+                                                        .primary),
+                                                child: Text('50.000',
+                                                    style: font().header),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                controller.keypadController
+                                                    .value.text = '100000';
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: color_template()
+                                                        .primary),
+                                                child: Text('100.000',
+                                                    style: font().header),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                child: TextField(
+                                                  readOnly: true,
+                                                  onTap: () {
+                                                    showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          DateTime.now(),
+                                                      firstDate: DateTime(2000),
+                                                      lastDate: DateTime(2099),
+                                                    );
+                                                  },
+                                                  decoration: InputDecoration(
+                                                      prefixIcon: Icon(
+                                                          Icons.edit_calendar),
+                                                      hintText: dateTime == null
+                                                          ? DateTime.now()
+                                                              .toString()
+                                                          : dateTime
+                                                              .toString()),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Expanded(
+                                              child: Container(
+                                                child: TextFormField(
+                                                  controller: controller
+                                                      .keypadController.value,
+                                                  onChanged: (value) {
+                                                    print(value);
+                                                  },
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                      prefixIcon: Icon(Icons
+                                                          .attach_money_rounded),
+                                                      hintText: 'Jumlah bayar'),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Obx(() {
+                                              return Expanded(
+                                                child: Container(
+                                                  child: TextField(
+                                                    onTap: () {
+                                                      print(
+                                                          'kembalian kasir--------------------');
+                                                    },
+                                                    onChanged: (val) {
+                                                      print(
+                                                          'kembalian kasir--------------------' +
+                                                              val);
+                                                    },
+                                                    readOnly: true,
+                                                    decoration: InputDecoration(
+                                                        prefixIcon: Icon(Icons
+                                                            .change_circle),
+                                                        hintText: controller
+                                                            .kembalian
+                                                            .toString()),
+                                                  ),
+                                                ),
+                                              );
+                                            })
+                                          ],
+                                        ),
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.spaceAround,
+                                        //   children: [
+                                        //     Expanded(
+                                        //       child: Container(
+                                        //         child: DropdownButton(
+                                        //           hint: Text('Keterangan'),
+                                        //           value: val_ongkir,
+                                        //           items: ongkir.map((item) {
+                                        //             return DropdownMenuItem(
+                                        //               child: Text(item),
+                                        //               value: item,
+                                        //             );
+                                        //           }).toList(),
+                                        //           onChanged: (val) {
+                                        //             print('lol');
+                                        //           },
+                                        //         ),
+                                        //       ),
+                                        //     )
+                                        //   ],
+                                        // ),
+                                      ],
+                                    );
+                            })
+                          ],
+                        ),
                       ),
-                    ),
-                    KeyPad(
-                      keypadController: controller.keypadController.value,
-                      onChange: (String pin) {
-                        print(pin);
-                      },
-                      onSubmit: (String pin) {},
-                    ),
-                  ],
+                      KeyPad(
+                        keypadController: controller.keypadController.value,
+                        onChange: (String pin) {
+                          print(pin + '-----------PRINT PIN');
+                          controller.change();
+                        },
+                        onSubmit: (String pin) {},
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -774,7 +855,10 @@ class popscreen {
         ),
         content: Builder(
           builder: (context) {
-            return Container(width: context.width_query,height: context.height_query,child: tambah_stock());
+            return Container(
+                width: context.width_query,
+                height: context.height_query,
+                child: tambah_stock());
           },
         ),
       ),

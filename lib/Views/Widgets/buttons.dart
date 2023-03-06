@@ -19,13 +19,18 @@ class button_solid_custom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      decoration: BoxDecoration(borderRadius: border_radius().header_border),
       width: width,
       height: height,
       child: ElevatedButton(
         onPressed: onPressed,
         child: child,
-        style:
-            ElevatedButton.styleFrom(backgroundColor: color_template().primary),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color_template().primary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12), // <-- Radius
+          ),
+        ),
       ),
     );
   }
@@ -52,8 +57,12 @@ class button_border_custom extends StatelessWidget {
         onPressed: onPressed,
         child: child,
         style: ElevatedButton.styleFrom(
-            side: BorderSide(color: color_template().primary),
-            backgroundColor: Colors.white),
+          side: BorderSide(color: color_template().primary),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12), // <-- Radius
+          ),
+        ),
       ),
     );
   }

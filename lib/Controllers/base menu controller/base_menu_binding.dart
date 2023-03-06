@@ -1,8 +1,8 @@
-
-
 import 'package:get/get.dart';
+import 'package:rims_waserda/jsontestController.dart';
 
 import '../dashboard controller/dashboard_controller.dart';
+import '../history controller/historyController.dart';
 import '../kasir controller/kasir_controller.dart';
 import '../produk controller/produk_controller.dart';
 import '../produk controller/tambah_produk_controller.dart';
@@ -22,6 +22,8 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<tambah_produkController>(() => tambah_produkController());
     Get.lazyPut<produkController>(() => produkController());
     Get.lazyPut<suplierController>(() => suplierController());
+    Get.lazyPut<jsontestController>(() => jsontestController());
+    Get.lazyPut<historyController>(() => historyController());
     /*Get.put(dashboardController());
     Get.put(base_menuController());
     Get.put(kasirController());*/

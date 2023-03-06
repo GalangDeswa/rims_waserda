@@ -9,7 +9,6 @@ import 'package:http/http.dart' as http;
 
 import '../../Models/loginv2.dart';
 
-
 class loginController extends GetxController {
   List<String> iklan = [
     'assets/animation/30826-online-shopping.json',

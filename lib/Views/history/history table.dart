@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Controllers/Templates/setting.dart';
+import 'package:rims_waserda/Controllers/history%20controller/historyController.dart';
 import 'package:rims_waserda/Views/Widgets/header.dart';
 
-import '../../Controllers/produk controller/produk_controller.dart';
 import '../Widgets/buttons.dart';
-import '../Widgets/popup.dart';
 
-class produk_table extends GetView<produkController> {
-  const produk_table({Key? key}) : super(key: key);
+class history_table extends GetView<historyController> {
+  const history_table({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,35 +22,9 @@ class produk_table extends GetView<produkController> {
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 50),
-                      child: header(
-                        title: 'List produk',
-                        icon: Icons.add_box,
-                      ),
-                    ),
-                  ),
-                  button_solid_custom(
-                      onPressed: () {
-                        Get.toNamed('/tambah_produk');
-                      },
-                      child: Text(
-                        'tambah produk',
-                        style: font().header,
-                      ),
-                      width: context.width_query * 0.2,
-                      height: 55)
-                ],
-              ),
-            ),
+            header(title: 'Daftar Riwayat', icon: Icons.history),
             SizedBox(
               height: 10,
             ),
@@ -63,11 +36,11 @@ class produk_table extends GetView<produkController> {
                     margin: EdgeInsets.symmetric(horizontal: 3),
                     //width: 200,
                     child: TextFormField(
-                      //controller: email,
+                      controller: controller.id_kas.value,
                       onChanged: ((String pass) {}),
                       decoration: InputDecoration(
                         icon: Icon(Icons.add_box),
-                        labelText: "cari produk",
+                        labelText: "cari history",
                         labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
@@ -88,14 +61,15 @@ class produk_table extends GetView<produkController> {
                 ),
                 icon_button_custom(
                     onPressed: () {
-                      controller.getprodukall();
+                      controller.gethistory(controller.id_kas.value.text);
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
               ],
             ),
             Container(
-              height: context.height_query * 0.46,
+              //color: Colors.red,
+              height: context.height_query / 1.6,
               margin: EdgeInsets.only(top: 15),
               width: double.infinity,
               child: SingleChildScrollView(
@@ -105,7 +79,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'kode',
+                              'tanggal',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -113,7 +87,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'nama produk',
+                              'nomor transasksi',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -121,7 +95,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'jenis',
+                              'id kasir',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -129,7 +103,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'kategori',
+                              'Produk',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -137,16 +111,18 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'Harga',
+                              'QTY',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
                         ),
                         DataColumn(
                           label: Expanded(
-                            child: Text(
-                              'Stock',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                            child: Center(
+                              child: Text(
+                                'Total',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
                             ),
                           ),
                         ),
@@ -161,27 +137,25 @@ class produk_table extends GetView<produkController> {
                           ),
                         ),
                       ],
-                      rows:
-                          List.generate(controller.produk_list.length, (index) {
+                      rows: List.generate(controller.history_list.length,
+                          (index) {
                         return DataRow(cells: [
                           DataCell(Container(
-                              child:
-                                  Text(controller.produk_list[index].barcode))),
+                              child: Text(controller.history_list[index].tgl))),
+                          DataCell(Container(
+                              child: Text(controller
+                                  .history_list[index].nomorTransaksi))),
                           DataCell(Container(
                               child: Text(
-                                  controller.produk_list[index].namaProduk))),
+                                  controller.history_list[index].idKasir))),
                           DataCell(Container(
                               child: Text(
-                                  controller.produk_list[index].jenisProduk))),
+                                  controller.history_list[index].namaProduk))),
                           DataCell(Container(
-                              child: Text(
-                                  controller.produk_list[index].kategori))),
-                          DataCell(Container(
-                              child:
-                                  Text(controller.produk_list[index].harga))),
+                              child: Text(controller.history_list[index].qty))),
                           DataCell(Container(
                               child:
-                                  Text(controller.produk_list[index].stock))),
+                                  Text(controller.history_list[index].total))),
                           DataCell(Row(
                             children: [
                               IconButton(

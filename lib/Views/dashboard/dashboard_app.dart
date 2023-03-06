@@ -6,7 +6,6 @@ import 'package:rims_waserda/Controllers/Templates/setting.dart';
 import '../../Controllers/base menu controller/base_menu_controller.dart';
 import 'dashboard_app_card.dart';
 
-
 class dashboard_app extends GetView<base_menuController> {
   const dashboard_app({Key? key}) : super(key: key);
 
@@ -16,63 +15,65 @@ class dashboard_app extends GetView<base_menuController> {
       child: Stack(
         children: [
           Container(
-            margin: EdgeInsets.all(5),
-            //  color: Colors.green,
+            decoration: BoxDecoration(
+                boxShadow: [shadow().reguler],
+                color: Colors.white,
+                borderRadius: border_radius().def_border,
+                border:
+                    Border.all(color: color_template().primary, width: 3.5)),
+            margin: EdgeInsets.only(left: 15),
             height: context.height_query,
             width: context.width_query,
             child: Card(
+              elevation: 0,
               child: Padding(
-                padding: EdgeInsets.only(top: 50),
+                padding: EdgeInsets.only(top: 55),
                 child: SingleChildScrollView(
-                  child: Wrap(
-                    alignment: WrapAlignment.spaceAround,
-                    direction: Axis.horizontal,
-                    runSpacing: 20,
-                    spacing: 20,
-                    children: [
-                      dasboard_app_card(
-                          function: () {
-                            controller.selectedIndex(1);
-                          },
-                          color: color_template().primary,
-                          icon: FontAwesomeIcons.cashRegister,
-                          label: 'Kasir'),
-                      dasboard_app_card(
-                          function: () {
-                            controller.selectedIndex(3);
-                          },
-                          color: color_template().primary,
-                          icon: Icons.add_box,
-                          label: 'Tambah stock'),
-                      dasboard_app_card(
-                          function: () {
-                            controller.selectedIndex(3);
-                          },
-                          color: color_template().primary,
-                          icon: Icons.person_add,
-                          label: 'Tambah user'),
-                      dasboard_app_card(
-                          function: () {
-                            controller.selectedIndex(1);
-                          },
-                          color: color_template().primary,
-                          icon: FontAwesomeIcons.cashRegister,
-                          label: 'Kasir'),
-                      dasboard_app_card(
-                          function: () {
-                            controller.selectedIndex(3);
-                          },
-                          color: color_template().primary,
-                          icon: Icons.add_box,
-                          label: 'Tambah stock'),
-                      dasboard_app_card(
-                          function: () {
-                            controller.selectedIndex(3);
-                          },
-                          color: color_template().primary,
-                          icon: Icons.person_add,
-                          label: 'Tambah user'),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      direction: Axis.horizontal,
+                      runSpacing: 30,
+                      spacing: 30,
+                      children: [
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(1);
+                            },
+                            color: color_template().primary,
+                            icon: FontAwesomeIcons.cashRegister,
+                            label: 'Kasir'),
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(3);
+                            },
+                            color: color_template().primary,
+                            icon: Icons.add_box,
+                            label: 'Tambah stock'),
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(2);
+                            },
+                            color: color_template().primary,
+                            icon: Icons.person_add,
+                            label: 'Tambah user'),
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(4);
+                            },
+                            color: color_template().primary,
+                            icon: FontAwesomeIcons.box,
+                            label: 'Produk'),
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(5);
+                            },
+                            color: color_template().primary,
+                            icon: Icons.history,
+                            label: 'History'),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -82,7 +83,7 @@ class dashboard_app extends GetView<base_menuController> {
             child: Align(
               alignment: Alignment.topLeft,
               child: Container(
-                margin: EdgeInsets.only(top: 10, bottom: 10),
+                margin: EdgeInsets.only(top: 0, bottom: 10, left: 10),
                 padding: EdgeInsets.all(10),
                 width: 100,
                 decoration: BoxDecoration(

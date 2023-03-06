@@ -83,18 +83,23 @@ class _base_menuState extends State<base_menu> {
                           BoxConstraints(minHeight: constraint.maxHeight),
                       child: IntrinsicHeight(
                         child: Obx(() {
-                          return NavigationRail(useIndicator: true,
+                          return NavigationRail(
+                            elevation: 10,
+                            useIndicator: true,
                             indicatorColor: color_template().primary,
-                            selectedIconTheme: IconThemeData(color: Colors.white),
-                            selectedLabelTextStyle: TextStyle(color: color_template().primary_dark),
+                            selectedIconTheme:
+                                IconThemeData(color: Colors.white),
+                            selectedLabelTextStyle:
+                                TextStyle(color: color_template().primary_dark),
 
-                            minExtendedWidth: context.width_query*0.2,
+                            minExtendedWidth: context.width_query * 0.2,
                             extended: base_con.extended.value,
-                            minWidth: context.width_query*0.010,
+                            minWidth: context.width_query * 0.010,
                             //backgroundColor: color_template().nav,
-                            leading: GestureDetector(onTap: (){
-                             // base_con.extended.value = !base_con.extended.value;
-                            },
+                            leading: GestureDetector(
+                              onTap: () {
+                                // base_con.extended.value = !base_con.extended.value;
+                              },
                               child: Container(
                                 width: 40,
                                 height: 40,
@@ -153,6 +158,14 @@ class _base_menuState extends State<base_menu> {
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text('Produk'),
+                                ),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.history),
+                                selectedIcon: Icon(Icons.history),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text('History'),
                                 ),
                               ),
                             ],

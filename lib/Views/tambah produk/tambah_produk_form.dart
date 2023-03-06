@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:rims_waserda/Views/Widgets/header.dart';
 
 import '../../Controllers/Templates/setting.dart';
 import '../../Controllers/produk controller/tambah_produk_controller.dart';
@@ -16,38 +17,23 @@ class tambah_produk_form extends GetView<tambah_produkController> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Card(
+      elevation: elevation().def_elevation,
+      //margin: EdgeInsets.all(30),
+      shape: RoundedRectangleBorder(
+        borderRadius: border_radius().def_border,
+        side: BorderSide(color: color_template().primary, width: 3.5),
+      ),
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Card(
-                child: Padding(padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: color_template().primary,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: FaIcon(
-                            FontAwesomeIcons.boxesPacking,
-                            size: 20,
-                            color: Colors.white,
-                          )),
-                      SizedBox(
-                        width: 20,
-                      ),
-                      Text(
-                        'Tambah produk',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                      )
-                    ],
-                  ),
-                ),
+              header(
+                title: "Tambah Produk",
+                icon: Icons.add_box,
               ),
               SizedBox(
                 height: 20,
@@ -132,23 +118,26 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               //Icon(Icons.category),
-                              Expanded(
-                                child: Container(
-                                  child: DropdownButton(
-                                    hint: Text('jenis produk'),
-                                    value: controller.val_ongkir,
-                                    items: controller.ongkir.map((item) {
-                                      return DropdownMenuItem(
-                                        child: Text(item),
-                                        value: item,
-                                      );
-                                    }).toList(),
-                                    onChanged: (val) {
-                                      print('lol');
-                                    },
+                              Obx(() {
+                                return Expanded(
+                                  child: Container(
+                                    child: DropdownButton2<String>(
+                                      hint: Text('jenis produk'),
+                                      value: controller.defdef.value,
+                                      items: controller.jenisproduk.value
+                                          .map((item) {
+                                        return DropdownMenuItem<String>(
+                                          child: Text(item),
+                                          value: item,
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? val) {
+                                        controller.defdef.value = val!;
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              }),
                             ],
                           ),
                         ),
@@ -273,7 +262,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                       child: Container(
                                         child: TextFormField(
                                           controller:
-                                              controller.barang_kode.value,
+                                              controller.kode_produk.value,
                                           onChanged: ((String pass) {}),
                                           decoration: InputDecoration(
                                             icon: Icon(Icons.code),
@@ -283,10 +272,10 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                             ),
                                             border: OutlineInputBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10)),
+                                                    BorderRadius.circular(10)),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10)),
+                                                    BorderRadius.circular(10)),
                                           ),
                                           textAlign: TextAlign.center,
                                           validator: (value) {
@@ -360,7 +349,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                                                   TextFormField(
                                                                 controller:
                                                                     controller
-                                                                        .barcodetext
+                                                                        .barcode
                                                                         .value,
                                                                 onChanged:
                                                                     ((String
@@ -378,10 +367,12 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                                                   ),
                                                                   border: OutlineInputBorder(
                                                                       borderRadius:
-                                                                      BorderRadius.circular(10)),
-                                                                      focusedBorder: OutlineInputBorder(
+                                                                          BorderRadius.circular(
+                                                                              10)),
+                                                                  focusedBorder:
+                                                                      OutlineInputBorder(
                                                                           borderRadius:
-                                                                          BorderRadius.circular(10)),
+                                                                              BorderRadius.circular(10)),
                                                                 ),
                                                                 textAlign:
                                                                     TextAlign
@@ -405,8 +396,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                                       child: Obx(() {
                                                         return TextFormField(
                                                           controller: controller
-                                                              .barcodetext
-                                                              .value,
+                                                              .barcode.value,
                                                           onChanged: ((String
                                                               pass) {}),
                                                           decoration:
@@ -422,10 +412,14 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                                             ),
                                                             border: OutlineInputBorder(
                                                                 borderRadius:
-                                                                BorderRadius.circular(10)),
-                                                                focusedBorder: OutlineInputBorder(
-                                                                    borderRadius:
-                                                                    BorderRadius.circular(10)),
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            focusedBorder: OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
                                                           ),
                                                           textAlign:
                                                               TextAlign.center,
@@ -470,7 +464,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                       child: Container(
                                         child: TextFormField(
                                           controller:
-                                              controller.barang_nama.value,
+                                              controller.nama_produk.value,
                                           onChanged: ((String pass) {}),
                                           decoration: InputDecoration(
                                             icon: Icon(Icons.add_box),
@@ -508,18 +502,17 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                       child: Obx(() {
                                         return DropdownButton(
                                           hint: Text('kategori'),
-                                          value: controller.selected.value == ""
-                                              ? null
-                                              : controller.selected.value,
-                                          items:
-                                              controller.kat_list.map((item) {
+                                          value: controller.katkat.value,
+                                          items: controller.kategoriv2.value
+                                              .map((item) {
                                             return DropdownMenuItem(
-                                              child: Text(item.kategori!),
-                                              value: item.idKategori.toString(),
+                                              child: Text(item),
+                                              value: item,
                                             );
                                           }).toList(),
                                           onChanged: (val) {
-                                            controller.setSelected(val!);
+                                            controller.katkat.value =
+                                                val.toString();
                                           },
                                         );
                                       }),
@@ -543,7 +536,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                       child: Container(
                                         child: TextFormField(
                                           controller:
-                                              controller.barang_harga.value,
+                                              controller.harga_jual.value,
                                           onChanged: ((String pass) {}),
                                           decoration: InputDecoration(
                                             icon: Icon(Icons.attach_money),
@@ -553,10 +546,10 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                             ),
                                             border: OutlineInputBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10)),
+                                                    BorderRadius.circular(10)),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10)),
+                                                    BorderRadius.circular(10)),
                                           ),
                                           textAlign: TextAlign.center,
                                           validator: (value) {
@@ -581,8 +574,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                       child: Container(
                                         width: 300,
                                         child: TextFormField(
-                                          controller:
-                                              controller.barang_qty.value,
+                                          controller: controller.satuan.value,
                                           onChanged: ((String pass) {}),
                                           decoration: InputDecoration(
                                             icon: Icon(Icons.list),
@@ -592,10 +584,39 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                                             ),
                                             border: OutlineInputBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10)),
+                                                    BorderRadius.circular(10)),
                                             focusedBorder: OutlineInputBorder(
                                                 borderRadius:
-                                                BorderRadius.circular(10)),
+                                                    BorderRadius.circular(10)),
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please enter email';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        width: 300,
+                                        child: TextFormField(
+                                          controller: controller.stock.value,
+                                          onChanged: ((String pass) {}),
+                                          decoration: InputDecoration(
+                                            icon: Icon(Icons.list),
+                                            labelText: "Stock",
+                                            labelStyle: TextStyle(
+                                              color: Colors.black87,
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
                                           ),
                                           textAlign: TextAlign.center,
                                           validator: (value) {
@@ -617,7 +638,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                       ),
                       button_solid_custom(
                           onPressed: () {
-                            controller.uploadimage();
+                            controller.tambahbarang();
                           },
                           child: Text(
                             'tambah produk',

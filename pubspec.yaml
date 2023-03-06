@@ -64,6 +64,7 @@ dependencies:
   connectivity_plus: ^2.3.7
   firebase_core: ^2.1.0
   shared_preferences: ^2.0.15
+  dropdown_button2: ^2.0.0
 
 
 dev_dependencies:

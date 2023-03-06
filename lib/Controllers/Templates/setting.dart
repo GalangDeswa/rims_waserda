@@ -26,7 +26,9 @@ class font {
   var header =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
   var header_big =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
+  var header_xl =
+      TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white);
   var header_black =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black);
   var header_blue = TextStyle(
@@ -43,9 +45,9 @@ class font {
 
 class shadow {
   var reguler = BoxShadow(
-    color: color_template().primary.withOpacity(0.3),
-    spreadRadius: 2,
-    blurRadius: 4,
+    color: Colors.black.withOpacity(0.2),
+    spreadRadius: 3,
+    blurRadius: 10,
     offset: Offset(3, 5), // changes position of shadow
   );
 }
@@ -53,4 +55,13 @@ class shadow {
 extension MediaQueryValues on BuildContext {
   double get width_query => MediaQuery.of(this).size.width;
   double get height_query => MediaQuery.of(this).size.height;
+}
+
+class border_radius {
+  var def_border = BorderRadius.circular(20);
+  var header_border = BorderRadius.circular(15);
+}
+
+class elevation {
+  var def_elevation = 10.0;
 }

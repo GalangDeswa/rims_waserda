@@ -26,15 +26,93 @@ import 'package:http_parser/http_parser.dart';
 import '../../Services/image_provider.dart';
 
 class tambah_produkController extends GetxController {
-  List ongkir = [
-    'JNE Reguler   Rp.30.000',
-    'JNE Cargo   Rp.20.000',
-    'TIKI Reguler  Rp.35.000',
-    'TIKI Cargo  Rp.110.000',
-    'Sicepat reguler   Rp.30.000',
-    'Sicepat Halu  Rp.15.000',
-  ];
-  String? val_ongkir;
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    print('----------------------tambah produk init--------------------');
+    //getjenis();
+  }
+
+  var jenisproduk = ['produk', 'jasa'].obs;
+  var kategoriv2 = ['makanan', 'minuman'].obs;
+  var defvalue = ''.obs;
+  late var defdef = jenisproduk.first.obs;
+  late var katkat = kategoriv2.first.obs;
+
+  var defjenis = 'produk'.obs;
+  var cc = 'qwe'.obs;
+  RxString slideValueOld = "".obs;
+
+  var kode_produk = TextEditingController().obs;
+  var barcode = TextEditingController().obs;
+  var nama_produk = TextEditingController().obs;
+  var harga_jual = TextEditingController().obs;
+  var satuan = TextEditingController().obs;
+  var stock = TextEditingController().obs;
+
+  Future<List> getjenis() async {
+    var response = await api().client.get(link().GET_jenisproduk);
+    if (response.statusCode == 200) {
+      var hasil = json.decode(response.body);
+      jenisproduk.value = hasil;
+
+      print('--------------------------------------------------------------');
+      print(jenisproduk);
+      return jenisproduk;
+    } else {
+      return [];
+    }
+  }
+
+  Future<dynamic> tambahbarang() async {
+    Get.dialog(
+        Center(
+          child: CircularProgressIndicator(),
+        ),
+        barrierDismissible: false);
+
+    var response = await api().client.post(link().POST_tambahproduk,
+        body: ({
+          'nama_produk': nama_produk.value.text,
+          'harga': harga_jual.value.text,
+          'id_kategori': '1',
+          'kode_produk': kode_produk.value.text,
+          'barcode': barcode.value.text,
+          'id_jenis': '1',
+          'satuan': satuan.value.text,
+          'stock': stock.value.text,
+        }));
+
+    if (response != null) {
+      var hasil = json.decode(response.body);
+      Get.back();
+      Get.snackbar('sukses', 'user di tambah');
+
+      return hasil;
+    } else {
+      Get.back();
+      Get.snackbar(
+        "Error",
+        'gagal tambah',
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
+    }
+  }
+
+  var val_jenis = ''.obs;
+
+  List kategori = ['Makanan', "minuman"].obs;
 
   /*final picker = ImagePicker();
   final cropper = ImageCropper();
@@ -83,14 +161,6 @@ class tambah_produkController extends GetxController {
       Get.snackbar('result', scaned_qr_code);
       barcodetext.value.text = scaned_qr_code;
     } on PlatformException {}
-  }
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    getkategori();
-    getsuplier();
   }
 
   var kat_list = <Kategeori>[].obs;

@@ -15,6 +15,7 @@ class dashboard_data_card extends StatelessWidget {
   final IconData icon;
   final Color color;
   final String label, subtitle;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -29,14 +30,14 @@ class dashboard_data_card extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 35, vertical: 10),
                       decoration: BoxDecoration(
-                          color: color.withOpacity(0.1),
+                          color: color.withOpacity(0.6),
                           borderRadius: BorderRadius.circular(15),
                           border: Border.all(color: color),
                           boxShadow: [shadow().reguler]),
                       child: Icon(
                         icon,
                         size: 80,
-                        color: color.withOpacity(0.2),
+                        color: color_template().primary_dark.withOpacity(0.5),
                       )),
                   Positioned.fill(
                     child: Align(
@@ -44,7 +45,9 @@ class dashboard_data_card extends StatelessWidget {
                       child: Text(
                         label,
                         style: TextStyle(
-                            fontSize: 28, fontWeight: FontWeight.bold),
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
                     ),
                   )

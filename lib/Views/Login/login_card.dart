@@ -34,7 +34,7 @@ class login_card extends GetView<loginController> {
         ),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 100),
-          height: 400,
+          height: context.height_query * 0.75,
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
@@ -49,7 +49,7 @@ class login_card extends GetView<loginController> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    width: 400,
+                    width: context.width_query * 0.44,
                     decoration: BoxDecoration(
                         color: color_template().primary,
                         borderRadius: BorderRadius.circular(30)),
@@ -63,90 +63,60 @@ class login_card extends GetView<loginController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        width: 350,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Promo RIMS',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.white),
-                            ),
-                            login_carousel(),
-                            Obx(() {
-                              return DotsIndicator(
-                                dotsCount: controller.iklan.length,
-                                position: controller.current.toDouble(),
-                                decorator: DotsDecorator(
-                                  color: Colors.black87, // Inactive color
-                                  activeColor: color_template().select,
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 15),
-                        width: 350,
-                        child: Form(
-                          key: controller.loginKey(),
+                      Expanded(
+                        child: Container(
+                          //width: context.width_query * 0.5,
                           child: Column(
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 20),
-                                child: Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
+                              Text(
+                                'Promo RIMS',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                    color: Colors.white),
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                controller: controller.email.value,
-                                onChanged: ((String pass) {}),
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.email),
-                                  labelText: "Email",
-                                  labelStyle: TextStyle(
-                                    color: Colors.black87,
-                                  ),
-                                  border: UnderlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
-                                textAlign: TextAlign.center,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return 'Masukan Email';
-                                  }
-                                  return null;
-                                },
-                              ),
+                              login_carousel(),
                               Obx(() {
-                                return TextFormField(
-                                  obscureText: controller.showpass.value,
-                                  controller: controller.pass.value,
+                                return DotsIndicator(
+                                  dotsCount: controller.iklan.length,
+                                  position: controller.current.toDouble(),
+                                  decorator: DotsDecorator(
+                                    color: Colors.black87, // Inactive color
+                                    activeColor: color_template().select,
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          // color: Colors.red,
+                          margin: EdgeInsets.symmetric(horizontal: 50),
+                          //width: context.width_query * 0.5,
+                          child: Form(
+                            key: controller.loginKey(),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 20),
+                                  child: Text(
+                                    'Login',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                TextFormField(
+                                  controller: controller.email.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                      icon: controller.showpass == false
-                                          ? Icon(Icons.visibility_off)
-                                          : Icon(Icons.visibility),
-                                      onPressed: () {
-                                        controller.showpass.value =
-                                            !controller.showpass.value;
-                                        print(controller.showpass.value);
-                                      },
-                                    ),
-                                    icon: Icon(Icons.lock),
-                                    labelText: "password",
+                                    icon: Icon(Icons.email),
+                                    labelText: "Email",
                                     labelStyle: TextStyle(
                                       color: Colors.black87,
                                     ),
@@ -160,58 +130,96 @@ class login_card extends GetView<loginController> {
                                   textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'Masukan Password';
+                                      return 'Masukan Email';
                                     }
                                     return null;
                                   },
-                                );
-                              }),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15),
-                                child: button_solid_custom(
-                                    width: 350,
-                                    height: 35,
-                                    onPressed: () {
-                                      // if (controller
-                                      //     .loginKey.value.currentState!
-                                      //     .validate()) {
-                                      //   controller.login();
-                                      // }
-
-                                      Get.toNamed('/base_menu');
-
-                                      //Get.to(() => barcode());
+                                ),
+                                Obx(() {
+                                  return TextFormField(
+                                    obscureText: controller.showpass.value,
+                                    controller: controller.pass.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        icon: controller.showpass == false
+                                            ? Icon(Icons.visibility_off)
+                                            : Icon(Icons.visibility),
+                                        onPressed: () {
+                                          controller.showpass.value =
+                                              !controller.showpass.value;
+                                          print(controller.showpass.value);
+                                        },
+                                      ),
+                                      icon: Icon(Icons.lock),
+                                      labelText: "password",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: UnderlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Masukan Password';
+                                      }
+                                      return null;
                                     },
-                                    child: Text(
-                                      'Login',
-                                      style: font().primary_white,
-                                    )),
-                              ),
-                              button_border_custom(
+                                  );
+                                }),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  child: button_solid_custom(
+                                      width: context.width_query * 0.5,
+                                      height: 35,
+                                      onPressed: () {
+                                        // if (controller
+                                        //     .loginKey.value.currentState!
+                                        //     .validate()) {
+                                        //   controller.login();
+                                        // }
+
+                                        Get.toNamed('/base_menu');
+
+                                        //Get.to(() => barcode());
+                                      },
+                                      child: Text(
+                                        'Login',
+                                        style: font().primary_white,
+                                      )),
+                                ),
+                                button_border_custom(
                                   onPressed: () {},
                                   child: Text(
                                     'Login dengan google',
                                     style: font().primary,
                                   ),
                                   height: 35,
-                                  width: 350),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              RichText(
-                                  text: TextSpan(
-                                      text: 'Lupa paswword? ',
-                                      style: TextStyle(color: Colors.black),
-                                      children: <TextSpan>[
-                                    TextSpan(
-                                        text: 'Reset password',
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Get.toNamed('/reset_password');
-                                          },
-                                        style: TextStyle(color: Colors.blue))
-                                  ]))
-                            ],
+                                  width: context.width_query * 0.5,
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                RichText(
+                                    text: TextSpan(
+                                        text: 'Lupa paswword? ',
+                                        style: TextStyle(color: Colors.black),
+                                        children: <TextSpan>[
+                                      TextSpan(
+                                          text: 'Reset password',
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Get.toNamed('/reset_password');
+                                            },
+                                          style: TextStyle(color: Colors.blue))
+                                    ]))
+                              ],
+                            ),
                           ),
                         ),
                       ),

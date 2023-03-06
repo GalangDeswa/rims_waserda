@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 
-
 import '../../Controllers/Templates/setting.dart';
 import '../../Controllers/login controller/login_controller.dart';
 import 'login_card.dart';
@@ -25,7 +24,7 @@ class login extends GetView<loginController> {
           Row(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.49,
+                width: MediaQuery.of(context).size.width * 0.5,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('assets/images/bg_login.png'),

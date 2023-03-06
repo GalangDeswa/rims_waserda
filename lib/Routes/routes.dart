@@ -1,6 +1,5 @@
-
-
 import 'package:get/get.dart';
+import 'package:rims_waserda/Controllers/history%20controller/historyBinding.dart';
 
 import '../Controllers/base menu controller/base_menu_binding.dart';
 import '../Controllers/dashboard controller/dashboard_binding.dart';
@@ -17,6 +16,7 @@ import '../Views/Dashboard/dashboard.dart';
 import '../Views/Login/login.dart';
 import '../Views/base_menu/base_menu.dart';
 import '../Views/detail produk/detail produk.dart';
+import '../Views/history/history.dart';
 import '../Views/kasir/kasir.dart';
 import '../Views/pilih toko/pilih_toko.dart';
 import '../Views/reset password/reset_password.dart';
@@ -57,4 +57,5 @@ final List<GetPage<dynamic>> route = [
       name: "/detail_produk",
       page: () => detail_Produk(),
       binding: detail_produkBinding()),
+  GetPage(name: "/history", page: () => history(), binding: historyBinding())
 ];

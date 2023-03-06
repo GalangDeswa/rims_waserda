@@ -16,8 +16,13 @@ class networkHandler extends GetConnect {
     return response.body;
   }
 
+  static Future getApi(String endpoint) async {
+    var response = await get(api(endpoint));
+    return response.body;
+  }
+
   static Uri api(String endpoint) {
-    String host = 'https://rimswaserdaapi.herokuapp.com/';
+    String host = 'http://192.168.100.33/waserda/waserda/';
     final apikey = host + endpoint;
     return Uri.parse(apikey);
   }

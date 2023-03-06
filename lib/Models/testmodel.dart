@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Models/produk.dart';
-
+import 'package:rims_waserda/Models/produkv2.dart';
 
 import '../Controllers/Templates/setting.dart';
 import '../Controllers/kasir controller/kasir_controller.dart';
 import '../Views/Widgets/popup.dart';
+import 'keranjang.dart';
 
 List<Product> productFromJson(String str) =>
     List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
@@ -186,7 +187,7 @@ class ProductTile extends GetView<kasirController> {
 
 class ProductTilev2 extends GetView<kasirController> {
   const ProductTilev2(this.list);
-  final List<Barang> list;
+  final List<KeranjangElement> list;
 
   @override
   Widget build(BuildContext context) {
@@ -196,33 +197,71 @@ class ProductTilev2 extends GetView<kasirController> {
         //sortAscending: sort,
         //sortColumnIndex: 0,
         columns: [
-          DataColumn(label: Text("Nama")),
-          DataColumn(label: Text("price")),
-          DataColumn(label: Text("desc")),
+          DataColumn(label: Text("Nomor")),
+          DataColumn(label: Text("Nama produk")),
+          DataColumn(label: Text("harga")),
+          DataColumn(
+              label: Expanded(
+                  child:
+                      Center(child: Text("QTY", textAlign: TextAlign.center)))),
+          DataColumn(label: Text("Aksi")),
         ],
-        rows: mapItemToDataRows(controller.listbarang_baru).toList());
+        rows: mapItemToDataRows(controller.keranjang_list).toList());
   }
-}
 
-Iterable<DataRow> mapItemToDataRows(List<Barang> items) {
-  Iterable<DataRow> dataRows = items.map((item) {
-    return DataRow(cells: [
-      DataCell(
-        Text(item.namaBarang!),
-      ),
-      DataCell(
-        Text(
-          item.harga.toString(),
+  Iterable<DataRow> mapItemToDataRows(List<KeranjangElement> items) {
+    final List uniqueList = Set.from(items).toList();
+
+    Iterable<DataRow> dataRows = items.map((item) {
+      int idx = uniqueList.indexOf(item) + 1;
+      return DataRow(cells: [
+        DataCell(
+          Text(controller.i.toString()),
         ),
-      ),
-      DataCell(
-        Text(
-          item.jenisBarang.toString(),
+        DataCell(
+          Text(item.namaProduk),
         ),
-      ),
-    ]);
-  });
-  return dataRows;
+        DataCell(
+          Text(
+            item.harga.toString(),
+          ),
+        ),
+        DataCell(
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      controller.isikeranjang(item.kodeProduk);
+                    },
+                    icon: Icon(Icons.add),
+                    color: color_template().select),
+                Text(
+                  item.qty,
+                ),
+                IconButton(
+                    onPressed: () {
+                      controller.deleteqty(item.kodeProduk);
+                    },
+                    icon: Icon(Icons.remove, color: color_template().select)),
+              ],
+            ),
+          ),
+        ),
+        DataCell(Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  controller.deletekeranjang(item.kodeProduk);
+                },
+                icon: Icon(Icons.delete))
+          ],
+        )),
+      ]);
+    });
+    return dataRows;
+  }
 }
 
 class ProductTilev3 extends GetView<kasirController> {

@@ -13,27 +13,44 @@ class header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      color: Colors.white,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          color: color_template().primary,
+          borderRadius: border_radius().header_border),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: color_template().primary,
-                  borderRadius: BorderRadius.circular(10)),
-              child: FaIcon(
-                icon,
-                size: 20,
-                color: Colors.white,
-              )),
-          SizedBox(
-            width: 20,
+          Row(
+            children: [
+              Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: FaIcon(
+                    icon!,
+                    size: 23,
+                    color: color_template().primary,
+                  )),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                title!,
+                style: font().header_big,
+              ),
+            ],
           ),
-          Text(
-            title!,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-          )
+          // button_solid_custom(
+          //     onPressed: () {
+          //       Get.toNamed('/tambah_produk');
+          //     },
+          //     child: Text(
+          //       'tambah produk',
+          //       style: font().header,
+          //     ),
+          //     width: context.width_query * 0.2,
+          //     height: 55)
         ],
       ),
     );
