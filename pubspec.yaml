@@ -63,6 +63,7 @@ dependencies:
   group_button: ^5.2.2
   connectivity_plus: ^2.3.7
   firebase_core: ^2.1.0
+  firebase_auth: ^4.2.10
   shared_preferences: ^2.0.15
   dropdown_button2: ^2.0.0
 

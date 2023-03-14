@@ -22,6 +22,10 @@ class font {
   var primary_white = TextStyle(color: Colors.white, fontSize: 20);
 
   var primary = TextStyle(color: color_template().primary, fontSize: 20);
+  var primary_bold = TextStyle(
+      color: color_template().primary,
+      fontSize: 20,
+      fontWeight: FontWeight.bold);
 
   var header =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:rims_waserda/Controllers/base%20menu%20controller/base_menu_controller.dart';
 
 import '../../Controllers/Templates/setting.dart';
@@ -137,22 +136,6 @@ class _base_menuState extends State<base_menu> {
                                 ),
                               ),
                               NavigationRailDestination(
-                                icon: FaIcon(FontAwesomeIcons.userPlus),
-                                selectedIcon: FaIcon(FontAwesomeIcons.userPlus),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('+ User'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(Icons.add_box),
-                                selectedIcon: Icon(Icons.add_box),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('+ Stock'),
-                                ),
-                              ),
-                              NavigationRailDestination(
                                 icon: Icon(Icons.add_box),
                                 selectedIcon: Icon(Icons.add_box),
                                 label: Padding(
@@ -161,11 +144,27 @@ class _base_menuState extends State<base_menu> {
                                 ),
                               ),
                               NavigationRailDestination(
-                                icon: Icon(Icons.history),
-                                selectedIcon: Icon(Icons.history),
+                                icon: Icon(Icons.add_box),
+                                selectedIcon: Icon(Icons.add_box),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
-                                  child: Text('History'),
+                                  child: Text('Beban'),
+                                ),
+                              ),
+                              NavigationRailDestination(
+                                icon: FaIcon(FontAwesomeIcons.userPlus),
+                                selectedIcon: FaIcon(FontAwesomeIcons.userPlus),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text('+ User'),
+                                ),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(Icons.receipt),
+                                selectedIcon: Icon(Icons.receipt),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text('Laporan'),
                                 ),
                               ),
                             ],

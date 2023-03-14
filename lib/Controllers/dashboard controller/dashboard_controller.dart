@@ -11,6 +11,9 @@ class dashboardController extends GetxController {
     print(toko_user.toString());
   }
 
+  var nama = GetStorage().read('nama');
+  var email = GetStorage().read('email');
+
   var toko_user = GetStorage().read('toko_user');
   //var toko = Get.arguments as Map;
 }

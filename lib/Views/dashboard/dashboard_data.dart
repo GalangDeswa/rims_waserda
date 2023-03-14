@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Views/Widgets/dashboard%20data%20card.dart';
-import 'package:rims_waserda/Views/Widgets/header.dart';
-
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../Controllers/Templates/setting.dart';
 import '../../Controllers/dashboard controller/dashboard_controller.dart';
-import 'dashboard.dart';
-import 'dashboard_data_card.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class dashboard_data extends GetView<dashboardController> {
   const dashboard_data({Key? key}) : super(key: key);
@@ -34,6 +27,7 @@ class dashboard_data extends GetView<dashboardController> {
                       margin: EdgeInsets.only(top: 30),
                       height: context.height_query,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -46,10 +40,125 @@ class dashboard_data extends GetView<dashboardController> {
                               datacard(
                                 title: "150",
                                 subtile: "Total barang",
-                                icon: Icons.money,
+                                icon: Icons.inventory,
                               ),
                             ],
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              datacard(
+                                title: "Rp.120.000",
+                                subtile: "Total beban",
+                                icon: Icons.money,
+                              ),
+                              datacard(
+                                title: "150",
+                                subtile: "Total barang",
+                                icon: Icons.inventory,
+                              ),
+                            ],
+                          ),
+                          // SizedBox(
+                          //   height: 100,
+                          // ),
+                          Container(
+                            height: context.height_query / 2,
+                            child: ListView(
+                              children: [
+                                Card(
+                                  elevation: elevation().def_elevation,
+                                  child: ListTile(
+                                    title: Text('150000'),
+                                    subtitle: Text('total tunggakan'),
+                                    leading: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.receipt,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: color_template().primary,
+                                          borderRadius:
+                                              border_radius().header_border),
+                                    ),
+                                  ),
+                                ),
+                                Card(
+                                  elevation: elevation().def_elevation,
+                                  child: ListTile(
+                                    title: Text('10'),
+                                    subtitle: Text('total pelanggan'),
+                                    leading: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.people,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: color_template().primary,
+                                          borderRadius:
+                                              border_radius().header_border),
+                                    ),
+                                  ),
+                                ),
+                                Card(
+                                  elevation: elevation().def_elevation,
+                                  child: ListTile(
+                                    title: Text('150000'),
+                                    subtitle: Text('total tunggakan'),
+                                    leading: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.receipt,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: color_template().primary,
+                                          borderRadius:
+                                              border_radius().header_border),
+                                    ),
+                                  ),
+                                ),
+                                Card(
+                                  elevation: elevation().def_elevation,
+                                  child: ListTile(
+                                    title: Text('150000'),
+                                    subtitle: Text('total tunggakan'),
+                                    leading: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.receipt,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: color_template().primary,
+                                          borderRadius:
+                                              border_radius().header_border),
+                                    ),
+                                  ),
+                                ),
+                                Card(
+                                  elevation: elevation().def_elevation,
+                                  child: ListTile(
+                                    title: Text('150000'),
+                                    subtitle: Text('total tunggakan'),
+                                    leading: Container(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.receipt,
+                                        color: Colors.white,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: color_template().primary,
+                                          borderRadius:
+                                              border_radius().header_border),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ))),
             ),

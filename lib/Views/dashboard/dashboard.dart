@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Views/Widgets/stack%20bg.dart';
 
 import '../../Controllers/Templates/setting.dart';
-
 import '../../Controllers/dashboard controller/dashboard_controller.dart';
 import 'dashboard_app.dart';
-import 'dashboard_app_card.dart';
 import 'dashboard_data.dart';
 
 class dashboard extends GetView<dashboardController> {
@@ -52,11 +48,15 @@ class dashboard extends GetView<dashboardController> {
                               style: font().header_big,
                             ),
                             Text(
-                              "Selamat Datang",
+                              controller.nama == null
+                                  ? 'nama null'
+                                  : controller.nama,
                               style: font().header,
                             ),
                             Text(
-                              "TOKO RIMS STORE",
+                              controller.email == null
+                                  ? 'email null'
+                                  : controller.email,
                               style: font().reguler_white,
                             ),
                             // Text(

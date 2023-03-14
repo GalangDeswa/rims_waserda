@@ -92,20 +92,20 @@ class login_card extends GetView<loginController> {
                       ),
                       Expanded(
                         child: Container(
-                          // color: Colors.red,
+                          //color: Colors.red,
                           margin: EdgeInsets.symmetric(horizontal: 50),
                           //width: context.width_query * 0.5,
+                          height: context.height_query / 2,
                           child: Form(
                             key: controller.loginKey(),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(bottom: 20),
                                   child: Text(
                                     'Login',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                    style: font().primary_bold,
                                   ),
                                 ),
                                 SizedBox(
@@ -176,7 +176,7 @@ class login_card extends GetView<loginController> {
                                   padding: EdgeInsets.symmetric(vertical: 15),
                                   child: button_solid_custom(
                                       width: context.width_query * 0.5,
-                                      height: 35,
+                                      height: 50,
                                       onPressed: () {
                                         // if (controller
                                         //     .loginKey.value.currentState!
@@ -194,30 +194,70 @@ class login_card extends GetView<loginController> {
                                       )),
                                 ),
                                 button_border_custom(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    controller.handleSignIn();
+                                  },
                                   child: Text(
                                     'Login dengan google',
                                     style: font().primary,
                                   ),
-                                  height: 35,
+                                  height: 50,
                                   width: context.width_query * 0.5,
                                 ),
                                 SizedBox(
-                                  height: 15,
+                                  height: 30,
                                 ),
-                                RichText(
-                                    text: TextSpan(
-                                        text: 'Lupa paswword? ',
-                                        style: TextStyle(color: Colors.black),
-                                        children: <TextSpan>[
-                                      TextSpan(
-                                          text: 'Reset password',
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.toNamed('/reset_password');
-                                            },
-                                          style: TextStyle(color: Colors.blue))
-                                    ]))
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    button_solid_custom(
+                                        width: context.width_query * 0.1,
+                                        height: 35,
+                                        onPressed: () {
+                                          // if (controller
+                                          //     .loginKey.value.currentState!
+                                          //     .validate()) {
+                                          //   controller.login();
+                                          // }
+
+                                          Get.toNamed('/base_menu');
+
+                                          //Get.to(() => barcode());
+                                        },
+                                        child: Text(
+                                          'Register',
+                                          style: font().primary_white,
+                                        )),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    button_border_custom(
+                                      onPressed: () {},
+                                      child: Text(
+                                        'Lupa Password?',
+                                        style: TextStyle(
+                                            color: color_template().primary,
+                                            fontSize: 13),
+                                      ),
+                                      height: 35,
+                                      width: context.width_query * 0.1,
+                                    ),
+                                  ],
+                                ),
+
+                                // RichText(
+                                //     text: TextSpan(
+                                //         text: 'Lupa paswword? ',
+                                //         style: TextStyle(color: Colors.black),
+                                //         children: <TextSpan>[
+                                //       TextSpan(
+                                //           text: 'Reset password',
+                                //           recognizer: TapGestureRecognizer()
+                                //             ..onTap = () {
+                                //               Get.toNamed('/reset_password');
+                                //             },
+                                //           style: TextStyle(color: Colors.blue))
+                                //     ]))
                               ],
                             ),
                           ),

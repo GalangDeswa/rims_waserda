@@ -1,15 +1,51 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rims_waserda/Services/handler.dart';
-
-import 'package:http/http.dart' as http;
 
 import '../../Models/loginv2.dart';
 
 class loginController extends GetxController {
+  final googleSignIn = GoogleSignIn();
+  GoogleSignInAccount? _user;
+
+  GoogleSignInAccount get user => _user!;
+  var username = ''.obs;
+  var useremail = ''.obs;
+
+  Future<void> handleSignIn() async {
+    try {
+      final googleUser = await googleSignIn.signIn();
+      final googleAuth = await googleUser?.authentication;
+      var tc;
+      var id;
+      final credential = GoogleAuthProvider.credential(
+          accessToken: tc = googleAuth!.accessToken,
+          idToken: id = googleAuth.idToken);
+
+      username.value = googleUser!.displayName!;
+      useremail.value = googleUser.email;
+      GetStorage().write('nama', googleUser.displayName);
+      GetStorage().write('email', googleUser.email);
+
+      Get.snackbar(
+        "berhasil",
+        googleUser.displayName.toString(),
+      );
+      Get.offAndToNamed('/base_menu');
+
+      print(username);
+      print(useremail);
+    } catch (error) {
+      print(error);
+      Get.snackbar('gagal', error.toString());
+    }
+  }
+
   List<String> iklan = [
     'assets/animation/30826-online-shopping.json',
     'assets/animation/74384-swipe-for-shopping.json',
@@ -81,7 +117,7 @@ class loginController extends GetxController {
     }
   }
 
-  /* login() async {
+/* login() async {
     var url = Uri.parse(link().api + 'login');
     var res = await http.post(url,
         body: {"email": email.value.text, "password": pass.value.text});
