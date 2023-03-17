@@ -1,17 +1,13 @@
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:rims_waserda/Views/produk/produk.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 import '../Models/kategori.dart';
-import '../Models/produk.dart';
 import '../Models/produkv2.dart';
 import '../Models/supliyer.dart';
-import '../Models/testmodel.dart';
+import '../Modules/produk/data produk/model_produk.dart';
 
 class check_conn {
   static Future<bool> check() async {
@@ -88,18 +84,19 @@ class link {
 
 class api extends GetConnect {
   var client = http.Client();
-  static Future<List<Product>> getproduct() async {
-    var error = 'error';
-    var response = await api().client.get(Uri.parse(
-        'http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline'));
-    if (response.statusCode == 200) {
-      var jsonstring = response.body;
-      var hasil = productFromJson(jsonstring);
-      return hasil;
-    } else {
-      return [];
-    }
-  }
+
+  // static Future<List<Product>> getproduct() async {
+  //   var error = 'error';
+  //   var response = await api().client.get(Uri.parse(
+  //       'http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline'));
+  //   if (response.statusCode == 200) {
+  //     var jsonstring = response.body;
+  //     var hasil = productFromJson(jsonstring);
+  //     return hasil;
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
   static Future<List<Kategeori>> get_kategori() async {
     var error = 'error';

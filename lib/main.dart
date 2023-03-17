@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-
 import 'Routes/routes.dart';
-import 'Controllers/Templates/setting.dart';
-
+import 'Templates/setting.dart';
 
 void main() async {
   await GetStorage.init();
