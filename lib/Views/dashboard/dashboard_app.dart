@@ -46,25 +46,25 @@ class dashboard_app extends GetView<base_menuController> {
                             label: 'Kasir'),
                         dasboard_app_card(
                             function: () {
-                              controller.selectedIndex(3);
-                            },
-                            color: color_template().primary,
-                            icon: Icons.add_box,
-                            label: 'Tambah stock'),
-                        dasboard_app_card(
-                            function: () {
                               controller.selectedIndex(2);
                             },
                             color: color_template().primary,
-                            icon: Icons.person_add,
-                            label: 'Tambah user'),
+                            icon: FontAwesomeIcons.box,
+                            label: 'Produk'),
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(3);
+                            },
+                            color: color_template().primary,
+                            icon: FontAwesomeIcons.dollarSign,
+                            label: 'Beban'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(4);
                             },
                             color: color_template().primary,
-                            icon: FontAwesomeIcons.box,
-                            label: 'Produk'),
+                            icon: Icons.person_add,
+                            label: 'Tambah user'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(5);

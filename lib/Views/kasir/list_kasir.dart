@@ -171,29 +171,24 @@ class list_kasir extends GetView<kasirController> {
               child: Obx(
                 () {
                   return controller.keranjang_list.isNotEmpty
-                      ? Expanded(
-                          child: Container(
-                              width: context.width_query,
-                              // height: context.height_query * 0.70,
-                              //: color_template().primary.withOpacity(0.2),
-                              //color: Colors.red,
-                              child: SingleChildScrollView(
-                                  child: ProductTilev2(
-                                      controller.keranjang_list))),
-                        )
-                      : Expanded(
-                          child: Container(
-                              width: context.width_query,
-                              //height: context.height_query,
-                              //margin: EdgeInsets.all(300),
-                              //color: color_template().primary.withOpacity(0.2),
-                              //color: Colors.red,
-                              child: Icon(
-                                Icons.add_shopping_cart,
-                                color: color_template().primary,
-                                size: 100,
-                              )),
-                        );
+                      ? Container(
+                          width: context.width_query,
+                          // height: context.height_query * 0.70,
+                          //: color_template().primary.withOpacity(0.2),
+                          //color: Colors.red,
+                          child: SingleChildScrollView(
+                              child: ProductTilev2(controller.keranjang_list)))
+                      : Container(
+                          width: context.width_query,
+                          //height: context.height_query,
+                          //margin: EdgeInsets.all(300),
+                          //color: color_template().primary.withOpacity(0.2),
+                          //color: Colors.red,
+                          child: Icon(
+                            Icons.add_shopping_cart,
+                            color: color_template().primary,
+                            size: 100,
+                          ));
                 },
               )),
         )

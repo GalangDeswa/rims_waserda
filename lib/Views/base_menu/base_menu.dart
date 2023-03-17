@@ -136,16 +136,16 @@ class _base_menuState extends State<base_menu> {
                                 ),
                               ),
                               NavigationRailDestination(
-                                icon: Icon(Icons.add_box),
-                                selectedIcon: Icon(Icons.add_box),
+                                icon: Icon(FontAwesomeIcons.box),
+                                selectedIcon: Icon(FontAwesomeIcons.box),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text('Produk'),
                                 ),
                               ),
                               NavigationRailDestination(
-                                icon: Icon(Icons.add_box),
-                                selectedIcon: Icon(Icons.add_box),
+                                icon: Icon(FontAwesomeIcons.dollarSign),
+                                selectedIcon: Icon(FontAwesomeIcons.dollarSign),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text('Beban'),
@@ -160,8 +160,8 @@ class _base_menuState extends State<base_menu> {
                                 ),
                               ),
                               NavigationRailDestination(
-                                icon: Icon(Icons.receipt),
-                                selectedIcon: Icon(Icons.receipt),
+                                icon: Icon(FontAwesomeIcons.receipt),
+                                selectedIcon: Icon(FontAwesomeIcons.receipt),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text('Laporan'),

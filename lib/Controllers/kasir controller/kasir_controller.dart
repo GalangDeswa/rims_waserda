@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:group_button/group_button.dart';
+import 'package:intl/intl.dart';
 
 import '../../Models/keranjang.dart';
 import '../../Models/produk.dart';
 import '../../Models/produkv2.dart';
 import '../../Models/testmodel.dart';
 import '../../Services/api.dart';
-import 'package:collection/collection.dart';
-import 'package:intl/intl.dart';
 
 class kasirController extends GetxController {
   @override
@@ -25,18 +22,34 @@ class kasirController extends GetxController {
     // getbarang();
     //getprodukall();
     getkeranjang();
+    groupindex.value = 9;
     print(
         'kasir init---------------------------------------------------------->');
   }
 
+  /*RxDouble _total = 0.0.obs;
+
+  double get total => _total.value;
+
+  void addValue(double value) {
+    _total.value += value;
+  }
+
+  void clear() {
+    _total.value = 0.0;
+  }*/
+
   var num = 1.obs;
   var i = 0.obs;
-  var groupindex = 0.obs;
+  var groupindex = 9.obs;
+
   var currencyFormatter = NumberFormat('#,##0', 'ID');
+
   //int newnum1 = int.parse(str.replaceAll(RegExp(r'[^0-9]'), ''));
   //var groupbutton = GroupButtonController(selectedIndex: 3).obs;
 
   var list = [].obs;
+
   void tambahkasir() {
     print(num);
     num++;

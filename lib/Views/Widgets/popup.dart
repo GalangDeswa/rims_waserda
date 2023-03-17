@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Controllers/detail%20produk%20controller/detail_produk_controller.dart';
-import 'package:rims_waserda/Views/detail%20produk/detail%20produk.dart';
 import 'package:rims_waserda/Views/tambah_stock/tambah_stock.dart';
 
 import '../../Controllers/Templates/setting.dart';
@@ -10,8 +9,6 @@ import '../../Controllers/kasir controller/kasir_controller.dart';
 import '../../Controllers/stock controller/tambah_stock.dart';
 import 'buttons.dart';
 import 'keypad.dart';
-import 'package:group_button/group_button.dart';
-import 'package:intl/intl.dart';
 
 class popscreen {
   void popkonfirmasi(BuildContext context, kasirController controller) {
@@ -156,8 +153,21 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        actions: [
+          button_border_custom(
+              onPressed: () {
+                controller.onInit();
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Batal',
+                style: font().primary,
+              ),
+              height: 50,
+              width: 100),
+        ],
         elevation: elevation().def_elevation,
-        contentPadding: EdgeInsets.all(20),
+        contentPadding: EdgeInsets.all(15),
         shape: const RoundedRectangleBorder(
           side: BorderSide(color: Colors.blueAccent, width: 3.5),
           borderRadius: BorderRadius.all(
@@ -168,7 +178,10 @@ class popscreen {
           builder: (context) {
             return Container(
               //color: Colors.red,
-              width: context.width_query * 0.7,
+              width: context.width_query * 0.75,
+              height: context.height_query * 0.7,
+
+              //height: context.height_query * 0.6,
               child: Center(
                 child: SingleChildScrollView(
                   child: Row(
@@ -184,7 +197,6 @@ class popscreen {
                               children: [
                                 Container(
                                   padding: EdgeInsets.all(10),
-                                  height: 50,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: color_template().primary),
@@ -195,14 +207,15 @@ class popscreen {
                                       Icon(
                                         Icons.attach_money,
                                         color: Colors.white,
+                                        size: 30,
                                       ),
                                       Text('total tagihan :',
-                                          style: font().header),
+                                          style: font().header_big),
                                       Obx(() {
                                         return Text(
                                           'Rp.' +
                                               controller.subtotal.toString(),
-                                          style: font().header,
+                                          style: font().header_big,
                                         );
                                       }),
                                     ],
@@ -242,7 +255,7 @@ class popscreen {
                               height: 50,
                             ),
                             Obx(() {
-                              return controller.groupindex.value == null
+                              return controller.groupindex.value == 9
                                   ? Center(
                                       child: Container(
                                         child: Text(
@@ -325,41 +338,29 @@ class popscreen {
                                                     style: font().header),
                                               ),
                                             ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                controller.keypadController
+                                                    .value.text = '500000';
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: color_template()
+                                                        .primary),
+                                                child: Text('500.000',
+                                                    style: font().header),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         SizedBox(
                                           height: 30,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                child: TextField(
-                                                  readOnly: true,
-                                                  onTap: () {
-                                                    showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(2000),
-                                                      lastDate: DateTime(2099),
-                                                    );
-                                                  },
-                                                  decoration: InputDecoration(
-                                                      prefixIcon: Icon(
-                                                          Icons.edit_calendar),
-                                                      hintText: dateTime == null
-                                                          ? DateTime.now()
-                                                              .toString()
-                                                          : dateTime
-                                                              .toString()),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
+
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
@@ -441,13 +442,17 @@ class popscreen {
                           ],
                         ),
                       ),
-                      KeyPad(
-                        keypadController: controller.keypadController.value,
-                        onChange: (String pin) {
-                          print(pin + '-----------PRINT PIN');
-                          controller.change();
-                        },
-                        onSubmit: (String pin) {},
+                      Column(
+                        children: [
+                          KeyPad(
+                            keypadController: controller.keypadController.value,
+                            onChange: (String pin) {
+                              print(pin + '-----------PRINT PIN');
+                              controller.change();
+                            },
+                            onSubmit: (String pin) {},
+                          ),
+                        ],
                       ),
                     ],
                   ),

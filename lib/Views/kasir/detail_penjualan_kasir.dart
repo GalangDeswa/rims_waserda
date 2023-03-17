@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import '../../Controllers/Templates/setting.dart';
 import '../../Controllers/kasir controller/kasir_controller.dart';
 import '../Widgets/buttons.dart';
@@ -117,8 +117,10 @@ class detail_penjualan_kasir extends GetView<kasirController> {
               ),
               button_solid_custom(
                   onPressed: () {
+                    print('--------------pop-------------');
                     controller.tambah_chekout();
                     popscreen().popbayar(context, controller);
+                    print(controller.groupindex);
                   },
                   child: Text(
                     'Bayar',

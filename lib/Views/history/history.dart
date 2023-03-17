@@ -5,7 +5,6 @@ import 'package:rims_waserda/Views/Widgets/stack%20bg.dart';
 import 'package:rims_waserda/Views/history/history%20table.dart';
 
 import '../../Controllers/Templates/setting.dart';
-import '../Widgets/appbar.dart';
 
 class history extends GetView<historyController> {
   const history({Key? key}) : super(key: key);
@@ -15,8 +14,8 @@ class history extends GetView<historyController> {
     return SafeArea(
         //minimum: EdgeInsets.all(10),
         child: Scaffold(
-            //backgroundColor: color_template().primary.withOpacity(0.2),
-            backgroundColor: Colors.white,
+            backgroundColor: color_template().primary.withOpacity(0.2),
+            //backgroundColor: Colors.white,
             // appBar: appbar_custom(
             //     height: context.height_query / 12,
             //     child: Text(

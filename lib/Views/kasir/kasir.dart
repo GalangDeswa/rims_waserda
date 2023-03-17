@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:rims_waserda/Views/Widgets/stack%20bg.dart';
+import 'package:rims_waserda/Views/kasir/detail_penjualan_kasir.dart';
 
 import '../../Controllers/Templates/setting.dart';
 import '../../Controllers/kasir controller/kasir_controller.dart';
-import '../Widgets/appbar.dart';
-import 'detail_penjualan_kasir.dart';
 import 'list_kasir.dart';
 
 class kasir extends GetView<kasirController> {
@@ -43,9 +41,9 @@ class kasir extends GetView<kasirController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Expanded(child: list_kasir()),
-                  detail_penjualan_kasir()
+                  detail_penjualan_kasir(),
                 ],
               ),
             ),

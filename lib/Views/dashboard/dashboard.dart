@@ -16,149 +16,103 @@ class dashboard extends GetView<dashboardController> {
     return SafeArea(
       //minimum: EdgeInsets.all(10),
       child: Scaffold(
-          //backgroundColor: color_template().primary.withOpacity(0.2),
+          backgroundColor: color_template().primary.withOpacity(0.2),
           body: stack_bg(
               child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Row(
-          children: [
-            Expanded(
-                child: Column(
+            padding: const EdgeInsets.all(30),
+            child: Row(
               children: [
-                Card(
-                  margin: EdgeInsets.all(0),
-                  color: color_template().primary,
-                  elevation: elevation().def_elevation,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: border_radius().def_border,
-                    side:
-                        BorderSide(color: color_template().primary, width: 3.5),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                Expanded(
+                    child: Column(
+                  children: [
+                    Card(
+                      margin: EdgeInsets.only(bottom: 10),
+                      color: color_template().primary,
+                      elevation: elevation().def_elevation,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: border_radius().def_border,
+                        side: BorderSide(
+                            color: color_template().primary, width: 3.5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              'RIMSWASERDA',
-                              style: font().header_big,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'RIMSWASERDA',
+                                  style: font().header_big,
+                                ),
+                                Text(
+                                  controller.nama == null
+                                      ? 'nama null'
+                                      : controller.nama,
+                                  style: font().header,
+                                ),
+                                Text(
+                                  controller.email == null
+                                      ? 'email null'
+                                      : controller.email,
+                                  style: font().reguler_white,
+                                ),
+                                // Text(
+                                //   controller.toko_user['alamat'],
+                                //   style: font().reguler_white,
+                                // ),
+                              ],
                             ),
-                            Text(
-                              controller.nama == null
-                                  ? 'nama null'
-                                  : controller.nama,
-                              style: font().header,
-                            ),
-                            Text(
-                              controller.email == null
-                                  ? 'email null'
-                                  : controller.email,
-                              style: font().reguler_white,
-                            ),
-                            // Text(
-                            //   controller.toko_user['alamat'],
-                            //   style: font().reguler_white,
-                            // ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Get.dialog(Center(
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Text('logout?'),
-                                    Row(
+                            GestureDetector(
+                              onTap: () {
+                                Get.dialog(Center(
+                                  child: Container(
+                                    child: Column(
                                       children: [
-                                        ElevatedButton(
-                                          child: Text('tidak'),
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                        ),
-                                        ElevatedButton(
-                                          child: Text('ya'),
-                                          onPressed: () {
-                                            GetStorage().erase();
-                                          },
+                                        Text('logout?'),
+                                        Row(
+                                          children: [
+                                            ElevatedButton(
+                                              child: Text('tidak'),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                            ElevatedButton(
+                                              child: Text('ya'),
+                                              onPressed: () {
+                                                GetStorage().erase();
+                                              },
+                                            )
+                                          ],
                                         )
                                       ],
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ));
-                            //print(GetStorage().read('token'));
-                          },
-                          child: CircleAvatar(
-                            child: Icon(
-                              Icons.store,
-                              size: 45,
-                            ),
-                            maxRadius: 30,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                /*Container(
-                      margin: EdgeInsets.only(top: 5),
-                      child: Card(
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: color_template().primary,
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    color_template().primary_v2,
-                                    color_template().primary_v3
-                                  ])),
-                          width: context.width_query,
-                          height: 100,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Selamat datang',
-                                    style: font().header,
+                                    ),
                                   ),
-                                  Text(
-                                    'Nama toko',
-                                    style: font().header,
-                                  ),
-                                ],
-                              ),
-                              CircleAvatar(
+                                ));
+                                //print(GetStorage().read('token'));
+                              },
+                              child: CircleAvatar(
                                 child: Icon(
-                                  Icons.person,
-                                  size: 50,
+                                  Icons.store,
+                                  size: 45,
                                 ),
                                 maxRadius: 30,
-                              )
-                            ],
-                          ),
+                              ),
+                            )
+                          ],
                         ),
                       ),
-
-                    ),*/
-                dashboard_data()
+                    ),
+                    dashboard_data()
+                  ],
+                )),
+                dashboard_app()
               ],
-            )),
-            dashboard_app()
-          ],
-        ),
-      ))),
+            ),
+          ))),
     );
   }
 }
