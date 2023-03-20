@@ -61,7 +61,7 @@ class history_table extends GetView<historyController> {
                 ),
                 icon_button_custom(
                     onPressed: () {
-                      controller.gethistory(controller.id_kas.value.text);
+                      // controller.gethistory(controller.id_kas.value.text);
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),

@@ -4,10 +4,10 @@ import 'package:get/get.dart';
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import 'controller_data_produk.dart';
+import 'controller_data_user.dart';
 
-class produk_table extends GetView<produkController> {
-  const produk_table({Key? key}) : super(key: key);
+class table_user extends GetView<datauserController> {
+  const table_user({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +32,17 @@ class produk_table extends GetView<produkController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
-                        title: 'List produk',
+                        title: 'Data User',
                         icon: Icons.add_box,
                       ),
                     ),
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        Get.toNamed('/tambah_produk');
+                        Get.toNamed('/tambah_user');
                       },
                       child: Text(
-                        'tambah produk',
+                        'tambah user',
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -65,7 +65,7 @@ class produk_table extends GetView<produkController> {
                       onChanged: ((String pass) {}),
                       decoration: InputDecoration(
                         icon: Icon(Icons.add_box),
-                        labelText: "cari produk",
+                        labelText: "cari user",
                         labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
@@ -86,7 +86,7 @@ class produk_table extends GetView<produkController> {
                 ),
                 icon_button_custom(
                     onPressed: () {
-                      //controller.getprodukall();
+                      // controller.getprodukall();
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
@@ -103,7 +103,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'kode',
+                              'Nama',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -111,7 +111,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'nama produk',
+                              'Email',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -119,7 +119,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'jenis',
+                              'No.HP',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -127,7 +127,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'kategori',
+                              'Role',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -135,62 +135,36 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'Harga',
+                              'Aksi',
                               style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Stock',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Center(
-                              child: Text(
-                                'Aksi',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
                             ),
                           ),
                         ),
                       ],
-                      rows:
-                          List.generate(controller.produk_list.length, (index) {
+                      rows: List.generate(controller.listUser.length, (index) {
                         return DataRow(cells: [
                           DataCell(Container(
-                              child:
-                                  Text(controller.produk_list[index].barcode))),
+                            child: Text(controller.listUser[index].nama != null
+                                ? controller.listUser[index].nama
+                                : '-'),
+                          )),
                           DataCell(Container(
-                              child: Text(
-                                  controller.produk_list[index].namaProduk))),
+                            child: Text(controller.listUser[index].email != null
+                                ? controller.listUser[index].email
+                                : '-'),
+                          )),
                           DataCell(Container(
-                              child: Text(
-                                  controller.produk_list[index].jenisProduk))),
+                              child: Text(controller.listUser[index].hp != null
+                                  ? controller.listUser[index].hp
+                                  : '-'))),
                           DataCell(Container(
-                              child: Text(
-                                  controller.produk_list[index].kategori))),
-                          DataCell(Container(
-                              child:
-                                  Text(controller.produk_list[index].harga))),
-                          DataCell(Container(
-                              child:
-                                  Text(controller.produk_list[index].stock))),
+                              child: Text(controller.listUser[index].role == '1'
+                                  ? 'Kasir'
+                                  : controller.listUser[index].role == '2'
+                                      ? 'Admin'
+                                      : '-'))),
                           DataCell(Row(
                             children: [
-                              IconButton(
-                                  onPressed: () {
-                                    // print('qweqweqwe');
-                                    // Get.toNamed('/detail_produk');
-                                  },
-                                  icon: Icon(
-                                    Icons.ballot,
-                                    size: 18,
-                                  )),
                               IconButton(
                                   onPressed: () {
                                     Get.toNamed('/detail_produk');
@@ -203,7 +177,7 @@ class produk_table extends GetView<produkController> {
                                   onPressed: () {},
                                   icon: Icon(Icons.delete, size: 18))
                             ],
-                          ))
+                          )),
                         ]);
                       }));
                 }),

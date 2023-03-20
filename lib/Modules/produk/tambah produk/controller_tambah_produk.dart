@@ -1,28 +1,17 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:meta/meta.dart';
-import 'package:flutter/services.dart';
+import 'dart:io';
 import 'dart:math' as Math;
-import 'package:image/image.dart' as Img;
-import 'package:mime/mime.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:get/get.dart';
+import 'package:image/image.dart' as Img;
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../Models/kategori.dart';
 import '../../../Models/supliyer.dart';
-import '../../../Services/api.dart';
 import '../../../Services/image_provider.dart';
 
 class tambah_produkController extends GetxController {
@@ -51,64 +40,64 @@ class tambah_produkController extends GetxController {
   var satuan = TextEditingController().obs;
   var stock = TextEditingController().obs;
 
-  Future<List> getjenis() async {
-    var response = await api().client.get(link().GET_jenisproduk);
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      jenisproduk.value = hasil;
+  // Future<List> getjenis() async {
+  //   var response = await api().client.get(link().GET_jenisproduk);
+  //   if (response.statusCode == 200) {
+  //     var hasil = json.decode(response.body);
+  //     jenisproduk.value = hasil;
+  //
+  //     print('--------------------------------------------------------------');
+  //     print(jenisproduk);
+  //     return jenisproduk;
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
-      print('--------------------------------------------------------------');
-      print(jenisproduk);
-      return jenisproduk;
-    } else {
-      return [];
-    }
-  }
-
-  Future<dynamic> tambahbarang() async {
-    Get.dialog(
-        Center(
-          child: CircularProgressIndicator(),
-        ),
-        barrierDismissible: false);
-
-    var response = await api().client.post(link().POST_tambahproduk,
-        body: ({
-          'nama_produk': nama_produk.value.text,
-          'harga': harga_jual.value.text,
-          'id_kategori': '1',
-          'kode_produk': kode_produk.value.text,
-          'barcode': barcode.value.text,
-          'id_jenis': '1',
-          'satuan': satuan.value.text,
-          'stock': stock.value.text,
-        }));
-
-    if (response != null) {
-      var hasil = json.decode(response.body);
-      Get.back();
-      Get.snackbar('sukses', 'user di tambah');
-
-      return hasil;
-    } else {
-      Get.back();
-      Get.snackbar(
-        "Error",
-        'gagal tambah',
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
-    }
-  }
+  // Future<dynamic> tambahbarang() async {
+  //   Get.dialog(
+  //       Center(
+  //         child: CircularProgressIndicator(),
+  //       ),
+  //       barrierDismissible: false);
+  //
+  //   var response = await api().client.post(link().POST_tambahproduk,
+  //       body: ({
+  //         'nama_produk': nama_produk.value.text,
+  //         'harga': harga_jual.value.text,
+  //         'id_kategori': '1',
+  //         'kode_produk': kode_produk.value.text,
+  //         'barcode': barcode.value.text,
+  //         'id_jenis': '1',
+  //         'satuan': satuan.value.text,
+  //         'stock': stock.value.text,
+  //       }));
+  //
+  //   if (response != null) {
+  //     var hasil = json.decode(response.body);
+  //     Get.back();
+  //     Get.snackbar('sukses', 'user di tambah');
+  //
+  //     return hasil;
+  //   } else {
+  //     Get.back();
+  //     Get.snackbar(
+  //       "Error",
+  //       'gagal tambah',
+  //       icon: Icon(Icons.error, color: Colors.white),
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.red,
+  //       borderRadius: 20,
+  //       margin: EdgeInsets.all(15),
+  //       colorText: Colors.white,
+  //       duration: Duration(seconds: 4),
+  //       isDismissible: true,
+  //       dismissDirection: DismissDirection.horizontal,
+  //       forwardAnimationCurve: Curves.elasticInOut,
+  //       reverseAnimationCurve: Curves.easeOut,
+  //     );
+  //   }
+  // }
 
   var val_jenis = ''.obs;
 
@@ -154,6 +143,7 @@ class tambah_produkController extends GetxController {
   var barcodetext = TextEditingController().obs;
   var qrcode = ''.obs;
   String scaned_qr_code = '';
+
   Future<void> scan() async {
     try {
       scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
@@ -168,6 +158,7 @@ class tambah_produkController extends GetxController {
   var val_kat = ''.obs;
   var selected = ''.obs;
   var selected_sup = ''.obs;
+
   void setSelected(String value) {
     selected.value = value;
   }
@@ -180,39 +171,39 @@ class tambah_produkController extends GetxController {
 
   var loading = true.obs;
 
-  void getsuplier() async {
-    try {
-      loading(true);
-      var checkconn = await check_conn.check();
-      if (checkconn == true) {
-        var suplier = await api.get_suplier();
-        if (suplier != null) {
-          suplier_list.value = suplier;
-        }
-      } else {
-        Get.snackbar('conn', 'tidak ada konenksi');
-      }
-    } finally {
-      loading(false);
-    }
-  }
+  // void getsuplier() async {
+  //   try {
+  //     loading(true);
+  //     var checkconn = await check_conn.check();
+  //     if (checkconn == true) {
+  //       var suplier = await api.get_suplier();
+  //       if (suplier != null) {
+  //         suplier_list.value = suplier;
+  //       }
+  //     } else {
+  //       Get.snackbar('conn', 'tidak ada konenksi');
+  //     }
+  //   } finally {
+  //     loading(false);
+  //   }
+  // }
 
-  void getkategori() async {
-    try {
-      loading(true);
-      var checkconn = await check_conn.check();
-      if (checkconn == true) {
-        var list = await api.get_kategori();
-        if (list != null) {
-          kat_list.value = list;
-        }
-      } else {
-        Get.snackbar('conn', 'tidak ada konenksi');
-      }
-    } finally {
-      loading(false);
-    }
-  }
+  // void getkategori() async {
+  //   try {
+  //     loading(true);
+  //     var checkconn = await check_conn.check();
+  //     if (checkconn == true) {
+  //       var list = await api.get_kategori();
+  //       if (list != null) {
+  //         kat_list.value = list;
+  //       }
+  //     } else {
+  //       Get.snackbar('conn', 'tidak ada konenksi');
+  //     }
+  //   } finally {
+  //     loading(false);
+  //   }
+  // }
 
   var barang_kode = TextEditingController().obs;
   var barang_jenis = TextEditingController().obs;
@@ -233,6 +224,7 @@ class tambah_produkController extends GetxController {
   var compresimagesize = ''.obs;
   var namaFile = ''.obs;
   File? pickedImageFile;
+
   void getimagev2(ImageSource imagesource) async {
     final pickedfile = await ImagePicker().pickImage(source: imagesource);
     if (pickedfile != null) {
@@ -332,48 +324,48 @@ class tambah_produkController extends GetxController {
     }
   }
 
-  Future<Map<String, dynamic>?> register_tambah_barang() async {
-    final postbarang = http.MultipartRequest('POST', link().POST_produk);
-    if (imgFile != null) {
-      /* postbarang.files
-          .add(await http.MultipartFile.fromPath('foto[]', imgFile!.path));*/
-      final mimeTypeData =
-          lookupMimeType(imgFile!.path, headerBytes: [0xFF, 0xD8])!.split('/');
-      final foto = await http.MultipartFile.fromPath('foto[]', imgFile!.path,
-          contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+// Future<Map<String, dynamic>?> register_tambah_barang() async {
+//   final postbarang = http.MultipartRequest('POST', link().POST_produk);
+//   if (imgFile != null) {
+//     /* postbarang.files
+//         .add(await http.MultipartFile.fromPath('foto[]', imgFile!.path));*/
+//     final mimeTypeData =
+//         lookupMimeType(imgFile!.path, headerBytes: [0xFF, 0xD8])!.split('/');
+//     final foto = await http.MultipartFile.fromPath('foto[]', imgFile!.path,
+//         contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
+//
+//     postbarang.files.add(foto);
+//   }
+//
+//   postbarang.fields['kode_barang'] = barang_kode.value.text;
+//   postbarang.fields['jenis_barang'] = barang_jenis.value.text;
+//   postbarang.fields['nama_barang'] = barang_nama.value.text;
+//
+//   postbarang.fields['id_kategori'] = selected.value;
+//   postbarang.fields['id_supliyer'] = selected_sup.value;
+//
+//   postbarang.fields['harga'] = barang_harga.value.text;
+//
+//   postbarang.fields['qty'] = barang_qty.value.text;
+//
+//   try {
+//     final streamedResponse = await postbarang.send();
+//     final response = await http.Response.fromStream(streamedResponse);
+//     if (response.statusCode != 200) {
+//       print(response.statusCode);
+//       return null;
+//     }
+//     final Map<String, dynamic> responseData = json.decode(response.body);
+//     print(responseData);
+//     Get.snackbar('pesan', 'Berhasil di tambah');
+//     return responseData;
+//   } catch (e) {
+//     print(e);
+//     return null;
+//   }
+// }
 
-      postbarang.files.add(foto);
-    }
-
-    postbarang.fields['kode_barang'] = barang_kode.value.text;
-    postbarang.fields['jenis_barang'] = barang_jenis.value.text;
-    postbarang.fields['nama_barang'] = barang_nama.value.text;
-
-    postbarang.fields['id_kategori'] = selected.value;
-    postbarang.fields['id_supliyer'] = selected_sup.value;
-
-    postbarang.fields['harga'] = barang_harga.value.text;
-
-    postbarang.fields['qty'] = barang_qty.value.text;
-
-    try {
-      final streamedResponse = await postbarang.send();
-      final response = await http.Response.fromStream(streamedResponse);
-      if (response.statusCode != 200) {
-        print(response.statusCode);
-        return null;
-      }
-      final Map<String, dynamic> responseData = json.decode(response.body);
-      print(responseData);
-      Get.snackbar('pesan', 'Berhasil di tambah');
-      return responseData;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  /*void start_register_tambah_barang() async {
+/*void start_register_tambah_barang() async {
     if (barang_namaText != '' ||
         barang_hargaText != '' ||
         barang_descText != '') {

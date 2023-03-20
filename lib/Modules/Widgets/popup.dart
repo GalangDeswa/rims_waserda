@@ -124,7 +124,7 @@ class popscreen {
                           height: 50),
                       button_solid_custom(
                           onPressed: () {
-                            controller.tambah_history();
+                            // controller.tambah_history();
                             popscreen().popberhasil(context);
                           },
                           child: Text('Bayar'),

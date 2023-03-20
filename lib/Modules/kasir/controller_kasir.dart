@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -10,7 +8,6 @@ import '../../Models/dummy.dart';
 import '../../Models/keranjang.dart';
 import '../../Models/produkv2.dart';
 import '../../Modules/produk/data produk/model_produk.dart';
-import '../../Services/api.dart';
 
 class kasirController extends GetxController {
   @override
@@ -21,7 +18,7 @@ class kasirController extends GetxController {
     // getproduct();
     // getbarang();
     //getprodukall();
-    getkeranjang();
+    //getkeranjang();
     groupindex.value = 9;
     print(
         'kasir init---------------------------------------------------------->');
@@ -117,36 +114,36 @@ class kasirController extends GetxController {
 
   var barang_list = <Barang>[].obs;
 
-  void getbarang() async {
-    try {
-      loading(true);
-      var checkconn = await check_conn.check();
-      if (checkconn == true) {
-        var barang = await api.get_barang();
-        if (barang != null) {
-          barang_list.value = barang;
-        }
-      } else {
-        Get.snackbar('conn', 'tidak ada konenksi');
-      }
-    } finally {
-      loading(false);
-    }
-  }
+  // void getbarang() async {
+  //   try {
+  //     loading(true);
+  //     var checkconn = await check_conn.check();
+  //     if (checkconn == true) {
+  //       var barang = await api.get_barang();
+  //       if (barang != null) {
+  //         barang_list.value = barang;
+  //       }
+  //     } else {
+  //       Get.snackbar('conn', 'tidak ada konenksi');
+  //     }
+  //   } finally {
+  //     loading(false);
+  //   }
+  // }
 
-  Future<List<ProdukElement>> getprodukall() async {
-    var response = await api().client.get(link().GET_produkv2);
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      var res = Produk.fromJson(hasil);
-      print('--------------------------------------------------------------');
-      print(res);
-      produk_list.value = res.produk;
-      return produk_list;
-    } else {
-      return [];
-    }
-  }
+  // Future<List<ProdukElement>> getprodukall() async {
+  //   var response = await api().client.get(link().GET_produkv2);
+  //   if (response.statusCode == 200) {
+  //     var hasil = json.decode(response.body);
+  //     var res = Produk.fromJson(hasil);
+  //     print('--------------------------------------------------------------');
+  //     print(res);
+  //     produk_list.value = res.produk;
+  //     return produk_list;
+  //   } else {
+  //     return [];
+  //   }
+  // }
 
   // void getproduct() async {
   //   try {
@@ -203,110 +200,110 @@ class kasirController extends GetxController {
     qtydisplay.value + 1;
   }
 
-  Future<dynamic> isikeranjang(String id) async {
-    var response = await api().client.post(link().POST_tambahkeranjang,
-        body: ({
-          'kode_produk': id,
-          'qty': '1',
-          'tgl': '123123',
-        }));
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
+// Future<dynamic> isikeranjang(String id) async {
+//   var response = await api().client.post(link().POST_tambahkeranjang,
+//       body: ({
+//         'kode_produk': id,
+//         'qty': '1',
+//         'tgl': '123123',
+//       }));
+//   if (response.statusCode == 200) {
+//     var hasil = json.decode(response.body);
+//
+//     print(
+//         '-----------------------------keranjang add--------------------------');
+//     getkeranjang();
+//     return hasil;
+//   } else {
+//     Get.snackbar('error', response.statusCode.toString());
+//     return [];
+//   }
+// }
 
-      print(
-          '-----------------------------keranjang add--------------------------');
-      getkeranjang();
-      return hasil;
-    } else {
-      Get.snackbar('error', response.statusCode.toString());
-      return [];
-    }
-  }
+// Future<List<KeranjangElement>> getkeranjang() async {
+//   var response = await api().client.get(link().GET_keranjang);
+//   if (response.statusCode == 200) {
+//     var hasil = json.decode(response.body);
+//     var res = Keranjang.fromJson(hasil);
+//
+//     print(
+//         '-----------------------------get keranjang---------------------------------');
+//     print(hasil);
+//
+//     keranjang_list.value = res.keranjang;
+//     return keranjang_list;
+//   } else {
+//     Get.snackbar('error', response.statusCode.toString());
+//     return [];
+//   }
+// }
 
-  Future<List<KeranjangElement>> getkeranjang() async {
-    var response = await api().client.get(link().GET_keranjang);
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      var res = Keranjang.fromJson(hasil);
+// Future<dynamic> deletekeranjang(String id) async {
+//   var response = await api().client.post(link().POST_deletekeranjang,
+//       body: ({
+//         'kode_produk': id,
+//       }));
+//   if (response.statusCode == 200) {
+//     var hasil = json.decode(response.body);
+//     print(
+//         '-----------------------------keranjang delete--------------------------');
+//     getkeranjang();
+//     return hasil;
+//   } else {
+//     Get.snackbar('error', response.statusCode.toString());
+//     return [];
+//   }
+// }
 
-      print(
-          '-----------------------------get keranjang---------------------------------');
-      print(hasil);
+// Future<dynamic> deleteqty(String id) async {
+//   var response = await api().client.post(link().POST_deleteqty,
+//       body: ({
+//         'kode_produk': id,
+//       }));
+//   if (response.statusCode == 200) {
+//     var hasil = json.decode(response.body);
+//     print(
+//         '-----------------------------qty delete--------------------------');
+//     getkeranjang();
+//     return hasil;
+//   } else {
+//     Get.snackbar('error', response.statusCode.toString());
+//     return [];
+//   }
+// }
 
-      keranjang_list.value = res.keranjang;
-      return keranjang_list;
-    } else {
-      Get.snackbar('error', response.statusCode.toString());
-      return [];
-    }
-  }
+// Future<dynamic> tambah_chekout() async {
+//   var response =
+//       await api().client.post(link().POST_tambahchekout, body: ({}));
+//   if (response.statusCode == 200) {
+//     var hasil = json.decode(response.body);
+//     print(
+//         '-----------------------------add chekout--------------------------');
+//     //getkeranjang();
+//     return hasil;
+//   } else {
+//     Get.snackbar('error', response.statusCode.toString());
+//     return [];
+//   }
+// }
 
-  Future<dynamic> deletekeranjang(String id) async {
-    var response = await api().client.post(link().POST_deletekeranjang,
-        body: ({
-          'kode_produk': id,
-        }));
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      print(
-          '-----------------------------keranjang delete--------------------------');
-      getkeranjang();
-      return hasil;
-    } else {
-      Get.snackbar('error', response.statusCode.toString());
-      return [];
-    }
-  }
-
-  Future<dynamic> deleteqty(String id) async {
-    var response = await api().client.post(link().POST_deleteqty,
-        body: ({
-          'kode_produk': id,
-        }));
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      print(
-          '-----------------------------qty delete--------------------------');
-      getkeranjang();
-      return hasil;
-    } else {
-      Get.snackbar('error', response.statusCode.toString());
-      return [];
-    }
-  }
-
-  Future<dynamic> tambah_chekout() async {
-    var response =
-        await api().client.post(link().POST_tambahchekout, body: ({}));
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      print(
-          '-----------------------------add chekout--------------------------');
-      //getkeranjang();
-      return hasil;
-    } else {
-      Get.snackbar('error', response.statusCode.toString());
-      return [];
-    }
-  }
-
-  Future<dynamic> tambah_history() async {
-    var response = await api().client.post(link().POST_tambahistory,
-        body: ({
-          'tgl': '3432',
-          'nomor_transaksi': '003939',
-          'id_kasir': '1',
-          'total': subtotal.value.toString(),
-        }));
-    if (response.statusCode == 200) {
-      var hasil = json.decode(response.body);
-      print(
-          '-----------------------------add history--------------------------');
-      //getkeranjang();
-      return hasil;
-    } else {
-      Get.snackbar('error', response.statusCode.toString());
-      return [];
-    }
-  }
+// Future<dynamic> tambah_history() async {
+//   var response = await api().client.post(link().POST_tambahistory,
+//       body: ({
+//         'tgl': '3432',
+//         'nomor_transaksi': '003939',
+//         'id_kasir': '1',
+//         'total': subtotal.value.toString(),
+//       }));
+//   if (response.statusCode == 200) {
+//     var hasil = json.decode(response.body);
+//     print(
+//         '-----------------------------add history--------------------------');
+//     //getkeranjang();
+//     return hasil;
+//   } else {
+//     Get.snackbar('error', response.statusCode.toString());
+//     return [];
+//   }
+// }
 }

@@ -1,5 +1,6 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../Modules/Login/view_login_carousel.dart';
@@ -164,13 +165,12 @@ class login_card extends GetView<loginController> {
                               width: context.width_query * 0.5,
                               height: 50,
                               onPressed: () {
-                                // if (controller
-                                //     .loginKey.value.currentState!
-                                //     .validate()) {
-                                //   controller.login();
-                                // }
+                                if (controller.loginKey.value.currentState!
+                                    .validate()) {
+                                  controller.loginv2();
+                                }
 
-                                Get.toNamed('/base_menu');
+                                //Get.toNamed('/base_menu');
 
                                 //Get.to(() => barcode());
                               },
@@ -183,9 +183,21 @@ class login_card extends GetView<loginController> {
                           onPressed: () {
                             controller.handleSignIn();
                           },
-                          child: Text(
-                            'Login dengan google',
-                            style: font().primary,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.google,
+                                color: color_template().primary,
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'Login dengan google',
+                                style: font().primary,
+                              ),
+                            ],
                           ),
                           height: 50,
                           width: context.width_query * 0.5,

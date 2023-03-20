@@ -33,13 +33,13 @@ class dashboard_data extends GetView<dashboardController> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               datacard(
-                                title: "Rp.120.000",
-                                subtile: "Total penjualan",
+                                title: controller.pendapatan.toString(),
+                                subtile: "Total Pendapatan",
                                 icon: Icons.money,
                               ),
                               datacard(
-                                title: "150",
-                                subtile: "Total barang",
+                                title: controller.beban.toString(),
+                                subtile: "Total Beban",
                                 icon: Icons.inventory,
                               ),
                             ],

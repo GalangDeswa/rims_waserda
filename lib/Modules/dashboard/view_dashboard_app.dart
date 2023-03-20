@@ -3,8 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../Templates/setting.dart';
-import '../base menu/controller_base_menu.dart';
 import '../Widgets/dashboard_app_card.dart';
+import '../base menu/controller_base_menu.dart';
 
 class dashboard_app extends GetView<base_menuController> {
   const dashboard_app({Key? key}) : super(key: key);
@@ -43,7 +43,7 @@ class dashboard_app extends GetView<base_menuController> {
                             },
                             color: color_template().primary,
                             icon: FontAwesomeIcons.cashRegister,
-                            label: 'Kasir'),
+                            label: 'Penjualan'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(2);

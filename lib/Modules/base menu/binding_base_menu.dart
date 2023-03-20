@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-
+import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 import 'package:rims_waserda/jsontestController.dart';
 
 import '../beban/controller_beban.dart';
@@ -25,5 +25,6 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<jsontestController>(() => jsontestController());
     Get.lazyPut<historyController>(() => historyController());
     Get.lazyPut<bebanController>(() => bebanController());
+    Get.lazyPut<datauserController>(() => datauserController());
   }
 }

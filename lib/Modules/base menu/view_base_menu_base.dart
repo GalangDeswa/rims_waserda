@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 
 import '../../Templates/setting.dart';
@@ -90,7 +91,38 @@ class base_menu extends GetView<base_menuController> {
                             //backgroundColor: color_template().nav,
                             leading: GestureDetector(
                               onTap: () {
-                                // controller.extended.value = !controller.extended.value;
+                                Get.dialog(Center(
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Text('logout?'),
+                                        Row(
+                                          children: [
+                                            ElevatedButton(
+                                              child: Text('tidak'),
+                                              onPressed: () {
+                                                Get.back();
+                                              },
+                                            ),
+                                            ElevatedButton(
+                                              child: Text('ya'),
+                                              onPressed: () {
+                                                GetStorage().erase();
+                                                Get.offAndToNamed('/login');
+                                              },
+                                            ),
+                                            // ElevatedButton(
+                                            //   child: Text('load toko'),
+                                            //   onPressed: () {
+                                            //     controller.loadToko();
+                                            //   },
+                                            // ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ));
                               },
                               child: Container(
                                 width: 40,
@@ -125,7 +157,7 @@ class base_menu extends GetView<base_menuController> {
                                     FaIcon(FontAwesomeIcons.cashRegister),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Kasir'),
+                                  child: Text('Penjualan'),
                                 ),
                               ),
                               NavigationRailDestination(
@@ -149,7 +181,7 @@ class base_menu extends GetView<base_menuController> {
                                 selectedIcon: FaIcon(FontAwesomeIcons.userPlus),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
-                                  child: Text('+ User'),
+                                  child: Text('User'),
                                 ),
                               ),
                               NavigationRailDestination(

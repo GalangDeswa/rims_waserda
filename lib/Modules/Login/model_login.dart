@@ -1,122 +1,74 @@
 // To parse this JSON data, do
 //
-//     final login = loginFromJson(jsonString);
+//     final modelLogin = modelLoginFromJson(jsonString);
 
 import 'dart:convert';
 
-Login loginFromJson(String str) => Login.fromJson(json.decode(str));
+ModelLogin modelLoginFromJson(String str) =>
+    ModelLogin.fromJson(json.decode(str));
 
-String loginToJson(Login data) => json.encode(data.toJson());
+String modelLoginToJson(ModelLogin data) => json.encode(data.toJson());
 
-class Login {
-  Login({
-    this.accessToken,
-    this.data,
+class ModelLogin {
+  ModelLogin({
+    required this.success,
+    required this.message,
+    required this.errors,
+    required this.id,
+    required this.idToko,
+    required this.name,
+    required this.email,
+    this.hp,
+    this.emailVerifiedAt,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.token,
+    required this.tokenType,
   });
 
-  String? accessToken;
-  Data? data;
+  bool success;
+  String message;
+  String errors;
+  int id;
+  String idToko;
+  String name;
+  String email;
+  dynamic hp;
+  dynamic emailVerifiedAt;
+  DateTime createdAt;
+  DateTime updatedAt;
+  String token;
+  String tokenType;
 
-  factory Login.fromJson(Map<String, dynamic> json) => Login(
-        accessToken: json["accessToken"],
-        data: Data.fromJson(json["data"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "accessToken": accessToken,
-        "data": data!.toJson(),
-      };
-}
-
-class Data {
-  Data({
-    this.id,
-    this.nama,
-    this.email,
-    this.isActive,
-    this.storeId,
-  });
-
-  String? id;
-  String? nama;
-  String? email;
-  bool? isActive;
-  List<StoreId>? storeId;
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        id: json["_id"],
-        nama: json["nama"],
+  factory ModelLogin.fromJson(Map<String, dynamic> json) => ModelLogin(
+        success: json["success"],
+        message: json["message"],
+        errors: json["errors"],
+        id: json["id"],
+        idToko: json["id_toko"],
+        name: json["name"],
         email: json["email"],
-        isActive: json["is_active"],
-        storeId: List<StoreId>.from(
-            json["store_id"].map((x) => StoreId.fromJson(x))),
+        hp: json["hp"],
+        emailVerifiedAt: json["email_verified_at"],
+        createdAt: DateTime.parse(json["created_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),
+        token: json["token"],
+        tokenType: json["token_type"],
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
-        "nama": nama,
+        "success": success,
+        "message": message,
+        "errors": errors,
+        "id": id,
+        "id_toko": idToko,
+        "name": name,
         "email": email,
-        "is_active": isActive,
-        "store_id": List<dynamic>.from(storeId!.map((x) => x.toJson())),
-      };
-}
-
-class StoreId {
-  StoreId({
-    this.id,
-    this.nama,
-    this.email,
-    this.phone,
-    this.logoStore,
-    this.alamat,
-    this.kec,
-    this.kab,
-    this.receiptHeader,
-    this.receiptFooter,
-    this.createdAt,
-    this.updatedAt,
-  });
-
-  String? id;
-  String? nama;
-  String? email;
-  String? phone;
-  String? logoStore;
-  String? alamat;
-  String? kec;
-  String? kab;
-  String? receiptHeader;
-  String? receiptFooter;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-
-  factory StoreId.fromJson(Map<String, dynamic> json) => StoreId(
-        id: json["_id"],
-        nama: json["nama"],
-        email: json["email"],
-        phone: json["phone"],
-        logoStore: json["logo_store"],
-        alamat: json["alamat"],
-        kec: json["kec"],
-        kab: json["kab"],
-        receiptHeader: json["receipt_header"],
-        receiptFooter: json["receipt_footer"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "nama": nama,
-        "email": email,
-        "phone": phone,
-        "logo_store": logoStore,
-        "alamat": alamat,
-        "kec": kec,
-        "kab": kab,
-        "receipt_header": receiptHeader,
-        "receipt_footer": receiptFooter,
-        "createdAt": createdAt!.toIso8601String(),
-        "updatedAt": updatedAt!.toIso8601String(),
+        "hp": hp,
+        "email_verified_at": emailVerifiedAt,
+        "created_at": createdAt.toIso8601String(),
+        "updated_at": updatedAt.toIso8601String(),
+        "token": token,
+        "token_type": tokenType,
       };
 }

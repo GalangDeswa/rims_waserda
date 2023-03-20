@@ -44,7 +44,7 @@ class list_kasir extends GetView<kasirController> {
                       //width: context.width_query * 0.60,
                       //pakai string bisa di cari tp tidak bisa lengkap?
                       child: DropdownSearch<ProdukElement>(
-                    asyncItems: (qwe) => controller.getprodukall(),
+                    //asyncItems: (qwe) => controller.getprodukall(),
                     //asyncItems: (qwe) => api.getproduct(),
                     //  compareFn: (i, s) => i.isEqual(s),
                     popupProps: PopupProps.menu(
@@ -70,8 +70,8 @@ class list_kasir extends GetView<kasirController> {
                     //items: controller.productlist.map((e) => e.name).toList(),
 
                     onChanged: (value) {
-                      controller.isikeranjang(value!.kodeProduk.toString());
-                      controller.getkeranjang();
+                      // controller.isikeranjang(value!.kodeProduk.toString());
+                      // controller.getkeranjang();
                       controller.totalkeranjang();
                       controller.totalqty();
                       controller.i++;
@@ -261,7 +261,7 @@ class ProductTilev2 extends GetView<kasirController> {
               children: [
                 IconButton(
                     onPressed: () {
-                      controller.isikeranjang(item.kodeProduk);
+                      // controller.isikeranjang(item.kodeProduk);
                     },
                     icon: Icon(Icons.add),
                     color: color_template().select),
@@ -270,7 +270,7 @@ class ProductTilev2 extends GetView<kasirController> {
                 ),
                 IconButton(
                     onPressed: () {
-                      controller.deleteqty(item.kodeProduk);
+                      // controller.deleteqty(item.kodeProduk);
                     },
                     icon: Icon(Icons.remove, color: color_template().select)),
               ],
@@ -281,7 +281,7 @@ class ProductTilev2 extends GetView<kasirController> {
           children: [
             IconButton(
                 onPressed: () {
-                  controller.deletekeranjang(item.kodeProduk);
+                  // controller.deletekeranjang(item.kodeProduk);
                 },
                 icon: Icon(Icons.delete))
           ],

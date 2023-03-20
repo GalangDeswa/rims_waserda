@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class splashController extends GetxController {
   @override
@@ -18,10 +15,10 @@ class splashController extends GetxController {
 
   checkLogin() async {
     var loginStatus = GetStorage().read('token');
-    var toko_user = GetStorage().read('toko_user');
-    print("D|LOGIN " + loginStatus.toString());
+    var toko_user = GetStorage().read('id_toko');
+    print("LOGIN " + loginStatus.toString());
     if (loginStatus != null) {
-      Timer(const Duration(seconds: 2), () {
+      Timer(const Duration(seconds: 3), () {
         Get.offAndToNamed('/base_menu');
       }
           //     {

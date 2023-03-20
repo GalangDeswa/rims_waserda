@@ -118,7 +118,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
               button_solid_custom(
                   onPressed: () {
                     print('--------------pop-------------');
-                    controller.tambah_chekout();
+                    //controller.tambah_chekout();
                     popscreen().popbayar(context, controller);
                     print(controller.groupindex);
                   },

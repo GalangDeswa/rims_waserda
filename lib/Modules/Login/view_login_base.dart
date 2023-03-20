@@ -50,7 +50,7 @@ class login extends GetView<loginController> {
           ),
           Scaffold(
               backgroundColor: Colors.transparent,
-              body: Center(child: Expanded(child: login_card())))
+              body: Center(child: SingleChildScrollView(child: login_card())))
         ],
       ),
     );

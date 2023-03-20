@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:rims_waserda/Modules/dashboard/view_dashboar_konten.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_app.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_data.dart';
 
@@ -26,7 +28,7 @@ class dashboard extends GetView<dashboardController> {
                     child: Column(
                   children: [
                     Card(
-                      margin: EdgeInsets.only(bottom: 10),
+                      margin: EdgeInsets.only(bottom: 15),
                       color: color_template().primary,
                       elevation: elevation().def_elevation,
                       shape: RoundedRectangleBorder(
@@ -44,25 +46,17 @@ class dashboard extends GetView<dashboardController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'RIMSWASERDA',
+                                  controller.nama_toko,
                                   style: font().header_big,
                                 ),
                                 Text(
-                                  controller.nama == null
-                                      ? 'nama null'
-                                      : controller.nama,
-                                  style: font().header,
-                                ),
-                                Text(
-                                  controller.email == null
-                                      ? 'email null'
-                                      : controller.email,
+                                  controller.jenis_toko,
                                   style: font().reguler_white,
                                 ),
-                                // Text(
-                                //   controller.toko_user['alamat'],
-                                //   style: font().reguler_white,
-                                // ),
+                                Text(
+                                  GetStorage().read('alamat_toko'),
+                                  style: font().reguler_white,
+                                ),
                               ],
                             ),
                             GestureDetector(
@@ -84,8 +78,15 @@ class dashboard extends GetView<dashboardController> {
                                               child: Text('ya'),
                                               onPressed: () {
                                                 GetStorage().erase();
+                                                Get.offAndToNamed('/login');
                                               },
-                                            )
+                                            ),
+                                            ElevatedButton(
+                                              child: Text('load toko'),
+                                              onPressed: () {
+                                                controller.loadToko();
+                                              },
+                                            ),
                                           ],
                                         )
                                       ],
@@ -95,9 +96,8 @@ class dashboard extends GetView<dashboardController> {
                                 //print(GetStorage().read('token'));
                               },
                               child: CircleAvatar(
-                                child: Icon(
-                                  Icons.store,
-                                  size: 45,
+                                child: CachedNetworkImage(
+                                  imageUrl: controller.logo,
                                 ),
                                 maxRadius: 30,
                               ),
@@ -109,7 +109,17 @@ class dashboard extends GetView<dashboardController> {
                     dashboard_data()
                   ],
                 )),
-                dashboard_app()
+                Expanded(
+                  child: Column(
+                    children: [
+                      dashboard_app(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      dashboard_konten()
+                    ],
+                  ),
+                )
               ],
             ),
           ))),

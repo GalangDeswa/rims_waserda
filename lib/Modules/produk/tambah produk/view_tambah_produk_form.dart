@@ -638,7 +638,7 @@ class tambah_produk_form extends GetView<tambah_produkController> {
                       ),
                       button_solid_custom(
                           onPressed: () {
-                            controller.tambahbarang();
+                            // controller.tambahbarang();
                           },
                           child: Text(
                             'tambah produk',
