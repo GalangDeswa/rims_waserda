@@ -19,17 +19,4 @@ class base_menuController extends GetxController {
   ];
   var selectedIndex = 0.obs;
   var extended = false.obs;
-
-// List<GetPage<dynamic>> route = [
-//   GetPage(name: "/login", page: () => login(), binding: loginBinding()),
-//   GetPage(
-//       name: "/base_menu",
-//       page: () => base_menu(),
-//       binding: base_menuBinding()),
-//   GetPage(
-//       name: "/dashboard",
-//       page: () => dashboard(),
-//       binding: dashboardBinding()),
-//   GetPage(name: "/kasir", page: () => kasir(), binding: kasirBinding()),
-// ];
 }

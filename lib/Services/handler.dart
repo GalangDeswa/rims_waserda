@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart';
 import 'package:rims_waserda/Services/api.dart';
 
@@ -22,7 +21,7 @@ class check_conn {
         Get.snackbar('Error', 'Tidak bisa mengakses internet');
       }
     } else if (connectivityResult == ConnectivityResult.wifi) {
-      Get.snackbar('conn', 'wifi');
+      //Get.snackbar('conn', 'wifi');
       try {
         final result = await InternetAddress.lookup("www.google.com");
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -51,8 +50,10 @@ class REST extends GetConnect {
         }));
     if (response.statusCode == 200) {
       print('LOGIN network handler----------------------------------------->');
-      var data = jsonDecode(response.body);
+
+      //var data = json.decode(response.body);
       //var data = response.body;
+      var data = response;
       print(data);
       print(response.statusCode);
       return (data);
@@ -140,33 +141,145 @@ class REST extends GetConnect {
     }
   }
 
-  static Future<String> postApi(var body, String endpoint) async {
-    var response = await post(api(endpoint), body: body, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      // 'Authorization': GetStorage().read(PREF_TOKEN)
-    });
-    print('dari network handler----------------------------------------->');
-    print(response.body);
-    return response.body;
+  static Future<dynamic> userEdit(
+      String token, idtoko, id, iduser, nama, email, hp) async {
+    var response = await post(link().POST_useredit,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'id': id.toString(),
+          'id_user': iduser.toString(),
+          'nama': nama,
+          'email': email,
+          'hp': hp,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'USER EDIT network handler----------------------------------------->');
+      var data = json.decode(response.body);
+      //var data = response.body;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'USER EDIT network handler----------------------------------------->');
+      print('gagal USER EDIT');
+      print(response.statusCode);
+      print(response.body);
+    }
   }
 
-  static Future getApi(String endpoint) async {
-    var response = await get(api(endpoint));
-    return response.body;
+  static Future<dynamic> userEditPassword(
+    String token,
+    idtoko,
+    id,
+    iduser,
+    password,
+  ) async {
+    var response = await post(link().POST_usereditpassword,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'id': id.toString(),
+          'id_user': iduser.toString(),
+          'password': password,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'USER EDIT network handler----------------------------------------->');
+      var data = json.decode(response.body);
+      //var data = response.body;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'USER EDIT network handler----------------------------------------->');
+      print('gagal USER EDIT');
+      print(response.statusCode);
+      print(response.body);
+    }
   }
 
-  static Uri api(String endpoint) {
-    String host = 'http://192.168.100.33/waserda/waserda/';
-    final apikey = host + endpoint;
-    return Uri.parse(apikey);
+  static Future<dynamic> userDelete(String token, idtoko, id) async {
+    var response = await post(link().POST_userdelete,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'id': id.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'USER DELETE network handler----------------------------------------->');
+      var data = json.decode(response.body);
+      //var data = response.body;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'USER DELETE network handler----------------------------------------->');
+      print('gagal USER DATA');
+      print(response.statusCode);
+      print(response.body);
+    }
   }
 
-  static void storeToken(String token) async {
-    await GetStorage().write('token', token);
+  //-------------------------------------------------------------------------
+
+  static Future<dynamic> produkAll(String token, idtoko) async {
+    var response = await post(link().POST_produkall,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PRODUKALL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'PRODUKALLnetwork handler----------------------------------------->');
+      print('gagal PRODUKALL');
+      print(response.statusCode);
+      print(response.body);
+    }
   }
 
-  static Future<String?> getToken() async {
-    return await GetStorage().read('token');
-  }
+// static Future<String> postApi(var body, String endpoint) async {
+//   var response = await post(api(endpoint), body: body, headers: {
+//     'Content-Type': 'application/json',
+//     'Accept': 'application/json',
+//     // 'Authorization': GetStorage().read(PREF_TOKEN)
+//   });
+//   print('dari network handler----------------------------------------->');
+//   print(response.body);
+//   return response.body;
+// }
+//
+// static Future getApi(String endpoint) async {
+//   var response = await get(api(endpoint));
+//   return response.body;
+// }
+//
+// static Uri api(String endpoint) {
+//   String host = 'http://192.168.100.33/waserda/waserda/';
+//   final apikey = host + endpoint;
+//   return Uri.parse(apikey);
+// }
+//
+// static void storeToken(String token) async {
+//   await GetStorage().write('token', token);
+// }
+//
+// static Future<String?> getToken() async {
+//   return await GetStorage().read('token');
+// }
 }

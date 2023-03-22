@@ -10,6 +10,11 @@ class link {
   final Uri POST_loadtoko = Uri.parse(server().host + 'loadtoko');
   final Uri POST_userdata = Uri.parse(server().host + 'user/data');
   final Uri POST_usertambah = Uri.parse(server().host + 'user/tambah');
+  final Uri POST_useredit = Uri.parse(server().host + 'user/edit');
+  final Uri POST_usereditpassword = Uri.parse(server().host + 'user/gantipass');
+  final Uri POST_userdelete = Uri.parse(server().host + 'user/hapus');
+
+  final Uri POST_produkall = Uri.parse(server().host + 'produk/data/allproduk');
 }
 
 class api extends GetConnect {

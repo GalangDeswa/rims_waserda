@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
+import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 
-import '../kasir/controller_kasir.dart';
-import '../produk/tambah_stock/controller_tambah_stock.dart';
 import '../../Templates/setting.dart';
+import '../kasir/controller_kasir.dart';
 import '../produk/detail produk/controller_detail_produk.dart';
+import '../produk/tambah_stock/controller_tambah_stock.dart';
 import '../produk/tambah_stock/view_tambah_stock_base.dart';
+import '../user/data user/model_data_user.dart';
 import 'buttons.dart';
+import 'header.dart';
 import 'keypad.dart';
 
 class popscreen {
@@ -661,143 +665,147 @@ class popscreen {
         content: Builder(
           builder: (context) {
             return Center(
-              child: SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.attach_money),
-                                  Text(
-                                    'Tambah suplier',
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.edit_calendar),
-                                        hintText: 'nama suplier'),
-                                  ),
+              child: Container(
+                width: context.width_query / 2,
+                color: Colors.red,
+                child: SingleChildScrollView(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(Icons.attach_money),
+                                    Text(
+                                      'Tambah suplier',
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.edit_calendar),
-                                        hintText: 'nomor hp'),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.edit_calendar),
+                                          hintText: 'nama suplier'),
+                                    ),
                                   ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.edit_calendar),
+                                          hintText: 'nomor hp'),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Container(
+                              height: 230,
+                              //  color: Colors.red,
+                              margin: EdgeInsets.only(top: 15),
+                              width: double.infinity,
+                              child: SingleChildScrollView(
+                                child: DataTable(
+                                  columns: const <DataColumn>[
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text(
+                                          'no',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text(
+                                          'suplier',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Text(
+                                          'no hp',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(child: Icon(Icons.edit)),
+                                    ),
+                                  ],
+                                  rows: const <DataRow>[
+                                    DataRow(
+                                      cells: <DataCell>[
+                                        DataCell(Text('1')),
+                                        DataCell(Text('Nusa indah')),
+                                        DataCell(Text('09832832')),
+                                        DataCell(Icon(Icons.edit)),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              )
-                            ],
-                          ),
-                          Container(
-                            height: 230,
-                            //  color: Colors.red,
-                            margin: EdgeInsets.only(top: 15),
-                            width: double.infinity,
-                            child: SingleChildScrollView(
-                              child: DataTable(
-                                columns: const <DataColumn>[
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Text(
-                                        'no',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Text(
-                                        'suplier',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(
-                                      child: Text(
-                                        'no hp',
-                                        style: TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                    ),
-                                  ),
-                                  DataColumn(
-                                    label: Expanded(child: Icon(Icons.edit)),
-                                  ),
-                                ],
-                                rows: const <DataRow>[
-                                  DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(Text('1')),
-                                      DataCell(Text('Nusa indah')),
-                                      DataCell(Text('09832832')),
-                                      DataCell(Icon(Icons.edit)),
-                                    ],
-                                  ),
-                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              button_border_custom(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'batal',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  height: 40,
-                                  width: 220),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              button_solid_custom(
-                                  onPressed: () {
-                                    controller.tambah();
-                                  },
-                                  child: Text('Simpan'),
-                                  height: 40,
-                                  width: 220),
-                            ],
-                          )
-                        ],
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                button_border_custom(
+                                    onPressed: () {},
+                                    child: Text(
+                                      'batal',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    height: 40,
+                                    width: 220),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                button_solid_custom(
+                                    onPressed: () {
+                                      controller.tambah();
+                                    },
+                                    child: Text('Simpan'),
+                                    height: 40,
+                                    width: 220),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
@@ -869,4 +877,398 @@ class popscreen {
       ),
     );
   }
+
+  void popedituser(
+      BuildContext context, edituserController controller, Datum qwe) {
+    Get.dialog(
+        Center(
+          child: Container(
+            width: context.width_query / 1.5,
+            padding: EdgeInsets.zero,
+            child: Card(
+              elevation: elevation().def_elevation,
+              //margin: EdgeInsets.all(30),
+              shape: RoundedRectangleBorder(
+                borderRadius: border_radius().def_border,
+                side: BorderSide(color: color_template().primary, width: 3.5),
+              ),
+
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    header(
+                      title: 'Edit User',
+                      icon: FontAwesomeIcons.person,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Obx(() {
+                          return Form(
+                              key: controller.formKey.value,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  TextFormField(
+                                    //initialValue: controller.data.nama,
+                                    controller: controller.nama.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.add_card),
+                                      labelText: 'Nama',
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextFormField(
+                                    controller: controller.email.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.person),
+                                      labelText: "Email",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextFormField(
+                                    controller: controller.hp.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.pin_drop),
+                                      labelText: "Nomor HP",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextFormField(
+                                    controller: controller.password.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.pin_drop),
+                                      labelText: "Password",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  button_solid_custom(
+                                      onPressed: () {
+                                        // controller.tambahuser();
+                                        // controller.edituser(qwe.id.toString());
+                                      },
+                                      child: Text(
+                                        'Edit User',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      width: double.infinity,
+                                      height: 50)
+                                ],
+                              ));
+                        }),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+        arguments: qwe);
+  }
+
+  void deleteuser(
+      BuildContext context, edituserController controller, Datum arg) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Hapus data'),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
+        ),
+        content: Builder(
+          builder: (context) {
+            return Container(
+                width: context.width_query / 2,
+                height: context.height_query / 2,
+                child: Card(
+                  child: Column(
+                    children: [
+                      Text("Hapus data ?" + arg.nama),
+                      button_solid_custom(
+                          onPressed: () {
+                            controller.deleteuser(arg.id.toString());
+                          },
+                          child: Text(
+                            'Hapus',
+                            style: font().primary_white,
+                          ),
+                          width: context.width_query / 2,
+                          height: context.height_query / 7),
+                      button_border_custom(
+                          onPressed: () {},
+                          child: Text(
+                            'Batal',
+                            style: font().primary,
+                          ),
+                          height: context.height_query / 7,
+                          width: context.width_query / 2)
+                    ],
+                  ),
+                ));
+          },
+        ),
+      ),
+    );
+  }
 }
+
+// class edituserpop extends GetView<edituserController> {
+//   const edituserpop({
+//     Key? key,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return AlertDialog(
+//       backgroundColor: Colors.transparent,
+//       content: Center(
+//         child: Container(
+//           width: context.width_query / 1.5,
+//           child: Card(
+//             elevation: elevation().def_elevation,
+//             //margin: EdgeInsets.all(30),
+//             shape: RoundedRectangleBorder(
+//               borderRadius: border_radius().def_border,
+//               side: BorderSide(color: color_template().primary, width: 3.5),
+//             ),
+//
+//             child: Padding(
+//               padding: const EdgeInsets.all(15),
+//               child: Column(
+//                 children: [
+//                   header(
+//                     title: 'Edit User',
+//                     icon: FontAwesomeIcons.person,
+//                   ),
+//                   SizedBox(
+//                     height: 10,
+//                   ),
+//                   Expanded(
+//                     child: SingleChildScrollView(
+//                       child: Obx(() {
+//                         return Form(
+//                             key: controller.formKey.value,
+//                             child: Column(
+//                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                               children: [
+//                                 TextFormField(
+//                                   //initialValue: controller.data.nama,
+//                                   controller: controller.nama.value,
+//                                   onChanged: ((String pass) {}),
+//                                   decoration: InputDecoration(
+//                                     icon: Icon(Icons.add_card),
+//                                     labelText: 'Nama',
+//                                     labelStyle: TextStyle(
+//                                       color: Colors.black87,
+//                                     ),
+//                                     border: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                     focusedBorder: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                   ),
+//                                   textAlign: TextAlign.center,
+//                                   validator: (value) {
+//                                     if (value!.isEmpty) {
+//                                       return 'Please enter email';
+//                                     }
+//                                     return null;
+//                                   },
+//                                 ),
+//                                 SizedBox(
+//                                   height: 15,
+//                                 ),
+//                                 TextFormField(
+//                                   controller: controller.email.value,
+//                                   onChanged: ((String pass) {}),
+//                                   decoration: InputDecoration(
+//                                     icon: Icon(Icons.person),
+//                                     labelText: "Email",
+//                                     labelStyle: TextStyle(
+//                                       color: Colors.black87,
+//                                     ),
+//                                     border: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                     focusedBorder: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                   ),
+//                                   textAlign: TextAlign.center,
+//                                   validator: (value) {
+//                                     if (value!.isEmpty) {
+//                                       return 'Please enter email';
+//                                     }
+//                                     return null;
+//                                   },
+//                                 ),
+//                                 SizedBox(
+//                                   height: 15,
+//                                 ),
+//                                 TextFormField(
+//                                   controller: controller.hp.value,
+//                                   onChanged: ((String pass) {}),
+//                                   decoration: InputDecoration(
+//                                     icon: Icon(Icons.pin_drop),
+//                                     labelText: "Nomor HP",
+//                                     labelStyle: TextStyle(
+//                                       color: Colors.black87,
+//                                     ),
+//                                     border: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                     focusedBorder: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                   ),
+//                                   textAlign: TextAlign.center,
+//                                   validator: (value) {
+//                                     if (value!.isEmpty) {
+//                                       return 'Please enter email';
+//                                     }
+//                                     return null;
+//                                   },
+//                                 ),
+//                                 SizedBox(
+//                                   height: 15,
+//                                 ),
+//                                 TextFormField(
+//                                   controller: controller.password.value,
+//                                   onChanged: ((String pass) {}),
+//                                   decoration: InputDecoration(
+//                                     icon: Icon(Icons.pin_drop),
+//                                     labelText: "Password",
+//                                     labelStyle: TextStyle(
+//                                       color: Colors.black87,
+//                                     ),
+//                                     border: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                     focusedBorder: OutlineInputBorder(
+//                                         borderRadius:
+//                                             BorderRadius.circular(10)),
+//                                   ),
+//                                   textAlign: TextAlign.center,
+//                                   validator: (value) {
+//                                     if (value!.isEmpty) {
+//                                       return 'Please enter email';
+//                                     }
+//                                     return null;
+//                                   },
+//                                 ),
+//                                 SizedBox(
+//                                   height: 30,
+//                                 ),
+//                                 button_solid_custom(
+//                                     onPressed: () {
+//                                       // controller.tambahuser();
+//                                       controller.edituser(data.id);
+//                                     },
+//                                     child: Text(
+//                                       'Edit User',
+//                                       style: TextStyle(
+//                                         fontWeight: FontWeight.bold,
+//                                       ),
+//                                     ),
+//                                     width: double.infinity,
+//                                     height: 50)
+//                               ],
+//                             ));
+//                       }),
+//                     ),
+//                   )
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }

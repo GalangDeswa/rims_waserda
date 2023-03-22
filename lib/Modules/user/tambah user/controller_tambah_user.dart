@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 import 'package:rims_waserda/Services/handler.dart';
 
 import '../../Widgets/loading.dart';
@@ -96,7 +97,8 @@ class tambah_userController extends GetxController {
           hp.value.text);
       if (user != null) {
         print(user);
-        Get.back(closeOverlays: true);
+
+        Get.back(closeOverlays: true, result: user);
         Get.snackbar(
           "Berhasil",
           "Data user ditambah",

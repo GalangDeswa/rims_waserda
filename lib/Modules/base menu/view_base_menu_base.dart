@@ -139,7 +139,11 @@ class base_menu extends GetView<base_menuController> {
                               ),
                             ),
                             selectedIndex: controller.selectedIndex.value,
-                            onDestinationSelected: controller.selectedIndex,
+                            onDestinationSelected: (value) {
+                              controller.selectedIndex.value = value;
+
+                              print(value);
+                            },
                             labelType: NavigationRailLabelType.all,
 
                             destinations: [

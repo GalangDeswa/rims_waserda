@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/history/binding_history.dart';
+import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_password.dart';
 
+import '../Modules/Widgets/popup.dart';
 import '../Modules/dashboard/view_dashboard_base.dart';
 import '../Modules/history/view_history_base.dart';
 import '../Modules/kasir/view_kasir_base.dart';
@@ -9,6 +11,8 @@ import '../Modules/produk/tambah produk/view_tambah_produk_base.dart';
 import '../Modules/reset password/binding_reset_password.dart';
 import '../Modules/reset password/view_reset_password_base.dart';
 import '../Modules/toko/view_toko_base.dart';
+import '../Modules/user/edit user/binding_edit_user.dart';
+import '../Modules/user/edit user/view_edit_user_base.dart';
 import '../Modules/user/tambah user/binding_tambah_user.dart';
 import '../Modules/user/tambah user/view_tambah_user_base.dart';
 import '../Modules/user/verification/binding_verification.dart';
@@ -60,5 +64,11 @@ final List<GetPage<dynamic>> route = [
       page: () => detail_Produk(),
       binding: detail_produkBinding()),
   GetPage(name: "/history", page: () => history(), binding: historyBinding()),
-  GetPage(name: "/beban", page: () => beban(), binding: bebanBinding())
+  GetPage(name: "/beban", page: () => beban(), binding: bebanBinding()),
+  GetPage(
+      name: "/edit_user", page: () => edit_user(), binding: edituserBinding()),
+  GetPage(
+      name: "/edit_user_password",
+      page: () => edit_user_password(),
+      binding: edituserBinding()),
 ];

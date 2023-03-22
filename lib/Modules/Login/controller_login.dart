@@ -1,14 +1,18 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rims_waserda/Modules/Login/model_login.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Services/handler.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
+import '../../Services/api.dart';
 import '../dashboard/model_toko.dart';
 
 class loginController extends GetxController {
@@ -142,8 +146,15 @@ class loginController extends GetxController {
     Get.dialog(loading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
-      var login = await REST.login(email.value.text, pass.value.text);
-      if (login != null) {
+      var response = await post(link().POST_login,
+          body: ({
+            'email': email.value.text,
+            'password': pass.value.text,
+          }));
+      //var login = await REST.login(email.value.text, pass.value.text);
+
+      if (response.statusCode == 200) {
+        var login = json.decode(response.body);
         print('--------------login controller Write storage--------------');
         print(login['message']);
         print(login['success']);

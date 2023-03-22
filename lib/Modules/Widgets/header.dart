@@ -4,11 +4,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Templates/setting.dart';
 
 class header extends StatelessWidget {
-  const header({Key? key, this.base_color, this.title, this.icon})
+  const header(
+      {Key? key, this.base_color, this.title, this.icon, this.function})
       : super(key: key);
   final Color? base_color;
   final String? title;
   final IconData? icon;
+
+  //final IconButton? button;
+  final Function()? function;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +25,7 @@ class header extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
                   padding: EdgeInsets.all(5),
@@ -41,6 +46,16 @@ class header extends StatelessWidget {
               ),
             ],
           ),
+          Container(
+            decoration:
+                BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+            child: IconButton(
+                color: color_template().primary,
+                onPressed: () {
+                  function!();
+                },
+                icon: Icon(Icons.refresh)),
+          )
           // button_solid_custom(
           //     onPressed: () {
           //       Get.toNamed('/tambah_produk');

@@ -165,10 +165,11 @@ class login_card extends GetView<loginController> {
                               width: context.width_query * 0.5,
                               height: 50,
                               onPressed: () {
-                                if (controller.loginKey.value.currentState!
-                                    .validate()) {
-                                  controller.loginv2();
-                                }
+                                // if (controller.loginKey.value.currentState!
+                                //     .validate()) {
+                                //
+                                // }
+                                controller.loginv2();
 
                                 //Get.toNamed('/base_menu');
 

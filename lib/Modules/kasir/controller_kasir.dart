@@ -92,7 +92,7 @@ class kasirController extends GetxController {
   var loading = true.obs;
   var productlist = <Product>[].obs;
   var listbaru = <Product>[].obs;
-  var listbarang_baru = <Barang>[].obs;
+  // var listbarang_baru = <Barang>[].obs;
   var listets = ['lol', 'lmao', 'XD'].obs;
   var isitest = [].obs;
   var produk_list = <ProdukElement>[].obs;
@@ -112,7 +112,7 @@ class kasirController extends GetxController {
     Get.snackbar('conn', 'refreshed');
   }
 
-  var barang_list = <Barang>[].obs;
+  //var barang_list = <Barang>[].obs;
 
   // void getbarang() async {
   //   try {
