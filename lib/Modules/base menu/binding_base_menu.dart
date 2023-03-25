@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 
 import '../beban/controller_beban.dart';
 import '../dashboard/controller_dashboard.dart';
@@ -24,13 +25,14 @@ class base_menuBinding extends Bindings {
         fenix: true);
     Get.lazyPut<tambah_stockController>(() => tambah_stockController());
     Get.lazyPut<tambah_produkController>(() => tambah_produkController());
-    Get.lazyPut<produkController>(() => produkController());
+    Get.lazyPut<produkController>(() => produkController(), fenix: true);
     Get.lazyPut<historyController>(() => historyController());
     Get.lazyPut<bebanController>(() => bebanController());
     Get.lazyPut<datauserController>(() => datauserController(), fenix: true);
     //Get.lazyPut(() => datauserController(), fenix: true);
     Get.lazyPut<edituserController>(() => edituserController(), fenix: true);
-    Get.lazyPut<edituserController>(() => edituserController(), fenix: true);
+    Get.lazyPut<editjenisController>(() => editjenisController(), fenix: true);
+
     //Get.lazyPut(() => edituserController());
   }
 }

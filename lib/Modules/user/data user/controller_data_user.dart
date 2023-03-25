@@ -108,7 +108,7 @@ class datauserController extends GetxController {
   var id_user = GetStorage().read('id_user');
 
   tambahuser() async {
-    Get.dialog(loading(), barrierDismissible: false);
+    Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var user = await REST.userTambah(

@@ -5,11 +5,17 @@ import '../../Templates/setting.dart';
 
 class header extends StatelessWidget {
   const header(
-      {Key? key, this.base_color, this.title, this.icon, this.function})
+      {Key? key,
+      this.base_color,
+      this.title,
+      this.icon,
+      this.function,
+      this.icon_color,
+      this.icon_funtion})
       : super(key: key);
-  final Color? base_color;
+  final Color? base_color, icon_color;
   final String? title;
-  final IconData? icon;
+  final IconData? icon, icon_funtion;
 
   //final IconButton? button;
   final Function()? function;
@@ -19,7 +25,7 @@ class header extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: color_template().primary,
+          color: base_color == null ? color_template().primary : base_color,
           borderRadius: border_radius().header_border),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -35,7 +41,9 @@ class header extends StatelessWidget {
                   child: FaIcon(
                     icon!,
                     size: 23,
-                    color: color_template().primary,
+                    color: icon_color == null
+                        ? color_template().primary
+                        : icon_color,
                   )),
               SizedBox(
                 width: 20,
@@ -46,16 +54,19 @@ class header extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            decoration:
-                BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-            child: IconButton(
-                color: color_template().primary,
-                onPressed: () {
-                  function!();
-                },
-                icon: Icon(Icons.refresh)),
-          )
+          function == null
+              ? Container()
+              : Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white, shape: BoxShape.circle),
+                  child: IconButton(
+                      color: color_template().primary,
+                      onPressed: () {
+                        function!();
+                      },
+                      icon: Icon(icon_funtion)),
+                )
+
           // button_solid_custom(
           //     onPressed: () {
           //       Get.toNamed('/tambah_produk');

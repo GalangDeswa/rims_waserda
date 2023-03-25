@@ -143,7 +143,7 @@ class loginController extends GetxController {
   // }
 
   loginv2() async {
-    Get.dialog(loading(), barrierDismissible: false);
+    Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var response = await post(link().POST_login,

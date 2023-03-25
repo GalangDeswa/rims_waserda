@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/header.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/stack bg.dart';
@@ -35,11 +36,21 @@ class detail_Produk extends GetView<detail_produkController> {
 
                   child: Padding(
                     padding: EdgeInsets.all(15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    child: Column(
                       children: [
-                        detail_produk_gambar(),
-                        Expanded(child: detail_produk_list())
+                        header(
+                          title: 'Edit produk',
+                          icon: Icons.add,
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              detail_produk_gambar(),
+                              Expanded(child: detail_produk_list())
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),

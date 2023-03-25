@@ -15,6 +15,19 @@ class link {
   final Uri POST_userdelete = Uri.parse(server().host + 'user/hapus');
 
   final Uri POST_produkall = Uri.parse(server().host + 'produk/data/allproduk');
+  final Uri POST_produkjenis = Uri.parse(server().host + 'produk/jenis/data');
+  final Uri POST_produktambah = Uri.parse(server().host + 'produk/tambah');
+  final Uri POST_produkhapus = Uri.parse(server().host + 'produk/hapus');
+  final Uri POST_produkqtytambah =
+      Uri.parse(server().host + 'produk/tambah/stock');
+  final Uri POST_produkjenistambah =
+      Uri.parse(server().host + 'produk/jenis/tambah');
+  final Uri POST_produkjeniedit =
+      Uri.parse(server().host + 'produk/jenis/edit');
+  final Uri POST_produkjenisdelete =
+      Uri.parse(server().host + 'produk/jenis/hapus');
+  final Uri POST_produkbyjenis =
+      Uri.parse(server().host + 'produk/data/byjenis');
 }
 
 class api extends GetConnect {

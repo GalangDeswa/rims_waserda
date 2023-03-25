@@ -228,8 +228,34 @@ class REST extends GetConnect {
 
   //-------------------------------------------------------------------------
 
-  static Future<dynamic> produkAll(String token, idtoko) async {
+  static Future<dynamic> produkAll(String token, idtoko, search) async {
     var response = await post(link().POST_produkall,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'search': search,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PRODUKALL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'PRODUKALLnetwork handler----------------------------------------->');
+      print('gagal PRODUKALL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkJenis(String token, idtoko) async {
+    var response = await post(link().POST_produkjenis,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -248,6 +274,210 @@ class REST extends GetConnect {
       print(
           'PRODUKALLnetwork handler----------------------------------------->');
       print('gagal PRODUKALL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkTambah(String token, idtoko, iduser, idjenis,
+      namaproduk, desc, qty, harga) async {
+    var response = await post(link().POST_produktambah,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'id_user': iduser.toString(),
+          'id_jenis': idjenis.toString(),
+          'nama_produk': namaproduk,
+          'deskripsi': desc,
+          'qty': qty.toString(),
+          'harga': harga.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PRODUK TAMBAH network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'PRODUKALL TAMBAH handler----------------------------------------->');
+      print('gagal PRODUK TAMBAH');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkJenisTambah(
+      String token, idtoko, namajenis) async {
+    var response = await post(link().POST_produkjenistambah,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'nama_jenis': namajenis,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'TAMBAH JENIS network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'TAMBAH JENIS network handler----------------------------------------->');
+      print('gagal TAMBAH JENIS');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkJenisedit(
+      String token, id, idtoko, namajenis) async {
+    var response = await post(link().POST_produkjeniedit,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_toko': idtoko,
+          'nama_jenis': namajenis,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'EDIT JENIS network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'EDIT JENIS network handler----------------------------------------->');
+      print('gagal EDIT JENIS');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkJenidelete(
+    String token,
+    id,
+    idtoko,
+  ) async {
+    var response = await post(link().POST_produkjenisdelete,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DELETE JENIS network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DELETE JENIS network handler----------------------------------------->');
+      print('gagal DELETE JENIS');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkbyjenis(
+    String token,
+    idjenis,
+    idtoko,
+  ) async {
+    var response = await post(link().POST_produkbyjenis,
+        body: ({
+          'token': token,
+          'id_jenis': idjenis,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PRODUK BY JENISnetwork handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'PRODUK BY JENIS network handler----------------------------------------->');
+      print('gagal PRODUK BY JENIS');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkdelete(
+    String token,
+    id,
+    idtoko,
+  ) async {
+    var response = await post(link().POST_produkhapus,
+        body: ({
+          'token': token,
+          'id': id.toString(),
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DELETE PRODUK network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DELETE PRODUK network handler----------------------------------------->');
+      print('gagal DELETE PRODUK');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> produkqtytambah(String token, id, idtoko, qty) async {
+    var response = await post(link().POST_produkqtytambah,
+        body: ({
+          'token': token,
+          'id': id.toString(),
+          'id_toko': idtoko,
+          'qty': qty.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'TAMBAH QTY network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'TAMBAH QTY network handler----------------------------------------->');
+      print('gagal DTAMBAH QTY');
       print(response.statusCode);
       print(response.body);
     }

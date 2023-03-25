@@ -49,7 +49,7 @@ class dashboard_konten extends GetView<dashboardController> {
                                       Container(
                                           width: 100,
                                           height: 120,
-                                          child: loading()),
+                                          child: showloading()),
                                   fit: BoxFit.cover,
                                   imageUrl: x.photo),
                             ),

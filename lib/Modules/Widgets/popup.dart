@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
+import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
+import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
+import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
+import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 
 import '../../Templates/setting.dart';
@@ -15,6 +19,116 @@ import 'header.dart';
 import 'keypad.dart';
 
 class popscreen {
+  void deletejenis(
+      BuildContext context, editjenisController controller, DataJenis arg) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: header(
+                title: 'Hapus Data',
+                icon: Icons.warning,
+                icon_color: color_template().tritadery,
+                base_color: color_template().tritadery),
+            contentPadding: EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            content: Builder(
+              builder: (context) {
+                return Container(
+                    width: context.width_query / 2.6,
+                    height: context.height_query / 2.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Hapus data " + arg.namaJenis + '?',
+                          style: font().header_black,
+                        ),
+                        button_solid_custom(
+                            onPressed: () {
+                              controller.deletejenis(arg.id.toString());
+                            },
+                            child: Text(
+                              'Hapus',
+                              style: font().primary_white,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10),
+                        button_border_custom(
+                            onPressed: () {},
+                            child: Text(
+                              'Batal',
+                              style: font().primary,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10)
+                      ],
+                    ));
+              },
+            ),
+          );
+        });
+  }
+
+  void deleteproduk(
+      BuildContext context, produkController controller, DataProduk arg) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: header(
+                title: 'Hapus Data',
+                icon: Icons.warning,
+                icon_color: color_template().tritadery,
+                base_color: color_template().tritadery),
+            contentPadding: EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            content: Builder(
+              builder: (context) {
+                return Container(
+                    width: context.width_query / 2.6,
+                    height: context.height_query / 2.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Hapus produk " + arg.namaProduk + '?',
+                          style: font().header_black,
+                        ),
+                        button_solid_custom(
+                            onPressed: () {
+                              controller.deleteproduk(arg.id.toString());
+                            },
+                            child: Text(
+                              'Hapus',
+                              style: font().primary_white,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10),
+                        button_border_custom(
+                            onPressed: () {},
+                            child: Text(
+                              'Batal',
+                              style: font().primary,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10)
+                      ],
+                    ));
+              },
+            ),
+          );
+        });
+  }
+
   void popkonfirmasi(BuildContext context, kasirController controller) {
     showDialog(
       context: context,

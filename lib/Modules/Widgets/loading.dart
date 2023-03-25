@@ -3,8 +3,8 @@ import 'package:loading_indicator/loading_indicator.dart';
 
 import '../../Templates/setting.dart';
 
-class loading extends StatelessWidget {
-  const loading({Key? key}) : super(key: key);
+class showloading extends StatelessWidget {
+  const showloading({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

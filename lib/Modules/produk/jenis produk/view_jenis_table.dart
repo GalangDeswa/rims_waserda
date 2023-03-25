@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
+import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import 'controller_data_produk.dart';
 
-class produk_table extends GetView<produkController> {
-  const produk_table({Key? key}) : super(key: key);
+class jenis_table extends GetView<produkController> {
+  const jenis_table({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,11 @@ class produk_table extends GetView<produkController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
-                        title: 'List produk',
+                        title: 'List jenis',
                         icon: Icons.add_box,
+                        base_color: color_template().primary,
                         icon_funtion: Icons.refresh,
+                        //icon_color: color_template().primary,
                         function: () {
                           controller.onInit();
 
@@ -46,7 +49,7 @@ class produk_table extends GetView<produkController> {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        Get.toNamed('/tambah_produk');
+                        Get.toNamed('/tambah_jenis');
 
                         // Get.dialog(SingleChildScrollView(
                         //   child: AlertDialog(
@@ -60,7 +63,7 @@ class produk_table extends GetView<produkController> {
                         // ));
                       },
                       child: Text(
-                        'tambah produk',
+                        'tambah jenis',
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -74,41 +77,37 @@ class produk_table extends GetView<produkController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Obx(() {
-                  return Expanded(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      //width: 200,
-                      child: TextFormField(
-                        controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          controller.fetchProduk();
-                        }),
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.add_box),
-                          labelText: "cari produk",
-                          labelStyle: TextStyle(
-                            color: Colors.black87,
-                          ),
-                          border: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 3),
+                    //width: 200,
+                    child: TextFormField(
+                      //controller: email,
+                      onChanged: ((String pass) {}),
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.add_box),
+                        labelText: "cari jenis",
+                        labelStyle: TextStyle(
+                          color: Colors.black87,
                         ),
-                        textAlign: TextAlign.center,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter email';
-                          }
-                          return null;
-                        },
+                        border: UnderlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
+                      textAlign: TextAlign.center,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter email';
+                        }
+                        return null;
+                      },
                     ),
-                  );
-                }),
+                  ),
+                ),
                 icon_button_custom(
                     onPressed: () {
-                      controller.fetchProduk();
+                      //controller.getprodukall();
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
@@ -125,39 +124,7 @@ class produk_table extends GetView<produkController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'Nama Produk',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Jenis produk',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Desc',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Stock',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Harga',
+                              'Nama Jenis',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
@@ -172,50 +139,27 @@ class produk_table extends GetView<produkController> {
                         // ),
                         DataColumn(
                           label: Expanded(
-                            child: Center(
-                              child: Text(
-                                'Aksi',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
+                            child: Text(
+                              'Aksi',
+                              style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
                         ),
                       ],
-                      rows:
-                          List.generate(controller.produklist.length, (index) {
+                      rows: List.generate(controller.jenislist.length, (index) {
                         return DataRow(cells: [
                           DataCell(Container(
-                              child: Text(
-                                  controller.produklist[index].namaProduk))),
-                          DataCell(Container(
-                              child: Text(
-                                  controller.produklist[index].namaJenis))),
+                              child:
+                                  Text(controller.jenislist[index].namaJenis))),
 
-                          DataCell(Container(
-                              child: Text(
-                                  controller.produklist[index].deskripsi))),
-                          DataCell(Container(
-                              child: Text(controller.produklist[index].qty))),
-                          DataCell(Container(
-                              child: Text(controller.produklist[index].harga))),
                           // DataCell(Container(
                           //     child: Text(controller.produklist[index].image))),
                           DataCell(Row(
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    // print('qweqweqwe');
-                                    // Get.toNamed('/detail_produk');
-                                  },
-                                  icon: Icon(
-                                    Icons.ballot,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    Get.toNamed('/detail_produk',
-                                        arguments:
-                                            controller.produklist[index]);
+                                    Get.toNamed('/edit_jenis',
+                                        arguments: controller.jenislist[index]);
                                   },
                                   icon: Icon(
                                     Icons.edit,
@@ -223,10 +167,10 @@ class produk_table extends GetView<produkController> {
                                   )),
                               IconButton(
                                   onPressed: () {
-                                    popscreen().deleteproduk(
+                                    popscreen().deletejenis(
                                         context,
-                                        controller,
-                                        controller.produklist[index]);
+                                        editjenisController(),
+                                        controller.jenislist[index]);
                                   },
                                   icon: Icon(Icons.delete, size: 18))
                             ],

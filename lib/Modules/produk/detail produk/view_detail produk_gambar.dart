@@ -1,11 +1,11 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import 'package:image_picker/image_picker.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
+import '../jenis produk/model_jenisproduk.dart';
 import 'controller_detail_produk.dart';
 
 class detail_produk_gambar extends GetView<detail_produkController> {
@@ -37,19 +37,26 @@ class detail_produk_gambar extends GetView<detail_produkController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               //Icon(Icons.category),
-              Container(
-                child: DropdownButton(
-                  hint: Text('Pilih variasi'),
-                  value: controller.val_ongkir,
-                  items: controller.ongkir.map((item) {
-                    return DropdownMenuItem(
-                      child: Text(item),
-                      value: item,
+              Expanded(
+                child: Container(
+                  child: Obx(() {
+                    return DropdownButton2(
+                      isExpanded: true,
+                      hint: Text('Pilih jenis produk'),
+                      value: controller.jenisvalue.value,
+                      items: controller.jenislist.value.map((DataJenis item) {
+                        return DropdownMenuItem(
+                          child: Text(item.namaJenis.toString()),
+                          value: item.id.toString(),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        controller.jenisvalue.value = val!.toString();
+                        print(controller.jenisvalue);
+                        controller.update();
+                      },
                     );
-                  }).toList(),
-                  onChanged: (val) {
-                    print('lol');
-                  },
+                  }),
                 ),
               ),
               icon_button_custom(

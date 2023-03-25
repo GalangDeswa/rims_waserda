@@ -39,6 +39,7 @@ class table_user extends GetView<datauserController> {
                       child: header(
                         title: 'Data User',
                         icon: Icons.add_box,
+                        icon_funtion: Icons.refresh,
                         function: () {
                           controller.onInit();
                         },

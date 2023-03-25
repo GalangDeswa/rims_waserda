@@ -60,6 +60,7 @@ class base_menu extends GetView<base_menuController> {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           body: Row(
             children: <Widget>[
@@ -124,18 +125,28 @@ class base_menu extends GetView<base_menuController> {
                                   ),
                                 ));
                               },
-                              child: Container(
-                                width: 40,
-                                height: 40,
-                                margin: EdgeInsets.only(top: 10),
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                ),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: color_template().primary,
-                                ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    margin: EdgeInsets.only(top: 10),
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: color_template().primary,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    GetStorage().read('name'),
+                                  ),
+                                ],
                               ),
                             ),
                             selectedIndex: controller.selectedIndex.value,

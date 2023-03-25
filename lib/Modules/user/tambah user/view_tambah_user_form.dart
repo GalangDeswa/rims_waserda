@@ -14,8 +14,7 @@ class tambah_user_form extends GetView<tambah_userController> {
 
   @override
   Widget build(BuildContext context) {
-    return stack_bg(
-        child: Center(
+    return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
         child: Card(
@@ -188,6 +187,6 @@ class tambah_user_form extends GetView<tambah_userController> {
           ),
         ),
       ),
-    ));
+    );
   }
 }

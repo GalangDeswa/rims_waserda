@@ -2,87 +2,221 @@ import 'dart:io';
 import 'dart:math' as Math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image/image.dart' as Img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../Models/kategori.dart';
 import '../../../Models/supliyer.dart';
+import '../../../Services/handler.dart';
 import '../../../Services/image_provider.dart';
+import '../../../Templates/setting.dart';
+import '../../Widgets/buttons.dart';
+import '../../Widgets/header.dart';
+import '../../Widgets/loading.dart';
+import '../../Widgets/toast.dart';
+import '../jenis produk/model_jenisproduk.dart';
 
 class detail_produkController extends GetxController {
-  List ongkir = [
-    'JNE Reguler   Rp.30.000',
-    'JNE Cargo   Rp.20.000',
-    'TIKI Reguler  Rp.35.000',
-    'TIKI Cargo  Rp.110.000',
-    'Sicepat reguler   Rp.30.000',
-    'Sicepat Halu  Rp.15.000',
-  ];
-  String? val_ongkir;
-
-  /*final picker = ImagePicker();
-  final cropper = ImageCropper();
-  List? imageFileList = [];
-  var namaFile = "";
-  File? imgFile, imgPreview;
-
-  Future getImageCamera() async {
-    var imageFile = await picker.pickImage(source: ImageSource.camera);
-    imageFileList!.add(imageFile);
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-    int rand = new Math.Random().nextInt(100000);
-    namaFile = "img$rand.jpg";
-
-    Img.Image? image = Img.decodeImage(await imageFile!.readAsBytes());
-    Img.Image? smallerImg = Img.copyResize(image!, width: 500);
-
-    var compressImg = new File("$path/$namaFile")
-      ..writeAsBytesSync(Img.encodeJpg(smallerImg, quality: 90));
-
-    */ /* setState(() {
-      imgFile = compressImg;
-    });*/ /*
-  }*/
+  var id_user = GetStorage().read('id_user');
+  var token = GetStorage().read('token');
+  var id_toko = GetStorage().read('id_toko');
 
   var formKey = GlobalKey<FormState>().obs;
-
-  get check_conn => null;
-
-  void selectImages() async {
-    final List<XFile>? selectedImages =
-        await ImagePicker().pickMultiImage(imageQuality: 85, maxWidth: 500);
-    if (selectedImages!.isNotEmpty) {
-      imageFileList!.addAll(selectedImages);
-    }
-    print("Image List Length:" + imageFileList!.length.toString());
-    //setState(() {});
-  }
-
-  var barcodetext = TextEditingController().obs;
-  var qrcode = ''.obs;
-  String scaned_qr_code = '';
-
-  Future<void> scan() async {
-    try {
-      scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'cancel', true, ScanMode.QR);
-      Get.snackbar('result', scaned_qr_code);
-      barcodetext.value.text = scaned_qr_code;
-    } on PlatformException {}
-  }
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    //getkategori();
-    //getsuplier();
+    fetchjenis();
+
+    nama_produk.value = TextEditingController(text: data.namaProduk);
+    harga.value = TextEditingController(text: data.harga);
+    desc.value = TextEditingController(text: data.deskripsi);
+    qtyv2.value = TextEditingController(text: data.qty);
+    jenisvalue.value = data.idJenis.toString();
   }
+
+  var jenislist = <DataJenis>[].obs;
+
+  var qtyv2 = TextEditingController().obs;
+
+  fetchjenis() async {
+    print('-------------------fetchJenis---------------------');
+
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var jenis = await REST.produkJenis(token, id_toko);
+      if (jenis != null) {
+        print('-------------------datajenis---------------');
+        var dataJenis = ModelJenis.fromJson(jenis);
+
+        jenislist.value = dataJenis.data;
+        jenislist.refresh();
+        //update();
+        print('--------------------list jenis---------------');
+        print(jenislist);
+
+        //Get.back(closeOverlays: true);
+
+        return jenislist;
+      } else {
+        // Get.back(closeOverlays: true);
+        Get.snackbar(
+          "Error",
+          "Data jenis tidak ada",
+          icon: Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
+      }
+    } else {
+      //Get.back(closeOverlays: true);
+      Get.snackbar(
+        "Error",
+        "Data user gagal,periksa koneksi",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
+    }
+    return [];
+  }
+
+  editqty() async {
+    print('-------------------edit jenis---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var qty = await REST.produkqtytambah(
+          token, data.id, id_toko, qtyadd.value.text);
+      if (qty != null) {
+        print(qty);
+        Get.back(closeOverlays: true, result: true);
+        Get.showSnackbar(
+            toast().bottom_snackbar_success('Berhasil', 'qty Berhasil diedit'));
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'qty Gagal diedit'));
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+    return [];
+  }
+
+  var qtyadd = TextEditingController().obs;
+
+  add() {
+    var sum = int.parse(qtyv2.value.text) + int.parse(qtyadd.value.text);
+
+    print(sum);
+    qtyv2.value.text = sum.toString();
+    Get.back();
+  }
+
+  sumqty() async {
+    add();
+    editqty();
+  }
+
+  void addqty(
+    BuildContext context,
+    detail_produkController controller,
+  ) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: header(
+                title: 'Tambah Qty',
+                icon: Icons.warning,
+                icon_color: color_template().tritadery,
+                base_color: color_template().tritadery),
+            contentPadding: EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            content: Builder(
+              builder: (context) {
+                return Container(
+                    width: context.width_query / 2.6,
+                    height: context.height_query / 2.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  controller: qtyadd.value,
+                                  style: font().header_black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        button_solid_custom(
+                            onPressed: () {
+                              add();
+                            },
+                            child: Text(
+                              'edit qty',
+                              style: font().primary_white,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10),
+                        button_border_custom(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: Text(
+                              'Batal',
+                              style: font().primary,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10)
+                      ],
+                    ));
+              },
+            ),
+          );
+        });
+  }
+
+  var data = Get.arguments;
+
+  late RxString jenisvalue = data.idJenis.toString().obs;
+
+  var desc = TextEditingController().obs;
+  var nama_produk = TextEditingController().obs;
+  var harga = TextEditingController().obs;
+  var nama_jenis = TextEditingController().obs;
 
   var kat_list = <Kategeori>[].obs;
   var suplier_list = <Supliyer>[].obs;
@@ -136,13 +270,6 @@ class detail_produkController extends GetxController {
   //   }
   // }
 
-  var barang_kode = TextEditingController().obs;
-  var barang_jenis = TextEditingController().obs;
-  var barang_nama = TextEditingController().obs;
-  var barang_id_kategori = TextEditingController().obs;
-  var barang_id_supliyer = TextEditingController().obs;
-  var barang_harga = TextEditingController().obs;
-  var barang_qty = TextEditingController().obs;
   List? imageFileList = [].obs;
   File? imgFile;
   var imagesize = ''.obs;

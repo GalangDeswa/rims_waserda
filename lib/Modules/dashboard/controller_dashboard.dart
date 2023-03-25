@@ -98,7 +98,7 @@ class dashboardController extends GetxController {
 
   loadToko() async {
     print('-------------------load toko---------------------');
-    Get.dialog(loading(), barrierDismissible: false);
+    Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var toko = await REST.loadToko(token, id_toko);

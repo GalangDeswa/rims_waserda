@@ -57,7 +57,7 @@ class edituserController extends GetxController {
 
   edituser() async {
     Get.dialog(
-      loading(),
+      showloading(),
       barrierDismissible: false,
     );
     var checkconn = await check_conn.check();
@@ -124,7 +124,7 @@ class edituserController extends GetxController {
 
   edituserpassword() async {
     Get.dialog(
-      loading(),
+      showloading(),
       barrierDismissible: false,
     );
     var checkconn = await check_conn.check();
@@ -191,7 +191,7 @@ class edituserController extends GetxController {
 
   deleteuser(String id) async {
     Get.dialog(
-      loading(),
+      showloading(),
       barrierDismissible: false,
     );
     var checkconn = await check_conn.check();
