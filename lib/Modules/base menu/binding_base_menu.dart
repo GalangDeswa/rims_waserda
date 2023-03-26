@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 
-import '../beban/controller_beban.dart';
+import '../beban/data beban/controller_beban.dart';
 import '../dashboard/controller_dashboard.dart';
 import '../history/Controller_history.dart';
 import '../kasir/controller_kasir.dart';

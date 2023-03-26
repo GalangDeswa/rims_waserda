@@ -483,6 +483,278 @@ class REST extends GetConnect {
     }
   }
 
+  static Future<dynamic> bebanKategori(String token, idtoko) async {
+    var response = await post(link().POST_bebankategori,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'BEBAN KATEGORI network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'BEBAN KATEGORI network handler----------------------------------------->');
+      print('gagal BEBAN KATEGORI');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanTambahJenis(
+      String token, idtoko, kategori) async {
+    var response = await post(link().POST_bebantambahjenis,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'kategori': kategori,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'TAMBAH KATEGORI BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'TAMBAH KATEGORI BEBAN network handler----------------------------------------->');
+      print('gagal TAMBAH KATEGORI BEBAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanEditJenis(
+      String token, id, idtoko, kategori) async {
+    var response = await post(link().POST_bebaneditjenis,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_toko': idtoko,
+          'kategori': kategori,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'EDIT KATEGORI BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'EDIT KATEGORI BEBAN network handler----------------------------------------->');
+      print('gagal EDIT KATEGORI BEBAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanHapusJenis(
+    String token,
+    id,
+    idtoko,
+  ) async {
+    var response = await post(link().POST_bebanhapusjenis,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'HAPUS KATEGORI BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'HAPUS KATEGORI BEBAN network handler----------------------------------------->');
+      print('gagal HAPUS KATEGORI BEBAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanData(String token, idtoko, search) async {
+    var response = await post(link().POST_bebadata,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'search': search,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'BEBAN DATA network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'BEBAN DATA network handler----------------------------------------->');
+      print('gagal BEBAN DATA');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanDataHariIni(String token, idtoko, search) async {
+    var response = await post(link().POST_bebadatahariini,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'search': search,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'BEBAN DATA HARI INI network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'BEBAN DATA  HARI INInetwork handler----------------------------------------->');
+      print('gagal BEBAN DATA HARI INI');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanDataTambah(
+    String token,
+    idtoko,
+    idkatbeban,
+    iduser,
+    nama,
+    keterangan,
+    tgl,
+    jumlah,
+  ) async {
+    var response = await post(link().POST_bebandatatambah,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'id_user': iduser,
+          'id_ktr_beban': idkatbeban,
+          'nama': nama,
+          'keterangan': keterangan,
+          'tgl': tgl,
+          'jumlah': jumlah,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'TAMBAH BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'TAMBAH BEBAN network handler----------------------------------------->');
+      print('gagal TAMBAH BEBAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanDataEdit(
+    String token,
+    id,
+    idtoko,
+    idkatbeban,
+    nama,
+    keterangan,
+    tgl,
+    jumlah,
+  ) async {
+    var response = await post(link().POST_bebandataedit,
+        body: ({
+          'token': token,
+          'id': id.toString(),
+          'id_toko': idtoko,
+          'id_ktr_beban': idkatbeban,
+          'nama': nama,
+          'keterangan': keterangan,
+          'tgl': tgl,
+          'jumlah': jumlah,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'TAMBAH BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'TAMBAH BEBAN network handler----------------------------------------->');
+      print('gagal TAMBAH BEBAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> bebanDataHapus(
+    String token,
+    id,
+    idtoko,
+  ) async {
+    var response = await post(link().POST_bebandatahapus,
+        body: ({
+          'token': token,
+          'id': id.toString(),
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'BEBAN HAPUS network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          ' BEBAN HAPUS network handler----------------------------------------->');
+      print('gagal BEBAN HAPUS');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
 // static Future<String> postApi(var body, String endpoint) async {
 //   var response = await post(api(endpoint), body: body, headers: {
 //     'Content-Type': 'application/json',

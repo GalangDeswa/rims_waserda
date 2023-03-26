@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/beban/data%20beban/view_tambah_beban_base.dart';
+
 import 'package:rims_waserda/Modules/history/binding_history.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/binding_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/binding_edit_jenis.dart';
@@ -12,8 +14,14 @@ import '../Modules/Splash/binding_splash.dart';
 import '../Modules/Splash/view_splash_base.dart';
 import '../Modules/base menu/binding_base_menu.dart';
 import '../Modules/base menu/view_base_menu_base.dart';
-import '../Modules/beban/binding_beban.dart';
-import '../Modules/beban/view_beban.dart';
+import '../Modules/beban/data beban/binding_beban.dart';
+import '../Modules/beban/data beban/view_beban_base.dart';
+
+import '../Modules/beban/edit beban/binding_edit_beban.dart';
+import '../Modules/beban/edit beban/view_edit_beban_base.dart';
+import '../Modules/beban/edit jenis beban/binding_edit_jenis_beban.dart';
+import '../Modules/beban/edit jenis beban/view_edit_jenis_beban.dart';
+import '../Modules/beban/edit jenis beban/view_tambah_jenis_beban.dart';
 import '../Modules/dashboard/binding_dashboard.dart';
 import '../Modules/dashboard/view_dashboard_base.dart';
 import '../Modules/history/view_history_base.dart';
@@ -81,4 +89,20 @@ final List<GetPage<dynamic>> route = [
       name: "/edit_jenis",
       page: () => edit_jenis(),
       binding: editjenisBinding()),
+  GetPage(
+      name: "/tambah_jenis_beban",
+      page: () => tambah_jenis_beban(),
+      binding: bebanBinding()),
+  GetPage(
+      name: "/edit_jenis_beban",
+      page: () => edit_jenis_beban(),
+      binding: editjenisbebanBinding()),
+  GetPage(
+      name: "/tambah_beban",
+      page: () => tambah_beban_base(),
+      binding: bebanBinding()),
+  GetPage(
+      name: "/edit_beban",
+      page: () => edit_beban(),
+      binding: editbebanBinding()),
 ];
