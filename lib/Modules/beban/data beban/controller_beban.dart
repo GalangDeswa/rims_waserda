@@ -57,6 +57,30 @@ class bebanController extends GetxController {
     //DateTime.now(),
   ];
 
+  deleteproduk(String id) async {
+    Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var produk = await REST.bebanDataHapus(token, id, id_toko);
+      if (produk != null) {
+        print(produk);
+        await fetchDataBeban();
+        Get.back(closeOverlays: true);
+        print('-----------batas----toasrp0-------------');
+        Get.showSnackbar(toast()
+            .bottom_snackbar_success('Berhasil', 'produk Berhasil dihapus'));
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'gagal menghapus'));
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_success('Error', 'periksa koneksi'));
+    }
+  }
+
   hapusBeban(String id) async {
     print('-------------------tambah beban---------------------');
 
@@ -65,11 +89,12 @@ class bebanController extends GetxController {
     if (checkconn == true) {
       var beban = await REST.bebanDataHapus(token, id, id_toko);
       if (beban != null) {
-        print(beban);
+        //print(beban);
         print('---------feacth data dari delete---------');
-        onInit();
 
+        fetchDataBeban();
         Get.back(closeOverlays: true, result: true);
+        print('-----------batas----toasrp0-------------');
         Get.showSnackbar(toast()
             .bottom_snackbar_success('Berhasil', 'beban Berhasil di hapus'));
       } else {
@@ -136,6 +161,7 @@ class bebanController extends GetxController {
         var dataBeban = ModelBeban.fromJson(beban);
 
         databebanlist.value = dataBeban.data;
+        databebanlist.refresh();
         //update();
         print('--------------------list data beban---------------');
         print(databebanlist);
@@ -174,9 +200,15 @@ class bebanController extends GetxController {
       if (beban != null) {
         print(beban);
         clear();
-        Get.back(closeOverlays: true, result: true);
-        Get.showSnackbar(toast()
-            .bottom_snackbar_success('Berhasil', 'beban Berhasil di tambah'));
+        var ui = await fetchDataBeban();
+        if (ui != null) {
+          Get.back(closeOverlays: true);
+          Get.showSnackbar(toast()
+              .bottom_snackbar_success('Berhasil', 'beban Berhasil di tambah'));
+        } else {
+          Get.showSnackbar(
+              toast().bottom_snackbar_error('Error', ' beban Gagal di tambah'));
+        }
       } else {
         Get.back(closeOverlays: true);
         Get.showSnackbar(
@@ -233,6 +265,7 @@ class bebanController extends GetxController {
           await REST.bebanTambahJenis(token, id_toko, kategori.value.text);
       if (jenis != null) {
         print(jenis);
+        await fetchJenisBeban();
         Get.back(closeOverlays: true, result: true);
         Get.showSnackbar(toast().bottom_snackbar_success(
             'Berhasil', 'jenis beban Berhasil diedit'));
@@ -410,7 +443,18 @@ class editbebanController extends GetxController {
       if (beban != null) {
         print(beban);
         clear();
-        Get.back(closeOverlays: true, result: true);
+        //kalok edit gak terupdate ui, karna beda con untuk list di table?
+        //solusi : bisa pakek get.find controller yg controller.list nya ada di view
+        //bisa get.put juga
+        // var con = Get.put(bebanController());
+        // await con.fetchDataBeban();
+        await Get.find<bebanController>().fetchDataBeban();
+
+        // Get.back(
+        //   closeOverlays: true,
+        // );
+        Get.back(closeOverlays: true);
+
         Get.showSnackbar(toast()
             .bottom_snackbar_success('Berhasil', 'beban Berhasil di edit'));
       } else {
@@ -435,7 +479,8 @@ class editbebanController extends GetxController {
   }
 
   fetchDataBeban() async {
-    print('-------------------fetch data beban---------------------');
+    print(
+        '-------------------fetch data beban dari edit conn---------------------');
 
     var checkconn = await check_conn.check();
     if (checkconn == true) {

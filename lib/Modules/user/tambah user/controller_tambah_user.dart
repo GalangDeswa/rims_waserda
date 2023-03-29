@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Services/handler.dart';
 
 import '../../Widgets/loading.dart';
+import '../data user/model_data_user.dart';
 
 class tambah_userController extends GetxController {
   var password = TextEditingController().obs;
@@ -80,6 +81,69 @@ class tambah_userController extends GetxController {
 //     Get.snackbar('gagal', 'chek koneksi');
 //   }
 // }
+  var listUser = <Datum>[].obs;
+
+  Future<List<Datum>> userdata() async {
+    print('-------------------userdata---------------------');
+
+    // SchedulerBinding.instance.addPostFrameCallback(
+    //     (_) => Get.dialog(loading(), barrierDismissible: false));
+    //call dialog tidak bisa di init tanpa coding di atas
+
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var user = await REST.userData(token, id_toko);
+      if (user != null) {
+        print('-------------------datauser---------------');
+        var dataUser = ModelUser.fromJson(user);
+        //listUser.value.clear();
+        listUser.value = dataUser.data;
+        //listUser.refresh();
+        update();
+        print('--------------------list user---------------');
+        print(listUser);
+
+        Get.back(closeOverlays: true);
+
+        return listUser;
+      } else {
+        Get.back(closeOverlays: true);
+        Get.snackbar(
+          "Error",
+          "Data user gagal,user tidak ada",
+          icon: Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.snackbar(
+        "Error",
+        "Data user gagal,periksa koneksi",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
+    }
+    return [];
+  }
 
   tambahuser() async {
     Get.dialog(showloading(), barrierDismissible: false);
@@ -97,7 +161,8 @@ class tambah_userController extends GetxController {
       if (user != null) {
         print(user);
 
-        Get.back(closeOverlays: true, result: user);
+        await userdata();
+        Get.back(closeOverlays: true);
         Get.snackbar(
           "Berhasil",
           "Data user ditambah",

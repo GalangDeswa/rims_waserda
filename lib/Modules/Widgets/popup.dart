@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
+import 'package:rims_waserda/Modules/kasir/model_kasir.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
+import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 
 import '../../Templates/setting.dart';
@@ -54,6 +56,65 @@ class popscreen {
                         button_solid_custom(
                             onPressed: () {
                               controller.hapusBeban(arg.id.toString());
+                              //controller.deleteproduk(arg.id.toString());
+                            },
+                            child: Text(
+                              'Hapus',
+                              style: font().primary_white,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10),
+                        button_border_custom(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: Text(
+                              'Batal',
+                              style: font().primary,
+                            ),
+                            width: context.width_query / 4,
+                            height: context.height_query / 10)
+                      ],
+                    ));
+              },
+            ),
+          );
+        });
+  }
+
+  void deletekeranjang(
+      BuildContext context, kasirController controller, DataKeranjang arg) {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: header(
+                title: 'Hapus keranjang',
+                icon: Icons.warning,
+                icon_color: color_template().tritadery,
+                base_color: color_template().tritadery),
+            contentPadding: EdgeInsets.all(10),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(12.0),
+              ),
+            ),
+            content: Builder(
+              builder: (context) {
+                return Container(
+                    width: context.width_query / 2.6,
+                    height: context.height_query / 2.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Hapus " + arg.namaBrg + '?',
+                          style: font().header_black,
+                        ),
+                        button_solid_custom(
+                            onPressed: () {
+                              controller.deleteKeranjang(
+                                  arg.id.toString(), arg.idProduk.toString());
                             },
                             child: Text(
                               'Hapus',
@@ -297,14 +358,14 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('sales person :', style: font().reguler),
-                      Text('Galang', style: font().reguler),
+                      Text(controller.namakasir, style: font().reguler),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total item :', style: font().reguler),
-                      Text(controller.totalitem.toString(),
+                      Text(controller.keranjanglist.value.length.toString(),
                           style: font().reguler),
                     ],
                   ),
@@ -312,8 +373,7 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total harga :', style: font().reguler),
-                      Text(controller.subtotal.toString(),
-                          style: font().reguler),
+                      Text(controller.total.toString(), style: font().reguler),
                     ],
                   ),
                   Row(
@@ -328,7 +388,7 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Kembalian :', style: font().reguler),
-                      Text(controller.kembalian.value.toString(),
+                      Text(controller.kembalian.value.text,
                           style: font().reguler),
                     ],
                   ),
@@ -346,7 +406,8 @@ class popscreen {
                     children: [
                       button_border_custom(
                           onPressed: () {
-                            Navigator.of(context).pop();
+                            //Navigator.of(context).pop();
+                            Get.back();
                             print('back');
                           },
                           child: Text(
@@ -357,8 +418,7 @@ class popscreen {
                           height: 50),
                       button_solid_custom(
                           onPressed: () {
-                            // controller.tambah_history();
-                            popscreen().popberhasil(context);
+                            controller.pembayaran();
                           },
                           child: Text('Bayar'),
                           width: 100,
@@ -622,27 +682,25 @@ class popscreen {
                                           children: [
                                             Obx(() {
                                               return Expanded(
-                                                child: Container(
-                                                  child: TextField(
-                                                    onTap: () {
-                                                      print(
-                                                          'kembalian kasir--------------------');
-                                                    },
-                                                    onChanged: (val) {
-                                                      print(
-                                                          'kembalian kasir--------------------' +
-                                                              val);
-                                                    },
-                                                    readOnly: true,
-                                                    decoration: InputDecoration(
-                                                        prefixIcon: Icon(Icons
-                                                            .change_circle),
-                                                        hintText: controller
-                                                            .kembalian
-                                                            .toString()),
+                                                  child: Container(
+                                                child: TextField(
+                                                  onTap: () {
+                                                    print(
+                                                        'kembalian kasir--------------------');
+                                                  },
+                                                  onChanged: (val) {
+                                                    print(
+                                                        'kembalian kasir--------------------' +
+                                                            val);
+                                                  },
+                                                  readOnly: true,
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: Icon(
+                                                        Icons.change_circle),
+                                                    hintText: 'kembalian',
                                                   ),
                                                 ),
-                                              );
+                                              ));
                                             })
                                           ],
                                         ),
@@ -681,7 +739,7 @@ class popscreen {
                             keypadController: controller.keypadController.value,
                             onChange: (String pin) {
                               print(pin + '-----------PRINT PIN');
-                              controller.change();
+                              // controller.change();
                             },
                             onSubmit: (String pin) {},
                           ),
@@ -861,7 +919,7 @@ class popscreen {
                                 ),
                                 button_solid_custom(
                                     onPressed: () {
-                                      controller.tambahkasir();
+                                      //  controller.tambahkasir();
                                     },
                                     child: Text('Simpan'),
                                     height: 30,
@@ -1279,7 +1337,7 @@ class popscreen {
   }
 
   void deleteuser(
-      BuildContext context, edituserController controller, Datum arg) {
+      BuildContext context, datauserController controller, Datum arg) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(

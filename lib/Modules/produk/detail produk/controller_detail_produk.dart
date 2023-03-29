@@ -17,6 +17,7 @@ import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
+import '../data produk/model_produk.dart';
 import '../jenis produk/model_jenisproduk.dart';
 
 class detail_produkController extends GetxController {
@@ -42,6 +43,71 @@ class detail_produkController extends GetxController {
   var jenislist = <DataJenis>[].obs;
 
   var qtyv2 = TextEditingController().obs;
+
+  var search = TextEditingController().obs;
+  var produklist = <DataProduk>[].obs;
+
+  fetchProduk() async {
+    print('-------------------fetchProduk---------------------');
+
+    // SchedulerBinding.instance.addPostFrameCallback(
+    //     (_) => Get.dialog(loading(), barrierDismissible: false));
+    //call dialog tidak bisa di init tanpa coding di atas
+
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var produk = await REST.produkAll(token, id_toko, search.value.text);
+      if (produk != null) {
+        print('-------------------dataproduk---------------');
+        var dataProduk = ModelProduk.fromJson(produk);
+
+        produklist.value = dataProduk.data;
+        produklist.refresh();
+        //update();
+        print('--------------------list produk---------------');
+        print(produklist);
+
+        Get.back(closeOverlays: true);
+
+        return produklist;
+      } else {
+        Get.back(closeOverlays: true);
+        Get.snackbar(
+          "Error",
+          "Data user gagal,user tidak ada",
+          icon: Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.snackbar(
+        "Error",
+        "Data user gagal,periksa koneksi",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
+    }
+    return [];
+  }
 
   fetchjenis() async {
     print('-------------------fetchJenis---------------------');
@@ -235,40 +301,6 @@ class detail_produkController extends GetxController {
   }
 
   var loading = true.obs;
-
-  // void getsuplier() async {
-  //   try {
-  //     loading(true);
-  //     var checkconn = await check_conn.check();
-  //     if (checkconn == true) {
-  //       var suplier = await api.get_suplier();
-  //       if (suplier != null) {
-  //         suplier_list.value = suplier;
-  //       }
-  //     } else {
-  //       Get.snackbar('conn', 'tidak ada konenksi');
-  //     }
-  //   } finally {
-  //     loading(false);
-  //   }
-  // }
-
-  // void getkategori() async {
-  //   try {
-  //     loading(true);
-  //     var checkconn = await check_conn.check();
-  //     if (checkconn == true) {
-  //       var list = await api.get_kategori();
-  //       if (list != null) {
-  //         kat_list.value = list;
-  //       }
-  //     } else {
-  //       Get.snackbar('conn', 'tidak ada konenksi');
-  //     }
-  //   } finally {
-  //     loading(false);
-  //   }
-  // }
 
   List? imageFileList = [].obs;
   File? imgFile;

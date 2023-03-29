@@ -194,20 +194,11 @@ class beban_table extends GetView<bebanController> {
                         DataColumn(
                           label: Expanded(
                             child: Text(
-                              'Kategoti',
+                              'Kategori',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
                         ),
-
-                        // DataColumn(
-                        //   label: Expanded(
-                        //     child: Text(
-                        //       'img',
-                        //       style: TextStyle(fontStyle: FontStyle.italic),
-                        //     ),
-                        //   ),
-                        // ),
                         DataColumn(
                           label: Expanded(
                             child: Text(
@@ -254,7 +245,8 @@ class beban_table extends GetView<bebanController> {
                                   onPressed: () {
                                     popscreen().deletebeban(
                                         context,
-                                        bebanController(),
+                                        //untuk refresh data, di conn pagil fecth setelah berhasil, tp untuk popup yg pakek parameert controller, get.put/controller baru bisa refresh?
+                                        Get.put(bebanController()),
                                         controller.databebanlist[index]);
                                   },
                                   icon: Icon(Icons.delete, size: 18))

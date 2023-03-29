@@ -42,4 +42,13 @@ class link {
   final Uri POST_bebandatatambah = Uri.parse(server().host + 'beban/tambah');
   final Uri POST_bebandataedit = Uri.parse(server().host + 'beban/edit');
   final Uri POST_bebandatahapus = Uri.parse(server().host + 'beban/hapus');
+
+  final Uri POST_kasirkeranjangdata =
+      Uri.parse(server().host + 'kasir/keranjang/data');
+  final Uri POST_kasirkeranjangtambah =
+      Uri.parse(server().host + 'kasir/keranjang/tambah');
+  final Uri POST_kasirkeranjanghapus =
+      Uri.parse(server().host + 'kasir/keranjang/hapus');
+  final Uri POST_kasirpembayaran =
+      Uri.parse(server().host + 'kasir/keranjang/pembayaran');
 }

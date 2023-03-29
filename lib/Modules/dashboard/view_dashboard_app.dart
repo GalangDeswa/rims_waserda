@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../Templates/setting.dart';
 import '../Widgets/dashboard_app_card.dart';
+import '../Widgets/loading.dart';
 import '../base menu/controller_base_menu.dart';
 
 class dashboard_app extends GetView<base_menuController> {
@@ -27,50 +28,71 @@ class dashboard_app extends GetView<base_menuController> {
             child: Card(
               elevation: 0,
               child: Padding(
-                padding: EdgeInsets.only(top: 55),
+                padding: EdgeInsets.only(top: 20),
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Wrap(
                       alignment: WrapAlignment.spaceBetween,
                       direction: Axis.horizontal,
-                      runSpacing: 30,
-                      spacing: 30,
+                      runSpacing: 15,
+                      spacing: 15,
+                      crossAxisAlignment: WrapCrossAlignment.start,
                       children: [
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(1);
                             },
                             color: color_template().primary,
-                            icon: FontAwesomeIcons.cashRegister,
+                            icon: SvgPicture.asset(
+                              'assets/icons/cashier.svg',
+                              height: context.width_query / 15,
+                              placeholderBuilder: (context) => showloading(),
+                            ),
                             label: 'Penjualan'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(2);
                             },
                             color: color_template().primary,
-                            icon: FontAwesomeIcons.box,
+                            icon: SvgPicture.asset(
+                              'assets/icons/produk.svg',
+                              height: context.width_query / 15,
+                              placeholderBuilder: (context) => showloading(),
+                            ),
                             label: 'Produk'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(3);
                             },
                             color: color_template().primary,
-                            icon: FontAwesomeIcons.dollarSign,
+                            icon: SvgPicture.asset(
+                              'assets/icons/money.svg',
+                              height: context.width_query / 15,
+                              placeholderBuilder: (context) => showloading(),
+                            ),
                             label: 'Beban'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(4);
                             },
                             color: color_template().primary,
-                            icon: Icons.person_add,
+                            icon: SvgPicture.asset(
+                              'assets/icons/adduser.svg',
+                              height: context.width_query / 15,
+                              placeholderBuilder: (context) => showloading(),
+                            ),
                             label: 'Tambah user'),
                         dasboard_app_card(
                             function: () {
                               controller.selectedIndex(5);
                             },
                             color: color_template().primary,
-                            icon: Icons.history,
+                            icon: SvgPicture.asset(
+                              'assets/icons/history.svg',
+                              height: context.width_query / 15,
+                              placeholderBuilder: (context) => showloading(),
+                            ),
                             label: 'History'),
                       ],
                     ),
@@ -85,7 +107,7 @@ class dashboard_app extends GetView<base_menuController> {
               child: Container(
                 margin: EdgeInsets.only(top: 0, bottom: 10, left: 10),
                 padding: EdgeInsets.all(10),
-                width: 100,
+                //width: 100,
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(

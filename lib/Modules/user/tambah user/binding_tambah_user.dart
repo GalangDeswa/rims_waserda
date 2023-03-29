@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
-
-import 'controller_tambah_user.dart';
+import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 
 class tambah_userBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<tambah_userController>(() => tambah_userController());
+    //Get.lazyPut<tambah_userController>(() => tambah_userController());
+    Get.put(datauserController());
   }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 import 'package:rims_waserda/Modules/user/tambah%20user/view_tambah_user_form.dart';
 
-import 'controller_tambah_user.dart';
-
-class tambah_user extends GetView<tambah_userController> {
+class tambah_user extends GetView<datauserController> {
   const tambah_user({Key? key}) : super(key: key);
 
   @override

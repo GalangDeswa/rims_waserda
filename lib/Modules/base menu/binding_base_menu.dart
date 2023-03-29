@@ -27,7 +27,7 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<tambah_produkController>(() => tambah_produkController());
     Get.lazyPut<produkController>(() => produkController(), fenix: true);
     Get.lazyPut<historyController>(() => historyController());
-    Get.lazyPut<bebanController>(() => bebanController());
+    Get.lazyPut<bebanController>(() => bebanController(), fenix: true);
     Get.lazyPut<datauserController>(() => datauserController(), fenix: true);
     //Get.lazyPut(() => datauserController(), fenix: true);
     Get.lazyPut<edituserController>(() => edituserController(), fenix: true);

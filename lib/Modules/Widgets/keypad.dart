@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
 
 import '../../Templates/setting.dart';
 import '../kasir/controller_kasir.dart';
 
 class KeyPad extends GetView<kasirController> {
-  double buttonSize = 60.0;
+  double buttonSize = 60;
   final TextEditingController keypadController;
   final Function onChange;
   final Function onSubmit;
@@ -21,37 +20,37 @@ class KeyPad extends GetView<kasirController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 30, right: 30),
+      //margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
         children: [
-          SizedBox(height: 20),
+          SizedBox(height: context.height_query / 35),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buttonWidget('1'),
-              buttonWidget('2'),
-              buttonWidget('3'),
+              buttonWidget('1', context.height_query / 9),
+              buttonWidget('2', context.height_query / 9),
+              buttonWidget('3', context.height_query / 9),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: context.height_query / 35),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buttonWidget('4'),
-              buttonWidget('5'),
-              buttonWidget('6'),
+              buttonWidget('4', context.height_query / 9),
+              buttonWidget('5', context.height_query / 9),
+              buttonWidget('6', context.height_query / 9),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: context.height_query / 35),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buttonWidget('7'),
-              buttonWidget('8'),
-              buttonWidget('9'),
+              buttonWidget('7', context.height_query / 9),
+              buttonWidget('8', context.height_query / 9),
+              buttonWidget('9', context.height_query / 9),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: context.height_query / 35),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -69,11 +68,11 @@ class KeyPad extends GetView<kasirController> {
                     },
                     icon: Icon(
                       Icons.backspace,
-                      size: 30,
+                      size: context.height_query / 17,
                       color: Colors.white,
                     )),
               ),
-              buttonWidget('0'),
+              buttonWidget('0', context.height_query / 10),
               Container(
                 decoration: BoxDecoration(
                     color: color_template().primary, shape: BoxShape.circle),
@@ -84,7 +83,7 @@ class KeyPad extends GetView<kasirController> {
                     },
                     icon: Icon(
                       Icons.check,
-                      size: 30,
+                      size: context.height_query / 17,
                       color: Colors.white,
                     )),
               )
@@ -95,17 +94,18 @@ class KeyPad extends GetView<kasirController> {
     );
   }
 
-  buttonWidget(String buttonText) {
+  buttonWidget(String buttonText, double size) {
     return Container(
-      height: buttonSize,
-      width: buttonSize,
+      height: size,
+      width: size,
       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: color_template().secondary),
         onPressed: () {
           keypadController.text = keypadController.text + buttonText;
-          onChange(controller.currencyFormatter
-              .format(int.parse(keypadController.text)));
+          // onChange(controller.currencyFormatter
+          //     .format(int.parse(keypadController.text)));
+          onChange(keypadController.text);
           //controller.change();
         },
         child: Center(

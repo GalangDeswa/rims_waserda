@@ -2,14 +2,13 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/user/tambah%20user/controller_tambah_user.dart';
+import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import '../../Widgets/stack bg.dart';
 
-class tambah_user_form extends GetView<tambah_userController> {
+class tambah_user_form extends GetView<datauserController> {
   const tambah_user_form({Key? key}) : super(key: key);
 
   @override

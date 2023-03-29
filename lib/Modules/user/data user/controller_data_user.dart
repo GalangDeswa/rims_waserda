@@ -122,7 +122,7 @@ class datauserController extends GetxController {
           hp.value.text);
       if (user != null) {
         print(user);
-
+        await userdata();
         Get.back(closeOverlays: true, result: user);
         Get.snackbar(
           "Berhasil",
@@ -177,19 +177,70 @@ class datauserController extends GetxController {
     }
   }
 
-// Future<List<Datum>> userdatav2() async {
-//   var user = await REST.userData(token, id_toko);
-//   if (user != null) {
-//     print('-------------------datauser---------------');
-//     var dataUser = ModelUser.fromJson(user);
-//     print(dataUser);
-//     print('--------------------------------------------------------------');
-//     listUser.value = dataUser.data;
-//
-//     print(listUser.map((element) => element.nama));
-//     return listUser.value;
-//   } else {
-//     return [];
-//   }
-// }
+  deleteuser(String id) async {
+    Get.dialog(
+      showloading(),
+      barrierDismissible: false,
+    );
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var user = await REST.userDelete(token, id_toko, id);
+      if (user != null) {
+        print(user);
+        //get.back close overlay otomatis close dan back page sebelumnya?
+        await userdata();
+        Get.back(closeOverlays: true);
+
+        Get.snackbar(
+          "Berhasil",
+          "user di hapus",
+          icon: Icon(Icons.check_box, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.blueAccent,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
+      } else {
+        Get.back(closeOverlays: true);
+        Get.snackbar(
+          "Error",
+          "Data user gagal,user error",
+          icon: Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.snackbar(
+        "Error",
+        "Data user gagal,koneksi tidak ada",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
+    }
+  }
 }

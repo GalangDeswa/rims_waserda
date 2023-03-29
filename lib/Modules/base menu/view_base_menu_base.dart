@@ -200,11 +200,11 @@ class base_menu extends GetView<base_menuController> {
                                 ),
                               ),
                               NavigationRailDestination(
-                                icon: Icon(FontAwesomeIcons.receipt),
-                                selectedIcon: Icon(FontAwesomeIcons.receipt),
+                                icon: Icon(FontAwesomeIcons.history),
+                                selectedIcon: Icon(FontAwesomeIcons.history),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Laporan'),
+                                  child: Text('History'),
                                 ),
                               ),
                             ],

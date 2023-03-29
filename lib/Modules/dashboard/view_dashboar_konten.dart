@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
@@ -21,52 +22,55 @@ class dashboard_konten extends GetView<dashboardController> {
               borderRadius: border_radius().def_border,
               border: Border.all(color: color_template().primary, width: 3.5)),
           margin: EdgeInsets.only(left: 15),
-          height: context.height_query / 3,
+          height: context.height_query / 5.8,
           width: context.width_query,
-          child: Card(
-            elevation: 0,
-            child: Padding(
-              padding: EdgeInsets.all(15),
-              child: Obx(() {
-                return CarouselSlider(
-                  options: CarouselOptions(
-                    onPageChanged: (index, reason) {
-                      //controller.listkonten.value.length;
-                    },
-                    viewportFraction: 1.0,
-                    height: 450,
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: true,
-                    autoPlay: true,
-                    autoPlayInterval: Duration(seconds: 6),
-                  ),
-                  items: controller.listkonten.value
-                      .map((x) => ClipRRect(
-                            child: Container(
-                              // margin: EdgeInsets.only(top: 20),
-                              child: CachedNetworkImage(
-                                  errorWidget: (context, url, error) =>
-                                      Container(
-                                          width: 100,
-                                          height: 120,
-                                          child: showloading()),
-                                  fit: BoxFit.cover,
-                                  imageUrl: x.photo),
-                            ),
-                          ))
-                      .toList(),
-                );
-              }),
-            ),
-          ),
+          child: Obx(() {
+            return CarouselSlider(
+              options: CarouselOptions(
+                onPageChanged: (index, reason) {
+                  //controller.listkonten.value.length;
+                },
+                viewportFraction: 1.0,
+                enlargeCenterPage: true,
+                enableInfiniteScroll: true,
+                autoPlay: true,
+                autoPlayInterval: Duration(seconds: 5),
+              ),
+              items: controller.listkonten.value
+                  .map((x) => ClipRRect(
+                        borderRadius: border_radius().def_border,
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: border_radius().def_border,
+                              color: Colors.red),
+                          width: context.width_query,
+                          // margin: EdgeInsets.only(top: 20),
+                          child: CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                  width: 100,
+                                  height: 120,
+                                  child: showloading()),
+                              errorWidget: (context, url, error) => Container(
+                                  width: 100,
+                                  height: 120,
+                                  child: Icon(
+                                    FontAwesomeIcons.warning,
+                                    color: color_template().tritadery,
+                                  )),
+                              fit: BoxFit.cover,
+                              imageUrl: x.photo),
+                        ),
+                      ))
+                  .toList(),
+            );
+          }),
         ),
         Positioned.fill(
           child: Align(
             alignment: Alignment.topLeft,
             child: Container(
               margin: EdgeInsets.only(top: 0, bottom: 10, left: 10),
-              padding: EdgeInsets.all(10),
-              width: 100,
+              padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(

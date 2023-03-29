@@ -60,10 +60,6 @@ class produkController extends GetxController {
   fetchProduk() async {
     print('-------------------fetchProduk---------------------');
 
-    // SchedulerBinding.instance.addPostFrameCallback(
-    //     (_) => Get.dialog(loading(), barrierDismissible: false));
-    //call dialog tidak bisa di init tanpa coding di atas
-
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var produk = await REST.produkAll(token, id_toko, search.value.text);
@@ -72,7 +68,7 @@ class produkController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
-        produklist.refresh();
+        //produklist.refresh();
         //update();
         print('--------------------list produk---------------');
         print(produklist);
@@ -205,9 +201,11 @@ class produkController extends GetxController {
           harga.value.text);
       if (produk != null) {
         print(produk);
+
+        await fetchProduk();
+        Get.back(closeOverlays: true, result: true);
         Get.showSnackbar(toast()
             .bottom_snackbar_success('Berhasil', 'Produk Berhasil diTambah'));
-        Get.back(closeOverlays: true, result: true);
       } else {
         Get.back(closeOverlays: true);
         Get.showSnackbar(
@@ -222,21 +220,19 @@ class produkController extends GetxController {
   }
 
   deleteproduk(String id) async {
-    Get.dialog(
-      showloading(),
-      barrierDismissible: false,
-    );
+    Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var produk = await REST.produkdelete(token, id, id_toko);
       if (produk != null) {
         print(produk);
-        //get.back close overlay otomatis close dan back page sebelumnya?
+        await fetchProduk();
 
-        Get.back(closeOverlays: true);
-
+        Get.back(closeOverlays: true, result: true);
         Get.showSnackbar(toast()
             .bottom_snackbar_success('Berhasil', 'produk Berhasil dihapus'));
+
+        print('-----------batas----toasrp0-------------');
       } else {
         Get.back(closeOverlays: true);
         Get.showSnackbar(

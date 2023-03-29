@@ -169,7 +169,7 @@ class dashboard_data extends GetView<dashboardController> {
               child: Container(
                 margin: EdgeInsets.only(top: 10, bottom: 10),
                 padding: EdgeInsets.all(10),
-                width: 100,
+                //width: 100,
                 decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(

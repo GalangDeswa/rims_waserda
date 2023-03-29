@@ -755,6 +755,130 @@ class REST extends GetConnect {
     }
   }
 
+  static Future<dynamic> kasirKeranjangData(
+      String token, iduser, idtoko, meja) async {
+    var response = await post(link().POST_kasirkeranjangdata,
+        body: ({
+          'token': token,
+          'id_user': iduser.toString(),
+          'id_toko': idtoko,
+          'meja': meja,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA KERANJANG network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          ' DATA KERANJANGnetwork handler----------------------------------------->');
+      print('gagal DATA KERANJANG');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> kasirKeranjangTambah(
+      String token, iduser, idtoko, meja, idproduk, diskon_brg, qty) async {
+    var response = await post(link().POST_kasirkeranjangtambah,
+        body: ({
+          'token': token,
+          'id_user': iduser.toString(),
+          'id_toko': idtoko,
+          'meja': meja,
+          'id_produk': idproduk,
+          'diskon_brg': diskon_brg,
+          'qty': qty,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'TAMBAH KERANJANG network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          ' TAMBAH KERANJANG network handler----------------------------------------->');
+      print('TAMBAH DATA KERANJANG');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> kasirKeranjangHapus(
+    String token,
+    id,
+    iduser,
+    idtoko,
+    idproduk,
+    meja,
+  ) async {
+    var response = await post(link().POST_kasirkeranjanghapus,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_user': iduser.toString(),
+          'id_toko': idtoko,
+          'meja': meja,
+          'id_produk': idproduk,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'HAPUS KERANJANG network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          ' HAPUS KERANJANG network handler----------------------------------------->');
+      print('HAPUS DATA KERANJANG');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> kasirPembayaran(
+      String token, iduser, idtoko, meja, bayar) async {
+    var response = await post(link().POST_kasirpembayaran,
+        body: ({
+          'token': token,
+          'id_user': iduser.toString(),
+          'id_toko': idtoko,
+          'meja': meja,
+          'bayar': bayar,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PEMBAYARAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          ' PEMBAYARAN network handler----------------------------------------->');
+      print('GAGAL PEMBAYARAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
 // static Future<String> postApi(var body, String endpoint) async {
 //   var response = await post(api(endpoint), body: body, headers: {
 //     'Content-Type': 'application/json',

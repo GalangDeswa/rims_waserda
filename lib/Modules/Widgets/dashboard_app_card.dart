@@ -7,16 +7,15 @@ class dasboard_app_card extends StatelessWidget {
       {Key? key,
       required this.function,
       required this.color,
-      required this.icon,
-      this.icon_size,
-      required this.label})
+      required this.label,
+      required this.icon})
       : super(key: key);
 
   final Function() function;
   final Color color;
-  final IconData icon;
+
   final String label;
-  final double? icon_size;
+  final Widget icon;
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +36,7 @@ class dasboard_app_card extends StatelessWidget {
                 decoration: BoxDecoration(
                     color: color.withOpacity(0.0),
                     borderRadius: BorderRadius.circular(10)),
-                child: Icon(
-                  icon,
-                  size: icon_size == null ? 80 : icon_size,
-                  color: Colors.white,
-                )),
+                child: icon),
           ),
         ),
         SizedBox(

@@ -23,6 +23,7 @@ class dashboard extends GetView<dashboardController> {
               child: Padding(
             padding: const EdgeInsets.all(30),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                     child: Column(
@@ -114,7 +115,7 @@ class dashboard extends GetView<dashboardController> {
                     children: [
                       dashboard_app(),
                       SizedBox(
-                        height: 15,
+                        height: context.height_query / 30,
                       ),
                       dashboard_konten()
                     ],
