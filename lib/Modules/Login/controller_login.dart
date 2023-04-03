@@ -9,6 +9,7 @@ import 'package:http/http.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rims_waserda/Modules/Login/model_login.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Services/handler.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
@@ -81,7 +82,7 @@ class loginController extends GetxController {
   var body = {"email": "galang@gmail.com", "password": "12345"};
 
   final loginKey = GlobalKey<FormState>().obs;
-  var showpass = false.obs;
+  var showpass = true.obs;
   var nama_toko;
   var alamat_toko;
   var jenis_toko;
@@ -159,11 +160,11 @@ class loginController extends GetxController {
         print(login['message']);
         print(login['success']);
         var dataUser = ModelLogin.fromJson(login);
-        GetStorage().write('name', dataUser.name);
-        GetStorage().write('email', dataUser.email);
-        GetStorage().write('id_toko', dataUser.idToko);
-        GetStorage().write('token', dataUser.token);
-        GetStorage().write('id_user', dataUser.id);
+        await GetStorage().write('name', dataUser.name);
+        await GetStorage().write('email', dataUser.email);
+        await GetStorage().write('id_toko', dataUser.idToko);
+        await GetStorage().write('token', dataUser.token);
+        await GetStorage().write('id_user', dataUser.id);
 
         var toko = await REST.loadToko(dataUser.token, dataUser.idToko);
         if (toko != null) {
@@ -182,11 +183,11 @@ class loginController extends GetxController {
           email_toko = dataToko.data[0].toko.email;
           logo_toko = dataToko.data[0].toko.logo;
 
-          GetStorage().write('nama_toko', nama_toko);
-          GetStorage().write('jenis_toko', jenis_toko);
-          GetStorage().write('alamat_toko', alamat_toko);
-          GetStorage().write('email_toko', email_toko);
-          GetStorage().write('logo_toko', logo_toko);
+          await GetStorage().write('nama_toko', nama_toko);
+          await GetStorage().write('jenis_toko', jenis_toko);
+          await GetStorage().write('alamat_toko', alamat_toko);
+          await GetStorage().write('email_toko', email_toko);
+          await GetStorage().write('logo_toko', logo_toko);
           print(dataToko.data[0].toko.namaToko);
           print(logo_toko);
           print('-------------------konten---------------');
@@ -229,7 +230,8 @@ class loginController extends GetxController {
         }
 
         Get.back(closeOverlays: true);
-        Get.snackbar('sukses', 'login api');
+        Get.showSnackbar(toast().bottom_snackbar_success(
+            'Selamat datang', GetStorage().read('nama_toko')));
         Get.offNamed('/base_menu');
       } else {
         Get.back(closeOverlays: true);

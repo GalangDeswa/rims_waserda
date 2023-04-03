@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/stack%20bg.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import '../../Widgets/stack bg.dart';
 import '../data beban/controller_beban.dart';
 
 class tambah_jenis_beban extends GetView<bebanController> {
@@ -16,8 +16,7 @@ class tambah_jenis_beban extends GetView<bebanController> {
     return SafeArea(
       // minimum: EdgeInsets.all(5),
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: color_template().base_blue,
+        // backgroundColor: Colors.transparent,
         // appBar: appbar_custom(
         //     height: 50,
         //     child: Text(
@@ -25,11 +24,10 @@ class tambah_jenis_beban extends GetView<bebanController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
+          child: Center(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30),
+              child: Container(
+                width: context.width_query / 2,
                 child: Card(
                   elevation: elevation().def_elevation,
                   //margin: EdgeInsets.all(30),
@@ -50,57 +48,43 @@ class tambah_jenis_beban extends GetView<bebanController> {
                           header(
                             title: 'Tambah Kategori Beban',
                             icon: FontAwesomeIcons.dollarSign,
-                            function: () {},
                           ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Form(
-                                key: controller.formKeyjenis.value,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    TextFormField(
-                                      controller: controller.kategori.value,
-                                      onChanged: ((String pass) {}),
-                                      decoration: InputDecoration(
-                                        icon: Icon(Icons.add_card),
-                                        labelText: "Katergori",
-                                        labelStyle: TextStyle(
-                                          color: Colors.black87,
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter email';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    button_solid_custom(
-                                        onPressed: () {
-                                          controller.tambahJenisBeban();
-                                        },
-                                        child: Text(
-                                          'tambah jenis',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        width: double.infinity,
-                                        height: 50)
-                                  ],
-                                )),
-                          )
+                          Form(
+                              key: controller.formKeyjenis.value,
+                              child: TextFormField(
+                                controller: controller.kategori.value,
+                                onChanged: ((String pass) {}),
+                                decoration: InputDecoration(
+                                  icon: Icon(Icons.add_card),
+                                  labelText: "Katergori",
+                                  labelStyle: TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                                textAlign: TextAlign.center,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Please enter email';
+                                  }
+                                  return null;
+                                },
+                              )),
+                          button_solid_custom(
+                              onPressed: () {
+                                controller.tambahJenisBeban();
+                              },
+                              child: Text(
+                                'Tambah Kategori',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              width: double.infinity,
+                              height: 50)
                         ],
                       ),
                     ),

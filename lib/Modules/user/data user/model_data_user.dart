@@ -20,14 +20,15 @@ class ModelUser {
   bool success;
   int statusCode;
   String messages;
-  List<Datum> data;
+  List<DataUser> data;
   Meta meta;
 
   factory ModelUser.fromJson(Map<String, dynamic> json) => ModelUser(
         success: json["success"],
         statusCode: json["status_code"],
         messages: json["messages"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data:
+            List<DataUser>.from(json["data"].map((x) => DataUser.fromJson(x))),
         meta: Meta.fromJson(json["meta"]),
       );
 
@@ -40,8 +41,8 @@ class ModelUser {
       };
 }
 
-class Datum {
-  Datum({
+class DataUser {
+  DataUser({
     required this.id,
     required this.idToko,
     required this.nama,
@@ -59,14 +60,14 @@ class Datum {
   String role;
   String status;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory DataUser.fromJson(Map<String, dynamic> json) => DataUser(
         id: json["id"],
-        idToko: json["id_toko"],
+        idToko: json["id_toko"].toString(),
         nama: json["nama"],
         email: json["email"],
-        hp: json["hp"],
-        role: json["role"],
-        status: json["status"],
+        hp: json["hp"].toString(),
+        role: json["role"].toString(),
+        status: json["status"].toString(),
       );
 
   Map<String, dynamic> toJson() => {

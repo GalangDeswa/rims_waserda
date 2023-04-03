@@ -1,10 +1,13 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/beban/edit%20jenis%20beban/model_jenis_beban.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
+import '../../Widgets/loading.dart';
 import '../data beban/controller_beban.dart';
 
 class jenis_beban_table extends GetView<bebanController> {
@@ -33,7 +36,8 @@ class jenis_beban_table extends GetView<bebanController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
-                        title: 'Jenis Beban',
+                        iscenter: false,
+                        title: 'Kategori Beban',
                         icon: Icons.add_box,
                         icon_funtion: Icons.refresh,
                         function: () {
@@ -71,125 +75,108 @@ class jenis_beban_table extends GetView<bebanController> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Obx(() {
-                  return Expanded(
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3),
-                      //width: 200,
-                      child: TextFormField(
-                        controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          // controller.fetchJenisBeban();
-                        }),
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.add_box),
-                          labelText: "cari jenis beban",
-                          labelStyle: TextStyle(
-                            color: Colors.black87,
-                          ),
-                          border: UnderlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        textAlign: TextAlign.center,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter email';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  );
-                }),
-                icon_button_custom(
-                    onPressed: () {
-                      // controller.fetchProduk();
-                    },
-                    icon: Icons.search,
-                    container_color: color_template().primary),
-              ],
-            ),
-            Container(
-              height: context.height_query * 0.46,
-              margin: EdgeInsets.only(top: 15),
-              width: double.infinity,
-              child: SingleChildScrollView(
+            Expanded(
+              child: Container(
+                // height: context.height_query * 0.46,
+                margin: EdgeInsets.only(top: 12),
+                // width: double.infinity,
                 child: Obx(() {
-                  return DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Kategori Beban',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                  var source =
+                      kategoriBebanTable(controller.jenisbebanlist.value).obs;
+                  return PaginatedDataTable2(
+                    horizontalMargin: 10,
+                    //minWidth: 1000,
+                    //minWidth: 10,
+                    //fit: FlexFit.loose,
+                    columnSpacing: 5,
+                    wrapInCard: false,
+                    renderEmptyRowsInTheEnd: false,
+                    headingRowColor: MaterialStateColor.resolveWith(
+                        (states) => color_template().primary.withOpacity(0.2)),
+                    autoRowsToHeight: true,
+                    showFirstLastButtons: true,
+                    columns: const <DataColumn>[
+                      DataColumn(
+                        label: Text(
+                          'Kategori Beban',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+
+                      // DataColumn(
+                      //   label: Expanded(
+                      //     child: Text(
+                      //       'img',
+                      //       style: TextStyle(fontStyle: FontStyle.italic),
+                      //     ),
+                      //   ),
+                      // ),
+                      DataColumn(
+                        label: Center(
+                          child: Text(
+                            'Aksi',
+                            style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                         ),
-
-                        // DataColumn(
-                        //   label: Expanded(
-                        //     child: Text(
-                        //       'img',
-                        //       style: TextStyle(fontStyle: FontStyle.italic),
-                        //     ),
-                        //   ),
-                        // ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Aksi',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                      ],
-                      rows: List.generate(controller.jenisbebanlist.length,
-                          (index) {
-                        return DataRow(cells: [
-                          DataCell(Container(
-                              child: Text(
-                                  controller.jenisbebanlist[index].kategori))),
-
-                          // DataCell(Container(
-                          //     child: Text(controller.produklist[index].image))),
-                          DataCell(Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Get.toNamed('/edit_jenis_beban',
-                                        arguments:
-                                            controller.jenisbebanlist[index]);
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    popscreen().deletejenisbeban(
-                                        context,
-                                        editjenisbebanController(),
-                                        controller.jenisbebanlist[index]);
-                                  },
-                                  icon: Icon(Icons.delete, size: 18))
-                            ],
-                          ))
-                        ]);
-                      }));
+                      ),
+                    ],
+                    source: source.value,
+                    empty: Container(
+                        width: 200, height: 150, child: showloading()),
+                  );
                 }),
               ),
             ),
-            SizedBox(
-              height: 15,
-            )
           ],
         ),
       ),
     );
+  }
+}
+
+class kategoriBebanTable extends DataTableSource {
+  final List<DataJenisBeban> data;
+
+  kategoriBebanTable(this.data);
+
+  //var con = Get.find<editjenisbebanController>();
+  //var con = Get.put(editjenisbebanController());
+  var con = Get.find<bebanController>();
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Text(data[index].kategori)),
+      DataCell(Row(
+        children: [
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  Get.toNamed('/edit_jenis_beban', arguments: data[index]);
+                },
+                icon: Icon(
+                  Icons.edit,
+                  size: 18,
+                )),
+          ),
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  popscreen().deletejenisbeban(con, data[index]);
+                },
+                icon: Icon(Icons.delete, size: 18)),
+          )
+        ],
+      )),
+    ]);
   }
 }

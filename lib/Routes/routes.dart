@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_tambah_beban_base.dart';
+import 'package:rims_waserda/Modules/history/binding_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/history/binding_history.dart';
+import 'package:rims_waserda/Modules/history/view_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/binding_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/binding_edit_jenis.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/view_edit_jenis.dart';
@@ -25,6 +27,8 @@ import '../Modules/dashboard/view_dashboard_base.dart';
 import '../Modules/history/view_history_base.dart';
 import '../Modules/kasir/binding_kasir.dart';
 import '../Modules/kasir/view_kasir_basev2.dart';
+import '../Modules/laporan/binding_laporan.dart';
+import '../Modules/laporan/view_laporan_base.dart';
 import '../Modules/produk/detail produk/binding_detail_produk.dart';
 import '../Modules/produk/detail produk/view_detail_produk_base.dart';
 import '../Modules/produk/tambah produk/view_tambah_produk_base.dart';
@@ -71,7 +75,6 @@ final List<GetPage<dynamic>> route = [
       name: "/detail_produk",
       page: () => detail_Produk(),
       binding: detail_produkBinding()),
-  GetPage(name: "/history", page: () => history(), binding: historyBinding()),
   GetPage(name: "/beban", page: () => beban(), binding: bebanBinding()),
   GetPage(
       name: "/edit_user", page: () => edit_user(), binding: edituserBinding()),
@@ -104,4 +107,10 @@ final List<GetPage<dynamic>> route = [
       page: () => edit_beban(),
       binding: editbebanBinding()),
   GetPage(name: "/beban", page: () => beban(), binding: bebanBinding()),
+  GetPage(name: "/laporan", page: () => laporan(), binding: laporanBinding()),
+  GetPage(name: "/history", page: () => history(), binding: historyBinding()),
+  GetPage(
+      name: "/detail_penjualan",
+      page: () => detail_penjualan(),
+      binding: detailpenjualanBinding()),
 ];

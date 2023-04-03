@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:lottie/lottie.dart';
 
 import 'controller_login.dart';
@@ -13,38 +12,41 @@ class login_carousel extends GetView<loginController> {
   Widget build(BuildContext context) {
     var login_con = Get.find<loginController>();
 
-    return Container(
-      height: 280,
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: Obx(() {
-        return CarouselSlider(
-          options: CarouselOptions(
-            onPageChanged: (index, reason) {
-              login_con.current(index);
-            },
-            viewportFraction: 1.0,
-            height: 450,
-            enlargeCenterPage: true,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            autoPlayInterval: Duration(seconds: 6),
-          ),
-          items: login_con.iklan
-              .map((x) => ClipRRect(
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          child: Container(
-                            margin: EdgeInsets.only(top: 20),
-                            child: Lottie.asset(x),
-                          ),
-                        )
-                      ],
-                    ),
-                  ))
-              .toList(),
-        );
-      }),
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(15)),
+        margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Obx(() {
+          return CarouselSlider(
+            options: CarouselOptions(
+              onPageChanged: (index, reason) {
+                login_con.current(index);
+              },
+              viewportFraction: 1.0,
+              height: 450,
+              enlargeCenterPage: true,
+              enableInfiniteScroll: true,
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 6),
+            ),
+            items: login_con.iklan
+                .map((x) => ClipRRect(
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: Lottie.asset(x),
+                            ),
+                          )
+                        ],
+                      ),
+                    ))
+                .toList(),
+          );
+        }),
+      ),
     );
   }
 }

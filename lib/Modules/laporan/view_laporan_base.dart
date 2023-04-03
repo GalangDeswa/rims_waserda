@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
+import 'package:rims_waserda/Modules/laporan/Controller_laporan.dart';
 
-import '../../../Templates/setting.dart';
-import '../../Widgets/stack bg.dart';
-import 'controller_beban.dart';
+import '../../Templates/setting.dart';
+import '../Widgets/stack bg.dart';
 
-class beban extends GetView<bebanController> {
-  const beban({Key? key}) : super(key: key);
+class laporan extends GetView<laporanController> {
+  const laporan({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +68,7 @@ class beban extends GetView<bebanController> {
                           controller.selectedIndex.value = index;
                           print(index);
                         },
-                        buttons: [
-                          "Beban",
-                          "Kategori",
-                        ],
+                        buttons: ["Umum", "Penjualan", 'Beban', 'Reversal'],
                       ),
                     ),
                   ),

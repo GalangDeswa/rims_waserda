@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/history/controller_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 
 import '../beban/data beban/controller_beban.dart';
 import '../dashboard/controller_dashboard.dart';
 import '../history/Controller_history.dart';
 import '../kasir/controller_kasir.dart';
+import '../laporan/Controller_laporan.dart';
 import '../produk/data produk/controller_data_produk.dart';
 import '../produk/tambah produk/controller_tambah_produk.dart';
 import '../produk/tambah_stock/controller_tambah_stock.dart';
@@ -31,7 +33,11 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<datauserController>(() => datauserController(), fenix: true);
     //Get.lazyPut(() => datauserController(), fenix: true);
     Get.lazyPut<edituserController>(() => edituserController(), fenix: true);
+    Get.lazyPut<editbebanController>(() => editbebanController(), fenix: true);
     Get.lazyPut<editjenisController>(() => editjenisController(), fenix: true);
+    Get.lazyPut<laporanController>(() => laporanController());
+    Get.lazyPut<detailpenjualanController>(() => detailpenjualanController(),
+        fenix: true);
 
     //Get.lazyPut(() => edituserController());
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
+import '../../Widgets/popup.dart';
 import 'controller_data_produk.dart';
 
 class produk_table extends GetView<produkController> {
@@ -33,6 +34,7 @@ class produk_table extends GetView<produkController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
+                        iscenter: false,
                         title: 'List produk',
                         icon: Icons.add_box,
                         icon_funtion: Icons.refresh,
@@ -233,6 +235,7 @@ class produk_table extends GetView<produkController> {
                           ))
                         ]);
                       }));
+                  ;
                 }),
               ),
             ),
@@ -243,5 +246,60 @@ class produk_table extends GetView<produkController> {
         ),
       ),
     );
+  }
+}
+
+class produkTable extends DataTableSource {
+  // Generate some made-up data
+  var con = Get.put(produkController());
+  late final List<DataProduk> _data = con.produklist.value;
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => _data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Text(_data[index].namaProduk)),
+      DataCell(Text(_data[index].namaJenis)),
+      DataCell(Text(_data[index].deskripsi)),
+      DataCell(Text(_data[index].qty)),
+      DataCell(Text(_data[index].harga)),
+      DataCell(Row(
+        children: [
+          IconButton(
+              onPressed: () {
+                // print('qweqweqwe');
+                // Get.toNamed('/detail_produk');
+              },
+              icon: Icon(
+                Icons.ballot,
+                size: 18,
+              )),
+          IconButton(
+              onPressed: () {
+                Get.toNamed('/detail_produk', arguments: con.produklist[index]);
+              },
+              icon: Icon(
+                Icons.edit,
+                size: 18,
+              )),
+          IconButton(
+              onPressed: () {
+                // popscreen().deleteproduk(
+                //     context,
+                //     con,
+                //     con.produklist[index]);
+              },
+              icon: Icon(Icons.delete, size: 18))
+        ],
+      )),
+    ]);
   }
 }

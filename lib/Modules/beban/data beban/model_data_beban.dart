@@ -67,13 +67,13 @@ class DataBeban {
 
   factory DataBeban.fromJson(Map<String, dynamic> json) => DataBeban(
         id: json["id"],
-        idToko: json["id_toko"],
-        idUser: json["id_user"],
+        idToko: json["id_toko"].toString(),
+        idUser: json["id_user"].toString(),
         nama: json["nama"],
         keterangan: json["keterangan"],
         tgl: json["tgl"],
-        jumlah: json["jumlah"],
-        idKtrBeban: json["id_ktr_beban"],
+        jumlah: json["jumlah"].toString(),
+        idKtrBeban: json["id_ktr_beban"].toString(),
         namaKtrBeban: json["nama_ktr_beban"],
       );
 

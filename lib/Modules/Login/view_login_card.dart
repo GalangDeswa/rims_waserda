@@ -14,13 +14,15 @@ class login_card extends GetView<loginController> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Container(
           width: 200,
-          margin: EdgeInsets.symmetric(vertical: 20),
+          margin: EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
               color: color_template().primary,
-              borderRadius: BorderRadius.circular(5)),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white, width: 3)),
           padding: EdgeInsets.all(5),
           child: Center(
             child: Text(
@@ -51,7 +53,7 @@ class login_card extends GetView<loginController> {
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 30),
                   decoration: BoxDecoration(
-                      color: color_template().primary,
+                      color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
                           bottomLeft: Radius.circular(30))),
@@ -59,14 +61,11 @@ class login_card extends GetView<loginController> {
                   //width: context.width_query * 0.5,
                   //height: context.height_query / 1.5,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Promo RIMS',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.white),
+                        style: font().primary_bold,
                       ),
                       login_carousel(),
                       Obx(() {
@@ -83,10 +82,17 @@ class login_card extends GetView<loginController> {
                   ),
                 ),
               ),
+              Container(
+                  margin:
+                      EdgeInsets.symmetric(vertical: context.height_query / 15),
+                  child: VerticalDivider(
+                    color: color_template().primary,
+                    thickness: 2.5,
+                  )),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 30),
-                  //color: Colors.red,
+
                   margin: EdgeInsets.symmetric(horizontal: 30),
                   //width: context.width_query * 0.5,
                   //height: context.height_query / 5,
@@ -165,11 +171,10 @@ class login_card extends GetView<loginController> {
                               width: context.width_query * 0.5,
                               height: 50,
                               onPressed: () {
-                                // if (controller.loginKey.value.currentState!
-                                //     .validate()) {
-                                //
-                                // }
-                                controller.loginv2();
+                                if (controller.loginKey.value.currentState!
+                                    .validate()) {
+                                  controller.loginv2();
+                                }
 
                                 //Get.toNamed('/base_menu');
 
@@ -266,7 +271,7 @@ class login_card extends GetView<loginController> {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 20),
+          margin: EdgeInsets.symmetric(vertical: 15),
           child: Text('Powered with ❤ by RIMS',
               style: TextStyle(
                   fontWeight: FontWeight.bold,

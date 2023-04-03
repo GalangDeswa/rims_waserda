@@ -25,84 +25,80 @@ class edit_jenis_beban extends GetView<editjenisbebanController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Card(
-                  elevation: elevation().def_elevation,
-                  //margin: EdgeInsets.all(30),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: border_radius().def_border,
-                    side:
-                        BorderSide(color: color_template().primary, width: 3.5),
-                  ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: Card(
+                elevation: elevation().def_elevation,
+                //margin: EdgeInsets.all(30),
+                shape: RoundedRectangleBorder(
+                  borderRadius: border_radius().def_border,
+                  side: BorderSide(color: color_template().primary, width: 3.5),
+                ),
 
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Container(
-                      width: context.width_query / 1,
-                      height: context.height_query / 2.3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          header(
-                            title: 'Tambah Kategori Beban',
-                            icon: FontAwesomeIcons.dollarSign,
-                            function: () {},
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Form(
-                                key: controller.formKeyjenis.value,
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    TextFormField(
-                                      controller: controller.kategori.value,
-                                      onChanged: ((String pass) {}),
-                                      decoration: InputDecoration(
-                                        icon: Icon(Icons.add_card),
-                                        labelText: "Katergori",
-                                        labelStyle: TextStyle(
-                                          color: Colors.black87,
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        focusedBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Container(
+                    width: context.width_query / 1,
+                    height: context.height_query / 2.3,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        header(
+                          title: 'Edit Kategori Beban',
+                          icon: FontAwesomeIcons.dollarSign,
+                          function: () {},
+                        ),
+                        SizedBox(
+                          height: 50,
+                        ),
+                        Expanded(
+                          child: Form(
+                              key: controller.formKeyjenis.value,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  TextFormField(
+                                    controller: controller.kategori.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(Icons.add_card),
+                                      labelText: "Katergori",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
                                       ),
-                                      textAlign: TextAlign.center,
-                                      validator: (value) {
-                                        if (value!.isEmpty) {
-                                          return 'Please enter email';
-                                        }
-                                        return null;
-                                      },
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                     ),
-                                    button_solid_custom(
-                                        onPressed: () {
-                                          controller.editJenisBeban();
-                                        },
-                                        child: Text(
-                                          'edit jenis',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                    textAlign: TextAlign.center,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter email';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  button_solid_custom(
+                                      onPressed: () {
+                                        controller.editJenisBeban();
+                                      },
+                                      child: Text(
+                                        'edit jenis',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        width: double.infinity,
-                                        height: 50)
-                                  ],
-                                )),
-                          )
-                        ],
-                      ),
+                                      ),
+                                      width: double.infinity,
+                                      height: 50)
+                                ],
+                              )),
+                        )
+                      ],
                     ),
                   ),
                 ),

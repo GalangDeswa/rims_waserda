@@ -16,9 +16,12 @@ class bebanController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    print('----------------------bebancon init--------------------');
     fetchJenisBeban();
     fetchDataBeban();
   }
+
+  var format = NumberFormat.simpleCurrency(locale: 'id', decimalDigits: 0);
 
   var data = Get.arguments;
 
@@ -33,6 +36,7 @@ class bebanController extends GetxController {
   var keterangan = TextEditingController().obs;
   var tanggal = TextEditingController().obs;
   var jumlah = TextEditingController().obs;
+  var jumlahbeban = 0.0.obs;
 
   var formKeyjenis = GlobalKey<FormState>().obs;
 
@@ -42,11 +46,15 @@ class bebanController extends GetxController {
   ];
   var formKeybeban = GlobalKey<FormState>().obs;
   RxInt selectedIndex = 0.obs;
-  RxList jenisbebanlist = <DataJenisBeban>[].obs;
-  RxList databebanlist = <DataBeban>[].obs;
+  var jenisbebanlist = <DataJenisBeban>[].obs;
+  var databebanlist = <DataBeban>[].obs;
+
   String? jenisbebanval;
 
   final dateformat = DateFormat('dd-MM-yyyy');
+  final nominal = NumberFormat("#,##0");
+
+  final numformat = NumberFormat.currency(locale: 'id', decimalDigits: 0);
 
   stringdate() {
     var ff = dateformat.format(datedata[0]!);
@@ -110,12 +118,39 @@ class bebanController extends GetxController {
     return [];
   }
 
+  deleteJenisBeban(String id) async {
+    print('-------------------delete jenis beban---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var jenis = await REST.bebanHapusJenis(token, id, id_toko);
+      if (jenis != null) {
+        print(jenis);
+        await fetchJenisBeban();
+        Get.back(closeOverlays: true, result: true);
+        Get.showSnackbar(toast().bottom_snackbar_success(
+            'Berhasil', 'jenis beban Berhasil dihapus'));
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(toast()
+            .bottom_snackbar_error('Error', 'jenis beban Gagal dihapus'));
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+    return [];
+  }
+
   clear() {
     nama.value.clear();
     kategori.value.clear();
     keterangan.value.clear();
     tanggal.value.clear();
     jumlah.value.clear();
+    datedata = [];
   }
 
   fetchJenisBeban() async {
@@ -196,7 +231,7 @@ class bebanController extends GetxController {
           nama.value.text,
           keterangan.value.text,
           tanggal.value.text,
-          jumlah.value.text);
+          jumlahbeban.value.toString());
       if (beban != null) {
         print(beban);
         clear();
@@ -264,15 +299,18 @@ class bebanController extends GetxController {
       var jenis =
           await REST.bebanTambahJenis(token, id_toko, kategori.value.text);
       if (jenis != null) {
-        print(jenis);
         await fetchJenisBeban();
-        Get.back(closeOverlays: true, result: true);
+        update();
+        // await Get.find<editbebanController>().fetchJenisBeban();
+
+        Get.back();
+        Get.back();
         Get.showSnackbar(toast().bottom_snackbar_success(
-            'Berhasil', 'jenis beban Berhasil diedit'));
+            'Berhasil', 'jenis beban Berhasil di tambah'));
       } else {
         Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'jenis beban Gagal diedit'));
+        Get.showSnackbar(toast()
+            .bottom_snackbar_error('Error', 'jenis beban Gagal di tambah'));
       }
     } else {
       Get.back(closeOverlays: true);
@@ -310,6 +348,7 @@ class editjenisbebanController extends GetxController {
           token, data.id.toString(), id_toko, kategori.value.text);
       if (jenis != null) {
         print(jenis);
+        await Get.find<bebanController>().fetchJenisBeban();
         Get.back(closeOverlays: true, result: true);
         Get.showSnackbar(toast().bottom_snackbar_success(
             'Berhasil', 'jenis beban Berhasil diedit'));
@@ -317,31 +356,6 @@ class editjenisbebanController extends GetxController {
         Get.back(closeOverlays: true);
         Get.showSnackbar(
             toast().bottom_snackbar_error('Error', 'jenis beban Gagal diedit'));
-      }
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
-    }
-    return [];
-  }
-
-  deleteJenisBeban(String id) async {
-    print('-------------------delete jenis beban---------------------');
-
-    Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var jenis = await REST.bebanHapusJenis(token, id, id_toko);
-      if (jenis != null) {
-        print(jenis);
-        Get.back(closeOverlays: true, result: true);
-        Get.showSnackbar(toast().bottom_snackbar_success(
-            'Berhasil', 'jenis beban Berhasil dihapus'));
-      } else {
-        Get.back(closeOverlays: true);
-        Get.showSnackbar(toast()
-            .bottom_snackbar_error('Error', 'jenis beban Gagal dihapus'));
       }
     } else {
       Get.back(closeOverlays: true);
@@ -360,12 +374,11 @@ class editbebanController extends GetxController {
     print('-------------edit beban conn-----------');
     fetchJenisBeban();
     nama.value = TextEditingController(text: data.nama);
-
     keterangan.value = TextEditingController(text: data.keterangan);
     tanggal.value = TextEditingController(text: data.tgl);
     jumlah.value = TextEditingController(text: data.jumlah);
     jenisbebanval.value = data.idKtrBeban.toString();
-    print(jenisbebanval);
+    // print(jenisbebanval);
   }
 
   RxList databebanlist = <DataBeban>[].obs;
@@ -376,7 +389,7 @@ class editbebanController extends GetxController {
   var jenisbebanlist = <DataJenisBeban>[].obs;
 
   var data = Get.arguments;
-  late RxString jenisbebanval = data.idKtrBeban.toString().obs;
+  late var jenisbebanval = data.idKtrBeban.toString().obs;
 
   var formKeybeban = GlobalKey<FormState>().obs;
   var nama = TextEditingController().obs;

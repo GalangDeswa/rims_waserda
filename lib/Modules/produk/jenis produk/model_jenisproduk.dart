@@ -62,7 +62,7 @@ class DataJenis {
 
   factory DataJenis.fromJson(Map<String, dynamic> json) => DataJenis(
         id: json["id"],
-        idToko: json["id_toko"],
+        idToko: json["id_toko"].toString(),
         namaJenis: json["nama_jenis"],
       );
 

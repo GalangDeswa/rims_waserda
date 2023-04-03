@@ -34,6 +34,7 @@ class jenis_table extends GetView<produkController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
+                        iscenter: false,
                         title: 'List jenis',
                         icon: Icons.add_box,
                         base_color: color_template().primary,

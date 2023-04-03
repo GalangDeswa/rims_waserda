@@ -22,9 +22,11 @@ class tambah_beban_base extends GetView<bebanController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: tambah_beban(),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(30),
+              child: tambah_beban(),
+            ),
           ),
         ),
       ),

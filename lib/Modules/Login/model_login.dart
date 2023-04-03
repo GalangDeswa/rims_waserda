@@ -45,7 +45,7 @@ class ModelLogin {
         message: json["message"],
         errors: json["errors"],
         id: json["id"],
-        idToko: json["id_toko"],
+        idToko: json["id_toko"].toString(),
         name: json["name"],
         email: json["email"],
         hp: json["hp"],

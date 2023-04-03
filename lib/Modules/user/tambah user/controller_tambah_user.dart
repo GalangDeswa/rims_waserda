@@ -81,9 +81,9 @@ class tambah_userController extends GetxController {
 //     Get.snackbar('gagal', 'chek koneksi');
 //   }
 // }
-  var listUser = <Datum>[].obs;
+  var listUser = <DataUser>[].obs;
 
-  Future<List<Datum>> userdata() async {
+  Future<List<DataUser>> userdata() async {
     print('-------------------userdata---------------------');
 
     // SchedulerBinding.instance.addPostFrameCallback(

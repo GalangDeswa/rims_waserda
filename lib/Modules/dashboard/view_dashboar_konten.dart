@@ -41,8 +41,8 @@ class dashboard_konten extends GetView<dashboardController> {
                         borderRadius: border_radius().def_border,
                         child: Container(
                           decoration: BoxDecoration(
-                              borderRadius: border_radius().def_border,
-                              color: Colors.red),
+                            borderRadius: border_radius().def_border,
+                          ),
                           width: context.width_query,
                           // margin: EdgeInsets.only(top: 20),
                           child: CachedNetworkImage(

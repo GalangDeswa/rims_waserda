@@ -131,7 +131,7 @@ class Toko {
 
   factory Toko.fromJson(Map<String, dynamic> json) => Toko(
         id: json["id"],
-        idUser: json["id_user"],
+        idUser: json["id_user"].toString(),
         jenisusaha: json["jenisusaha"],
         namaToko: json["nama_toko"],
         alamat: json["alamat"],

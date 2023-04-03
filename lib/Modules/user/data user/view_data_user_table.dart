@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
-import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_form.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_password.dart';
 
@@ -9,6 +8,7 @@ import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
 import 'controller_data_user.dart';
+import 'model_data_user.dart';
 
 class table_user extends GetView<datauserController> {
   const table_user({Key? key}) : super(key: key);
@@ -36,6 +36,7 @@ class table_user extends GetView<datauserController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
+                        iscenter: false,
                         title: 'Data User',
                         icon: Icons.add_box,
                         icon_funtion: Icons.refresh,
@@ -241,5 +242,59 @@ class table_user extends GetView<datauserController> {
         ),
       ),
     );
+  }
+}
+
+class userTable extends DataTableSource {
+  final List<DataUser> data;
+
+  userTable(this.data);
+
+  var con = Get.find<datauserController>();
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Text(data[index].nama)),
+      DataCell(Text(data[index].email)),
+      DataCell(Text(data[index].hp)),
+      DataCell(Text(data[index].role)),
+      DataCell(Row(
+        children: [
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  // Get.dialog(
+                  //     Container(
+                  //         padding: EdgeInsets.symmetric(
+                  //           horizontal: 50,
+                  //         ),
+                  //         child: edit_beban_form()),
+                  //     arguments: data[index]);
+                },
+                icon: Icon(
+                  Icons.edit,
+                  size: 18,
+                )),
+          ),
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  // popscreen().deletebebanv2(con, data[index]);
+                },
+                icon: Icon(Icons.delete, size: 18)),
+          )
+        ],
+      )),
+    ]);
   }
 }

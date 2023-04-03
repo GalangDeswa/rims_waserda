@@ -879,33 +879,108 @@ class REST extends GetConnect {
     }
   }
 
-// static Future<String> postApi(var body, String endpoint) async {
-//   var response = await post(api(endpoint), body: body, headers: {
-//     'Content-Type': 'application/json',
-//     'Accept': 'application/json',
-//     // 'Authorization': GetStorage().read(PREF_TOKEN)
-//   });
-//   print('dari network handler----------------------------------------->');
-//   print(response.body);
-//   return response.body;
-// }
-//
-// static Future getApi(String endpoint) async {
-//   var response = await get(api(endpoint));
-//   return response.body;
-// }
-//
-// static Uri api(String endpoint) {
-//   String host = 'http://192.168.100.33/waserda/waserda/';
-//   final apikey = host + endpoint;
-//   return Uri.parse(apikey);
-// }
-//
-// static void storeToken(String token) async {
-//   await GetStorage().write('token', token);
-// }
-//
-// static Future<String?> getToken() async {
-//   return await GetStorage().read('token');
-// }
+  static Future<dynamic> penjualanData(String token, iduser, idtoko) async {
+    var response = await post(link().POST_penjualadata,
+        body: ({
+          'token': token,
+          'id_user': iduser.toString(),
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PENJUALAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PENJUALAN network handler----------------------------------------->');
+      print('GAGAL DATA PENJUALAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> penjualanDataDetail(String token, id, idtoko) async {
+    var response = await post(link().POST_penjualadatadetail,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PENJUALAN DETAIL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PENJUALAN DETAIL network handler----------------------------------------->');
+      print('GAGAL DATA PENJUALAN DETAIL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> penjualanDataHariIni(
+      String token, iduser, idtoko) async {
+    var response = await post(link().POST_penjualadatahariini,
+        body: ({
+          'token': token,
+          'id_user': iduser,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PENJUALAN HARI INI network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PENJUALAN HARI INI network handler----------------------------------------->');
+      print('GAGAL DATA PENJUALAN HARI INI');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> penjualanReversal(String token, id, idtoko) async {
+    var response = await post(link().POST_penjualanreversal,
+        body: ({
+          'token': token,
+          'id': id,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PENJUALAN REVERSAL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PENJUALAN REVERSAL network handler----------------------------------------->');
+      print('GAGAL DATA PENJUALAN REVERSAL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
 }

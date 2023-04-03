@@ -1,11 +1,14 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/Widgets/loading.dart';
+import 'package:rims_waserda/Modules/beban/data%20beban/model_data_beban.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
+import '../../Widgets/popup.dart';
 import 'controller_beban.dart';
 
 class beban_table extends GetView<bebanController> {
@@ -34,13 +37,19 @@ class beban_table extends GetView<bebanController> {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
+                        iscenter: false,
                         title: 'Data Beban',
                         icon: FontAwesomeIcons.dollarSign,
                         icon_funtion: Icons.refresh,
-                        function: () {
-                          controller.onInit();
-
-                          print('-----snack------');
+                        function: () async {
+                          Get.dialog(Container(
+                            width: 300,
+                            height: 150,
+                            child: showloading(),
+                          ));
+                          await controller.fetchDataBeban();
+                          await controller.fetchJenisBeban();
+                          Get.back();
                         },
                       ),
                     ),
@@ -151,16 +160,31 @@ class beban_table extends GetView<bebanController> {
                     container_color: color_template().primary),
               ],
             ),
-            Container(
-              height: context.height_query * 0.46,
-              margin: EdgeInsets.only(top: 15),
-              width: double.infinity,
-              child: SingleChildScrollView(
+            Expanded(
+              child: Container(
+                // height: context.height_query / 2.5,
+                margin: EdgeInsets.only(top: 12),
+                // width: double.infinity,
                 child: Obx(() {
-                  return DataTable(
-                      columns: const <DataColumn>[
+                  //untuk paginated table yg pakek data source harus buat var lg di dalam obx
+                  //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
+                  var source = bebanTable(controller.databebanlist.value).obs;
+                  return PaginatedDataTable2(
+                      horizontalMargin: 10,
+                      //minWidth: 1000,
+                      //minWidth: 10,
+                      //fit: FlexFit.loose,
+                      columnSpacing: 5,
+                      wrapInCard: false,
+                      renderEmptyRowsInTheEnd: false,
+                      headingRowColor: MaterialStateColor.resolveWith(
+                          (states) =>
+                              color_template().primary.withOpacity(0.2)),
+                      autoRowsToHeight: true,
+                      showFirstLastButtons: true,
+                      columns: <DataColumn>[
                         DataColumn(
-                          label: Expanded(
+                          label: Center(
                             child: Text(
                               'Nama Beban',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -168,7 +192,7 @@ class beban_table extends GetView<bebanController> {
                           ),
                         ),
                         DataColumn(
-                          label: Expanded(
+                          label: Center(
                             child: Text(
                               'Keterangan',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -176,7 +200,7 @@ class beban_table extends GetView<bebanController> {
                           ),
                         ),
                         DataColumn(
-                          label: Expanded(
+                          label: Center(
                             child: Text(
                               'Tanggal',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -184,7 +208,7 @@ class beban_table extends GetView<bebanController> {
                           ),
                         ),
                         DataColumn(
-                          label: Expanded(
+                          label: Center(
                             child: Text(
                               'jumlah',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -192,7 +216,7 @@ class beban_table extends GetView<bebanController> {
                           ),
                         ),
                         DataColumn(
-                          label: Expanded(
+                          label: Center(
                             child: Text(
                               'Kategori',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -200,7 +224,7 @@ class beban_table extends GetView<bebanController> {
                           ),
                         ),
                         DataColumn(
-                          label: Expanded(
+                          label: Center(
                             child: Text(
                               'Aksi',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -208,61 +232,72 @@ class beban_table extends GetView<bebanController> {
                           ),
                         ),
                       ],
-                      rows: List.generate(controller.databebanlist.length,
-                          (index) {
-                        return DataRow(cells: [
-                          DataCell(Container(
-                              child:
-                                  Text(controller.databebanlist[index].nama))),
-                          DataCell(Container(
-                              child: Text(
-                                  controller.databebanlist[index].keterangan))),
-                          DataCell(Container(
-                              child:
-                                  Text(controller.databebanlist[index].tgl))),
-                          DataCell(Container(
-                              child: Text(
-                                  controller.databebanlist[index].jumlah))),
-                          DataCell(Container(
-                              child: Text(controller
-                                  .databebanlist[index].namaKtrBeban))),
-
-                          // DataCell(Container(
-                          //     child: Text(controller.produklist[index].image))),
-                          DataCell(Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Get.toNamed('/edit_beban',
-                                        arguments:
-                                            controller.databebanlist[index]);
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    popscreen().deletebeban(
-                                        context,
-                                        //untuk refresh data, di conn pagil fecth setelah berhasil, tp untuk popup yg pakek parameert controller, get.put/controller baru bisa refresh?
-                                        Get.put(bebanController()),
-                                        controller.databebanlist[index]);
-                                  },
-                                  icon: Icon(Icons.delete, size: 18))
-                            ],
-                          ))
-                        ]);
-                      }));
+                      source: source.value,
+                      empty: Center(
+                        child: Text(
+                          "Data Kosong",
+                          style: font().header_black,
+                        ),
+                      ));
                 }),
               ),
             ),
-            SizedBox(
-              height: 15,
-            )
           ],
         ),
       ),
     );
+  }
+}
+
+class bebanTable extends DataTableSource {
+  final List<DataBeban> data;
+
+  bebanTable(this.data);
+
+  var con = Get.find<bebanController>();
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Center(child: Text(data[index].nama))),
+      DataCell(Center(child: Text(data[index].keterangan))),
+      DataCell(Center(child: Text(data[index].tgl))),
+      DataCell(Center(
+          child: Text(
+              'Rp. ' + con.nominal.format(double.parse(data[index].jumlah))))),
+      DataCell(Center(child: Text(data[index].namaKtrBeban))),
+      DataCell(Center(
+        child: Row(
+          children: [
+            Expanded(
+              child: IconButton(
+                  onPressed: () {
+                    Get.toNamed('/edit_beban', arguments: data[index]);
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    size: 18,
+                  )),
+            ),
+            Expanded(
+              child: IconButton(
+                  onPressed: () {
+                    popscreen().deletebebanv2(con, data[index]);
+                  },
+                  icon: Icon(Icons.delete, size: 18)),
+            )
+          ],
+        ),
+      )),
+    ]);
   }
 }

@@ -14,6 +14,8 @@ import '../../Templates/setting.dart';
 import '../beban/data beban/controller_beban.dart';
 import '../beban/data beban/model_data_beban.dart';
 import '../beban/edit jenis beban/model_jenis_beban.dart';
+import '../history/Controller_history.dart';
+import '../history/model_penjualan.dart';
 import '../kasir/controller_kasir.dart';
 import '../produk/detail produk/controller_detail_produk.dart';
 import '../produk/tambah_stock/controller_tambah_stock.dart';
@@ -24,6 +26,60 @@ import 'header.dart';
 import 'keypad.dart';
 
 class popscreen {
+  reversalpenjualan(historyController controller, DataPenjualan arg) {
+    Get.dialog(AlertDialog(
+      title: header(
+          iscenter: true,
+          title: 'Batalkan Transaksi',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Batalkan transaksi ini?",
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.reversalPenjualan(arg.id.toString());
+                        //controller.deleteproduk(arg.id.toString());
+                      },
+                      child: Text(
+                        'Batalkan',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
+  }
+
   void deletebeban(
       BuildContext context, bebanController controller, DataBeban arg) {
     showDialog(
@@ -80,6 +136,59 @@ class popscreen {
             ),
           );
         });
+  }
+
+  deletebebanv2(bebanController controller, DataBeban arg) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Hapus Beban',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Hapus beban " + arg.nama + '?',
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.hapusBeban(arg.id.toString());
+                        //controller.deleteproduk(arg.id.toString());
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
   }
 
   void deletekeranjang(
@@ -140,59 +249,54 @@ class popscreen {
         });
   }
 
-  void deletejenisbeban(BuildContext context,
-      editjenisbebanController controller, DataJenisBeban arg) {
-    showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: header(
-                title: 'Hapus Kategori',
-                icon: Icons.warning,
-                icon_color: color_template().tritadery,
-                base_color: color_template().tritadery),
-            contentPadding: EdgeInsets.all(10),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12.0),
-              ),
-            ),
-            content: Builder(
-              builder: (context) {
-                return Container(
-                    width: context.width_query / 2.6,
-                    height: context.height_query / 2.6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Hapus kategori " + arg.kategori + '?',
-                          style: font().header_black,
-                        ),
-                        button_solid_custom(
-                            onPressed: () {
-                              controller.deleteJenisBeban(arg.id.toString());
-                            },
-                            child: Text(
-                              'Hapus',
-                              style: font().primary_white,
-                            ),
-                            width: context.width_query / 4,
-                            height: context.height_query / 10),
-                        button_border_custom(
-                            onPressed: () {},
-                            child: Text(
-                              'Batal',
-                              style: font().primary,
-                            ),
-                            width: context.width_query / 4,
-                            height: context.height_query / 10)
-                      ],
-                    ));
-              },
-            ),
-          );
-        });
+  deletejenisbeban(bebanController controller, DataJenisBeban arg) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Hapus Kategori',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Hapus kategori " + arg.kategori + '?',
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.deleteJenisBeban(arg.id.toString());
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {},
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
   }
 
   void deletejenis(
@@ -248,6 +352,56 @@ class popscreen {
             ),
           );
         });
+  }
+
+  deleteprodukv2(produkController controller, DataProduk arg) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Hapus Data',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Hapus produk " + arg.namaProduk + '?',
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.deleteproduk(arg.id.toString());
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {},
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
   }
 
   void deleteproduk(
@@ -1166,7 +1320,7 @@ class popscreen {
   }
 
   void popedituser(
-      BuildContext context, edituserController controller, Datum qwe) {
+      BuildContext context, edituserController controller, DataUser qwe) {
     Get.dialog(
         Center(
           child: Container(
@@ -1337,7 +1491,7 @@ class popscreen {
   }
 
   void deleteuser(
-      BuildContext context, datauserController controller, Datum arg) {
+      BuildContext context, datauserController controller, DataUser arg) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(

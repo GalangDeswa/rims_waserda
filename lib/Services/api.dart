@@ -1,5 +1,5 @@
 class server {
-  final String host = 'https://rimsdev.com/rimspos-standar/api-pos/';
+  final String host = 'https://rims.co.id/rimspos-standar/api-pos/';
 }
 
 class link {
@@ -51,4 +51,12 @@ class link {
       Uri.parse(server().host + 'kasir/keranjang/hapus');
   final Uri POST_kasirpembayaran =
       Uri.parse(server().host + 'kasir/keranjang/pembayaran');
+
+  final Uri POST_penjualadata = Uri.parse(server().host + 'penjualan/data');
+  final Uri POST_penjualadatadetail =
+      Uri.parse(server().host + 'penjualan/data/detail');
+  final Uri POST_penjualadatahariini =
+      Uri.parse(server().host + 'penjualan/data/hariini');
+  final Uri POST_penjualanreversal =
+      Uri.parse(server().host + 'penjualan/reversal');
 }

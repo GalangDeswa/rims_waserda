@@ -81,19 +81,19 @@ class DataKeranjang {
 
   factory DataKeranjang.fromJson(Map<String, dynamic> json) => DataKeranjang(
         id: json["id"],
-        meja: json["meja"],
-        idToko: json["id_toko"],
-        idProduk: json["id_produk"],
+        meja: json["meja"].toString(),
+        idToko: json["id_toko"].toString(),
+        idProduk: json["id_produk"].toString(),
         detailProduk: DetailProduk.fromJson(json["detail_produk"]),
-        idKategori: json["id_kategori"],
-        idUser: json["id_user"],
+        idKategori: json["id_kategori"].toString(),
+        idUser: json["id_user"].toString(),
         namaUser: json["nama_user"],
         namaBrg: json["nama_brg"],
         hargaBrg: json["harga_brg"],
         diskonBrg: json["diskon_brg"],
         qty: json["qty"],
         total: json["total"],
-        status: json["status"],
+        status: json["status"].toString(),
         updated: json["updated"],
         createdAt: json["created_at"],
       );
@@ -130,7 +130,7 @@ class DetailProduk {
   String image;
 
   factory DetailProduk.fromJson(Map<String, dynamic> json) => DetailProduk(
-        idJenis: json["id_jenis"],
+        idJenis: json["id_jenis"].toString(),
         deskripsi: json["deskripsi"],
         image: json["image"],
       );

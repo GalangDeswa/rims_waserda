@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:rims_waserda/Modules/Widgets/logout_pop.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 
 import '../../Templates/setting.dart';
 
 class base_menu extends GetView<base_menuController> {
-  const base_menu({Key? key}) : super(key: key);
+  base_menu({Key? key}) : super(key: key);
+  var key = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,60 @@ class base_menu extends GetView<base_menuController> {
           }
         },
         child: Scaffold(
+          drawerEnableOpenDragGesture: false,
+          endDrawer: Drawer(
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(bottom: 10),
+              children: [
+                DrawerHeader(
+                    child: Column(
+                  children: [
+                    Container(
+                      width: 70,
+                      height: 70,
+                      margin: EdgeInsets.only(top: 10),
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 50,
+                      ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: color_template().primary,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      GetStorage().read('name'),
+                      style: font().primary_dark,
+                    ),
+                    Text(
+                      GetStorage().read('nama_toko'),
+                      style: font().primary_dark,
+                    ),
+                  ],
+                )),
+                ListTile(
+                  title: Text('Setting'),
+                  leading: Icon(Icons.settings),
+                ),
+                InkWell(
+                  highlightColor: color_template().select,
+                  splashColor: Colors.orangeAccent,
+                  onTap: () {
+                    Get.dialog(logout_pop());
+                  },
+                  child: ListTile(
+                    title: Text('Logout'),
+                    leading: Icon(Icons.logout),
+                  ),
+                )
+              ],
+            ),
+          ),
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           body: Row(
@@ -90,64 +146,38 @@ class base_menu extends GetView<base_menuController> {
                             extended: controller.extended.value,
                             minWidth: context.width_query * 0.010,
                             //backgroundColor: color_template().nav,
-                            leading: GestureDetector(
-                              onTap: () {
-                                Get.dialog(Center(
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        Text('logout?'),
-                                        Row(
-                                          children: [
-                                            ElevatedButton(
-                                              child: Text('tidak'),
-                                              onPressed: () {
-                                                Get.back();
-                                              },
-                                            ),
-                                            ElevatedButton(
-                                              child: Text('ya'),
-                                              onPressed: () {
-                                                GetStorage().erase();
-                                                Get.offAndToNamed('/login');
-                                              },
-                                            ),
-                                            // ElevatedButton(
-                                            //   child: Text('load toko'),
-                                            //   onPressed: () {
-                                            //     controller.loadToko();
-                                            //   },
-                                            // ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
+                            leading: Builder(
+                              builder: (context) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Scaffold.of(context).openEndDrawer();
+                                    //controller.openDrawer();
+                                  },
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        margin: EdgeInsets.only(top: 10),
+                                        child: Icon(
+                                          Icons.person,
+                                          color: Colors.white,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: color_template().primary,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        GetStorage().read('name'),
+                                      ),
+                                    ],
                                   ),
-                                ));
+                                );
                               },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: 50,
-                                    height: 50,
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: color_template().primary,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    GetStorage().read('name'),
-                                  ),
-                                ],
-                              ),
                             ),
                             selectedIndex: controller.selectedIndex.value,
                             onDestinationSelected: (value) {
@@ -205,6 +235,14 @@ class base_menu extends GetView<base_menuController> {
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text('History'),
+                                ),
+                              ),
+                              NavigationRailDestination(
+                                icon: Icon(FontAwesomeIcons.receipt),
+                                selectedIcon: Icon(FontAwesomeIcons.receipt),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text('Laporan'),
                                 ),
                               ),
                             ],

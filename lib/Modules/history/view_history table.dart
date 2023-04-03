@@ -1,6 +1,10 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/loading.dart';
+import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/history/model_penjualan.dart';
+import 'package:rims_waserda/Modules/history/view_detail_penjualan.dart';
 
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
@@ -24,7 +28,15 @@ class history_table extends GetView<historyController> {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            header(title: 'Daftar Riwayat', icon: Icons.history),
+            header(
+              iscenter: false,
+              title: 'Daftar Riwayat Penjualan',
+              icon: Icons.history,
+              icon_funtion: Icons.refresh,
+              function: () {
+                controller.fetchPenjualan();
+              },
+            ),
             SizedBox(
               height: 10,
             ),
@@ -40,7 +52,7 @@ class history_table extends GetView<historyController> {
                       onChanged: ((String pass) {}),
                       decoration: InputDecoration(
                         icon: Icon(Icons.add_box),
-                        labelText: "cari history",
+                        labelText: "Penjualan Hari Ini",
                         labelStyle: TextStyle(
                           color: Colors.black87,
                         ),
@@ -60,128 +72,101 @@ class history_table extends GetView<historyController> {
                   ),
                 ),
                 icon_button_custom(
-                    onPressed: () {
-                      // controller.gethistory(controller.id_kas.value.text);
+                    onPressed: () async {
+                      Get.dialog(showloading());
+                      await controller.fetchPenjualanHariIni();
+
+                      Get.back();
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
               ],
             ),
-            Container(
-              //color: Colors.red,
-              height: context.height_query / 1.6,
-              margin: EdgeInsets.only(top: 15),
-              width: double.infinity,
-              child: SingleChildScrollView(
+            Expanded(
+              child: Container(
+                //color: Colors.red,
+                // height: context.height_query / 1.6,
+                margin: EdgeInsets.only(top: 10),
+                // width: double.infinity,
                 child: Obx(() {
-                  return DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'tanggal',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                  var source =
+                      penjualanTable(controller.penjualan_list.value).obs;
+                  return PaginatedDataTable2(
+                    horizontalMargin: 10,
+                    //minWidth: 1000,
+                    //minWidth: 10,
+                    //fit: FlexFit.loose,
+                    columnSpacing: 5,
+                    wrapInCard: false,
+                    renderEmptyRowsInTheEnd: false,
+                    headingRowColor: MaterialStateColor.resolveWith(
+                        (states) => color_template().primary.withOpacity(0.2)),
+                    autoRowsToHeight: true,
+                    showFirstLastButtons: true,
+                    empty: Center(
+                      child: Text(
+                        "Data Kosong",
+                        style: font().header_black,
+                      ),
+                    ),
+                    columns: const <DataColumn>[
+                      DataColumn(
+                        label: Text(
+                          'tanggal',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Nama Kasir',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Total item',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Subtotal',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Text(
+                          'Total',
+                          style: TextStyle(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Center(
+                          child: Text(
+                            'Bayar',
+                            style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                         ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'nomor transasksi',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                      ),
+                      DataColumn(
+                        label: Center(
+                          child: Text(
+                            'Status',
+                            style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                         ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'id kasir',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
+                      ),
+                      DataColumn(
+                        label: Center(
+                          child: Text(
+                            'Aksi',
+                            style: TextStyle(fontStyle: FontStyle.italic),
                           ),
                         ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Produk',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'QTY',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Center(
-                              child: Text(
-                                'Total',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Center(
-                              child: Text(
-                                'Aksi',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                      rows: List.generate(controller.history_list.length,
-                          (index) {
-                        return DataRow(cells: [
-                          DataCell(Container(
-                              child: Text(controller.history_list[index].tgl))),
-                          DataCell(Container(
-                              child: Text(controller
-                                  .history_list[index].nomorTransaksi))),
-                          DataCell(Container(
-                              child: Text(
-                                  controller.history_list[index].idKasir))),
-                          DataCell(Container(
-                              child: Text(
-                                  controller.history_list[index].namaProduk))),
-                          DataCell(Container(
-                              child: Text(controller.history_list[index].qty))),
-                          DataCell(Container(
-                              child:
-                                  Text(controller.history_list[index].total))),
-                          DataCell(Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    // print('qweqweqwe');
-                                    // Get.toNamed('/detail_produk');
-                                  },
-                                  icon: Icon(
-                                    Icons.ballot,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    Get.toNamed('/detail_produk');
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.delete, size: 18))
-                            ],
-                          ))
-                        ]);
-                      }));
+                      ),
+                    ],
+                    source: source.value,
+                  );
                 }),
               ),
             ),
@@ -192,5 +177,111 @@ class history_table extends GetView<historyController> {
         ),
       ),
     );
+  }
+}
+
+class penjualanTable extends DataTableSource {
+  final List<DataPenjualan> data;
+
+  penjualanTable(this.data);
+
+  var con = Get.find<historyController>();
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Center(child: Text(data[index].tglPenjualan))),
+      DataCell(Center(child: Text(data[index].namaUser))),
+      DataCell(Center(child: Text(data[index].totalItem))),
+      DataCell(Center(child: Text(data[index].subTotal))),
+      DataCell(Center(child: Text(data[index].total))),
+      DataCell(Center(child: Text(data[index].bayar))),
+      DataCell(Center(
+          child: data[index].status == 1
+              ? Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    'Selesai',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              : data[index].status == 2
+                  ? Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(10)),
+                      child:
+                          Text('Hutang', style: TextStyle(color: Colors.white)),
+                    )
+                  : data[index].status == 3
+                      ? Container(
+                          padding: EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                              color: Colors.purple,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text('Bayar Nanti',
+                              style: TextStyle(color: Colors.white)),
+                        )
+                      : data[index].status == 4
+                          ? Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                  color: color_template().tritadery,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text('Reversal',
+                                  style: TextStyle(color: Colors.white)),
+                            )
+                          : Text('-'))),
+      DataCell(Center(
+        child: Row(
+          children: [
+            Expanded(
+              child: IconButton(
+                  onPressed: () {
+                    Get.dialog(
+                        AlertDialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20.0))),
+                          contentPadding: EdgeInsets.zero,
+                          content: detail_penjualan(),
+                        ),
+                        arguments: data[index]);
+                    //popscreen().penjualandetail(con, data[index]);
+                    //Get.toNamed('/detail_penjualan', arguments: data[index]);
+                  },
+                  icon: Icon(
+                    Icons.list,
+                    size: 18,
+                  )),
+            ),
+            Expanded(
+              child: IconButton(
+                  onPressed: () {
+                    popscreen().reversalpenjualan(con, data[index]);
+                  },
+                  icon: Icon(
+                    Icons.cancel,
+                    size: 18,
+                    color: color_template().tritadery,
+                  )),
+            )
+          ],
+        ),
+      )),
+    ]);
   }
 }

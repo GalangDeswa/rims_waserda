@@ -14,6 +14,7 @@ class history extends GetView<historyController> {
     return SafeArea(
         //minimum: EdgeInsets.all(10),
         child: Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: color_template().primary.withOpacity(0.2),
             //backgroundColor: Colors.white,
             // appBar: appbar_custom(

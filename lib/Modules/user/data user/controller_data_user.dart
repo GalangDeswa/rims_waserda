@@ -26,11 +26,11 @@ class datauserController extends GetxController {
     // listUser.refresh();
   }
 
-  var listUser = <Datum>[].obs;
+  var listUser = <DataUser>[].obs;
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
 
-  Future<List<Datum>> userdata() async {
+  Future<List<DataUser>> userdata() async {
     print('-------------------userdata---------------------');
 
     // SchedulerBinding.instance.addPostFrameCallback(
