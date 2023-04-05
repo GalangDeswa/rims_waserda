@@ -3,8 +3,6 @@ import 'dart:io';
 import 'dart:math' as Math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as Img;
 import 'package:image_picker/image_picker.dart';
@@ -144,14 +142,14 @@ class tambah_produkController extends GetxController {
   var qrcode = ''.obs;
   String scaned_qr_code = '';
 
-  Future<void> scan() async {
-    try {
-      scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'cancel', true, ScanMode.QR);
-      Get.snackbar('result', scaned_qr_code);
-      barcodetext.value.text = scaned_qr_code;
-    } on PlatformException {}
-  }
+  // Future<void> scan() async {
+  //   try {
+  //     scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
+  //         '#ff6666', 'cancel', true, ScanMode.QR);
+  //     Get.snackbar('result', scaned_qr_code);
+  //     barcodetext.value.text = scaned_qr_code;
+  //   } on PlatformException {}
+  // }
 
   var kat_list = <Kategeori>[].obs;
   var suplier_list = <Supliyer>[].obs;

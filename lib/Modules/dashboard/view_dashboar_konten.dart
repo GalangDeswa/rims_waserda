@@ -21,8 +21,8 @@ class dashboard_konten extends GetView<dashboardController> {
               color: Colors.white,
               borderRadius: border_radius().def_border,
               border: Border.all(color: color_template().primary, width: 3.5)),
-          margin: EdgeInsets.only(left: 15),
-          height: context.height_query / 5.8,
+          margin: EdgeInsets.only(left: 15, top: 10),
+          height: context.height_query / 6.5,
           width: context.width_query,
           child: Obx(() {
             return CarouselSlider(

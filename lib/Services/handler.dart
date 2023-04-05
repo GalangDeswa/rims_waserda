@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -979,6 +980,209 @@ class REST extends GetConnect {
       print(
           'DATA PENJUALAN REVERSAL network handler----------------------------------------->');
       print('GAGAL DATA PENJUALAN REVERSAL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> laporanUmum(String token, idtoko, date1, date2) async {
+    //Completer<File> completer = Completer();
+    var response = await post(link().POST_laporanumum,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'date1': date1,
+          'date2': date2,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA LAPORAN UMUM network handler----------------------------------------->');
+      //  final filename = 'qwe';
+      var data = response;
+      return data;
+
+      // var request = await HttpClient().getUrl(link().POST_laporanumum);
+      //  var response = await request.close();
+      // var bytes = await consolidateHttpClientResponseBytes(response);
+
+      // Directory tempDir = await getTemporaryDirectory();
+      // String tempPath = tempDir.path;
+      // File file = File('$tempPath/$filename.pdf');
+      // print('$tempPath/$filename');
+      // await file.writeAsBytes(response.bodyBytes);
+      // return file;
+
+      //await file.writeAsBytes(bytes, flush: true);
+      //completer.complete(file);
+      // createFileOfPdfUrl().then((f) {
+      //   remotePDFpath.value = f.path;
+      // });
+
+      // File data = response.body;
+      // var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      //print(data);
+      print(response.statusCode);
+      // return completer.future;
+      //return (data);
+    } else {
+      print(
+          'DATA LAPORAN UMUM network handler----------------------------------------->');
+      print('GAGAL DATA LAPORAN UMUM');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> laporanPenjualan(
+      String token, idtoko, date1, date2) async {
+    //Completer<File> completer = Completer();
+    var response = await post(link().POST_laporanpenjualan,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'date1': date1,
+          'date2': date2,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA LAPORAN PENJUALAN network handler----------------------------------------->');
+      //  final filename = 'qwe';
+      var data = response;
+      return data;
+
+      // var request = await HttpClient().getUrl(link().POST_laporanumum);
+      //  var response = await request.close();
+      // var bytes = await consolidateHttpClientResponseBytes(response);
+
+      // Directory tempDir = await getTemporaryDirectory();
+      // String tempPath = tempDir.path;
+      // File file = File('$tempPath/$filename.pdf');
+      // print('$tempPath/$filename');
+      // await file.writeAsBytes(response.bodyBytes);
+      // return file;
+
+      //await file.writeAsBytes(bytes, flush: true);
+      //completer.complete(file);
+      // createFileOfPdfUrl().then((f) {
+      //   remotePDFpath.value = f.path;
+      // });
+
+      // File data = response.body;
+      // var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      //print(data);
+      print(response.statusCode);
+      // return completer.future;
+      //return (data);
+    } else {
+      print(
+          'DATA LAPORAN PENJUALAN network handler----------------------------------------->');
+      print('GAGAL DATA LAPORAN UMUM');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> laporanBeban(
+      String token, idtoko, date1, date2) async {
+    //Completer<File> completer = Completer();
+    var response = await post(link().POST_laporanbeban,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'date1': date1,
+          'date2': date2,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA LAPORAN BEBAN network handler----------------------------------------->');
+      //  final filename = 'qwe';
+      var data = response;
+      return data;
+
+      // var request = await HttpClient().getUrl(link().POST_laporanumum);
+      //  var response = await request.close();
+      // var bytes = await consolidateHttpClientResponseBytes(response);
+
+      // Directory tempDir = await getTemporaryDirectory();
+      // String tempPath = tempDir.path;
+      // File file = File('$tempPath/$filename.pdf');
+      // print('$tempPath/$filename');
+      // await file.writeAsBytes(response.bodyBytes);
+      // return file;
+
+      //await file.writeAsBytes(bytes, flush: true);
+      //completer.complete(file);
+      // createFileOfPdfUrl().then((f) {
+      //   remotePDFpath.value = f.path;
+      // });
+
+      // File data = response.body;
+      // var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      //print(data);
+      print(response.statusCode);
+      // return completer.future;
+      //return (data);
+    } else {
+      print(
+          'DATA LAPORAN BEBAN network handler----------------------------------------->');
+      print('GAGAL DATA LAPORAN BEBAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> laporanReversal(
+      String token, idtoko, date1, date2) async {
+    //Completer<File> completer = Completer();
+    var response = await post(link().POST_laporanreversal,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'date1': date1,
+          'date2': date2,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA LAPORAN REVERSAL network handler----------------------------------------->');
+      //  final filename = 'qwe';
+      var data = response;
+      return data;
+
+      // var request = await HttpClient().getUrl(link().POST_laporanumum);
+      //  var response = await request.close();
+      // var bytes = await consolidateHttpClientResponseBytes(response);
+
+      // Directory tempDir = await getTemporaryDirectory();
+      // String tempPath = tempDir.path;
+      // File file = File('$tempPath/$filename.pdf');
+      // print('$tempPath/$filename');
+      // await file.writeAsBytes(response.bodyBytes);
+      // return file;
+
+      //await file.writeAsBytes(bytes, flush: true);
+      //completer.complete(file);
+      // createFileOfPdfUrl().then((f) {
+      //   remotePDFpath.value = f.path;
+      // });
+
+      // File data = response.body;
+      // var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      //print(data);
+      print(response.statusCode);
+      // return completer.future;
+      //return (data);
+    } else {
+      print(
+          'DATA LAPORAN REVERSAL network handler----------------------------------------->');
+      print('GAGAL DATA LAPORAN REVERSAL');
       print(response.statusCode);
       print(response.body);
     }

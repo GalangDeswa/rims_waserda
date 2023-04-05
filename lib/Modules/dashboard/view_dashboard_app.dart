@@ -22,7 +22,7 @@ class dashboard_app extends GetView<base_menuController> {
                 borderRadius: border_radius().def_border,
                 border:
                     Border.all(color: color_template().primary, width: 3.5)),
-            margin: EdgeInsets.only(left: 15),
+            margin: EdgeInsets.only(left: 15, bottom: 10),
             height: context.height_query,
             width: context.width_query,
             child: Card(
@@ -35,9 +35,9 @@ class dashboard_app extends GetView<base_menuController> {
                     child: Wrap(
                       alignment: WrapAlignment.spaceBetween,
                       direction: Axis.horizontal,
-                      runSpacing: 15,
+                      runSpacing: 35,
                       spacing: 15,
-                      crossAxisAlignment: WrapCrossAlignment.start,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         dasboard_app_card(
                             function: () {
@@ -94,6 +94,17 @@ class dashboard_app extends GetView<base_menuController> {
                               placeholderBuilder: (context) => showloading(),
                             ),
                             label: 'History'),
+                        dasboard_app_card(
+                            function: () {
+                              controller.selectedIndex(6);
+                            },
+                            color: color_template().primary,
+                            icon: SvgPicture.asset(
+                              'assets/icons/laporan.svg',
+                              height: context.width_query / 15,
+                              placeholderBuilder: (context) => showloading(),
+                            ),
+                            label: 'Laporan'),
                       ],
                     ),
                   ),

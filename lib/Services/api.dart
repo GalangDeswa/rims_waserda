@@ -59,4 +59,11 @@ class link {
       Uri.parse(server().host + 'penjualan/data/hariini');
   final Uri POST_penjualanreversal =
       Uri.parse(server().host + 'penjualan/reversal');
+
+  final Uri POST_laporanumum = Uri.parse(server().host + 'laporan/umum');
+  final Uri POST_laporanpenjualan =
+      Uri.parse(server().host + 'laporan/penjualan');
+  final Uri POST_laporanbeban = Uri.parse(server().host + 'laporan/beban');
+  final Uri POST_laporanreversal =
+      Uri.parse(server().host + 'laporan/reversal');
 }

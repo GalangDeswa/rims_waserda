@@ -1,6 +1,4 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class color_template {
   var primary = Color.fromRGBO(87, 207, 252, 1);
@@ -58,6 +56,7 @@ class shadow {
 
 extension MediaQueryValues on BuildContext {
   double get width_query => MediaQuery.of(this).size.width;
+
   double get height_query => MediaQuery.of(this).size.height;
 }
 
@@ -67,5 +66,5 @@ class border_radius {
 }
 
 class elevation {
-  var def_elevation = 10.0;
+  var def_elevation = 9.0;
 }

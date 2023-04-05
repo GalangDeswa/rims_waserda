@@ -2,6 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/laporan/Controller_laporan.dart';
+import 'package:rims_waserda/Modules/laporan/view_pdf.dart';
 
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
@@ -24,7 +25,11 @@ class laporan_table_umum extends GetView<laporanController> {
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            header(title: 'Laporan Umum', icon: Icons.history),
+            header(
+              title: 'Laporan Umum',
+              icon: Icons.history,
+              iscenter: false,
+            ),
             SizedBox(
               height: 10,
             ),
@@ -39,23 +44,47 @@ class laporan_table_umum extends GetView<laporanController> {
                       child: TextFormField(
                         onTap: () {
                           FocusScope.of(context).requestFocus(new FocusNode());
-                          Get.dialog(Container(
-                            padding: EdgeInsets.all(50),
-                            child: Card(
+                          Get.dialog(AlertDialog(
+                            content: Container(
+                              width: context.width_query / 1.5,
+                              height: context.height_query / 1.5,
                               child: CalendarDatePicker2WithActionButtons(
-                                config:
-                                    CalendarDatePicker2WithActionButtonsConfig(
-                                  calendarType: CalendarDatePicker2Type.range,
-                                  centerAlignModePicker: true,
-                                ),
-                                value: controller.dates,
-                                onOkTapped: () {
-                                  Get.back();
-                                  print('tgl-----------------------------');
-                                },
-                                onValueChanged: (dates) => controller
-                                    .pickdate.value.text = dates.toString(),
-                              ),
+                                  config:
+                                      CalendarDatePicker2WithActionButtonsConfig(
+                                    weekdayLabels: [
+                                      'Minggu',
+                                      'Senin',
+                                      'Selasa',
+                                      'Rabu',
+                                      'Kamis',
+                                      'Jumat',
+                                      'Sabtu',
+                                    ],
+                                    firstDayOfWeek: 1,
+                                    calendarType: CalendarDatePicker2Type.range,
+                                    centerAlignModePicker: true,
+                                  ),
+                                  value: controller.dates,
+                                  onOkTapped: () {
+                                    Get.back();
+                                    print('tgl-----------------------------');
+                                  },
+                                  onValueChanged: (dates) {
+                                    var list = <String>[];
+                                    var start = dates.first;
+                                    final end = dates.last;
+                                    controller.pickdate.value.text =
+                                        (controller.dateformat.format(start!) +
+                                            ' - ' +
+                                            controller.dateformat.format(end!));
+
+                                    controller.date1 =
+                                        controller.dateformat.format(start);
+                                    controller.date2 =
+                                        controller.dateformat.format(end);
+                                    print(controller.date1);
+                                    print(controller.date2);
+                                  }),
                             ),
                           ));
                         },
@@ -87,153 +116,41 @@ class laporan_table_umum extends GetView<laporanController> {
                     ),
                   );
                 }),
-                icon_button_custom(
-                    onPressed: () {
-                      //controller.fetchDataBeban();
-                      Get.dialog(Container(
-                        padding: EdgeInsets.all(50),
-                        child: Card(
-                          child: CalendarDatePicker2WithActionButtons(
-                            config: CalendarDatePicker2WithActionButtonsConfig(
-                              calendarType: CalendarDatePicker2Type.range,
-                              centerAlignModePicker: true,
-                            ),
-                            value: controller.dates,
-                            onOkTapped: () {
-                              Get.back();
-                              print('tgl-----------------------------');
-                            },
-                            onValueChanged: (dates) => controller
-                                .pickdate.value.text = dates.toString(),
-                          ),
-                        ),
-                      ));
-                    },
-                    icon: Icons.search,
-                    container_color: color_template().primary),
+                controller.pickdate.value.text.isEmpty
+                    ? Container()
+                    : icon_button_custom(
+                        onPressed: () async {
+                          //controller.askPermission();
+                          // var status = await Permission.bluetooth.status;
+                          // if (!status.isGranted) {
+                          //   await Permission.bluetooth.request();
+                          // }
+
+                          await controller.laporanUmum();
+                        },
+                        icon: Icons.search,
+                        container_color: color_template().primary),
               ],
             ),
-            Container(
-              //color: Colors.red,
-              height: context.height_query / 1.6,
-              margin: EdgeInsets.only(top: 15),
-              width: double.infinity,
-              child: SingleChildScrollView(
-                  // child: Obx(() {
-                  //   return DataTable(
-                  //       columns: const <DataColumn>[
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Text(
-                  //               'tanggal',
-                  //               style: TextStyle(fontStyle: FontStyle.italic),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Text(
-                  //               'nomor transasksi',
-                  //               style: TextStyle(fontStyle: FontStyle.italic),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Text(
-                  //               'id kasir',
-                  //               style: TextStyle(fontStyle: FontStyle.italic),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Text(
-                  //               'Produk',
-                  //               style: TextStyle(fontStyle: FontStyle.italic),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Text(
-                  //               'QTY',
-                  //               style: TextStyle(fontStyle: FontStyle.italic),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Center(
-                  //               child: Text(
-                  //                 'Total',
-                  //                 style: TextStyle(fontStyle: FontStyle.italic),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //         DataColumn(
-                  //           label: Expanded(
-                  //             child: Center(
-                  //               child: Text(
-                  //                 'Aksi',
-                  //                 style: TextStyle(fontStyle: FontStyle.italic),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //       rows: List.generate(controller.history_list.length,
-                  //               (index) {
-                  //             return DataRow(cells: [
-                  //               DataCell(Container(
-                  //                   child: Text(controller.history_list[index].tgl))),
-                  //               DataCell(Container(
-                  //                   child: Text(controller
-                  //                       .history_list[index].nomorTransaksi))),
-                  //               DataCell(Container(
-                  //                   child: Text(
-                  //                       controller.history_list[index].idKasir))),
-                  //               DataCell(Container(
-                  //                   child: Text(
-                  //                       controller.history_list[index].namaProduk))),
-                  //               DataCell(Container(
-                  //                   child: Text(controller.history_list[index].qty))),
-                  //               DataCell(Container(
-                  //                   child:
-                  //                   Text(controller.history_list[index].total))),
-                  //               DataCell(Row(
-                  //                 children: [
-                  //                   IconButton(
-                  //                       onPressed: () {
-                  //                         // print('qweqweqwe');
-                  //                         // Get.toNamed('/detail_produk');
-                  //                       },
-                  //                       icon: Icon(
-                  //                         Icons.ballot,
-                  //                         size: 18,
-                  //                       )),
-                  //                   IconButton(
-                  //                       onPressed: () {
-                  //                         Get.toNamed('/detail_produk');
-                  //                       },
-                  //                       icon: Icon(
-                  //                         Icons.edit,
-                  //                         size: 18,
-                  //                       )),
-                  //                   IconButton(
-                  //                       onPressed: () {},
-                  //                       icon: Icon(Icons.delete, size: 18))
-                  //                 ],
-                  //               ))
-                  //             ]);
-                  //           }));
-                  // }),
-                  ),
-            ),
-            SizedBox(
-              height: 15,
-            )
+            Obx(() {
+              return Expanded(
+                child: Container(
+
+                    // height: context.height_query / 1.6,
+                    margin: EdgeInsets.only(top: 10),
+                    // width: double.infinity,
+                    child: controller.path_umum.isEmpty
+                        ? Center(
+                            child: Text(
+                            'Tidak ada data',
+                            style: font().header_black,
+                          ))
+                        : PDFScreen(
+                            path: controller.path_umum.value,
+                            file: controller.pdffile_umum,
+                          )),
+              );
+            }),
           ],
         ),
       ),

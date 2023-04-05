@@ -29,7 +29,7 @@ class dashboard extends GetView<dashboardController> {
                     child: Column(
                   children: [
                     Card(
-                      margin: EdgeInsets.only(bottom: 15),
+                      margin: EdgeInsets.only(bottom: 10),
                       color: color_template().primary,
                       elevation: elevation().def_elevation,
                       shape: RoundedRectangleBorder(
@@ -112,13 +112,7 @@ class dashboard extends GetView<dashboardController> {
                 )),
                 Expanded(
                   child: Column(
-                    children: [
-                      dashboard_app(),
-                      SizedBox(
-                        height: context.height_query / 30,
-                      ),
-                      dashboard_konten()
-                    ],
+                    children: [dashboard_app(), dashboard_konten()],
                   ),
                 )
               ],

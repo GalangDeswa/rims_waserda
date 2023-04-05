@@ -13,6 +13,34 @@ class splashController extends GetxController {
         'splash init---------------------------------------------------------->');
   }
 
+  // Future askPermission() async {
+  //   return await [
+  //     Permission.photos,
+  //     //Permission.videos,
+  //     //Permission.audio,
+  //     //Permission.manageExternalStorage,
+  //     //Permission.accessMediaLocation,
+  //   ].request().then((permission) async {
+  //     print(
+  //         'permisison----------------------------------------------------------');
+  //     print(permission);
+  //     if (permission.containsValue(PermissionStatus.denied) ||
+  //         permission.containsValue(PermissionStatus.permanentlyDenied)) {
+  //       isGranted(false);
+  //       await [
+  //         Permission.photos,
+  //         Permission.videos,
+  //         Permission.audio,
+  //         //Permission.manageExternalStorage,
+  //         // Permission.accessMediaLocation,
+  //         // Permission.locationAlways,
+  //       ].request();
+  //     } else {
+  //       isGranted(true);
+  //     }
+  //   });
+  // }
+
   checkLogin() async {
     var loginStatus = GetStorage().read('token');
     var toko_user = GetStorage().read('id_toko');

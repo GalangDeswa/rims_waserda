@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -526,14 +524,14 @@ class kasirController extends GetxController {
   var qrcode = ''.obs;
   String scaned_qr_code = '';
 
-  Future<void> scan() async {
-    try {
-      scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'cancel', true, ScanMode.QR);
-      Get.snackbar('result', scaned_qr_code);
-      barcodetext.value.text = scaned_qr_code;
-    } on PlatformException {}
-  }
+  // Future<void> scan() async {
+  //   try {
+  //     scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
+  //         '#ff6666', 'cancel', true, ScanMode.QR);
+  //     Get.snackbar('result', scaned_qr_code);
+  //     barcodetext.value.text = scaned_qr_code;
+  //   } on PlatformException {}
+  // }
 
   // Future<void> scankasir() async {
   //   try {
