@@ -15,18 +15,19 @@ class detail_produk_gambar extends GetView<detail_produkController> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-            margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            width: 300,
-            height: 300,
-            decoration: BoxDecoration(
-                color: color_template().primary,
-                borderRadius: BorderRadius.circular(10)),
-            child: Icon(
-              Icons.image,
-              color: Colors.white,
-              size: 50,
-            )),
+        Expanded(
+          child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              width: 300,
+              decoration: BoxDecoration(
+                  color: color_template().primary,
+                  borderRadius: BorderRadius.circular(10)),
+              child: Icon(
+                Icons.image,
+                color: Colors.white,
+                size: 50,
+              )),
+        ),
         SizedBox(
           height: 10,
         ),
@@ -70,19 +71,6 @@ class detail_produk_gambar extends GetView<detail_produkController> {
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: Container(
-              width: 300,
-              margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              decoration: BoxDecoration(
-                  color: color_template().primary,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Icon(
-                Icons.qr_code,
-                color: Colors.white,
-                size: 50,
-              )),
         ),
       ],
     );

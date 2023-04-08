@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/produk/tambah%20produk/view_tambah_produk_form.dart';
+import 'package:rims_waserda/Modules/produk/edit%20produk/controller_edit_produk.dart';
+import 'package:rims_waserda/Modules/produk/edit%20produk/view_edit_produk_form.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/stack bg.dart';
-import 'controller_tambah_produk.dart';
 
-class tambah_produk extends GetView<tambah_produkController> {
-  const tambah_produk({Key? key}) : super(key: key);
+class edit_produk extends GetView<editprodukController> {
+  const edit_produk({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class tambah_produk extends GetView<tambah_produkController> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(30),
-              child: tambah_produk_form(),
+              child: edit_produk_form(),
             ),
           ),
         ),

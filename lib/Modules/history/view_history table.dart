@@ -83,92 +83,95 @@ class history_table extends GetView<historyController> {
               ],
             ),
             Expanded(
-              child: Container(
-                //color: Colors.red,
-                // height: context.height_query / 1.6,
-                margin: EdgeInsets.only(top: 10),
-                // width: double.infinity,
-                child: Obx(() {
-                  var source =
-                      penjualanTable(controller.penjualan_list.value).obs;
-                  return PaginatedDataTable2(
-                    horizontalMargin: 10,
-                    //minWidth: 1000,
-                    //minWidth: 10,
-                    //fit: FlexFit.loose,
-                    columnSpacing: 5,
-                    wrapInCard: false,
-                    renderEmptyRowsInTheEnd: false,
-                    headingRowColor: MaterialStateColor.resolveWith(
-                        (states) => color_template().primary.withOpacity(0.2)),
-                    autoRowsToHeight: true,
-                    showFirstLastButtons: true,
-                    empty: Center(
-                      child: Text(
-                        "Data Kosong",
-                        style: font().header_black,
-                      ),
-                    ),
-                    columns: const <DataColumn>[
-                      DataColumn(
-                        label: Text(
-                          'tanggal',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Nama Kasir',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Total item',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Subtotal',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Text(
-                          'Total',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Center(
-                          child: Text(
-                            'Bayar',
-                            style: TextStyle(fontStyle: FontStyle.italic),
+              child: Obx(() {
+                var source =
+                    penjualanTable(controller.penjualan_list.value).obs;
+                return Container(
+                  //color: Colors.red,
+                  // height: context.height_query / 1.6,
+                  margin: EdgeInsets.only(top: 10),
+                  // width: double.infinity,
+                  child: controller.penjualan_list.value.isEmpty
+                      ? Container(width: 100, height: 100, child: showloading())
+                      : PaginatedDataTable2(
+                          horizontalMargin: 10,
+                          //minWidth: 1000,
+                          //minWidth: 10,
+                          //fit: FlexFit.loose,
+                          columnSpacing: 5,
+                          wrapInCard: false,
+                          renderEmptyRowsInTheEnd: false,
+                          headingRowColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  color_template().primary.withOpacity(0.2)),
+                          autoRowsToHeight: true,
+                          showFirstLastButtons: true,
+                          empty: Center(
+                            child: Text(
+                              "Data Kosong",
+                              style: font().header_black,
+                            ),
                           ),
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'tanggal',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Nama Kasir',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Total item',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Subtotal',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Total',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Bayar',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Status',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Aksi',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ],
+                          source: source.value,
                         ),
-                      ),
-                      DataColumn(
-                        label: Center(
-                          child: Text(
-                            'Status',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
-                      DataColumn(
-                        label: Center(
-                          child: Text(
-                            'Aksi',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ),
-                    ],
-                    source: source.value,
-                  );
-                }),
-              ),
+                );
+              }),
             ),
             SizedBox(
               height: 15,
@@ -202,9 +205,15 @@ class penjualanTable extends DataTableSource {
       DataCell(Center(child: Text(data[index].tglPenjualan))),
       DataCell(Center(child: Text(data[index].namaUser))),
       DataCell(Center(child: Text(data[index].totalItem))),
-      DataCell(Center(child: Text(data[index].subTotal))),
-      DataCell(Center(child: Text(data[index].total))),
-      DataCell(Center(child: Text(data[index].bayar))),
+      DataCell(Center(
+          child: Text('Rp. ' +
+              con.nominal.format(double.parse(data[index].subTotal))))),
+      DataCell(Center(
+          child: Text(
+              'Rp. ' + con.nominal.format(double.parse(data[index].total))))),
+      DataCell(Center(
+          child: Text(
+              'Rp. ' + con.nominal.format(double.parse(data[index].bayar))))),
       DataCell(Center(
           child: data[index].status == 1
               ? Container(

@@ -42,7 +42,7 @@ class toast {
           padding: EdgeInsets.all(5),
           decoration:
               BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-          child: Icon(Icons.check, color: color_template().primary)),
+          child: Icon(Icons.check, color: Colors.lightBlue[900])),
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: color_template().primary,
       borderRadius: 20,

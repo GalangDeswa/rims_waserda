@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 
 import 'controller_login.dart';
 
@@ -30,18 +29,10 @@ class login_carousel extends GetView<loginController> {
               autoPlay: true,
               autoPlayInterval: Duration(seconds: 6),
             ),
-            items: login_con.iklan
+            items: login_con.konten
                 .map((x) => ClipRRect(
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            child: Container(
-                              margin: EdgeInsets.only(top: 20),
-                              child: Lottie.asset(x),
-                            ),
-                          )
-                        ],
-                      ),
+                      borderRadius: BorderRadius.circular(15),
+                      child: Image.asset(x),
                     ))
                 .toList(),
           );

@@ -43,14 +43,21 @@ class font {
   );
 
   var reguler_white = TextStyle(fontSize: 18, color: Colors.white);
+
+  var produktitle =
+      TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold);
+  var produkharga = TextStyle(
+    fontSize: 15,
+    color: Colors.white,
+  );
 }
 
 class shadow {
   var reguler = BoxShadow(
     color: Colors.black.withOpacity(0.2),
-    spreadRadius: 3,
-    blurRadius: 10,
-    offset: Offset(3, 5), // changes position of shadow
+    spreadRadius: 1,
+    blurRadius: 8,
+    offset: Offset(2, 5), // changes position of shadow
   );
 }
 

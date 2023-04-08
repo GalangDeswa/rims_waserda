@@ -5,7 +5,6 @@ import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Modules/kasir/model_kasir.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
-import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
 import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
@@ -299,59 +298,54 @@ class popscreen {
     ));
   }
 
-  void deletejenis(
-      BuildContext context, editjenisController controller, DataJenis arg) {
-    showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: header(
-                title: 'Hapus Data',
-                icon: Icons.warning,
-                icon_color: color_template().tritadery,
-                base_color: color_template().tritadery),
-            contentPadding: EdgeInsets.all(10),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(12.0),
-              ),
-            ),
-            content: Builder(
-              builder: (context) {
-                return Container(
-                    width: context.width_query / 2.6,
-                    height: context.height_query / 2.6,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "Hapus data " + arg.namaJenis + '?',
-                          style: font().header_black,
-                        ),
-                        button_solid_custom(
-                            onPressed: () {
-                              controller.deletejenis(arg.id.toString());
-                            },
-                            child: Text(
-                              'Hapus',
-                              style: font().primary_white,
-                            ),
-                            width: context.width_query / 4,
-                            height: context.height_query / 10),
-                        button_border_custom(
-                            onPressed: () {},
-                            child: Text(
-                              'Batal',
-                              style: font().primary,
-                            ),
-                            width: context.width_query / 4,
-                            height: context.height_query / 10)
-                      ],
-                    ));
-              },
-            ),
-          );
-        });
+  void deletejenis(produkController controller, DataJenis arg) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Hapus Data',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Hapus data " + arg.namaJenis + '?',
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.deletejenis(arg.id.toString());
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {},
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
   }
 
   deleteprodukv2(produkController controller, DataProduk arg) {
@@ -390,7 +384,9 @@ class popscreen {
                       width: context.width_query / 4,
                       height: context.height_query / 10),
                   button_border_custom(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                      },
                       child: Text(
                         'Batal',
                         style: font().primary,
@@ -1490,11 +1486,9 @@ class popscreen {
         arguments: qwe);
   }
 
-  void deleteuser(
-      BuildContext context, datauserController controller, DataUser arg) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
+  void deleteuser(datauserController controller, DataUser arg) {
+    Get.dialog(
+      AlertDialog(
         title: Text('Hapus data'),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(

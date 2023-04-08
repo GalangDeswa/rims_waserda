@@ -270,4 +270,20 @@ class loginController extends GetxController {
       );
     }
   }
+
+  var konten = [
+    'assets/konten/digital marketing 1.png',
+    'assets/konten/digital marketing 2.png',
+    'assets/konten/digital marketing 3.png',
+    'assets/konten/digital marketing 4.png',
+    'assets/konten/brosur signage ig.png',
+    'assets/konten/brosur signage ig 2.png',
+    'assets/konten/rims kopsiah.png',
+    'assets/konten/rims simpeg.png',
+    'assets/konten/rims notaris.png',
+    'assets/konten/rims dental.png',
+    'assets/konten/rims butik.png',
+    'assets/konten/rims beauty.png',
+    'assets/konten/rims barbaer.png',
+  ].obs;
 }

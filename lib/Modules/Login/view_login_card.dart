@@ -70,10 +70,10 @@ class login_card extends GetView<loginController> {
                       login_carousel(),
                       Obx(() {
                         return DotsIndicator(
-                          dotsCount: controller.iklan.length,
+                          dotsCount: controller.konten.length,
                           position: controller.current.toDouble(),
                           decorator: DotsDecorator(
-                            color: Colors.black87, // Inactive color
+                            color: color_template().secondary, // Inactive color
                             activeColor: color_template().select,
                           ),
                         );

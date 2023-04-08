@@ -49,32 +49,4 @@ class editjenisController extends GetxController {
     }
     return [];
   }
-
-  deletejenis(String id) async {
-    Get.dialog(
-      showloading(),
-      barrierDismissible: false,
-    );
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var jenis = await REST.produkJenidelete(token, id, id_toko);
-      if (jenis != null) {
-        print(jenis);
-        //get.back close overlay otomatis close dan back page sebelumnya?
-
-        Get.back(closeOverlays: true);
-
-        Get.showSnackbar(toast()
-            .bottom_snackbar_success('Berhasil', 'jenis Berhasil dihapus'));
-      } else {
-        Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'gagal menghapus'));
-      }
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_success('Error', 'periksa koneksi'));
-    }
-  }
 }

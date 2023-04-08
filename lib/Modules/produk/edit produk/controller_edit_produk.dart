@@ -6,40 +6,75 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:rims_waserda/Models/produkv2.dart';
-import 'package:rims_waserda/Modules/Widgets/toast.dart';
-import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
-import 'package:rims_waserda/Modules/produk/data%20produk/view_produk_table.dart';
-import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
-import 'package:rims_waserda/Modules/produk/jenis%20produk/view_jenis_table.dart';
-import 'package:rims_waserda/Services/handler.dart';
 
-import '../../../Templates/setting.dart';
-import '../../Widgets/buttons.dart';
-import '../../Widgets/header.dart';
+import '../../../Services/handler.dart';
 import '../../Widgets/loading.dart';
-import 'model_produk.dart';
+import '../../Widgets/toast.dart';
+import '../data produk/model_produk.dart';
+import '../jenis produk/model_jenisproduk.dart';
 
-class produkController extends GetxController {
+class editprodukController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    //getprodukall();
-    //check_conn.check();
-    fetchProduk();
     fetchjenis();
-    //nama_jenis.value = TextEditingController(text: data.namaJenis);
-    //Get.snackbar('sukses', 'produk controller init');
+    nama_produk.value = TextEditingController(text: data.namaProduk);
+    desc.value = TextEditingController(text: data.deskripsi);
+    harga.value = TextEditingController(text: data.harga);
+    qty.value = TextEditingController(text: data.qty);
 
-    print('produk controller--------------------------------------->');
+    pikedImagePath.value = data.image.toString();
+    //pickedImageFile = File(data.image);
+
+    jenisvalue.value = data.idJenis;
   }
 
+  late var jenisvalue = data.idJenis.toString().obs;
+
+  ProdukEdit() async {
+    print('-------------------edit Produk---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var produk = await REST.produkEdit(
+          token,
+          data.id,
+          id_toko,
+          id_user,
+          data.idJenis,
+          nama_produk.value.text,
+          desc.value.text,
+          harga.value.text,
+          pickedImageFile!);
+      if (produk != null) {
+        print(produk);
+
+        await fetchProduk();
+        Get.back(closeOverlays: true, result: true);
+        Get.showSnackbar(toast().bottom_snackbar_success(
+            'Berhasil', 'Produk Berhasil diperbaharui'));
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(toast()
+            .bottom_snackbar_error('Error', 'Produk Gagal diperbaharui'));
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+    return [];
+  }
+
+  var data = Get.arguments;
+
   final nominal = NumberFormat("#,##0");
-  var formKeyproduk = GlobalKey<FormState>().obs;
+  var formKeyprodukedit = GlobalKey<FormState>().obs;
   var formKeyjenis = GlobalKey<FormState>().obs;
   var loading = true.obs;
-  var produk_list = <ProdukElement>[].obs;
+
   var id_user = GetStorage().read('id_user');
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
@@ -57,7 +92,7 @@ class produkController extends GetxController {
   List<String> listimagepath = [];
   var selectedfilecount = 0.obs;
 
-  Future pickImageCamera() async {
+  Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(
           source: ImageSource.camera,
@@ -68,34 +103,10 @@ class produkController extends GetxController {
       pickedImageFile = File(image.path);
       pikedImagePath.value = pickedImageFile!.path;
       print(pikedImagePath);
-      Get.back();
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
     }
   }
-
-  Future pickImageGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 85,
-          maxHeight: 300,
-          maxWidth: 300);
-      if (image == null) return;
-      pickedImageFile = File(image.path);
-      pikedImagePath.value = pickedImageFile!.path;
-      print(pikedImagePath);
-      Get.back();
-    } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
-    }
-  }
-
-  List<Widget> table = const [
-    produk_table(),
-    jenis_table(),
-  ];
-  RxInt selectedindex = 0.obs;
 
   var search = TextEditingController().obs;
 
@@ -110,7 +121,8 @@ class produkController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
-
+        //produklist.refresh();
+        //update();
         print('--------------------list produk---------------');
         print(produklist);
 
@@ -119,15 +131,41 @@ class produkController extends GetxController {
         return produklist;
       } else {
         Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+        Get.snackbar(
+          "Error",
+          "Data user gagal,user tidak ada",
+          icon: Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+      Get.snackbar(
+        "Error",
+        "Data user gagal,periksa koneksi",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
     }
-    // return [];
+    return [];
   }
 
   fetchjenis() async {
@@ -186,10 +224,6 @@ class produkController extends GetxController {
     return [];
   }
 
-  var data = Get.arguments;
-
-  String? jenisvalue;
-
   var desc = TextEditingController().obs;
   var nama_produk = TextEditingController().obs;
   var harga = TextEditingController().obs;
@@ -197,16 +231,6 @@ class produkController extends GetxController {
 
   var qty = TextEditingController().obs;
   var image;
-
-  clear() {
-    desc.value.clear();
-    nama_produk.value.clear();
-    harga.value.clear();
-    nama_jenis.value.clear();
-
-    qty.value.clear();
-    pikedImagePath.value = '';
-  }
 
   ProdukTambah() async {
     print('-------------------tambah Produk---------------------');
@@ -226,10 +250,8 @@ class produkController extends GetxController {
           pickedImageFile!);
       if (produk != null) {
         print(produk);
-        clear();
-        await fetchProduk();
-        await Get.find<kasirController>().fetchProduk();
 
+        await fetchProduk();
         Get.back(closeOverlays: true, result: true);
         Get.showSnackbar(toast()
             .bottom_snackbar_success('Berhasil', 'Produk Berhasil diTambah'));
@@ -356,172 +378,4 @@ class produkController extends GetxController {
           toast().bottom_snackbar_success('Error', 'periksa koneksi'));
     }
   }
-
-  var qtyadd = TextEditingController().obs;
-
-  editqty(String id, stock) async {
-    print('-------------------edit jenis---------------------');
-
-    Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var qty =
-          await REST.produkqtytambah(token, id, id_toko, qtyadd.value.text);
-      if (qty != null) {
-        print(qty);
-        var sum = int.parse(stock) + int.parse(qtyadd.value.text);
-        qty = sum.toString();
-        qtyadd.value.clear();
-        await fetchProduk();
-        Get.back(closeOverlays: true, result: true);
-        Get.showSnackbar(toast()
-            .bottom_snackbar_success('Berhasil', 'qty Berhasil ditambah'));
-      } else {
-        Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'qty Gagal ditambah'));
-      }
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
-    }
-    return [];
-  }
-
-  addqty(produkController controller, DataProduk arg) {
-    Get.dialog(AlertDialog(
-      title: header(
-          title: 'Tambah Stock',
-          icon: Icons.add,
-          icon_color: color_template().primary,
-          base_color: color_template().primary),
-      contentPadding: EdgeInsets.all(10),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(12.0),
-        ),
-      ),
-      content: Builder(
-        builder: (context) {
-          return SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                width: context.width_query / 2.6,
-                height: context.height_query / 2.6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text('Masukan jumlah yang akan di tambah'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              textAlign: TextAlign.center,
-                              controller: qtyadd.value,
-                              style: font().header_black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    button_solid_custom(
-                        onPressed: () {
-                          editqty(arg.id.toString(), arg.qty);
-                        },
-                        child: Text(
-                          'Tambah Stock',
-                          style: font().primary_white,
-                        ),
-                        width: context.width_query,
-                        height: context.height_query / 11),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    button_border_custom(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text(
-                          'Batal',
-                          style: font().primary,
-                        ),
-                        width: context.width_query,
-                        height: context.height_query / 11)
-                  ],
-                )),
-          );
-        },
-      ),
-    ));
-  }
-
-  pilihsourcefoto() {
-    Get.dialog(AlertDialog(
-      title: header(
-          iscenter: true,
-          title: 'Foto Produk',
-          icon: Icons.image,
-          icon_color: color_template().primary,
-          base_color: color_template().primary),
-      contentPadding: EdgeInsets.all(10),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(12.0),
-        ),
-      ),
-      content: Builder(
-        builder: (context) {
-          return Container(
-              width: context.width_query / 2.6,
-              height: context.height_query / 2.6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    "pilih sumber foto",
-                    style: font().header_black,
-                  ),
-                  button_solid_custom(
-                      onPressed: () {
-                        pickImageGallery();
-                      },
-                      child: Text(
-                        'Galery',
-                        style: font().primary_white,
-                      ),
-                      width: context.width_query / 4,
-                      height: context.height_query / 10),
-                  button_border_custom(
-                      onPressed: () {
-                        pickImageCamera();
-                      },
-                      child: Text(
-                        'Kamera',
-                        style: font().primary,
-                      ),
-                      width: context.width_query / 4,
-                      height: context.height_query / 10)
-                ],
-              ));
-        },
-      ),
-    ));
-  }
-
-//
 }

@@ -38,65 +38,6 @@ class tambah_produkController extends GetxController {
   var satuan = TextEditingController().obs;
   var stock = TextEditingController().obs;
 
-  // Future<List> getjenis() async {
-  //   var response = await api().client.get(link().GET_jenisproduk);
-  //   if (response.statusCode == 200) {
-  //     var hasil = json.decode(response.body);
-  //     jenisproduk.value = hasil;
-  //
-  //     print('--------------------------------------------------------------');
-  //     print(jenisproduk);
-  //     return jenisproduk;
-  //   } else {
-  //     return [];
-  //   }
-  // }
-
-  // Future<dynamic> tambahbarang() async {
-  //   Get.dialog(
-  //       Center(
-  //         child: CircularProgressIndicator(),
-  //       ),
-  //       barrierDismissible: false);
-  //
-  //   var response = await api().client.post(link().POST_tambahproduk,
-  //       body: ({
-  //         'nama_produk': nama_produk.value.text,
-  //         'harga': harga_jual.value.text,
-  //         'id_kategori': '1',
-  //         'kode_produk': kode_produk.value.text,
-  //         'barcode': barcode.value.text,
-  //         'id_jenis': '1',
-  //         'satuan': satuan.value.text,
-  //         'stock': stock.value.text,
-  //       }));
-  //
-  //   if (response != null) {
-  //     var hasil = json.decode(response.body);
-  //     Get.back();
-  //     Get.snackbar('sukses', 'user di tambah');
-  //
-  //     return hasil;
-  //   } else {
-  //     Get.back();
-  //     Get.snackbar(
-  //       "Error",
-  //       'gagal tambah',
-  //       icon: Icon(Icons.error, color: Colors.white),
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       borderRadius: 20,
-  //       margin: EdgeInsets.all(15),
-  //       colorText: Colors.white,
-  //       duration: Duration(seconds: 4),
-  //       isDismissible: true,
-  //       dismissDirection: DismissDirection.horizontal,
-  //       forwardAnimationCurve: Curves.elasticInOut,
-  //       reverseAnimationCurve: Curves.easeOut,
-  //     );
-  //   }
-  // }
-
   var val_jenis = ''.obs;
 
   List kategori = ['Makanan', "minuman"].obs;
@@ -169,47 +110,6 @@ class tambah_produkController extends GetxController {
 
   var loading = true.obs;
 
-  // void getsuplier() async {
-  //   try {
-  //     loading(true);
-  //     var checkconn = await check_conn.check();
-  //     if (checkconn == true) {
-  //       var suplier = await api.get_suplier();
-  //       if (suplier != null) {
-  //         suplier_list.value = suplier;
-  //       }
-  //     } else {
-  //       Get.snackbar('conn', 'tidak ada konenksi');
-  //     }
-  //   } finally {
-  //     loading(false);
-  //   }
-  // }
-
-  // void getkategori() async {
-  //   try {
-  //     loading(true);
-  //     var checkconn = await check_conn.check();
-  //     if (checkconn == true) {
-  //       var list = await api.get_kategori();
-  //       if (list != null) {
-  //         kat_list.value = list;
-  //       }
-  //     } else {
-  //       Get.snackbar('conn', 'tidak ada konenksi');
-  //     }
-  //   } finally {
-  //     loading(false);
-  //   }
-  // }
-
-  var barang_kode = TextEditingController().obs;
-  var barang_jenis = TextEditingController().obs;
-  var barang_nama = TextEditingController().obs;
-  var barang_id_kategori = TextEditingController().obs;
-  var barang_id_supliyer = TextEditingController().obs;
-  var barang_harga = TextEditingController().obs;
-  var barang_qty = TextEditingController().obs;
   List? imageFileList = [].obs;
   File? imgFile;
   var imagesize = ''.obs;
@@ -321,70 +221,4 @@ class tambah_produkController extends GetxController {
       Get.snackbar('error', 'no img');
     }
   }
-
-// Future<Map<String, dynamic>?> register_tambah_barang() async {
-//   final postbarang = http.MultipartRequest('POST', link().POST_produk);
-//   if (imgFile != null) {
-//     /* postbarang.files
-//         .add(await http.MultipartFile.fromPath('foto[]', imgFile!.path));*/
-//     final mimeTypeData =
-//         lookupMimeType(imgFile!.path, headerBytes: [0xFF, 0xD8])!.split('/');
-//     final foto = await http.MultipartFile.fromPath('foto[]', imgFile!.path,
-//         contentType: MediaType(mimeTypeData[0], mimeTypeData[1]));
-//
-//     postbarang.files.add(foto);
-//   }
-//
-//   postbarang.fields['kode_barang'] = barang_kode.value.text;
-//   postbarang.fields['jenis_barang'] = barang_jenis.value.text;
-//   postbarang.fields['nama_barang'] = barang_nama.value.text;
-//
-//   postbarang.fields['id_kategori'] = selected.value;
-//   postbarang.fields['id_supliyer'] = selected_sup.value;
-//
-//   postbarang.fields['harga'] = barang_harga.value.text;
-//
-//   postbarang.fields['qty'] = barang_qty.value.text;
-//
-//   try {
-//     final streamedResponse = await postbarang.send();
-//     final response = await http.Response.fromStream(streamedResponse);
-//     if (response.statusCode != 200) {
-//       print(response.statusCode);
-//       return null;
-//     }
-//     final Map<String, dynamic> responseData = json.decode(response.body);
-//     print(responseData);
-//     Get.snackbar('pesan', 'Berhasil di tambah');
-//     return responseData;
-//   } catch (e) {
-//     print(e);
-//     return null;
-//   }
-// }
-
-/*void start_register_tambah_barang() async {
-    if (barang_namaText != '' ||
-        barang_hargaText != '' ||
-        barang_descText != '') {
-      formKey.currentState?.save();
-
-      final Map<String, dynamic>? response = await register_tambah_barang();
-
-      // Check if any error occured
-      if (response == null) {
-        pr.hide();
-        BotToast.showSimpleNotification(title: 'gagal');
-
-        print(response);
-      } else {
-        Get.off(() => detail_toko_setting());
-        BotToast.showText(
-            text: 'Berhasil di tambah',
-            contentColor: Colors.green,
-            textStyle:
-                TextStyle(fontWeight: FontWeight.bold, color: Colors.white));
-      }
-    }
-  }*/
 }

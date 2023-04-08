@@ -97,6 +97,7 @@ class dashboard extends GetView<dashboardController> {
                                 //print(GetStorage().read('token'));
                               },
                               child: CircleAvatar(
+                                backgroundColor: Colors.white,
                                 child: CachedNetworkImage(
                                   imageUrl: controller.logo,
                                 ),

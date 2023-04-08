@@ -4,6 +4,7 @@ import 'package:rims_waserda/Modules/history/binding_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/history/binding_history.dart';
 import 'package:rims_waserda/Modules/history/view_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/binding_data_produk.dart';
+import 'package:rims_waserda/Modules/produk/edit%20produk/binding_edit_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/binding_edit_jenis.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/view_edit_jenis.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/view_tambah_jenis.dart';
@@ -31,6 +32,7 @@ import '../Modules/laporan/binding_laporan.dart';
 import '../Modules/laporan/view_laporan_base.dart';
 import '../Modules/produk/detail produk/binding_detail_produk.dart';
 import '../Modules/produk/detail produk/view_detail_produk_base.dart';
+import '../Modules/produk/edit produk/view_edit_produk_base.dart';
 import '../Modules/produk/tambah produk/view_tambah_produk_base.dart';
 import '../Modules/reset password/binding_reset_password.dart';
 import '../Modules/reset password/view_reset_password_base.dart';
@@ -113,4 +115,8 @@ final List<GetPage<dynamic>> route = [
       name: "/detail_penjualan",
       page: () => detail_penjualan(),
       binding: detailpenjualanBinding()),
+  GetPage(
+      name: "/edit_produk",
+      page: () => edit_produk(),
+      binding: editprodukBinding()),
 ];

@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:rims_waserda/Services/api.dart';
 
 class check_conn {
@@ -44,7 +44,7 @@ class check_conn {
 
 class REST extends GetConnect {
   static Future<dynamic> login(String email, password) async {
-    var response = await post(link().POST_login,
+    var response = await http.post(link().POST_login,
         body: ({
           'email': email,
           'password': password,
@@ -67,7 +67,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> loadToko(String token, idtoko) async {
-    var response = await post(link().POST_loadtoko,
+    var response = await http.post(link().POST_loadtoko,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -90,7 +90,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> userData(String token, idtoko) async {
-    var response = await post(link().POST_userdata,
+    var response = await http.post(link().POST_userdata,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -114,7 +114,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> userTambah(
       String token, idtoko, iduser, nama, email, password, role, hp) async {
-    var response = await post(link().POST_usertambah,
+    var response = await http.post(link().POST_usertambah,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -144,7 +144,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> userEdit(
       String token, idtoko, id, iduser, nama, email, hp) async {
-    var response = await post(link().POST_useredit,
+    var response = await http.post(link().POST_useredit,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -178,7 +178,7 @@ class REST extends GetConnect {
     iduser,
     password,
   ) async {
-    var response = await post(link().POST_usereditpassword,
+    var response = await http.post(link().POST_usereditpassword,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -204,7 +204,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> userDelete(String token, idtoko, id) async {
-    var response = await post(link().POST_userdelete,
+    var response = await http.post(link().POST_userdelete,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -230,7 +230,7 @@ class REST extends GetConnect {
   //-------------------------------------------------------------------------
 
   static Future<dynamic> produkAll(String token, idtoko, search) async {
-    var response = await post(link().POST_produkall,
+    var response = await http.post(link().POST_produkall,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -256,7 +256,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> produkJenis(String token, idtoko) async {
-    var response = await post(link().POST_produkjenis,
+    var response = await http.post(link().POST_produkjenis,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -281,40 +281,75 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> produkTambah(String token, idtoko, iduser, idjenis,
-      namaproduk, desc, qty, harga) async {
-    var response = await post(link().POST_produktambah,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'id_user': iduser.toString(),
-          'id_jenis': idjenis.toString(),
-          'nama_produk': namaproduk,
-          'deskripsi': desc,
-          'qty': qty.toString(),
-          'harga': harga.toString(),
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'PRODUK TAMBAH network handler----------------------------------------->');
+      namaproduk, desc, qty, harga, File image) async {
+    var response = http.MultipartRequest("POST", link().POST_produktambah);
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'PRODUKALL TAMBAH handler----------------------------------------->');
-      print('gagal PRODUK TAMBAH');
-      print(response.statusCode);
-      print(response.body);
+    if (image != null) {
+      var pic = await http.MultipartFile.fromPath("image", image.path);
+      //add multipart to request
+      response.files.add(pic);
+
+      //imageUploadRequest.files.add(foto);
     }
+    response.fields['token'] = token;
+    response.fields['id_toko'] = idtoko.toString();
+    response.fields['id_user'] = iduser.toString();
+    response.fields['id_jenis'] = idjenis.toString();
+    response.fields['nama_produk'] = namaproduk;
+    response.fields['deskripsi'] = desc;
+    response.fields['qty'] = qty;
+    response.fields['harga'] = harga;
+
+    final streamedResponse = await response.send();
+    final datarespon = await http.Response.fromStream(streamedResponse);
+    if (datarespon.statusCode != 200) {
+      print('tambah produk handelr-------------------------------------------');
+      print(datarespon.statusCode);
+      return null;
+    }
+    var data = json.decode(datarespon.body);
+
+    print(data);
+    return data;
+  }
+
+  static Future<dynamic> produkEdit(String token, id, idtoko, iduser, idjenis,
+      namaproduk, desc, harga, File image) async {
+    var response = http.MultipartRequest("POST", link().POST_produkedit);
+
+    if (image != null) {
+      var pic = await http.MultipartFile.fromPath("image", image.path);
+      //add multipart to request
+      response.files.add(pic);
+
+      //imageUploadRequest.files.add(foto);
+    }
+    response.fields['token'] = token;
+    response.fields['id_toko'] = idtoko.toString();
+    response.fields['id_user'] = iduser.toString();
+    response.fields['id_jenis'] = idjenis.toString();
+    response.fields['nama_produk'] = namaproduk;
+    response.fields['deskripsi'] = desc;
+    response.fields['id'] = id.toString();
+    response.fields['harga'] = harga;
+
+    final streamedResponse = await response.send();
+    final datarespon = await http.Response.fromStream(streamedResponse);
+    if (datarespon.statusCode != 200) {
+      print(
+          'edit produk handelr gagal -------------------------------------------');
+      print(datarespon.statusCode);
+      return null;
+    }
+    var data = json.decode(datarespon.body);
+
+    print(data);
+    return data;
   }
 
   static Future<dynamic> produkJenisTambah(
       String token, idtoko, namajenis) async {
-    var response = await post(link().POST_produkjenistambah,
+    var response = await http.post(link().POST_produkjenistambah,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -341,7 +376,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> produkJenisedit(
       String token, id, idtoko, namajenis) async {
-    var response = await post(link().POST_produkjeniedit,
+    var response = await http.post(link().POST_produkjeniedit,
         body: ({
           'token': token,
           'id': id,
@@ -372,7 +407,7 @@ class REST extends GetConnect {
     id,
     idtoko,
   ) async {
-    var response = await post(link().POST_produkjenisdelete,
+    var response = await http.post(link().POST_produkjenisdelete,
         body: ({
           'token': token,
           'id': id,
@@ -402,7 +437,7 @@ class REST extends GetConnect {
     idjenis,
     idtoko,
   ) async {
-    var response = await post(link().POST_produkbyjenis,
+    var response = await http.post(link().POST_produkbyjenis,
         body: ({
           'token': token,
           'id_jenis': idjenis,
@@ -432,7 +467,7 @@ class REST extends GetConnect {
     id,
     idtoko,
   ) async {
-    var response = await post(link().POST_produkhapus,
+    var response = await http.post(link().POST_produkhapus,
         body: ({
           'token': token,
           'id': id.toString(),
@@ -458,7 +493,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> produkqtytambah(String token, id, idtoko, qty) async {
-    var response = await post(link().POST_produkqtytambah,
+    var response = await http.post(link().POST_produkqtytambah,
         body: ({
           'token': token,
           'id': id.toString(),
@@ -485,7 +520,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> bebanKategori(String token, idtoko) async {
-    var response = await post(link().POST_bebankategori,
+    var response = await http.post(link().POST_bebankategori,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -511,7 +546,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> bebanTambahJenis(
       String token, idtoko, kategori) async {
-    var response = await post(link().POST_bebantambahjenis,
+    var response = await http.post(link().POST_bebantambahjenis,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -538,7 +573,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> bebanEditJenis(
       String token, id, idtoko, kategori) async {
-    var response = await post(link().POST_bebaneditjenis,
+    var response = await http.post(link().POST_bebaneditjenis,
         body: ({
           'token': token,
           'id': id,
@@ -569,7 +604,7 @@ class REST extends GetConnect {
     id,
     idtoko,
   ) async {
-    var response = await post(link().POST_bebanhapusjenis,
+    var response = await http.post(link().POST_bebanhapusjenis,
         body: ({
           'token': token,
           'id': id,
@@ -595,7 +630,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> bebanData(String token, idtoko, search) async {
-    var response = await post(link().POST_bebadata,
+    var response = await http.post(link().POST_bebadata,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -621,7 +656,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> bebanDataHariIni(String token, idtoko, search) async {
-    var response = await post(link().POST_bebadatahariini,
+    var response = await http.post(link().POST_bebadatahariini,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -656,7 +691,7 @@ class REST extends GetConnect {
     tgl,
     jumlah,
   ) async {
-    var response = await post(link().POST_bebandatatambah,
+    var response = await http.post(link().POST_bebandatatambah,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -696,7 +731,7 @@ class REST extends GetConnect {
     tgl,
     jumlah,
   ) async {
-    var response = await post(link().POST_bebandataedit,
+    var response = await http.post(link().POST_bebandataedit,
         body: ({
           'token': token,
           'id': id.toString(),
@@ -731,7 +766,7 @@ class REST extends GetConnect {
     id,
     idtoko,
   ) async {
-    var response = await post(link().POST_bebandatahapus,
+    var response = await http.post(link().POST_bebandatahapus,
         body: ({
           'token': token,
           'id': id.toString(),
@@ -758,7 +793,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> kasirKeranjangData(
       String token, iduser, idtoko, meja) async {
-    var response = await post(link().POST_kasirkeranjangdata,
+    var response = await http.post(link().POST_kasirkeranjangdata,
         body: ({
           'token': token,
           'id_user': iduser.toString(),
@@ -786,7 +821,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> kasirKeranjangTambah(
       String token, iduser, idtoko, meja, idproduk, diskon_brg, qty) async {
-    var response = await post(link().POST_kasirkeranjangtambah,
+    var response = await http.post(link().POST_kasirkeranjangtambah,
         body: ({
           'token': token,
           'id_user': iduser.toString(),
@@ -823,7 +858,7 @@ class REST extends GetConnect {
     idproduk,
     meja,
   ) async {
-    var response = await post(link().POST_kasirkeranjanghapus,
+    var response = await http.post(link().POST_kasirkeranjanghapus,
         body: ({
           'token': token,
           'id': id,
@@ -853,7 +888,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> kasirPembayaran(
       String token, iduser, idtoko, meja, bayar) async {
-    var response = await post(link().POST_kasirpembayaran,
+    var response = await http.post(link().POST_kasirpembayaran,
         body: ({
           'token': token,
           'id_user': iduser.toString(),
@@ -881,7 +916,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> penjualanData(String token, iduser, idtoko) async {
-    var response = await post(link().POST_penjualadata,
+    var response = await http.post(link().POST_penjualadata,
         body: ({
           'token': token,
           'id_user': iduser.toString(),
@@ -907,7 +942,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> penjualanDataDetail(String token, id, idtoko) async {
-    var response = await post(link().POST_penjualadatadetail,
+    var response = await http.post(link().POST_penjualadatadetail,
         body: ({
           'token': token,
           'id': id,
@@ -934,7 +969,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> penjualanDataHariIni(
       String token, iduser, idtoko) async {
-    var response = await post(link().POST_penjualadatahariini,
+    var response = await http.post(link().POST_penjualadatahariini,
         body: ({
           'token': token,
           'id_user': iduser,
@@ -960,7 +995,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> penjualanReversal(String token, id, idtoko) async {
-    var response = await post(link().POST_penjualanreversal,
+    var response = await http.post(link().POST_penjualanreversal,
         body: ({
           'token': token,
           'id': id,
@@ -987,7 +1022,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> laporanUmum(String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await post(link().POST_laporanumum,
+    var response = await http.post(link().POST_laporanumum,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -1038,7 +1073,7 @@ class REST extends GetConnect {
   static Future<dynamic> laporanPenjualan(
       String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await post(link().POST_laporanpenjualan,
+    var response = await http.post(link().POST_laporanpenjualan,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -1089,7 +1124,7 @@ class REST extends GetConnect {
   static Future<dynamic> laporanBeban(
       String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await post(link().POST_laporanbeban,
+    var response = await http.post(link().POST_laporanbeban,
         body: ({
           'token': token,
           'id_toko': idtoko,
@@ -1140,7 +1175,7 @@ class REST extends GetConnect {
   static Future<dynamic> laporanReversal(
       String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await post(link().POST_laporanreversal,
+    var response = await http.post(link().POST_laporanreversal,
         body: ({
           'token': token,
           'id_toko': idtoko,

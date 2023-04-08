@@ -36,16 +36,19 @@ class kasirv2 extends GetView<kasirController> {
           //             ))
           //       ],
           //     )),
-          body: stack_bg(
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Expanded(child: kasir_produk()),
-                  kasir_detail(),
-                ],
+          body: RefreshIndicator(
+            onRefresh: () => controller.refresh(),
+            child: stack_bg(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Expanded(child: kasir_produk()),
+                    kasir_detail(),
+                  ],
+                ),
               ),
             ),
           )),

@@ -161,86 +161,90 @@ class beban_table extends GetView<bebanController> {
               ],
             ),
             Expanded(
-              child: Container(
-                // height: context.height_query / 2.5,
-                margin: EdgeInsets.only(top: 12),
-                // width: double.infinity,
-                child: Obx(() {
-                  //untuk paginated table yg pakek data source harus buat var lg di dalam obx
-                  //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
-                  var source = bebanTable(controller.databebanlist.value).obs;
-                  return PaginatedDataTable2(
-                      horizontalMargin: 10,
-                      //minWidth: 1000,
-                      //minWidth: 10,
-                      //fit: FlexFit.loose,
-                      columnSpacing: 5,
-                      wrapInCard: false,
-                      renderEmptyRowsInTheEnd: false,
-                      headingRowColor: MaterialStateColor.resolveWith(
-                          (states) =>
-                              color_template().primary.withOpacity(0.2)),
-                      autoRowsToHeight: true,
-                      showFirstLastButtons: true,
-                      columns: <DataColumn>[
-                        DataColumn(
-                          label: Center(
-                            child: Text(
-                              'Nama Beban',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+              child: Obx(() {
+                var source = bebanTable(controller.databebanlist.value).obs;
+                return Container(
+                  // height: context.height_query / 2.5,
+                  margin: EdgeInsets.only(top: 12),
+                  // width: double.infinity,
+                  child: controller.databebanlist.value.isEmpty
+                      ? Container(width: 100, height: 100, child: showloading())
+                      :
+                      //untuk paginated table yg pakek data source harus buat var lg di dalam obx
+                      //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
+
+                      PaginatedDataTable2(
+                          horizontalMargin: 10,
+                          //minWidth: 1000,
+                          //minWidth: 10,
+                          //fit: FlexFit.loose,
+                          columnSpacing: 5,
+                          wrapInCard: false,
+                          renderEmptyRowsInTheEnd: false,
+                          headingRowColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  color_template().primary.withOpacity(0.2)),
+                          autoRowsToHeight: true,
+                          showFirstLastButtons: true,
+                          columns: <DataColumn>[
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Nama Beban',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Center(
-                            child: Text(
-                              'Keterangan',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Keterangan',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Center(
-                            child: Text(
-                              'Tanggal',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Tanggal',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Center(
-                            child: Text(
-                              'jumlah',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'jumlah',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Center(
-                            child: Text(
-                              'Kategori',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Kategori',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Center(
-                            child: Text(
-                              'Aksi',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Aksi',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                      source: source.value,
-                      empty: Center(
-                        child: Text(
-                          "Data Kosong",
-                          style: font().header_black,
-                        ),
-                      ));
-                }),
-              ),
+                          ],
+                          source: source.value,
+                          empty: Center(
+                            child: Text(
+                              "Data Kosong",
+                              style: font().header_black,
+                            ),
+                          )),
+                );
+              }),
             ),
           ],
         ),
@@ -286,6 +290,7 @@ class bebanTable extends DataTableSource {
                   icon: Icon(
                     Icons.edit,
                     size: 18,
+                    color: color_template().secondary,
                   )),
             ),
             Expanded(
@@ -293,7 +298,11 @@ class bebanTable extends DataTableSource {
                   onPressed: () {
                     popscreen().deletebebanv2(con, data[index]);
                   },
-                  icon: Icon(Icons.delete, size: 18)),
+                  icon: Icon(
+                    Icons.delete,
+                    size: 18,
+                    color: color_template().tritadery,
+                  )),
             )
           ],
         ),

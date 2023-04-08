@@ -47,7 +47,7 @@ class laporan_table_umum extends GetView<laporanController> {
                           Get.dialog(AlertDialog(
                             content: Container(
                               width: context.width_query / 1.5,
-                              height: context.height_query / 1.5,
+                              //height: context.height_query / 1.5,
                               child: CalendarDatePicker2WithActionButtons(
                                   config:
                                       CalendarDatePicker2WithActionButtonsConfig(

@@ -1,21 +1,19 @@
-import 'dart:io';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rims_waserda/Modules/produk/jenis%20produk/view_tambah_jenis.dart';
+import 'package:rims_waserda/Modules/produk/edit%20produk/controller_edit_produk.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import '../data produk/controller_data_produk.dart';
 import '../jenis produk/model_jenisproduk.dart';
 
-class tambah_produk_form extends GetView<produkController> {
-  const tambah_produk_form({Key? key}) : super(key: key);
+class edit_produk_form extends GetView<editprodukController> {
+  const edit_produk_form({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +34,7 @@ class tambah_produk_form extends GetView<produkController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               header(
-                title: 'Tambah Produk',
+                title: 'Edit Produk',
                 icon: FontAwesomeIcons.boxOpen,
                 iscenter: false,
               ),
@@ -44,9 +42,9 @@ class tambah_produk_form extends GetView<produkController> {
                 height: 30,
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  child: Form(
-                      key: controller.formKeyproduk.value,
+                child: Form(
+                    key: controller.formKeyprodukedit.value,
+                    child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -73,11 +71,9 @@ class tambah_produk_form extends GetView<produkController> {
                                         width: 200,
                                         height: 200,
                                         margin: EdgeInsets.only(right: 20),
-                                        child: Image.file(
-                                          File(
-                                              controller.pickedImageFile!.path),
-                                          width: double.infinity,
-                                          height: 300,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              controller.pikedImagePath.value,
                                         ),
                                       ),
                                 Container(
@@ -108,7 +104,7 @@ class tambah_produk_form extends GetView<produkController> {
                                         }
                                       }
 
-                                      controller.pilihsourcefoto();
+                                      controller.pickImage();
                                     },
                                     icon: Icon(
                                       Icons.add,
@@ -151,8 +147,7 @@ class tambah_produk_form extends GetView<produkController> {
                             children: [
                               Expanded(
                                 child: Container(
-                                  child: GetBuilder<produkController>(
-                                      builder: (logic) {
+                                  child: Obx(() {
                                     return DropdownButtonFormField2(
                                       decoration: InputDecoration(
                                         icon: Icon(FontAwesomeIcons.boxOpen),
@@ -174,8 +169,8 @@ class tambah_produk_form extends GetView<produkController> {
                                                   BorderRadius.circular(10),
                                               color: Colors.white)),
                                       hint: Text('Pilih jenis produk'),
-                                      value: logic.jenisvalue,
-                                      items: logic.jenislist.value
+                                      value: controller.jenisvalue.value,
+                                      items: controller.jenislist.value
                                           .map((DataJenis item) {
                                         return DropdownMenuItem(
                                           child:
@@ -184,48 +179,14 @@ class tambah_produk_form extends GetView<produkController> {
                                         );
                                       }).toList(),
                                       onChanged: (val) {
-                                        logic.jenisvalue = val!.toString();
-                                        print(logic.jenisvalue);
-                                        logic.update();
+                                        controller.jenisvalue.value =
+                                            val!.toString();
+                                        print(controller.jenisvalue);
                                       },
                                     );
                                   }),
                                 ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(left: 30, right: 5),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: color_template().primary,
-                                ),
-                                padding: EdgeInsets.all(3),
-                                child: IconButton(
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      Get.dialog(AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0))),
-                                          contentPadding: EdgeInsets.zero,
-                                          backgroundColor: Colors.transparent,
-                                          content: Builder(
-                                            builder: (context) {
-                                              return Container(
-                                                  padding: EdgeInsets.zero,
-                                                  width:
-                                                      context.width_query / 2,
-                                                  height:
-                                                      context.height_query / 2,
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      child: tambah_jenis()));
-                                            },
-                                          )));
-                                    },
-                                    icon: Icon(Icons.add)),
-                              )
                             ],
                           ),
                           SizedBox(
@@ -311,7 +272,7 @@ class tambah_produk_form extends GetView<produkController> {
                           ),
                           button_solid_custom(
                               onPressed: () {
-                                controller.ProdukTambah();
+                                controller.ProdukEdit();
                               },
                               child: Text(
                                 'tambah produk',
@@ -320,10 +281,10 @@ class tambah_produk_form extends GetView<produkController> {
                                 ),
                               ),
                               width: double.infinity,
-                              height: 60)
+                              height: 50)
                         ],
-                      )),
-                ),
+                      ),
+                    )),
               )
             ],
           ),

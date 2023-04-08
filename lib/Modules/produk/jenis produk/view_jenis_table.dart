@@ -1,12 +1,14 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
-import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
+import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
+import '../../Widgets/loading.dart';
 
 class jenis_table extends GetView<produkController> {
   const jenis_table({Key? key}) : super(key: key);
@@ -114,79 +116,116 @@ class jenis_table extends GetView<produkController> {
                     container_color: color_template().primary),
               ],
             ),
-            Container(
-              height: context.height_query * 0.46,
-              margin: EdgeInsets.only(top: 15),
-              width: double.infinity,
-              child: SingleChildScrollView(
-                child: Obx(() {
-                  return DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Expanded(
+            Expanded(
+              child: Obx(() {
+                var source = jenisprodukTable(controller.jenislist.value).obs;
+                return Container(
+                  // height: context.height_query * 0.46,
+                  margin: EdgeInsets.only(top: 10),
+                  // width: double.infinity,
+                  child: controller.jenislist.value.isEmpty
+                      ? Container(width: 100, height: 100, child: showloading())
+                      : PaginatedDataTable2(
+                          horizontalMargin: 10,
+                          //minWidth: 1000,
+                          //minWidth: 10,
+                          //fit: FlexFit.loose,
+                          columnSpacing: 5,
+                          wrapInCard: false,
+                          renderEmptyRowsInTheEnd: false,
+                          headingRowColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  color_template().primary.withOpacity(0.2)),
+                          autoRowsToHeight: true,
+                          showFirstLastButtons: true,
+                          empty: Center(
                             child: Text(
-                              'Nama Jenis',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                              "Data Kosong",
+                              style: font().header_black,
                             ),
                           ),
-                        ),
-                        // DataColumn(
-                        //   label: Expanded(
-                        //     child: Text(
-                        //       'img',
-                        //       style: TextStyle(fontStyle: FontStyle.italic),
-                        //     ),
-                        //   ),
-                        // ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Aksi',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'Nama Jenis',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
                             ),
-                          ),
+                            // DataColumn(
+                            //   label: Expanded(
+                            //     child: Text(
+                            //       'img',
+                            //       style: TextStyle(fontStyle: FontStyle.italic),
+                            //     ),
+                            //   ),
+                            // ),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Aksi',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ],
+                          source: source.value,
                         ),
-                      ],
-                      rows: List.generate(controller.jenislist.length, (index) {
-                        return DataRow(cells: [
-                          DataCell(Container(
-                              child:
-                                  Text(controller.jenislist[index].namaJenis))),
-
-                          // DataCell(Container(
-                          //     child: Text(controller.produklist[index].image))),
-                          DataCell(Row(
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    Get.toNamed('/edit_jenis',
-                                        arguments: controller.jenislist[index]);
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    popscreen().deletejenis(
-                                        context,
-                                        editjenisController(),
-                                        controller.jenislist[index]);
-                                  },
-                                  icon: Icon(Icons.delete, size: 18))
-                            ],
-                          ))
-                        ]);
-                      }));
-                }),
-              ),
+                );
+              }),
             ),
-            SizedBox(
-              height: 15,
-            )
           ],
         ),
       ),
     );
+  }
+}
+
+class jenisprodukTable extends DataTableSource {
+  final List<DataJenis> data;
+
+  jenisprodukTable(this.data);
+
+  var con = Get.find<produkController>();
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => data.length;
+
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Text(data[index].namaJenis)),
+      DataCell(Row(
+        children: [
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  Get.toNamed('/edit_jenis', arguments: data[index]);
+                },
+                icon: Icon(
+                  Icons.edit,
+                  size: 18,
+                  color: color_template().secondary,
+                )),
+          ),
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  popscreen().deletejenis(con, data[index]);
+                },
+                icon: Icon(
+                  Icons.delete,
+                  size: 18,
+                  color: color_template().tritadery,
+                )),
+          )
+        ],
+      )),
+    ]);
   }
 }

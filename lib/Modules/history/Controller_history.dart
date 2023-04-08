@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/history/model_penjualan.dart';
 
@@ -16,7 +17,7 @@ class historyController extends GetxController {
   }
 
   var penjualan_list = <DataPenjualan>[].obs;
-
+  final nominal = NumberFormat("#,##0");
   var detail_list = <DataPenjualan>[].obs;
   var id_kas = TextEditingController().obs;
   var id_user = GetStorage().read('id_user');

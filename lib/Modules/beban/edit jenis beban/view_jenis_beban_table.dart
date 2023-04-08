@@ -76,56 +76,59 @@ class jenis_beban_table extends GetView<bebanController> {
               height: 10,
             ),
             Expanded(
-              child: Container(
-                // height: context.height_query * 0.46,
-                margin: EdgeInsets.only(top: 12),
-                // width: double.infinity,
-                child: Obx(() {
-                  var source =
-                      kategoriBebanTable(controller.jenisbebanlist.value).obs;
-                  return PaginatedDataTable2(
-                    horizontalMargin: 10,
-                    //minWidth: 1000,
-                    //minWidth: 10,
-                    //fit: FlexFit.loose,
-                    columnSpacing: 5,
-                    wrapInCard: false,
-                    renderEmptyRowsInTheEnd: false,
-                    headingRowColor: MaterialStateColor.resolveWith(
-                        (states) => color_template().primary.withOpacity(0.2)),
-                    autoRowsToHeight: true,
-                    showFirstLastButtons: true,
-                    columns: const <DataColumn>[
-                      DataColumn(
-                        label: Text(
-                          'Kategori Beban',
-                          style: TextStyle(fontStyle: FontStyle.italic),
-                        ),
-                      ),
+              child: Obx(() {
+                var source =
+                    kategoriBebanTable(controller.jenisbebanlist.value).obs;
+                return Container(
+                  // height: context.height_query * 0.46,
+                  margin: EdgeInsets.only(top: 12),
+                  // width: double.infinity,
+                  child: controller.jenisbebanlist.value.isEmpty
+                      ? Container(width: 100, height: 100, child: showloading())
+                      : PaginatedDataTable2(
+                          horizontalMargin: 10,
+                          //minWidth: 1000,
+                          //minWidth: 10,
+                          //fit: FlexFit.loose,
+                          columnSpacing: 5,
+                          wrapInCard: false,
+                          renderEmptyRowsInTheEnd: false,
+                          headingRowColor: MaterialStateColor.resolveWith(
+                              (states) =>
+                                  color_template().primary.withOpacity(0.2)),
+                          autoRowsToHeight: true,
+                          showFirstLastButtons: true,
+                          columns: const <DataColumn>[
+                            DataColumn(
+                              label: Text(
+                                'Kategori Beban',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
 
-                      // DataColumn(
-                      //   label: Expanded(
-                      //     child: Text(
-                      //       'img',
-                      //       style: TextStyle(fontStyle: FontStyle.italic),
-                      //     ),
-                      //   ),
-                      // ),
-                      DataColumn(
-                        label: Center(
-                          child: Text(
-                            'Aksi',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                          ),
+                            // DataColumn(
+                            //   label: Expanded(
+                            //     child: Text(
+                            //       'img',
+                            //       style: TextStyle(fontStyle: FontStyle.italic),
+                            //     ),
+                            //   ),
+                            // ),
+                            DataColumn(
+                              label: Center(
+                                child: Text(
+                                  'Aksi',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                            ),
+                          ],
+                          source: source.value,
+                          empty: Container(
+                              width: 200, height: 150, child: showloading()),
                         ),
-                      ),
-                    ],
-                    source: source.value,
-                    empty: Container(
-                        width: 200, height: 150, child: showloading()),
-                  );
-                }),
-              ),
+                );
+              }),
             ),
           ],
         ),
@@ -166,6 +169,7 @@ class kategoriBebanTable extends DataTableSource {
                 icon: Icon(
                   Icons.edit,
                   size: 18,
+                  color: color_template().secondary,
                 )),
           ),
           Expanded(
@@ -173,7 +177,11 @@ class kategoriBebanTable extends DataTableSource {
                 onPressed: () {
                   popscreen().deletejenisbeban(con, data[index]);
                 },
-                icon: Icon(Icons.delete, size: 18)),
+                icon: Icon(
+                  Icons.delete,
+                  size: 18,
+                  color: color_template().tritadery,
+                )),
           )
         ],
       )),

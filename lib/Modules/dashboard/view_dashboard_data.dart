@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
@@ -24,33 +25,32 @@ class dashboard_data extends GetView<dashboardController> {
               padding: EdgeInsets.all(15),
               child: SingleChildScrollView(
                   child: Container(
-                      margin: EdgeInsets.only(top: 30),
                       height: context.height_query,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               datacard(
                                 title: controller.pendapatan.toString(),
                                 subtile: "Total Pendapatan",
-                                icon: Icons.money,
+                                icon: FontAwesomeIcons.dollarSign,
                               ),
                               datacard(
                                 title: controller.beban.toString(),
                                 subtile: "Total Beban",
-                                icon: Icons.inventory,
+                                icon: Icons.money_off,
                               ),
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               datacard(
                                 title: "Rp.120.000",
-                                subtile: "Total beban",
-                                icon: Icons.money,
+                                subtile: "Total Transaksi",
+                                icon: FontAwesomeIcons.cashRegister,
                               ),
                               datacard(
                                 title: "150",
@@ -65,6 +65,7 @@ class dashboard_data extends GetView<dashboardController> {
                           Container(
                             height: context.height_query / 2,
                             child: ListView(
+                              physics: NeverScrollableScrollPhysics(),
                               children: [
                                 Card(
                                   elevation: elevation().def_elevation,
@@ -93,42 +94,6 @@ class dashboard_data extends GetView<dashboardController> {
                                       padding: EdgeInsets.all(10),
                                       child: Icon(
                                         Icons.people,
-                                        color: Colors.white,
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: color_template().primary,
-                                          borderRadius:
-                                              border_radius().header_border),
-                                    ),
-                                  ),
-                                ),
-                                Card(
-                                  elevation: elevation().def_elevation,
-                                  child: ListTile(
-                                    title: Text('150000'),
-                                    subtitle: Text('total tunggakan'),
-                                    leading: Container(
-                                      padding: EdgeInsets.all(10),
-                                      child: Icon(
-                                        Icons.receipt,
-                                        color: Colors.white,
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: color_template().primary,
-                                          borderRadius:
-                                              border_radius().header_border),
-                                    ),
-                                  ),
-                                ),
-                                Card(
-                                  elevation: elevation().def_elevation,
-                                  child: ListTile(
-                                    title: Text('150000'),
-                                    subtitle: Text('total tunggakan'),
-                                    leading: Container(
-                                      padding: EdgeInsets.all(10),
-                                      child: Icon(
-                                        Icons.receipt,
                                         color: Colors.white,
                                       ),
                                       decoration: BoxDecoration(

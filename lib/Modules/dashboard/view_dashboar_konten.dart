@@ -22,7 +22,7 @@ class dashboard_konten extends GetView<dashboardController> {
               borderRadius: border_radius().def_border,
               border: Border.all(color: color_template().primary, width: 3.5)),
           margin: EdgeInsets.only(left: 15, top: 10),
-          height: context.height_query / 6.5,
+          height: context.height_query / 5.5,
           width: context.width_query,
           child: Obx(() {
             return CarouselSlider(
@@ -31,35 +31,27 @@ class dashboard_konten extends GetView<dashboardController> {
                   //controller.listkonten.value.length;
                 },
                 viewportFraction: 1.0,
+                // height: context.height_query,
                 enlargeCenterPage: true,
                 enableInfiniteScroll: true,
                 autoPlay: true,
-                autoPlayInterval: Duration(seconds: 5),
+                autoPlayInterval: Duration(seconds: 6),
               ),
               items: controller.listkonten.value
                   .map((x) => ClipRRect(
                         borderRadius: border_radius().def_border,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: border_radius().def_border,
-                          ),
-                          width: context.width_query,
-                          // margin: EdgeInsets.only(top: 20),
-                          child: CachedNetworkImage(
-                              placeholder: (context, url) => Container(
-                                  width: 100,
-                                  height: 120,
-                                  child: showloading()),
-                              errorWidget: (context, url, error) => Container(
-                                  width: 100,
-                                  height: 120,
-                                  child: Icon(
-                                    FontAwesomeIcons.warning,
-                                    color: color_template().tritadery,
-                                  )),
-                              fit: BoxFit.cover,
-                              imageUrl: x.photo),
-                        ),
+                        child: CachedNetworkImage(
+                            placeholder: (context, url) => Container(
+                                width: 50, height: 50, child: showloading()),
+                            errorWidget: (context, url, error) => Container(
+                                width: 100,
+                                height: 100,
+                                child: Icon(
+                                  FontAwesomeIcons.warning,
+                                  color: color_template().tritadery,
+                                )),
+                            fit: BoxFit.contain,
+                            imageUrl: x.photo),
                       ))
                   .toList(),
             );

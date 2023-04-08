@@ -3,6 +3,7 @@ class server {
 }
 
 class link {
+  //login----------------------------------------------------------------------
   final Uri POST_login = Uri.parse(server().host + 'auth/login');
   final Uri POST_loadtoko = Uri.parse(server().host + 'loadtoko');
   final Uri POST_userdata = Uri.parse(server().host + 'user/data');
@@ -11,6 +12,7 @@ class link {
   final Uri POST_usereditpassword = Uri.parse(server().host + 'user/gantipass');
   final Uri POST_userdelete = Uri.parse(server().host + 'user/hapus');
 
+  //produk----------------------------------------------------------------------
   final Uri POST_produkall = Uri.parse(server().host + 'produk/data/allproduk');
   final Uri POST_produkjenis = Uri.parse(server().host + 'produk/jenis/data');
   final Uri POST_produktambah = Uri.parse(server().host + 'produk/tambah');
@@ -25,7 +27,9 @@ class link {
       Uri.parse(server().host + 'produk/jenis/hapus');
   final Uri POST_produkbyjenis =
       Uri.parse(server().host + 'produk/data/byjenis');
+  final Uri POST_produkedit = Uri.parse(server().host + 'produk/edit');
 
+  //beban----------------------------------------------------------------------
   final Uri POST_bebankategori =
       Uri.parse(server().host + 'beban/kategori/data');
   final Uri POST_bebantambahjenis =
@@ -43,6 +47,7 @@ class link {
   final Uri POST_bebandataedit = Uri.parse(server().host + 'beban/edit');
   final Uri POST_bebandatahapus = Uri.parse(server().host + 'beban/hapus');
 
+//kasir----------------------------------------------------------------------
   final Uri POST_kasirkeranjangdata =
       Uri.parse(server().host + 'kasir/keranjang/data');
   final Uri POST_kasirkeranjangtambah =
@@ -52,6 +57,7 @@ class link {
   final Uri POST_kasirpembayaran =
       Uri.parse(server().host + 'kasir/keranjang/pembayaran');
 
+  //hitory----------------------------------------------------------------------
   final Uri POST_penjualadata = Uri.parse(server().host + 'penjualan/data');
   final Uri POST_penjualadatadetail =
       Uri.parse(server().host + 'penjualan/data/detail');
@@ -60,6 +66,7 @@ class link {
   final Uri POST_penjualanreversal =
       Uri.parse(server().host + 'penjualan/reversal');
 
+//laporan----------------------------------------------------------------------
   final Uri POST_laporanumum = Uri.parse(server().host + 'laporan/umum');
   final Uri POST_laporanpenjualan =
       Uri.parse(server().host + 'laporan/penjualan');

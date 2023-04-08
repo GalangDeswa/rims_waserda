@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
+import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
@@ -58,13 +59,18 @@ class kasir_keypad extends GetView<kasirController> {
                                       size: context.height_query / 17,
                                     ),
                                   ),
+                                  Text('Total Tagihan :',
+                                      style: font().header_big),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Expanded(
                                     child: Obx(() {
                                       return Text(
-                                          'total tagihan :' +
-                                              ' ' +
-                                              'Rp. ' +
-                                              controller.total.toString(),
+                                          'Rp.' +
+                                              controller.nominal.format(
+                                                  double.parse(controller.total
+                                                      .toString())),
                                           style: font().header_big);
                                     }),
                                   ),
@@ -231,14 +237,16 @@ class kasir_keypad extends GetView<kasirController> {
                                       Expanded(
                                         child: Container(
                                           child: TextFormField(
+                                            inputFormatters: [],
+                                            keyboardType: TextInputType.number,
                                             controller: controller
                                                 .keypadController.value,
                                             onChanged: (value) {
                                               print(value);
-                                              print('onchage bayar');
+
                                               controller.balik();
                                             },
-                                            readOnly: true,
+                                            // readOnly: true,
                                             decoration: InputDecoration(
                                                 prefixIcon: Icon(
                                                     Icons.attach_money_rounded),
@@ -279,23 +287,17 @@ class kasir_keypad extends GetView<kasirController> {
                   ),
                 ),
               ),
-              Column(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: context.width_query / 3.3,
-                      child: KeyPad(
-                        keypadController: controller.keypadController.value,
-                        onChange: (String value) {
-                          controller.balik();
-                          print(value);
-                          // controller.change();
-                        },
-                        onSubmit: (String pin) {},
-                      ),
-                    ),
-                  ),
-                ],
+              Container(
+                width: context.width_query / 3.5,
+                child: KeyPad(
+                  keypadController: controller.keypadController.value,
+                  onChange: (String value) {
+                    controller.balik();
+                    print(value);
+                    // controller.change();
+                  },
+                  onSubmit: (String pin) {},
+                ),
               ),
             ],
           ),

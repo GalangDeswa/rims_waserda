@@ -27,7 +27,7 @@ class datacard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(3),
+              padding: EdgeInsets.all(6),
               margin: EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
                 borderRadius: border_radius().header_border,
@@ -35,7 +35,7 @@ class datacard extends StatelessWidget {
               ),
               child: Icon(
                 icon,
-                size: 50,
+                size: context.height_query / 15,
                 color: color_template().primary,
               ),
             ),

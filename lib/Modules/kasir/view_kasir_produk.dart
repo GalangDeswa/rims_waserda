@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
-import '../../Models/produkv2.dart';
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/loading.dart';
@@ -211,28 +210,6 @@ class kasir_produk extends GetView<kasirController> {
   }
 }
 
-Widget customPopupItemBuilderExample2(
-  BuildContext context,
-  ProdukElement item,
-  bool isSelected,
-) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 8),
-    decoration: !isSelected
-        ? null
-        : BoxDecoration(
-            border: Border.all(color: Theme.of(context).primaryColor),
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
-          ),
-    child: ListTile(
-        selected: isSelected,
-        title: Text(item.namaProduk),
-        subtitle: Text('Rp' + ' ' + item.harga.toString()),
-        leading: Text(item.barcode.toString())),
-  );
-}
-
 class ProductTilev2 extends GetView<kasirController> {
   const ProductTilev2();
 
@@ -246,10 +223,10 @@ class ProductTilev2 extends GetView<kasirController> {
           scrollDirection: Axis.vertical,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               mainAxisExtent: context.height_query / 3.5,
-              maxCrossAxisExtent: context.width_query / 6,
+              maxCrossAxisExtent: context.width_query / 5.7,
               childAspectRatio: 1 / 1,
-              crossAxisSpacing: 0,
-              mainAxisSpacing: 0),
+              crossAxisSpacing: 1,
+              mainAxisSpacing: 2),
           itemCount: controller.produklist.length,
           itemBuilder: (BuildContext context, index) {
             return GestureDetector(
@@ -260,59 +237,69 @@ class ProductTilev2 extends GetView<kasirController> {
                     1.toString());
               },
               child: Card(
-                margin: EdgeInsets.all(8),
+                //  color: Colors.red,
+                margin: EdgeInsets.all(5),
                 shape: RoundedRectangleBorder(
                   borderRadius: border_radius().def_border,
                   side: BorderSide(color: color_template().primary, width: 2),
                 ),
                 elevation: 5,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  //color: Colors.orange,
-                  //width: context.width_query,
-
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Expanded(
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: border_radius().def_border,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20)),
+                      child: CachedNetworkImage(
+                          placeholder: (context, url) => Container(
+                                width: 100,
+                                height: 100,
+                                child: showloading(),
                               ),
-                              child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                        width: 100,
-                                        height: 100,
-                                        child: showloading(),
-                                      ),
-                                  width: context.width_query,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) {
-                                    return Container(
-                                      child:
-                                          Image.asset('assets/images/food.png'),
-                                    );
-                                  },
-                                  imageUrl:
-                                      controller.produklist[index].image))),
-                      Container(
-                        width: context.width_query,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
+                          width: context.width_query,
+                          height: context.height_query,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) {
+                            return Container(
+                              child: Image.asset('assets/images/food.png'),
+                            );
+                          },
+                          imageUrl: controller.produklist[index].image),
+                    )),
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      width: context.width_query,
+                      height: context.height_query / 10,
+                      decoration: BoxDecoration(
+                          color: color_template().primary,
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              overflow: TextOverflow.fade,
                               controller.produklist[index].namaProduk,
-                              style: font().header_black,
+                              style: font().produktitle,
                             ),
-                            Text(
-                              controller.produklist[index].harga,
-                              style: font().reguler,
-                            )
-                          ],
-                        ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Rp. ' +
+                                  controller.nominal.format(double.parse(
+                                      controller.produklist[index].harga)),
+                              style: font().produkharga,
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             );

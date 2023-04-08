@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -18,14 +19,22 @@ class kasirController extends GetxController {
     print('kasir init------------------------------------------------->');
     fetchProduk();
     fetchjenis();
-    keypadController.value = TextEditingController(text: '0');
-    kembalian.value = TextEditingController(text: '0');
+    //keypadController.value = TextEditingController(text: '0');
+    // kembalian.value = TextEditingController(text: '0');
 
     fetchkeranjang();
   }
 
+  Future<void> refresh() async {
+    await fetchProduk();
+    await fetchjenis();
+  }
+
+  final nominal = NumberFormat("#,##0");
+
   var kembalian = TextEditingController().obs;
   var keypadController = TextEditingController().obs;
+  var keypadvalue = 0.0.obs;
 
   balik() {
     var kem = int.parse(keypadController.value.text) - int.parse(total.value);
@@ -118,7 +127,7 @@ class kasirController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
-        produklist.refresh();
+        //produklist.refresh();
         //update();
         print('--------------------list produk---------------');
         print(produklist);
@@ -128,39 +137,13 @@ class kasirController extends GetxController {
         return produklist;
       } else {
         // Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data user gagal,user tidak ada",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Terjadi kesalahan'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,periksa koneksi",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
     }
     return [];
   }
@@ -176,7 +159,7 @@ class kasirController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
-        produklist.refresh();
+        // produklist.refresh();
         //update();
         print('--------------------list produk by jneis---------------');
         print(produklist);
@@ -186,39 +169,13 @@ class kasirController extends GetxController {
         return produklist;
       } else {
         // Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data user gagal,user tidak ada",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Terjadi kesalahan'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,periksa koneksi",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
     }
     return [];
   }
@@ -238,7 +195,7 @@ class kasirController extends GetxController {
         total.value = dataKeranjang.meta.total;
         print('-------------keranjang total---------');
         print(total);
-        keranjanglist.refresh();
+        //keranjanglist.refresh();
         //update();
         print('--------------------list keranjang---------------');
         print(keranjanglist);
@@ -248,39 +205,13 @@ class kasirController extends GetxController {
         return keranjanglist;
       } else {
         // Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "DATA KERANJANG ERROR",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Terjadi kesalahan'));
       }
     } else {
       //  Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,periksa koneksi",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
     }
     return [];
   }
@@ -296,7 +227,7 @@ class kasirController extends GetxController {
         var dataJenis = ModelJenis.fromJson(jenis);
 
         jenislist.value = dataJenis.data;
-        jenislist.refresh();
+        // jenislist.refresh();
         //update();
         print('--------------------list jenis---------------');
         print(jenislist);
@@ -306,39 +237,13 @@ class kasirController extends GetxController {
         return jenislist;
       } else {
         //Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data jenis tidak ada",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'gagal fect jenis'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,periksa koneksi",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'periksa koneksi'));
     }
     return [];
   }
@@ -352,7 +257,7 @@ class kasirController extends GetxController {
           meja.value.text, idproduk.toString(), diskon_brg, qty);
       if (keranjang != null) {
         print('------------------tambah keranjang---------------');
-        fetchkeranjang();
+        await fetchkeranjang();
         // Get.showSnackbar(
         //     toast().bottom_snackbar_success('Berhasil', 'berhasil di tambah'));
       } else {
@@ -377,7 +282,7 @@ class kasirController extends GetxController {
           token, id, id_user, id_toko, idproduk, meja.value.text);
       if (keranjang != null) {
         print('------------------delete keranjang---------------');
-        fetchkeranjang();
+        await fetchkeranjang();
         Get.back();
         // Get.showSnackbar(
         //     toast().bottom_snackbar_success('Berhasil', 'berhasil di hapus'));
@@ -402,7 +307,7 @@ class kasirController extends GetxController {
           meja.value.text, keypadController.value.text);
       if (keranjang != null) {
         print('------------------pembayaran--------------');
-        fetchkeranjang();
+        await fetchkeranjang();
         //popscreen().popberhasil();
         Get.back();
         Get.showSnackbar(
@@ -464,61 +369,6 @@ class kasirController extends GetxController {
     Get.delete<kasirController>();
     Get.put<kasirController>;
   }
-
-  void refresh() {
-    onInit();
-    Get.snackbar('conn', 'refreshed');
-  }
-
-  //var barang_list = <Barang>[].obs;
-
-  // void getbarang() async {
-  //   try {
-  //     loading(true);
-  //     var checkconn = await check_conn.check();
-  //     if (checkconn == true) {
-  //       var barang = await api.get_barang();
-  //       if (barang != null) {
-  //         barang_list.value = barang;
-  //       }
-  //     } else {
-  //       Get.snackbar('conn', 'tidak ada konenksi');
-  //     }
-  //   } finally {
-  //     loading(false);
-  //   }
-  // }
-
-  // Future<List<ProdukElement>> getprodukall() async {
-  //   var response = await api().client.get(link().GET_produkv2);
-  //   if (response.statusCode == 200) {
-  //     var hasil = json.decode(response.body);
-  //     var res = Produk.fromJson(hasil);
-  //     print('--------------------------------------------------------------');
-  //     print(res);
-  //     produk_list.value = res.produk;
-  //     return produk_list;
-  //   } else {
-  //     return [];
-  //   }
-  // }
-
-  // void getproduct() async {
-  //   try {
-  //     loading(true);
-  //     var checkconn = await check_conn.check();
-  //     if (checkconn == true) {
-  //       var product = await api.getproduct();
-  //       if (product != null) {
-  //         productlist.value = product;
-  //       }
-  //     } else {
-  //       Get.snackbar('conn', 'tidak ada konenksi');
-  //     }
-  //   } finally {
-  //     loading(false);
-  //   }
-  // }
 
   var barcodetext = TextEditingController().obs;
   var qrcode = ''.obs;

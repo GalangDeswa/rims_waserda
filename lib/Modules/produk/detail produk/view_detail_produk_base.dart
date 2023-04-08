@@ -16,12 +16,6 @@ class detail_Produk extends GetView<detail_produkController> {
     return SafeArea(
         child: Scaffold(
             backgroundColor: color_template().base_blue,
-            // appBar: appbar_custom(
-            //     height: 50,
-            //     child: Text(
-            //       'Detail Produk',
-            //       style: font().header,
-            //     )),
             body: stack_bg(
               child: Padding(
                 padding: const EdgeInsets.all(30),

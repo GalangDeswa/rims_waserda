@@ -22,6 +22,7 @@ class KeyPad extends GetView<kasirController> {
     return Container(
       //margin: EdgeInsets.only(left: 20, right: 20),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(height: context.height_query / 35),
           Row(
@@ -68,8 +69,8 @@ class KeyPad extends GetView<kasirController> {
                     },
                     icon: Icon(
                       Icons.backspace,
-                      size: context.height_query / 17,
                       color: Colors.white,
+                      size: 30,
                     )),
               ),
               buttonWidget('0', context.height_query / 10),
@@ -83,7 +84,7 @@ class KeyPad extends GetView<kasirController> {
                     },
                     icon: Icon(
                       Icons.check,
-                      size: context.height_query / 17,
+                      size: 30,
                       color: Colors.white,
                     )),
               )
@@ -102,11 +103,13 @@ class KeyPad extends GetView<kasirController> {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: color_template().secondary),
         onPressed: () {
-          keypadController.text = keypadController.text + buttonText;
+          var num = keypadController.text = keypadController.text + buttonText;
+          var x = num;
           // onChange(controller.currencyFormatter
           //     .format(int.parse(keypadController.text)));
-          onChange(keypadController.text);
+          onChange(x);
           //controller.change();
+          //.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]}.");
         },
         child: Center(
           child: Text(

@@ -1,12 +1,12 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
-import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_form.dart';
-import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_password.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
+import '../../Widgets/loading.dart';
 import 'controller_data_user.dart';
 import 'model_data_user.dart';
 
@@ -107,137 +107,73 @@ class table_user extends GetView<datauserController> {
                     container_color: color_template().primary),
               ],
             ),
-            Container(
-                height: context.height_query * 0.46,
-                margin: EdgeInsets.only(top: 15),
-                width: double.infinity,
-                child: SingleChildScrollView(child: Obx(() {
-                  return DataTable(
-                      columns: const <DataColumn>[
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Nama',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Email',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'No.HP',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Role',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                            ),
-                          ),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                            child: Center(
+            Expanded(
+              child: Obx(() {
+                var source = userTable(controller.listUser.value).obs;
+                return Container(
+                    // height: context.height_query * 0.46,
+                    margin: EdgeInsets.only(top: 10),
+                    // width: double.infinity,
+                    child: controller.listUser.value.isEmpty
+                        ? Container(
+                            width: 100, height: 100, child: showloading())
+                        : PaginatedDataTable2(
+                            horizontalMargin: 10,
+                            //minWidth: 1000,
+                            //minWidth: 10,
+                            //fit: FlexFit.loose,
+                            columnSpacing: 5,
+                            wrapInCard: false,
+                            renderEmptyRowsInTheEnd: false,
+                            headingRowColor: MaterialStateColor.resolveWith(
+                                (states) =>
+                                    color_template().primary.withOpacity(0.2)),
+                            autoRowsToHeight: true,
+                            showFirstLastButtons: true,
+                            empty: Center(
                               child: Text(
-                                'Aksi',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                                "Data Kosong",
+                                style: font().header_black,
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                      rows: List.generate(controller.listUser.length, (index) {
-                        return DataRow(cells: [
-                          DataCell(Container(
-                            child: Text(controller.listUser[index].nama != null
-                                ? controller.listUser[index].nama
-                                : '-'),
-                          )),
-                          DataCell(Container(
-                            child: Text(controller.listUser[index].email != null
-                                ? controller.listUser[index].email
-                                : '-'),
-                          )),
-                          DataCell(Container(
-                              child: Text(controller.listUser[index].hp != null
-                                  ? controller.listUser[index].hp
-                                  : '-'))),
-                          DataCell(Container(
-                              child: Text(controller.listUser[index].role == '1'
-                                  ? 'Kasir'
-                                  : controller.listUser[index].role == '2'
-                                      ? 'Admin'
-                                      : '-'))),
-                          DataCell(Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                  onPressed: () {
-                                    //Get.put(() => edituserController());
-                                    //Get.find<edituserController>();
-                                    Get.dialog(
-                                        Container(
-                                            padding: EdgeInsets.all(50),
-                                            child: edit_user_form()),
-                                        arguments: controller.listUser[index]);
-
-                                    // popscreen().popedituser(
-                                    //     context,
-                                    //     Get.put(edituserController()),
-                                    //     controller.listUser[index]);
-                                    // Get.toNamed('/edit_user',
-                                    //     arguments: controller.listUser[index]);
-                                    // popscreen().popedituserv2(
-                                    //     context,
-                                    //     Get.put(edituserController()),
-                                    //     controller.listUser.value[index]);
-                                  },
-                                  icon: Icon(
-                                    Icons.edit,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    Get.dialog(
-                                        Container(
-                                            padding: EdgeInsets.all(50),
-                                            child: edit_user_password()),
-                                        arguments:
-                                            controller.listUser.value[index]);
-                                    // popscreen().popedituserv2(
-                                    //     context,
-                                    //     Get.put(edituserController()),
-                                    //     controller.listUser.value[index]);
-                                  },
-                                  icon: Icon(
-                                    Icons.lock,
-                                    size: 18,
-                                  )),
-                              IconButton(
-                                  onPressed: () {
-                                    popscreen().deleteuser(context, controller,
-                                        controller.listUser.value[index]);
-                                  },
-                                  icon: Icon(Icons.delete, size: 18))
+                            columns: const <DataColumn>[
+                              DataColumn(
+                                label: Text(
+                                  'Nama',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  'Email',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  'No.HP',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Text(
+                                  'Role',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
+                              ),
+                              DataColumn(
+                                label: Center(
+                                  child: Text(
+                                    'Aksi',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                              ),
                             ],
-                          )),
-                        ]);
-                      }));
-                }))),
-            SizedBox(
-              height: 15,
-            )
+                            source: source.value));
+              }),
+            ),
           ],
         ),
       ),
@@ -267,33 +203,38 @@ class userTable extends DataTableSource {
       DataCell(Text(data[index].nama)),
       DataCell(Text(data[index].email)),
       DataCell(Text(data[index].hp)),
-      DataCell(Text(data[index].role)),
-      DataCell(Row(
-        children: [
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  // Get.dialog(
-                  //     Container(
-                  //         padding: EdgeInsets.symmetric(
-                  //           horizontal: 50,
-                  //         ),
-                  //         child: edit_beban_form()),
-                  //     arguments: data[index]);
-                },
-                icon: Icon(
-                  Icons.edit,
-                  size: 18,
-                )),
-          ),
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  // popscreen().deletebebanv2(con, data[index]);
-                },
-                icon: Icon(Icons.delete, size: 18)),
-          )
-        ],
+      DataCell(Text(data[index].role == '1'
+          ? "Kasir"
+          : data[index].role == '2'
+              ? 'Admin'
+              : '-')),
+      DataCell(Center(
+        child: Row(
+          children: [
+            Expanded(
+              child: IconButton(
+                  onPressed: () {
+                    Get.toNamed('/edit_user', arguments: data[index]);
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    size: 18,
+                    color: color_template().secondary,
+                  )),
+            ),
+            Expanded(
+              child: IconButton(
+                  onPressed: () {
+                    popscreen().deleteuser(con, data[index]);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    size: 18,
+                    color: color_template().tritadery,
+                  )),
+            )
+          ],
+        ),
       )),
     ]);
   }
