@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
 
@@ -57,11 +58,11 @@ class table_user extends GetView<datauserController> {
                         //     child: tambah_user_form()));
                       },
                       child: Text(
-                        'tambah user',
+                        'Tambah user',
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
-                      height: 55)
+                      height: 65)
                 ],
               ),
             ),
@@ -117,19 +118,69 @@ class table_user extends GetView<datauserController> {
                     child: controller.listUser.value.isEmpty
                         ? Container(
                             width: 100, height: 100, child: showloading())
-                        : PaginatedDataTable2(
+                        : DataTable2(
                             horizontalMargin: 10,
                             //minWidth: 1000,
                             //minWidth: 10,
                             //fit: FlexFit.loose,
                             columnSpacing: 5,
-                            wrapInCard: false,
-                            renderEmptyRowsInTheEnd: false,
+
                             headingRowColor: MaterialStateColor.resolveWith(
                                 (states) =>
                                     color_template().primary.withOpacity(0.2)),
-                            autoRowsToHeight: true,
-                            showFirstLastButtons: true,
+                            rows: List.generate(
+                                controller.listUser.length,
+                                (index) => DataRow(cells: [
+                                      DataCell(Text(
+                                          controller.listUser[index].nama)),
+                                      DataCell(Text(
+                                          controller.listUser[index].email)),
+                                      DataCell(
+                                          Text(controller.listUser[index].hp)),
+                                      DataCell(Text(
+                                          controller.listUser[index].role == '1'
+                                              ? "Kasir"
+                                              : controller.listUser[index]
+                                                          .role ==
+                                                      '2'
+                                                  ? 'Admin'
+                                                  : '-')),
+                                      DataCell(Center(
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Get.toNamed('/edit_user',
+                                                        arguments: controller
+                                                            .listUser[index]);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.edit,
+                                                    size: 18,
+                                                    color: color_template()
+                                                        .secondary,
+                                                  )),
+                                            ),
+                                            Expanded(
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    popscreen().deleteuser(
+                                                        controller,
+                                                        controller
+                                                            .listUser[index]);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.delete,
+                                                    size: 18,
+                                                    color: color_template()
+                                                        .tritadery,
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                    ])),
                             empty: Center(
                               child: Text(
                                 "Data Kosong",
@@ -171,9 +222,53 @@ class table_user extends GetView<datauserController> {
                                 ),
                               ),
                             ],
-                            source: source.value));
+                          ));
               }),
             ),
+            Obx(() {
+              return Container(
+                margin: EdgeInsets.only(left: context.width_query / 1.9),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Data perbaris :'),
+                    Text(controller.perpage.value.toString()),
+                    controller.currentpage > 1
+                        ? IconButton(
+                            onPressed: () {
+                              controller.back();
+                            },
+                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleLeft,
+                              size: 20,
+                              color: Colors.grey,
+                            )),
+                    Text(controller.currentpage.value.toString() +
+                        ' - ' +
+                        controller.totalpage.value.toString()),
+                    controller.currentpage < controller.totalpage.value
+                        ? IconButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              size: 20,
+                            ))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              color: Colors.grey,
+                              size: 20,
+                            ))
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ),

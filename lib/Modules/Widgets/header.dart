@@ -52,7 +52,7 @@ class header extends StatelessWidget {
                         width: 20,
                       ),
                       Text(
-                        title!,
+                        title!.toUpperCase(),
                         style: font().header_big,
                       ),
                     ],

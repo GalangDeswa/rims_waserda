@@ -24,10 +24,8 @@ class history extends GetView<historyController> {
             //       style: font().header,
             //     )),
             body: stack_bg(
-              child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: history_table(),
-              ),
+              isfullscreen: true,
+              child: history_table(),
             )));
   }
 }

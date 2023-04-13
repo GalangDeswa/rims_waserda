@@ -20,105 +20,103 @@ class dashboard extends GetView<dashboardController> {
       child: Scaffold(
           backgroundColor: color_template().primary.withOpacity(0.2),
           body: stack_bg(
-              child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                    child: Column(
-                  children: [
-                    Card(
-                      margin: EdgeInsets.only(bottom: 10),
-                      color: color_template().primary,
-                      elevation: elevation().def_elevation,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: border_radius().def_border,
-                        side: BorderSide(
-                            color: color_template().primary, width: 3.5),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  controller.nama_toko,
-                                  style: font().header_big,
-                                ),
-                                Text(
-                                  controller.jenis_toko,
-                                  style: font().reguler_white,
-                                ),
-                                Text(
-                                  GetStorage().read('alamat_toko'),
-                                  style: font().reguler_white,
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Get.dialog(Center(
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        Text('logout?'),
-                                        Row(
-                                          children: [
-                                            ElevatedButton(
-                                              child: Text('tidak'),
-                                              onPressed: () {
-                                                Get.back();
-                                              },
-                                            ),
-                                            ElevatedButton(
-                                              child: Text('ya'),
-                                              onPressed: () {
-                                                GetStorage().erase();
-                                                Get.offAndToNamed('/login');
-                                              },
-                                            ),
-                                            ElevatedButton(
-                                              child: Text('load toko'),
-                                              onPressed: () {
-                                                controller.loadToko();
-                                              },
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
+              isfullscreen: true,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                      child: Column(
+                    children: [
+                      Card(
+                        margin: EdgeInsets.only(bottom: 10),
+                        color: color_template().primary,
+                        elevation: elevation().def_elevation,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: border_radius().def_border,
+                          side: BorderSide(
+                              color: color_template().primary, width: 3.5),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    controller.nama_toko,
+                                    style: font().header_big,
                                   ),
-                                ));
-                                //print(GetStorage().read('token'));
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                child: CachedNetworkImage(
-                                  imageUrl: controller.logo,
-                                ),
-                                maxRadius: 30,
+                                  Text(
+                                    controller.jenis_toko,
+                                    style: font().reguler_white,
+                                  ),
+                                  Text(
+                                    GetStorage().read('alamat_toko'),
+                                    style: font().reguler_white,
+                                  ),
+                                ],
                               ),
-                            )
-                          ],
+                              GestureDetector(
+                                onTap: () {
+                                  Get.dialog(Center(
+                                    child: Container(
+                                      child: Column(
+                                        children: [
+                                          Text('logout?'),
+                                          Row(
+                                            children: [
+                                              ElevatedButton(
+                                                child: Text('tidak'),
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                              ),
+                                              ElevatedButton(
+                                                child: Text('ya'),
+                                                onPressed: () {
+                                                  GetStorage().erase();
+                                                  Get.offAndToNamed('/login');
+                                                },
+                                              ),
+                                              ElevatedButton(
+                                                child: Text('load toko'),
+                                                onPressed: () {
+                                                  controller.loadToko();
+                                                },
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ));
+                                  //print(GetStorage().read('token'));
+                                },
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  child: CachedNetworkImage(
+                                    imageUrl: controller.logo,
+                                  ),
+                                  maxRadius: 30,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
+                      dashboard_data()
+                    ],
+                  )),
+                  Expanded(
+                    child: Column(
+                      children: [dashboard_app(), dashboard_konten()],
                     ),
-                    dashboard_data()
-                  ],
-                )),
-                Expanded(
-                  child: Column(
-                    children: [dashboard_app(), dashboard_konten()],
-                  ),
-                )
-              ],
-            ),
-          ))),
+                  )
+                ],
+              ))),
     );
   }
 }

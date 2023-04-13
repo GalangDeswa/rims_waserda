@@ -1,16 +1,16 @@
 // To parse this JSON data, do
 //
-//     final modelPenjualan = modelPenjualanFromJson(jsonString);
+//     final modelPelanggan = modelPelangganFromJson(jsonString);
 
 import 'dart:convert';
 
-ModelPenjualan modelPenjualanFromJson(String str) =>
-    ModelPenjualan.fromJson(json.decode(str));
+ModelPelanggan modelPelangganFromJson(String str) =>
+    ModelPelanggan.fromJson(json.decode(str));
 
-String modelPenjualanToJson(ModelPenjualan data) => json.encode(data.toJson());
+String modelPelangganToJson(ModelPelanggan data) => json.encode(data.toJson());
 
-class ModelPenjualan {
-  ModelPenjualan({
+class ModelPelanggan {
+  ModelPelanggan({
     required this.success,
     required this.statusCode,
     required this.messages,
@@ -21,15 +21,15 @@ class ModelPenjualan {
   bool success;
   int statusCode;
   String messages;
-  List<DataPenjualan> data;
+  List<DataPelanggan> data;
   Meta meta;
 
-  factory ModelPenjualan.fromJson(Map<String, dynamic> json) => ModelPenjualan(
+  factory ModelPelanggan.fromJson(Map<String, dynamic> json) => ModelPelanggan(
         success: json["success"],
         statusCode: json["status_code"],
         messages: json["messages"],
-        data: List<DataPenjualan>.from(
-            json["data"].map((x) => DataPenjualan.fromJson(x))),
+        data: List<DataPelanggan>.from(
+            json["data"].map((x) => DataPelanggan.fromJson(x))),
         meta: Meta.fromJson(json["meta"]),
       );
 
@@ -42,124 +42,94 @@ class ModelPenjualan {
       };
 }
 
-class DataPenjualan {
-  DataPenjualan({
+class DataPelanggan {
+  DataPelanggan({
     required this.id,
-    required this.meja,
     required this.idToko,
-    required this.idUser,
     required this.namaPelanggan,
-    required this.namaUser,
+    required this.noHp,
+    required this.riwayatPembelian,
+  });
+
+  int id;
+  int idToko;
+  String namaPelanggan;
+  String noHp;
+  List<RiwayatPembelian> riwayatPembelian;
+
+  factory DataPelanggan.fromJson(Map<String, dynamic> json) => DataPelanggan(
+        id: json["id"],
+        idToko: json["id_toko"],
+        namaPelanggan: json["nama_pelanggan"],
+        noHp: json["no_hp"],
+        riwayatPembelian: List<RiwayatPembelian>.from(
+            json["riwayat_pembelian"].map((x) => RiwayatPembelian.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "id_toko": idToko,
+        "nama_pelanggan": namaPelanggan,
+        "no_hp": noHp,
+        "riwayat_pembelian":
+            List<dynamic>.from(riwayatPembelian.map((x) => x.toJson())),
+      };
+}
+
+class RiwayatPembelian {
+  RiwayatPembelian({
+    required this.meja,
+    required this.idUser,
     required this.totalItem,
     required this.diskonTotal,
-    required this.subTotal,
+    this.subtotal,
     required this.total,
     required this.bayar,
     required this.kembalian,
     required this.tglPenjualan,
     required this.metodeBayar,
     required this.status,
-    required this.detailItem,
   });
 
-  int id;
   int meja;
-  int idToko;
   int idUser;
-  String namaPelanggan;
-  String namaUser;
   String totalItem;
   String diskonTotal;
-  String subTotal;
+  dynamic subtotal;
   String total;
   String bayar;
   String kembalian;
-  String tglPenjualan;
+  DateTime tglPenjualan;
   int metodeBayar;
   int status;
-  List<DetailItem> detailItem;
 
-  factory DataPenjualan.fromJson(Map<String, dynamic> json) => DataPenjualan(
-        id: json["id"],
+  factory RiwayatPembelian.fromJson(Map<String, dynamic> json) =>
+      RiwayatPembelian(
         meja: json["meja"],
-        idToko: json["id_toko"],
         idUser: json["id_user"],
-        namaPelanggan: json["nama_pelanggan"],
-        namaUser: json["nama_user"],
         totalItem: json["total_item"],
         diskonTotal: json["diskon_total"],
-        subTotal: json["sub_total"],
+        subtotal: json["subtotal"],
         total: json["total"],
         bayar: json["bayar"],
         kembalian: json["kembalian"],
-        tglPenjualan: json["tgl_penjualan"],
+        tglPenjualan: DateTime.parse(json["tgl_penjualan"]),
         metodeBayar: json["metode_bayar"],
         status: json["status"],
-        detailItem: List<DetailItem>.from(
-            json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "meja": meja,
-        "id_toko": idToko,
         "id_user": idUser,
-        "nama_pelanggan": namaPelanggan,
-        "nama_user": namaUser,
         "total_item": totalItem,
         "diskon_total": diskonTotal,
-        "sub_total": subTotal,
+        "subtotal": subtotal,
         "total": total,
         "bayar": bayar,
         "kembalian": kembalian,
-        "tgl_penjualan": tglPenjualan,
+        "tgl_penjualan": tglPenjualan.toIso8601String(),
         "metode_bayar": metodeBayar,
         "status": status,
-        "detail_item": List<dynamic>.from(detailItem.map((x) => x.toJson())),
-      };
-}
-
-class DetailItem {
-  DetailItem({
-    required this.idPenjualan,
-    required this.idProduk,
-    required this.idKategori,
-    required this.namaBrg,
-    required this.hargaBrg,
-    required this.qty,
-    required this.diskonBrg,
-    required this.total,
-  });
-
-  int idPenjualan;
-  int idProduk;
-  int idKategori;
-  String namaBrg;
-  String hargaBrg;
-  String qty;
-  String diskonBrg;
-  String total;
-
-  factory DetailItem.fromJson(Map<String, dynamic> json) => DetailItem(
-        idPenjualan: json["id_penjualan"],
-        idProduk: json["id_produk"],
-        idKategori: json["id_kategori"],
-        namaBrg: json["nama_brg"],
-        hargaBrg: json["harga_brg"],
-        qty: json["qty"],
-        diskonBrg: json["diskon_brg"],
-        total: json["total"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id_penjualan": idPenjualan,
-        "id_produk": idProduk,
-        "id_kategori": idKategori,
-        "nama_brg": namaBrg,
-        "harga_brg": hargaBrg,
-        "qty": qty,
-        "diskon_brg": diskonBrg,
-        "total": total,
       };
 }
 
@@ -186,20 +156,16 @@ class Meta {
 class Catatan {
   Catatan({
     required this.status,
-    required this.metodeBayarDtl,
   });
 
   String status;
-  String metodeBayarDtl;
 
   factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
         status: json["status"],
-        metodeBayarDtl: json["metode_bayar_dtl"],
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
-        "metode_bayar_dtl": metodeBayarDtl,
       };
 }
 
@@ -210,7 +176,7 @@ class Pagination {
     required this.perPage,
     required this.currentPage,
     required this.totalPages,
-    //required this.links,
+    // required this.links,
   });
 
   int total;
@@ -226,7 +192,7 @@ class Pagination {
         perPage: json["per_page"],
         currentPage: json["current_page"],
         totalPages: json["total_pages"],
-        //links: List<dynamic>.from(json["links"].map((x) => x)),
+        // links: List<dynamic>.from(json["links"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {

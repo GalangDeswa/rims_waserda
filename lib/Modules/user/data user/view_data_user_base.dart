@@ -23,10 +23,8 @@ class data_user extends GetView<datauserController> {
           //       style: font().header,
           //     )),
           body: stack_bg(
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: table_user(),
-            ),
+            isfullscreen: true,
+            child: table_user(),
           )),
     );
   }

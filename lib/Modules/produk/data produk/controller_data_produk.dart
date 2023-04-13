@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rims_waserda/Models/produkv2.dart';
@@ -99,6 +101,60 @@ class produkController extends GetxController {
 
   var search = TextEditingController().obs;
 
+  next() async {
+    final respon = await http.post(Uri.parse(nextdata), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataProduk = ModelProduk.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    produklist.value = dataProduk.data;
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    currentpage.value = data['pagination']['current_page'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    perpage.value = data['pagination']['per_page'];
+    print(nextdata);
+    print(data);
+
+    //return produk_list;
+  }
+
+  back() async {
+    final respon = await http.post(Uri.parse(previouspage), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataProduk = ModelProduk.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    produklist.value = dataProduk.data;
+
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    currentpage.value = data['pagination']['current_page'];
+    perpage.value = data['pagination']['per_page'];
+    print(previouspage);
+
+    //return produk_list;
+  }
+
+  var totalpage = 0.obs;
+  var totaldata = 0.obs;
+  var currentpage = 0.obs;
+  var nextpage;
+  var count = 0.obs;
+
+  var nextdata;
+  var previouspage;
+  var perpage = 0.obs;
+
   fetchProduk() async {
     print('-------------------fetchProduk---------------------');
 
@@ -110,6 +166,14 @@ class produkController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
+        totalpage.value = dataProduk.meta.pagination.totalPages;
+        totaldata.value = dataProduk.meta.pagination.total;
+        perpage.value = dataProduk.meta.pagination.perPage;
+        currentpage.value = produk['meta']['pagination']['current_page'];
+        count.value = dataProduk.meta.pagination.count;
+        if (totalpage > 1) {
+          nextdata = produk['meta']['pagination']['links']['next'];
+        }
 
         print('--------------------list produk---------------');
         print(produklist);
@@ -130,6 +194,60 @@ class produkController extends GetxController {
     // return [];
   }
 
+  var totalpagejenis = 0.obs;
+  var totaldatajenis = 0.obs;
+  var currentpagejenis = 0.obs;
+  var nextpagejeis;
+  var countjenis = 0.obs;
+
+  var nextdatajenis;
+  var previouspagejenis;
+  var perpagejenis = 0.obs;
+
+  nextjenis() async {
+    final respon = await http.post(Uri.parse(nextdatajenis), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataJenis = ModelJenis.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    jenislist.value = dataJenis.data;
+    previouspagejenis = data['pagination']['links']['previous'];
+    nextdatajenis = data['pagination']['links']['next'];
+    currentpagejenis.value = data['pagination']['current_page'];
+    countjenis.value = data['pagination']['count'];
+    totaldatajenis.value = data['pagination']['total'];
+    perpagejenis.value = data['pagination']['per_page'];
+    print(nextdatajenis);
+    print(data);
+
+    //return produk_list;
+  }
+
+  backjenis() async {
+    final respon = await http.post(Uri.parse(previouspagejenis), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataJenis = ModelJenis.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    jenislist.value = dataJenis.data;
+
+    previouspagejenis = data['pagination']['links']['previous'];
+    nextdatajenis = data['pagination']['links']['next'];
+    countjenis.value = data['pagination']['count'];
+    totaldatajenis.value = data['pagination']['total'];
+    currentpagejenis.value = data['pagination']['current_page'];
+    perpagejenis.value = data['pagination']['per_page'];
+    print(previouspagejenis);
+
+    //return produk_list;
+  }
+
   fetchjenis() async {
     print('-------------------fetchJenis---------------------');
 
@@ -141,47 +259,27 @@ class produkController extends GetxController {
         var dataJenis = ModelJenis.fromJson(jenis);
 
         jenislist.value = dataJenis.data;
-        jenislist.refresh();
-        //update();
+        totalpagejenis.value = dataJenis.meta.pagination.totalPages;
+        totaldatajenis.value = dataJenis.meta.pagination.total;
+        perpagejenis.value = dataJenis.meta.pagination.perPage;
+        currentpagejenis.value = jenis['meta']['pagination']['current_page'];
+        countjenis.value = dataJenis.meta.pagination.count;
+        if (totalpagejenis > 1) {
+          nextdatajenis = jenis['meta']['pagination']['links']['next'];
+        }
         print('--------------------list jenis---------------');
         print(jenislist);
 
         return jenislist;
       } else {
         Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data jenis tidak ada",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(toast().bottom_snackbar_error(
+            'Error', 'Terjadi kesalahan mohon coba lagi'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,periksa koneksi",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(toast().bottom_snackbar_error(
+          'Error', 'Terjadi kesalahan periksa koneksi internet'));
     }
     return [];
   }

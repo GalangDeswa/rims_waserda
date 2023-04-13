@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Modules/kasir/model_kasir.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
@@ -16,6 +17,7 @@ import '../beban/edit jenis beban/model_jenis_beban.dart';
 import '../history/Controller_history.dart';
 import '../history/model_penjualan.dart';
 import '../kasir/controller_kasir.dart';
+import '../pelanggan/data pelanggan/model_data_pelanggan.dart';
 import '../produk/detail produk/controller_detail_produk.dart';
 import '../produk/tambah_stock/controller_tambah_stock.dart';
 import '../produk/tambah_stock/view_tambah_stock_base.dart';
@@ -25,6 +27,60 @@ import 'header.dart';
 import 'keypad.dart';
 
 class popscreen {
+  deletepelanggan(pelangganController controller, DataPelanggan arg) {
+    Get.dialog(AlertDialog(
+      titlePadding: EdgeInsets.all(10),
+      title: header(
+          title: 'Hapus Pelanggan',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Hapus " + arg.namaPelanggan + '?',
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.hapusPelanggan(arg.id.toString());
+                        //controller.deleteproduk(arg.id.toString());
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
+  }
+
   reversalpenjualan(historyController controller, DataPenjualan arg) {
     Get.dialog(AlertDialog(
       title: header(

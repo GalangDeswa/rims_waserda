@@ -23,7 +23,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -32,7 +32,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 height: 15,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
@@ -74,7 +74,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
@@ -88,6 +88,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 ],
               ),
               Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                     color: color_template().primary,
@@ -105,36 +106,39 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   width: context.width_query,
                   height: context.height_query / 4,
                   child: Obx(() {
-                    return ListView.builder(
-                        itemCount: controller.isi.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
+                    return DataTable(
+                        columns: <DataColumn>[
+                          DataColumn(
+                            label: Text(
+                              'Produk',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Qty',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                          DataColumn(
+                            label: Text(
+                              'Harga',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ),
+                        ],
+                        rows: List.generate(
+                            controller.isi.length,
+                            (index) => DataRow(cells: <DataCell>[
+                                  DataCell(Center(
+                                      child:
+                                          Text(controller.isi[index].namaBrg))),
+                                  DataCell(Center(
+                                      child: Text(controller.isi[index].qty))),
+                                  DataCell(Center(
                                       child: Text(
-                                    controller.isi[index].namaBrg,
-                                    style: font().primary_dark,
-                                  )),
-                                  Expanded(
-                                      child: Text(
-                                    'x ' + controller.isi[index].qty,
-                                    style: font().primary_dark,
-                                  )),
-                                  Expanded(
-                                      child: Text(
-                                    controller.isi[index].hargaBrg,
-                                    style: font().primary_dark,
-                                  )),
-                                ],
-                              )
-                            ],
-                          );
-                        });
+                                          controller.isi[index].hargaBrg))),
+                                ])));
                   }),
                 ),
               ),

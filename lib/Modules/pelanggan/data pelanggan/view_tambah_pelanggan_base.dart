@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/produk/tambah%20produk/view_tambah_produk_form.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_tambah_pelanggan_form.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/stack bg.dart';
-import 'controller_tambah_produk.dart';
+import 'controller_data_pelanggan.dart';
 
-class tambah_produk extends GetView<tambah_produkController> {
-  const tambah_produk({Key? key}) : super(key: key);
+class tambah_pelanggan extends GetView<pelangganController> {
+  const tambah_pelanggan({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,9 @@ class tambah_produk extends GetView<tambah_produkController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
-          child: SingleChildScrollView(child: tambah_produk_form()),
+          child: SingleChildScrollView(
+            child: tambah_pelanggan_form(),
+          ),
         ),
       ),
     );

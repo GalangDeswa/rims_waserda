@@ -230,6 +230,15 @@ class base_menu extends GetView<base_menuController> {
                                 ),
                               ),
                               NavigationRailDestination(
+                                icon: FaIcon(FontAwesomeIcons.peopleGroup),
+                                selectedIcon:
+                                    FaIcon(FontAwesomeIcons.peopleGroup),
+                                label: Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text('Pelanggan'),
+                                ),
+                              ),
+                              NavigationRailDestination(
                                 icon: Icon(FontAwesomeIcons.history),
                                 selectedIcon: Icon(FontAwesomeIcons.history),
                                 label: Padding(

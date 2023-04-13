@@ -3,6 +3,9 @@ import 'package:rims_waserda/Modules/beban/data%20beban/view_tambah_beban_base.d
 import 'package:rims_waserda/Modules/history/binding_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/history/binding_history.dart';
 import 'package:rims_waserda/Modules/history/view_detail_penjualan.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/binding_data_pelanggan.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
+import 'package:rims_waserda/Modules/pelanggan/edit%20pelanggan/view_edit_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/binding_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/edit%20produk/binding_edit_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/binding_edit_jenis.dart';
@@ -30,6 +33,8 @@ import '../Modules/kasir/binding_kasir.dart';
 import '../Modules/kasir/view_kasir_basev2.dart';
 import '../Modules/laporan/binding_laporan.dart';
 import '../Modules/laporan/view_laporan_base.dart';
+import '../Modules/pelanggan/data pelanggan/view_tambah_pelanggan_base.dart';
+import '../Modules/pelanggan/edit pelanggan/binding_edit_pelanggan.dart';
 import '../Modules/produk/detail produk/binding_detail_produk.dart';
 import '../Modules/produk/detail produk/view_detail_produk_base.dart';
 import '../Modules/produk/edit produk/view_edit_produk_base.dart';
@@ -119,4 +124,14 @@ final List<GetPage<dynamic>> route = [
       name: "/edit_produk",
       page: () => edit_produk(),
       binding: editprodukBinding()),
+  GetPage(
+      name: "/pelanggan", page: () => pelanggan(), binding: pelangganBinding()),
+  GetPage(
+      name: "/tambah_pelanggan",
+      page: () => tambah_pelanggan(),
+      binding: pelangganBinding()),
+  GetPage(
+      name: "/edit_pelanggan",
+      page: () => edit_pelanggan(),
+      binding: editpelangganBinding()),
 ];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_base.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/user/data%20user/view_data_user_base.dart';
 
 import '../dashboard/view_dashboard_base.dart';
@@ -16,6 +17,7 @@ class base_menuController extends GetxController {
     produk(),
     beban(),
     data_user(),
+    pelanggan(),
     history(),
     laporan(),
   ];

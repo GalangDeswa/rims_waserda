@@ -23,71 +23,69 @@ class laporan extends GetView<laporanController> {
           //       style: font().header,
           //     )),
           body: stack_bg(
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: Stack(
-                children: [
-                  Positioned(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: GroupButton(
-                        options: GroupButtonOptions(
-                          selectedTextStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                          selectedColor: Colors.white,
-                          selectedShadow: [shadow().reguler],
-                          unselectedShadow: const [],
-                          unselectedColor: color_template().primary,
-                          unselectedTextStyle: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
-                          selectedBorderColor: color_template().primary,
-                          // unselectedBorderColor: color_template().select,
-                          borderRadius: BorderRadius.circular(12),
-                          spacing: 15,
-                          runSpacing: 10,
-                          groupingType: GroupingType.wrap,
-                          direction: Axis.vertical,
-                          buttonHeight: context.height_query / 10,
-                          buttonWidth: context.width_query / 13,
-                          mainGroupAlignment: MainGroupAlignment.start,
-                          crossGroupAlignment: CrossGroupAlignment.start,
-                          groupRunAlignment: GroupRunAlignment.start,
-                          textAlign: TextAlign.center,
-                          textPadding: EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          elevation: 3,
+            isfullscreen: true,
+            child: Stack(
+              children: [
+                Positioned(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: GroupButton(
+                      options: GroupButtonOptions(
+                        selectedTextStyle: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                        selectedColor: Colors.white,
+                        selectedShadow: [shadow().reguler],
+                        unselectedShadow: const [],
+                        unselectedColor: color_template().primary,
+                        unselectedTextStyle: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
                         ),
-                        isRadio: true,
-                        controller: GroupButtonController(
-                            selectedIndex: controller.selectedIndex.value),
-                        onSelected: (string, index, bool) {
-                          controller.selectedIndex.value = index;
-                          print(index);
-                        },
-                        buttons: ["Umum", "Penjualan", 'Beban', 'Reversal'],
+                        selectedBorderColor: color_template().primary,
+                        // unselectedBorderColor: color_template().select,
+                        borderRadius: BorderRadius.circular(12),
+                        spacing: 15,
+                        runSpacing: 10,
+                        groupingType: GroupingType.wrap,
+                        direction: Axis.vertical,
+                        buttonHeight: context.height_query / 10,
+                        buttonWidth: context.width_query / 13,
+                        mainGroupAlignment: MainGroupAlignment.start,
+                        crossGroupAlignment: CrossGroupAlignment.start,
+                        groupRunAlignment: GroupRunAlignment.start,
+                        textAlign: TextAlign.center,
+                        textPadding: EdgeInsets.all(5),
+                        alignment: Alignment.center,
+                        elevation: 3,
                       ),
+                      isRadio: true,
+                      controller: GroupButtonController(
+                          selectedIndex: controller.selectedIndex.value),
+                      onSelected: (string, index, bool) {
+                        controller.selectedIndex.value = index;
+                        print(index);
+                      },
+                      buttons: ["Umum", "Penjualan", 'Beban', 'Reversal'],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(right: context.width_query / 16),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Obx(() {
-                            return controller.table
-                                .elementAt(controller.selectedIndex.value);
-                          }),
-                        ),
-                      ],
-                    ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: context.width_query / 16),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Obx(() {
+                          return controller.table
+                              .elementAt(controller.selectedIndex.value);
+                        }),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           )),
     );

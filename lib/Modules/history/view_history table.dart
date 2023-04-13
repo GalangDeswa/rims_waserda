@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
@@ -93,19 +94,17 @@ class history_table extends GetView<historyController> {
                   // width: double.infinity,
                   child: controller.penjualan_list.value.isEmpty
                       ? Container(width: 100, height: 100, child: showloading())
-                      : PaginatedDataTable2(
+                      : DataTable2(
                           horizontalMargin: 10,
                           //minWidth: 1000,
                           //minWidth: 10,
                           //fit: FlexFit.loose,
                           columnSpacing: 5,
-                          wrapInCard: false,
-                          renderEmptyRowsInTheEnd: false,
+
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
-                          autoRowsToHeight: true,
-                          showFirstLastButtons: true,
+
                           empty: Center(
                             child: Text(
                               "Data Kosong",
@@ -121,7 +120,13 @@ class history_table extends GetView<historyController> {
                             ),
                             DataColumn(
                               label: Text(
-                                'Nama Kasir',
+                                'Nama kasir',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Nama pelanggan',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
@@ -168,14 +173,223 @@ class history_table extends GetView<historyController> {
                               ),
                             ),
                           ],
-                          source: source.value,
+                          rows: List.generate(
+                              controller.penjualan_list.length,
+                              (index) => DataRow(cells: [
+                                    DataCell(Center(
+                                        child: Text(controller
+                                            .penjualan_list[index]
+                                            .tglPenjualan))),
+                                    DataCell(Center(
+                                        child: Text(controller
+                                            .penjualan_list[index].namaUser))),
+                                    DataCell(Center(
+                                        child: Text(controller
+                                            .penjualan_list[index]
+                                            .namaPelanggan))),
+                                    DataCell(Center(
+                                        child: Text(controller
+                                            .penjualan_list[index].totalItem))),
+                                    DataCell(Center(
+                                        child: Text('Rp. ' +
+                                            controller.nominal.format(
+                                                double.parse(controller
+                                                    .penjualan_list[index]
+                                                    .subTotal))))),
+                                    DataCell(Center(
+                                        child: Text('Rp. ' +
+                                            controller.nominal.format(
+                                                double.parse(controller
+                                                    .penjualan_list[index]
+                                                    .total))))),
+                                    DataCell(Center(
+                                        child: Text('Rp. ' +
+                                            controller.nominal.format(
+                                                double.parse(controller
+                                                    .penjualan_list[index]
+                                                    .bayar))))),
+                                    DataCell(Center(
+                                        child: controller.penjualan_list[index]
+                                                    .status ==
+                                                1
+                                            ? Container(
+                                                padding: EdgeInsets.all(6),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Text(
+                                                  'Selesai',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              )
+                                            : controller.penjualan_list[index]
+                                                        .status ==
+                                                    2
+                                                ? Container(
+                                                    padding: EdgeInsets.all(6),
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.orange,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                    child: Text('Hutang',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                  )
+                                                : controller
+                                                            .penjualan_list[
+                                                                index]
+                                                            .status ==
+                                                        3
+                                                    ? Container(
+                                                        padding:
+                                                            EdgeInsets.all(6),
+                                                        decoration: BoxDecoration(
+                                                            color:
+                                                                Colors.purple,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: Text(
+                                                            'Bayar Nanti',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      )
+                                                    : controller
+                                                                .penjualan_list[
+                                                                    index]
+                                                                .status ==
+                                                            4
+                                                        ? Container(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    6),
+                                                            decoration: BoxDecoration(
+                                                                color: color_template()
+                                                                    .tritadery,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            child: Text(
+                                                                'Reversal',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)),
+                                                          )
+                                                        : Text('-'))),
+                                    DataCell(Center(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  Get.dialog(
+                                                      AlertDialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        20.0))),
+                                                        contentPadding:
+                                                            EdgeInsets.zero,
+                                                        content:
+                                                            detail_penjualan(),
+                                                      ),
+                                                      arguments: controller
+                                                              .penjualan_list[
+                                                          index]);
+                                                  //popscreen().penjualandetail(con, data[index]);
+                                                  //Get.toNamed('/detail_penjualan', arguments: data[index]);
+                                                },
+                                                icon: Icon(
+                                                  Icons.list,
+                                                  size: 18,
+                                                )),
+                                          ),
+                                          Expanded(
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  popscreen().reversalpenjualan(
+                                                      controller,
+                                                      controller.penjualan_list[
+                                                          index]);
+                                                },
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  size: 18,
+                                                  color: color_template()
+                                                      .tritadery,
+                                                )),
+                                          )
+                                        ],
+                                      ),
+                                    )),
+                                  ])),
                         ),
                 );
               }),
             ),
-            SizedBox(
-              height: 15,
-            )
+            Obx(() {
+              return Container(
+                margin: EdgeInsets.only(left: context.width_query / 1.9),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Data perbaris :'),
+                    Text(controller.perpage.value.toString()),
+                    controller.currentpage > 1
+                        ? IconButton(
+                            onPressed: () {
+                              controller.back();
+                            },
+                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleLeft,
+                              size: 20,
+                              color: Colors.grey,
+                            )),
+                    Text(controller.currentpage.value.toString() +
+                        ' - ' +
+                        controller.totalpage.value.toString()),
+                    controller.currentpage < controller.totalpage.value
+                        ? IconButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              size: 20,
+                            ))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              color: Colors.grey,
+                              size: 20,
+                            ))
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ),

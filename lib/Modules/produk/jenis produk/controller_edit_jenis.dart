@@ -24,6 +24,16 @@ class editjenisController extends GetxController {
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
 
+  var totalpage = 0.obs;
+  var totaldata = 0.obs;
+  var currentpage = 0.obs;
+  var nextpage;
+  var count = 0.obs;
+
+  var nextdata;
+  var previouspage;
+  var perpage = 0.obs;
+
   jenisEdit() async {
     print('-------------------edit jenis---------------------');
 

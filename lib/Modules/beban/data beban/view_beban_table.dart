@@ -70,11 +70,11 @@ class beban_table extends GetView<bebanController> {
                         // ));
                       },
                       child: Text(
-                        'tambah beban',
+                        'Tambah beban',
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
-                      height: 55)
+                      height: 65)
                 ],
               ),
             ),
@@ -173,70 +173,84 @@ class beban_table extends GetView<bebanController> {
                       //untuk paginated table yg pakek data source harus buat var lg di dalam obx
                       //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
 
-                      PaginatedDataTable2(
+                      DataTable2(
+                          fixedTopRows: 1,
                           horizontalMargin: 10,
-                          //minWidth: 1000,
-                          //minWidth: 10,
-                          //fit: FlexFit.loose,
                           columnSpacing: 5,
-                          wrapInCard: false,
-                          renderEmptyRowsInTheEnd: false,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
-                          autoRowsToHeight: true,
-                          showFirstLastButtons: true,
                           columns: <DataColumn>[
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Nama Beban',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'Tanggal',
                               ),
                             ),
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Keterangan',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'Nama Beban',
                               ),
                             ),
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Tanggal',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'jumlah',
                               ),
                             ),
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'jumlah',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'Kategori',
                               ),
                             ),
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Kategori',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Aksi',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'Aksi',
                               ),
                             ),
                           ],
-                          source: source.value,
+                          rows: List.generate(
+                              controller.databebanlist.length,
+                              (index) => DataRow(cells: [
+                                    DataCell(Text(
+                                        controller.databebanlist[index].tgl)),
+                                    DataCell(Text(
+                                        controller.databebanlist[index].nama)),
+                                    DataCell(Text('Rp. ' +
+                                        controller.nominal.format(double.parse(
+                                            controller.databebanlist[index]
+                                                .jumlah)))),
+                                    DataCell(Text(controller
+                                        .databebanlist[index].namaKtrBeban)),
+                                    DataCell(Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              Get.toNamed('/edit_beban',
+                                                  arguments: controller
+                                                      .databebanlist[index]);
+                                            },
+                                            icon: Icon(
+                                              Icons.edit,
+                                              size: 18,
+                                              color: color_template().secondary,
+                                            )),
+                                        IconButton(
+                                            onPressed: () {
+                                              popscreen().deletebebanv2(
+                                                  controller,
+                                                  controller
+                                                      .databebanlist[index]);
+                                            },
+                                            icon: Icon(
+                                              Icons.delete,
+                                              size: 18,
+                                              color: color_template().tritadery,
+                                            ))
+                                      ],
+                                    )),
+                                  ])),
                           empty: Center(
                             child: Text(
                               "Data Kosong",
@@ -246,6 +260,50 @@ class beban_table extends GetView<bebanController> {
                 );
               }),
             ),
+            Obx(() {
+              return Container(
+                margin: EdgeInsets.only(left: context.width_query / 1.9),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Data perbaris :'),
+                    Text(controller.perpage.value.toString()),
+                    controller.currentpage > 1
+                        ? IconButton(
+                            onPressed: () {
+                              controller.back();
+                            },
+                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleLeft,
+                              size: 20,
+                              color: Colors.grey,
+                            )),
+                    Text(controller.currentpage.value.toString() +
+                        ' - ' +
+                        controller.totalpage.value.toString()),
+                    controller.currentpage < controller.totalpage.value
+                        ? IconButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              size: 20,
+                            ))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              color: Colors.grey,
+                              size: 20,
+                            ))
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ),

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/produk/tambah%20produk/view_tambah_produk_form.dart';
+import 'package:rims_waserda/Modules/pelanggan/edit%20pelanggan/controller_edit_pelanggan.dart';
+import 'package:rims_waserda/Modules/pelanggan/edit%20pelanggan/view_edit_pelanggan_form.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/stack bg.dart';
-import 'controller_tambah_produk.dart';
 
-class tambah_produk extends GetView<tambah_produkController> {
-  const tambah_produk({Key? key}) : super(key: key);
+class edit_pelanggan extends GetView<editpelangganController> {
+  const edit_pelanggan({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       // minimum: EdgeInsets.all(5),
       child: Scaffold(
-        backgroundColor: color_template().base_blue,
+        backgroundColor: color_template().primary.withOpacity(0.2),
         // appBar: appbar_custom(
         //     height: 50,
         //     child: Text(
@@ -22,7 +22,8 @@ class tambah_produk extends GetView<tambah_produkController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
-          child: SingleChildScrollView(child: tambah_produk_form()),
+          isfullscreen: true,
+          child: edit_pelanggan_form(),
         ),
       ),
     );

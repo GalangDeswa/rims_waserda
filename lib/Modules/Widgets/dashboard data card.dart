@@ -19,6 +19,7 @@ class datacard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: context.width_query / 5,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             color: color_template().primary,
@@ -27,7 +28,7 @@ class datacard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(6),
+              padding: EdgeInsets.all(5),
               margin: EdgeInsets.only(right: 10),
               decoration: BoxDecoration(
                 borderRadius: border_radius().header_border,

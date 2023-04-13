@@ -44,7 +44,7 @@ class toast {
               BoxDecoration(color: Colors.white, shape: BoxShape.circle),
           child: Icon(Icons.check, color: Colors.lightBlue[900])),
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: color_template().primary,
+      backgroundColor: Colors.blueAccent,
       borderRadius: 20,
       margin: EdgeInsets.all(15),
       duration: Duration(seconds: 4),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/history/controller_detail_penjualan.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 
 import '../beban/data beban/controller_beban.dart';
@@ -38,6 +39,8 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<laporanController>(() => laporanController());
     Get.lazyPut<detailpenjualanController>(() => detailpenjualanController(),
         fenix: true);
+
+    Get.lazyPut<pelangganController>(() => pelangganController());
 
     //Get.lazyPut(() => edituserController());
   }

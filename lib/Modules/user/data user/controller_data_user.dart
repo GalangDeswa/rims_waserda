@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -5,6 +7,7 @@ import 'package:rims_waserda/Services/handler.dart';
 
 import '../../Widgets/loading.dart';
 import 'model_data_user.dart';
+import 'package:http/http.dart' as http;
 
 class datauserController extends GetxController {
   @override
@@ -26,6 +29,58 @@ class datauserController extends GetxController {
     // listUser.refresh();
   }
 
+  var totalpage = 0.obs;
+  var totaldata = 0.obs;
+  var currentpage = 0.obs;
+  var nextpage;
+  var count = 0.obs;
+
+  var nextdata;
+  var previouspage;
+  var perpage = 0.obs;
+
+  next() async {
+    final respon = await http.post(Uri.parse(nextdata), body: {
+      'token': token,
+      'id_toko': id_toko,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataUser = ModelUser.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    listUser.value = dataUser.data;
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    currentpage.value = data['pagination']['current_page'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    perpage.value = data['pagination']['per_page'];
+    print(nextdata);
+    print(data);
+
+    //return produk_list;
+  }
+
+  back() async {
+    final respon = await http.post(Uri.parse(previouspage), body: {
+      'token': token,
+      'id_toko': id_toko,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataUser = ModelUser.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    listUser.value = dataUser.data;
+
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    currentpage.value = data['pagination']['current_page'];
+    perpage.value = data['pagination']['per_page'];
+    print(previouspage);
+
+    //return produk_list;
+  }
+
   var listUser = <DataUser>[].obs;
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
@@ -45,8 +100,16 @@ class datauserController extends GetxController {
         var dataUser = ModelUser.fromJson(user);
         //listUser.value.clear();
         listUser.value = dataUser.data;
-        //listUser.refresh();
-        update();
+
+        totalpage.value = dataUser.meta.pagination.totalPages;
+        totaldata.value = dataUser.meta.pagination.total;
+        perpage.value = dataUser.meta.pagination.perPage;
+        currentpage.value = user['meta']['pagination']['current_page'];
+        count.value = dataUser.meta.pagination.count;
+        if (totalpage > 1) {
+          nextdata = user['meta']['pagination']['links']['next'];
+        }
+
         print('--------------------list user---------------');
         print(listUser);
 

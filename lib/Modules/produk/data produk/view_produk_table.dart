@@ -43,7 +43,6 @@ class produk_table extends GetView<produkController> {
                         icon_funtion: Icons.refresh,
                         function: () async {
                           Get.dialog(showloading(), barrierDismissible: false);
-
                           await controller.fetchProduk();
                           Get.back(closeOverlays: true);
                         },
@@ -66,11 +65,11 @@ class produk_table extends GetView<produkController> {
                         // ));
                       },
                       child: Text(
-                        'tambah produk',
+                        'Tambah produk',
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
-                      height: 55)
+                      height: 65)
                 ],
               ),
             ),
@@ -131,57 +130,44 @@ class produk_table extends GetView<produkController> {
 
                   child: controller.produklist.value.isEmpty
                       ? Container(width: 100, height: 100, child: showloading())
-                      : PaginatedDataTable2(
+                      : DataTable2(
+                          fixedTopRows: 1,
                           horizontalMargin: 10,
-                          //minWidth: 1000,
-                          //minWidth: 10,
-                          //fit: FlexFit.loose,
                           columnSpacing: 5,
-                          wrapInCard: false,
-                          renderEmptyRowsInTheEnd: false,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
-                          autoRowsToHeight: true,
-                          showFirstLastButtons: true,
                           empty: Center(
                             child: Text(
                               "Data Kosong",
                               style: font().header_black,
                             ),
                           ),
-
                           columns: const <DataColumn>[
                             DataColumn(
+                              label: Text('Nama Produk'),
+                            ),
+                            DataColumn(
                               label: Text(
-                                'Nama Produk',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                                'Jenis Produk',
                               ),
                             ),
                             DataColumn(
                               label: Text(
-                                'Jenis produk',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                                'Deskripsi',
                               ),
                             ),
                             DataColumn(
                               label: Text(
-                                'Desc',
-                                style: TextStyle(fontStyle: FontStyle.italic),
-                              ),
-                            ),
-                            DataColumn(
-                              label: Text(
-                                'Stock',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                                'Qty',
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Harga',
-                                style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
+
                             // DataColumn(
                             //   label: Expanded(
                             //     child: Text(
@@ -191,19 +177,134 @@ class produk_table extends GetView<produkController> {
                             //   ),
                             // ),
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Aksi',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'Aksi',
                               ),
                             ),
                           ],
-                          source: source.value,
+                          rows: List.generate(
+                            controller.produklist.length,
+                            (index) => DataRow(cells: [
+                              DataCell(Text(
+                                  controller.produklist[index].namaProduk)),
+                              DataCell(
+                                  Text(controller.produklist[index].namaJenis)),
+                              DataCell(
+                                  Text(controller.produklist[index].deskripsi)),
+                              DataCell(Row(
+                                children: [
+                                  Expanded(
+                                      child: Text(controller.nominal.format(
+                                          double.parse(controller
+                                              .produklist[index].qty)))),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        right: context.width_query / 23),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          controller.addqty(controller,
+                                              controller.produklist[index]);
+                                        },
+                                        icon: Container(
+                                          padding: EdgeInsets.all(3),
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: color_template().primary),
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 18,
+                                            color: Colors.white,
+                                          ),
+                                        )),
+                                  )
+                                ],
+                              )),
+                              DataCell(Text('Rp. ' +
+                                  controller.nominal.format(double.parse(
+                                      controller.produklist[index].harga)))),
+                              DataCell(Container(
+                                // color: Colors.cyan,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 10),
+                                      child: IconButton(
+                                          onPressed: () {
+                                            Get.toNamed('/edit_produk',
+                                                arguments: controller
+                                                    .produklist[index]);
+                                          },
+                                          icon: Icon(
+                                            Icons.edit,
+                                            size: 18,
+                                            color: color_template().secondary,
+                                          )),
+                                    ),
+                                    IconButton(
+                                        onPressed: () {
+                                          popscreen().deleteprodukv2(controller,
+                                              controller.produklist[index]);
+                                        },
+                                        icon: Icon(
+                                          Icons.delete,
+                                          size: 18,
+                                          color: color_template().tritadery,
+                                        ))
+                                  ],
+                                ),
+                              )),
+                            ]),
+                          ),
                         ),
                 );
               }),
             ),
+            Obx(() {
+              return Container(
+                margin: EdgeInsets.only(left: context.width_query / 1.9),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text('Data perbaris :'),
+                    Text(controller.perpage.value.toString()),
+                    controller.currentpage > 1
+                        ? IconButton(
+                            onPressed: () {
+                              controller.back();
+                            },
+                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleLeft,
+                              size: 20,
+                              color: Colors.grey,
+                            )),
+                    Text(controller.currentpage.value.toString() +
+                        ' - ' +
+                        controller.totalpage.value.toString()),
+                    controller.currentpage < controller.totalpage.value
+                        ? IconButton(
+                            onPressed: () {
+                              controller.next();
+                            },
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              size: 20,
+                            ))
+                        : IconButton(
+                            onPressed: null,
+                            icon: Icon(
+                              FontAwesomeIcons.angleRight,
+                              color: Colors.grey,
+                              size: 20,
+                            ))
+                  ],
+                ),
+              );
+            })
           ],
         ),
       ),
@@ -290,3 +391,50 @@ class produkTable extends DataTableSource {
     ]);
   }
 }
+
+// class ExampleSource extends AdvancedDataTableSource<DataProduk> {
+//   final List<DataProduk> data;
+//   var con = Get.find<produkController>();
+//
+//   ExampleSource(this.data);
+//
+//   @override
+//   DataRow? getRow(int index) {
+//     final currentRowData = data[index];
+//     return DataRow(cells: [
+//       DataCell(
+//         Text(currentRowData.namaProduk.toString()),
+//       ),
+//       DataCell(
+//         Text(currentRowData.harga),
+//       ),
+//     ]);
+//   }
+//
+//   @override
+//   int get selectedRowCount => 0;
+//
+//   @override
+//   Future<RemoteDataSourceDetails<DataProduk>> getNextPage(
+//       NextPageRequest pageRequest) async {
+//     //the remote data source has to support the pagaing and sorting
+//
+//     final requestUri = Uri.https(
+//       'http://localhost/rimspos-standar/api-pos/produk/data/allproduk',
+//       queryParameter as String,
+//     );
+//
+//     final response = await http.get(requestUri);
+//     if (response.statusCode == 200) {
+//       final data = jsonDecode(response.body);
+//       return RemoteDataSourceDetails(
+//         data['data'],
+//         (data['data'] as List<dynamic>)
+//             .map((json) => DataProduk.fromJson(json))
+//             .toList(),
+//       );
+//     } else {
+//       throw Exception('Unable to query remote server');
+//     }
+//   }
+// }

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_table.dart';
 
@@ -39,6 +42,114 @@ class bebanController extends GetxController {
   var jumlahbeban = 0.0.obs;
 
   var formKeyjenis = GlobalKey<FormState>().obs;
+
+  next() async {
+    final respon = await http.post(Uri.parse(nextdata), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataBeban = ModelBeban.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    databebanlist.value = dataBeban.data;
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    currentpage.value = data['pagination']['current_page'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    perpage.value = data['pagination']['per_page'];
+    print(nextdata);
+    print(data);
+
+    //return produk_list;
+  }
+
+  back() async {
+    final respon = await http.post(Uri.parse(previouspage), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataBeban = ModelBeban.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    databebanlist.value = dataBeban.data;
+
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    currentpage.value = data['pagination']['current_page'];
+    perpage.value = data['pagination']['per_page'];
+    print(previouspage);
+
+    //return produk_list;
+  }
+
+  var totalpage = 0.obs;
+  var totaldata = 0.obs;
+  var currentpage = 0.obs;
+  var nextpage;
+  var count = 0.obs;
+
+  var nextdata;
+  var previouspage;
+  var perpage = 0.obs;
+
+  var totalpagejenis = 0.obs;
+  var totaldatajenis = 0.obs;
+  var currentpagejenis = 0.obs;
+  var nextpagejeis;
+  var countjenis = 0.obs;
+
+  var nextdatajenis;
+  var previouspagejenis;
+  var perpagejenis = 0.obs;
+
+  nextjenis() async {
+    final respon = await http.post(Uri.parse(nextdatajenis), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataJenis = ModelJenisBeban.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    jenisbebanlist.value = dataJenis.data;
+    previouspagejenis = data['pagination']['links']['previous'];
+    nextdatajenis = data['pagination']['links']['next'];
+    currentpagejenis.value = data['pagination']['current_page'];
+    countjenis.value = data['pagination']['count'];
+    totaldatajenis.value = data['pagination']['total'];
+    perpagejenis.value = data['pagination']['per_page'];
+    print(nextdatajenis);
+    print(data);
+
+    //return produk_list;
+  }
+
+  backjenis() async {
+    final respon = await http.post(Uri.parse(previouspagejenis), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataJenis = ModelJenisBeban.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    jenisbebanlist.value = dataJenis.data;
+
+    previouspagejenis = data['pagination']['links']['previous'];
+    nextdatajenis = data['pagination']['links']['next'];
+    countjenis.value = data['pagination']['count'];
+    totaldatajenis.value = data['pagination']['total'];
+    currentpagejenis.value = data['pagination']['current_page'];
+    perpagejenis.value = data['pagination']['per_page'];
+    print(previouspagejenis);
+
+    //return produk_list;
+  }
 
   List<Widget> table = [
     beban_table(),
@@ -164,8 +275,17 @@ class bebanController extends GetxController {
         var dataJenis = ModelJenisBeban.fromJson(jenis);
 
         jenisbebanlist.value = dataJenis.data;
-        jenisbebanlist.refresh();
-        //update();
+
+        jenisbebanlist.value = dataJenis.data;
+        totalpagejenis.value = dataJenis.meta.pagination.totalPages;
+        totaldatajenis.value = dataJenis.meta.pagination.total;
+        perpagejenis.value = dataJenis.meta.pagination.perPage;
+        currentpagejenis.value = jenis['meta']['pagination']['current_page'];
+        countjenis.value = dataJenis.meta.pagination.count;
+        if (totalpagejenis > 1) {
+          nextdatajenis = jenis['meta']['pagination']['links']['next'];
+        }
+
         print('--------------------list jenis---------------');
         print(jenisbebanlist);
 
@@ -196,8 +316,15 @@ class bebanController extends GetxController {
         var dataBeban = ModelBeban.fromJson(beban);
 
         databebanlist.value = dataBeban.data;
-        databebanlist.refresh();
-        //update();
+        totalpage.value = dataBeban.meta.pagination.totalPages;
+        totaldata.value = dataBeban.meta.pagination.total;
+        perpage.value = dataBeban.meta.pagination.perPage;
+        currentpage.value = beban['meta']['pagination']['current_page'];
+        count.value = dataBeban.meta.pagination.count;
+        if (totalpage > 1) {
+          nextdata = beban['meta']['pagination']['links']['next'];
+        }
+
         print('--------------------list data beban---------------');
         print(databebanlist);
 

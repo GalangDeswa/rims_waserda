@@ -1,6 +1,5 @@
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 import '../../Modules/Login/view_login_carousel.dart';
@@ -187,20 +186,13 @@ class login_card extends GetView<loginController> {
                         ),
                         button_border_custom(
                           onPressed: () {
-                            controller.handleSignIn();
+                            //controller.handleSignIn();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                FontAwesomeIcons.google,
-                                color: color_template().primary,
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
                               Text(
-                                'Login dengan google',
+                                'Lupa password ?',
                                 style: font().primary,
                               ),
                             ],
@@ -211,43 +203,43 @@ class login_card extends GetView<loginController> {
                         SizedBox(
                           height: 30,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            button_solid_custom(
-                                width: context.width_query * 0.1,
-                                height: 35,
-                                onPressed: () {
-                                  // if (controller
-                                  //     .loginKey.value.currentState!
-                                  //     .validate()) {
-                                  //   controller.login();
-                                  // }
-
-                                  Get.toNamed('/base_menu');
-
-                                  //Get.to(() => barcode());
-                                },
-                                child: Text(
-                                  'Register',
-                                  style: font().primary_white,
-                                )),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            button_border_custom(
-                              onPressed: () {},
-                              child: Text(
-                                'Lupa Password?',
-                                style: TextStyle(
-                                    color: color_template().primary,
-                                    fontSize: 13),
-                              ),
-                              height: 35,
-                              width: context.width_query * 0.1,
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.end,
+                        //   children: [
+                        //     button_solid_custom(
+                        //         width: context.width_query * 0.1,
+                        //         height: 35,
+                        //         onPressed: () {
+                        //           // if (controller
+                        //           //     .loginKey.value.currentState!
+                        //           //     .validate()) {
+                        //           //   controller.login();
+                        //           // }
+                        //
+                        //           Get.toNamed('/base_menu');
+                        //
+                        //           //Get.to(() => barcode());
+                        //         },
+                        //         child: Text(
+                        //           'Register',
+                        //           style: font().primary_white,
+                        //         )),
+                        //     SizedBox(
+                        //       width: 15,
+                        //     ),
+                        //     button_border_custom(
+                        //       onPressed: () {},
+                        //       child: Text(
+                        //         'Lupa Password?',
+                        //         style: TextStyle(
+                        //             color: color_template().primary,
+                        //             fontSize: 13),
+                        //       ),
+                        //       height: 35,
+                        //       width: context.width_query * 0.1,
+                        //     ),
+                        //   ],
+                        // ),
 
                         // RichText(
                         //     text: TextSpan(

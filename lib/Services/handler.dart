@@ -255,6 +255,32 @@ class REST extends GetConnect {
     }
   }
 
+  static Future<dynamic> produknext(String token, idtoko, page) async {
+    var response = await http.post(link().POST_produkall,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'page': page,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PRODUKALL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'PRODUKALLnetwork handler----------------------------------------->');
+      print('gagal PRODUKALL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
   static Future<dynamic> produkJenis(String token, idtoko) async {
     var response = await http.post(link().POST_produkjenis,
         body: ({
@@ -1188,36 +1214,118 @@ class REST extends GetConnect {
       //  final filename = 'qwe';
       var data = response;
       return data;
-
-      // var request = await HttpClient().getUrl(link().POST_laporanumum);
-      //  var response = await request.close();
-      // var bytes = await consolidateHttpClientResponseBytes(response);
-
-      // Directory tempDir = await getTemporaryDirectory();
-      // String tempPath = tempDir.path;
-      // File file = File('$tempPath/$filename.pdf');
-      // print('$tempPath/$filename');
-      // await file.writeAsBytes(response.bodyBytes);
-      // return file;
-
-      //await file.writeAsBytes(bytes, flush: true);
-      //completer.complete(file);
-      // createFileOfPdfUrl().then((f) {
-      //   remotePDFpath.value = f.path;
-      // });
-
-      // File data = response.body;
-      // var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      //print(data);
-      print(response.statusCode);
-      // return completer.future;
-      //return (data);
     } else {
       print(
           'DATA LAPORAN REVERSAL network handler----------------------------------------->');
       print('GAGAL DATA LAPORAN REVERSAL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> pelangganData(String token, idtoko) async {
+    var response = await http.post(link().POST_pelanggandata,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PELANGGAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PELANGGAN network handler----------------------------------------->');
+      print('GAGAL DATA PELANGGAN');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> pelangganTambah(
+      String token, id_toko, nama_pelanggan, no_hp) async {
+    var response = await http.post(link().POST_pelanggantambah,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+          'nama_pelanggan': nama_pelanggan,
+          'no_hp': no_hp,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PELANGGAN TAMBAH network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PELANGGAN TAMBAH network handler----------------------------------------->');
+      print('GAGAL DATA PELANGGAN TAMBAH');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> pelangganEdit(
+      String token, id_toko, id, nama_pelanggan, no_hp) async {
+    var response = await http.post(link().POST_pelangganedit,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+          'id': id.toString(),
+          'nama_pelanggan': nama_pelanggan,
+          'no_hp': no_hp,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PELANGGAN EDIT network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PELANGGAN EDIT network handler----------------------------------------->');
+      print('GAGAL DATA PELANGGAN EDIT');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> pelangganHapus(String token, id_toko, id) async {
+    var response = await http.post(link().POST_pelangganhapus,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+          'id': id.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PELANGGAN HAPUS network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PELANGGAN HAPUS network handler----------------------------------------->');
+      print('GAGAL DATA PELANGGAN EDIT');
       print(response.statusCode);
       print(response.body);
     }
