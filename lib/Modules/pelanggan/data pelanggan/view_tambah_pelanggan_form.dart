@@ -24,7 +24,7 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
         padding: const EdgeInsets.all(15),
         child: Container(
           width: context.width_query / 1,
-          height: context.height_query / 1.3,
+          //height: context.height_query / 1.3,
           child: Form(
               key: controller.formKeypelanggan.value,
               child: Column(
@@ -33,6 +33,9 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                   header(
                     title: 'Tambah Pelanggan',
                     icon: FontAwesomeIcons.dollarSign,
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   TextFormField(
                     controller: controller.nama_pelanggan.value,
@@ -56,6 +59,9 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                       return null;
                     },
                   ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     controller: controller.no_hp.value,
                     onChanged: ((String pass) {}),
@@ -70,13 +76,16 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Masukan nomor hp';
                       }
                       return null;
                     },
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   button_solid_custom(
                       onPressed: () {

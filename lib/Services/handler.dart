@@ -306,31 +306,50 @@ class REST extends GetConnect {
     }
   }
 
-  static Future<dynamic> produkTambah(String token, idtoko, iduser, idjenis,
-      namaproduk, desc, qty, harga, File image) async {
+  static Future<dynamic> produkTambah(
+      {required String token,
+      idtoko,
+      iduser,
+      idjenis,
+      idjenisstock,
+      namaproduk,
+      desc,
+      qty,
+      harga,
+      diskon_barang,
+      File? image}) async {
     var response = http.MultipartRequest("POST", link().POST_produktambah);
 
     if (image != null) {
       var pic = await http.MultipartFile.fromPath("image", image.path);
       //add multipart to request
       response.files.add(pic);
-
       //imageUploadRequest.files.add(foto);
     }
+
+    // var pic = await http.MultipartFile.fromPath("image", image.path);
+    // response.files.add(pic);
+
     response.fields['token'] = token;
     response.fields['id_toko'] = idtoko.toString();
     response.fields['id_user'] = iduser.toString();
     response.fields['id_jenis'] = idjenis.toString();
+    response.fields['id_jenis_stock'] = idjenisstock.toString();
     response.fields['nama_produk'] = namaproduk;
     response.fields['deskripsi'] = desc;
     response.fields['qty'] = qty;
     response.fields['harga'] = harga;
+    response.fields['diskon_barang'] = diskon_barang;
+
+    print('next diskon000000000000');
+    //response.fields['diskon_barang'] = diskon_barang;
 
     final streamedResponse = await response.send();
     final datarespon = await http.Response.fromStream(streamedResponse);
     if (datarespon.statusCode != 200) {
       print('tambah produk handelr-------------------------------------------');
       print(datarespon.statusCode);
+      print(datarespon.body);
       return null;
     }
     var data = json.decode(datarespon.body);
@@ -339,8 +358,18 @@ class REST extends GetConnect {
     return data;
   }
 
-  static Future<dynamic> produkEdit(String token, id, idtoko, iduser, idjenis,
-      namaproduk, desc, harga, File image) async {
+  static Future<dynamic> produkEdit(
+      {required String token,
+      id,
+      idjenisstock,
+      idtoko,
+      iduser,
+      idjenis,
+      namaproduk,
+      desc,
+      harga,
+      diskon_barang,
+      File? image}) async {
     var response = http.MultipartRequest("POST", link().POST_produkedit);
 
     if (image != null) {
@@ -354,10 +383,12 @@ class REST extends GetConnect {
     response.fields['id_toko'] = idtoko.toString();
     response.fields['id_user'] = iduser.toString();
     response.fields['id_jenis'] = idjenis.toString();
+    //response.fields['id_jenis_stock'] = idjenisstock.toString();
     response.fields['nama_produk'] = namaproduk;
     response.fields['deskripsi'] = desc;
     response.fields['id'] = id.toString();
     response.fields['harga'] = harga;
+    response.fields['diskon_barang'] = diskon_barang;
 
     final streamedResponse = await response.send();
     final datarespon = await http.Response.fromStream(streamedResponse);
@@ -845,8 +876,8 @@ class REST extends GetConnect {
     }
   }
 
-  static Future<dynamic> kasirKeranjangTambah(
-      String token, iduser, idtoko, meja, idproduk, diskon_brg, qty) async {
+  static Future<dynamic> kasirKeranjangTambah(String token, iduser, idtoko,
+      idjenisstock, meja, idproduk, diskon_brg, qty) async {
     var response = await http.post(link().POST_kasirkeranjangtambah,
         body: ({
           'token': token,
@@ -856,6 +887,7 @@ class REST extends GetConnect {
           'id_produk': idproduk,
           'diskon_brg': diskon_brg,
           'qty': qty,
+          'id_jenis_stock': idjenisstock,
         }));
     if (response.statusCode == 200) {
       print(
@@ -864,15 +896,19 @@ class REST extends GetConnect {
       var data = json.decode(response.body);
       //var data = response.body;
       //var data = response;
-      print(data);
+
       print(response.statusCode);
-      return (data);
+      return data;
     } else {
+      var data = json.decode(response.body);
+
       print(
           ' TAMBAH KERANJANG network handler----------------------------------------->');
       print('TAMBAH DATA KERANJANG');
+      print(data['message']);
       print(response.statusCode);
       print(response.body);
+      return data;
     }
   }
 
@@ -913,7 +949,13 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> kasirPembayaran(
-      String token, iduser, idtoko, meja, bayar) async {
+      {required String token,
+      iduser,
+      idtoko,
+      meja,
+      String? bayar,
+      metodebayar,
+      String? id_pelanggan}) async {
     var response = await http.post(link().POST_kasirpembayaran,
         body: ({
           'token': token,
@@ -921,6 +963,8 @@ class REST extends GetConnect {
           'id_toko': idtoko,
           'meja': meja,
           'bayar': bayar,
+          'metode_bayar': metodebayar,
+          'id_pelanggan': id_pelanggan,
         }));
     if (response.statusCode == 200) {
       print(
@@ -933,11 +977,13 @@ class REST extends GetConnect {
       print(response.statusCode);
       return (data);
     } else {
+      var data = json.decode(response.body);
       print(
           ' PEMBAYARAN network handler----------------------------------------->');
       print('GAGAL PEMBAYARAN');
       print(response.statusCode);
       print(response.body);
+      return data;
     }
   }
 

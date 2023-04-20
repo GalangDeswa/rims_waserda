@@ -1,29 +1,48 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
+import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
+import 'package:rims_waserda/Templates/setting.dart';
 
 import '../../Services/handler.dart';
+import '../Widgets/buttons.dart';
+import '../Widgets/header.dart';
+import '../Widgets/loading.dart';
 import '../produk/data produk/model_produk.dart';
 import '../produk/jenis produk/model_jenisproduk.dart';
 import 'model_kasir.dart';
 
 class kasirController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
 
     print('kasir init------------------------------------------------->');
-    fetchProduk();
-    fetchjenis();
+    await fetchProduk();
+    produkcache.value = await GetStorage().read('produk');
+    await fetchjenis();
+    jeniscache.value = await GetStorage().read('jenis');
+    fetchpelanggan();
+
+    // fetchkeranjangcache();
+
     //keypadController.value = TextEditingController(text: '0');
     // kembalian.value = TextEditingController(text: '0');
 
-    fetchkeranjang();
+    // fetchkeranjang();
+    nextscroll();
   }
+
+  var produkcache = <DataProduk>[].obs;
+  var jeniscache = <DataJenis>[].obs;
 
   Future<void> refresh() async {
     await fetchProduk();
@@ -31,70 +50,12 @@ class kasirController extends GetxController {
   }
 
   final nominal = NumberFormat("#,##0");
+  final formatCurrency =
+      NumberFormat.currency(decimalDigits: 0, locale: 'id', symbol: '');
 
   var kembalian = TextEditingController().obs;
   var keypadController = TextEditingController().obs;
   var keypadvalue = 0.0.obs;
-
-  balik() {
-    var kem = int.parse(keypadController.value.text) - int.parse(total.value);
-    kem < 0
-        ? kembalian.value.text = '0'
-        : kembalian.value.text = kem.toString();
-    //kembalian.value.text = kem.toString();
-    print('---kembalian----');
-    print(kembalian.value.text);
-  }
-
-  add_5000(String x) {
-    if (keypadController.value.text.isEmpty) {
-      keypadController.value.text = '5000';
-    } else {
-      var sum = int.parse(x) + 5000;
-      print(sum);
-      keypadController.value.text = sum.toString();
-    }
-  }
-
-  add_10000(String x) {
-    if (keypadController.value.text.isEmpty) {
-      keypadController.value.text = '10000';
-    } else {
-      var sum = int.parse(x) + 10000;
-      print(sum);
-      keypadController.value.text = sum.toString();
-    }
-  }
-
-  add_20000(String x) {
-    if (keypadController.value.text.isEmpty) {
-      keypadController.value.text = '20000';
-    } else {
-      var sum = int.parse(x) + 20000;
-      print(sum);
-      keypadController.value.text = sum.toString();
-    }
-  }
-
-  add_50000(String x) {
-    if (keypadController.value.text.isEmpty) {
-      keypadController.value.text = '50000';
-    } else {
-      var sum = int.parse(x) + 50000;
-      print(sum);
-      keypadController.value.text = sum.toString();
-    }
-  }
-
-  add_100000(String x) {
-    if (keypadController.value.text.isEmpty) {
-      keypadController.value.text = '100000';
-    } else {
-      var sum = int.parse(x) + 100000;
-      print(sum);
-      keypadController.value.text = sum.toString();
-    }
-  }
 
   var selectedIndex = 0.obs;
 
@@ -109,8 +70,147 @@ class kasirController extends GetxController {
   var namakasir = GetStorage().read('name');
   var produklist = <DataProduk>[].obs;
 
-  var subtotal = ''.obs;
-  var total = ''.obs;
+  var scroll = ScrollController().obs;
+
+  var totalpage = 0.obs;
+  var totaldata = 0.obs;
+  var currentpage = 0.obs;
+  var nextpage;
+  var count = 0.obs;
+
+  var nextdata;
+  var previouspage;
+  var perpage = 0.obs;
+
+  var listpelanggan = <DataPelanggan>[].obs;
+
+  Future<List<DataPelanggan>> fetchpelanggan() async {
+    print('-------------------userdata---------------------');
+
+    // SchedulerBinding.instance.addPostFrameCallback(
+    //     (_) => Get.dialog(loading(), barrierDismissible: false));
+    //call dialog tidak bisa di init tanpa coding di atas
+
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var user = await REST.pelangganData(token, id_toko);
+      if (user != null) {
+        print('-------------------datauser---------------');
+        var dataPelanggan = ModelPelanggan.fromJson(user);
+        //listUser.value.clear();
+        listpelanggan.value = dataPelanggan.data;
+
+        print('--------------------list user---------------');
+        print(listpelanggan);
+
+        // Get.back(closeOverlays: true);
+
+        return listpelanggan;
+      } else {
+        Get.back(closeOverlays: true);
+        Get.snackbar(
+          "Error",
+          "Data user gagal,user tidak ada",
+          icon: Icon(Icons.error, color: Colors.white),
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          borderRadius: 20,
+          margin: EdgeInsets.all(15),
+          colorText: Colors.white,
+          duration: Duration(seconds: 4),
+          isDismissible: true,
+          dismissDirection: DismissDirection.horizontal,
+          forwardAnimationCurve: Curves.elasticInOut,
+          reverseAnimationCurve: Curves.easeOut,
+        );
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.snackbar(
+        "Error",
+        "Data user gagal,periksa koneksi",
+        icon: Icon(Icons.error, color: Colors.white),
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        borderRadius: 20,
+        margin: EdgeInsets.all(15),
+        colorText: Colors.white,
+        duration: Duration(seconds: 4),
+        isDismissible: true,
+        dismissDirection: DismissDirection.horizontal,
+        forwardAnimationCurve: Curves.elasticInOut,
+        reverseAnimationCurve: Curves.easeOut,
+      );
+    }
+    return [];
+  }
+
+  nextscroll() {
+    scroll.value.addListener(() async {
+      if (scroll.value.position.maxScrollExtent ==
+          scroll.value.position.pixels) {
+        if (totalpage.value != currentpage.value) {
+          next();
+        } else {
+          print(
+              "end of the line --------------------------------------------------");
+        }
+
+        print('scroll--------------------------------------------------');
+      }
+    });
+  }
+
+  next() async {
+    if (nextdata == '') {
+      return null;
+    } else {
+      final respon = await http.post(Uri.parse(nextdata), body: {
+        'token': token,
+        'id_toko': id_toko,
+        'search': search.value.text,
+      });
+      final datav2 = json.decode(respon.body);
+      var dataProduk = ModelProduk.fromJson(datav2);
+      final data = json.decode(respon.body)['meta'];
+
+      produklist.value += dataProduk.data;
+      produkcache.value += dataProduk.data;
+      await GetStorage().write('produk', produkcache.value);
+      previouspage = data['pagination']['links']['previous'];
+      nextdata = data['pagination']['links']['next'] ?? '';
+      currentpage.value = data['pagination']['current_page'];
+      count.value = data['pagination']['count'];
+      totaldata.value = data['pagination']['total'];
+      perpage.value = data['pagination']['per_page'];
+      print(nextdata);
+      print(data);
+    }
+
+    //return produk_list;
+  }
+
+  back() async {
+    final respon = await http.post(Uri.parse(previouspage), body: {
+      'token': token,
+      'id_toko': id_toko,
+      'search': search.value.text,
+    });
+    final datav2 = json.decode(respon.body);
+    var dataProduk = ModelProduk.fromJson(datav2);
+    final data = json.decode(respon.body)['meta'];
+    produklist.value = dataProduk.data;
+
+    previouspage = data['pagination']['links']['previous'];
+    nextdata = data['pagination']['links']['next'];
+    count.value = data['pagination']['count'];
+    totaldata.value = data['pagination']['total'];
+    currentpage.value = data['pagination']['current_page'];
+    perpage.value = data['pagination']['per_page'];
+    print(previouspage);
+
+    //return produk_list;
+  }
 
   fetchProduk() async {
     print('-------------------fetchProduk---------------------');
@@ -127,10 +227,19 @@ class kasirController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
-        //produklist.refresh();
-        //update();
-        print('--------------------list produk---------------');
-        print(produklist);
+        totalpage.value = dataProduk.meta.pagination.totalPages;
+        totaldata.value = dataProduk.meta.pagination.total;
+        perpage.value = dataProduk.meta.pagination.perPage;
+        currentpage.value = produk['meta']['pagination']['current_page'];
+        count.value = dataProduk.meta.pagination.count;
+        if (totalpage > 1) {
+          nextdata = produk['meta']['pagination']['links']['next'] ?? '';
+        }
+        print(
+            '--------------------list produk cache----------------------------');
+        await GetStorage().write('produk', produklist.value);
+
+        // print(produklist);
 
         //Get.back(closeOverlays: true);
 
@@ -159,6 +268,7 @@ class kasirController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
+
         // produklist.refresh();
         //update();
         print('--------------------list produk by jneis---------------');
@@ -180,41 +290,176 @@ class kasirController extends GetxController {
     return [];
   }
 
-  fetchkeranjang() async {
-    print('-------------------fetchkeranjang---------------------');
-
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var keranjang = await REST.kasirKeranjangData(
-          token, id_user.toString(), id_toko, meja.value.text);
-      if (keranjang != null) {
-        print('-------------------data keranjang---------------');
-        var dataKeranjang = ModelKeranjang.fromJson(keranjang);
-        keranjanglist.value = dataKeranjang.data;
-        subtotal.value = dataKeranjang.meta.subtotal;
-        total.value = dataKeranjang.meta.total;
-        print('-------------keranjang total---------');
-        print(total);
-        //keranjanglist.refresh();
-        //update();
-        print('--------------------list keranjang---------------');
-        print(keranjanglist);
-
-        //Get.back(closeOverlays: true);
-
-        return keranjanglist;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Terjadi kesalahan'));
-      }
-    } else {
-      //  Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
-    }
-    return [];
+  fetchProdukByJeniscache(String id) async {
+    print('-------------------fetchProdukbyjenis cache---------------------');
+    produkcache.value = await GetStorage().read('produk');
+    var jenis =
+        produkcache.value.where((element) => element.idJenis == id).toList();
+    print(produkcache);
+    produkcache.value = jenis;
   }
+
+  var keranjangcache = <DataKeranjangCache>[].obs;
+  var qtycache = 0.obs;
+  var cache = <DataKeranjangCache>[].obs;
+  var max = false.obs;
+
+  tambahqty(int index) async {
+    cache.refresh();
+    var qty = cache.value[index].qty;
+    var add = qty + 1;
+    var sum = cache[index].qty = add;
+    print(produklist[index].qty);
+    if (int.parse(produklist[index].qty) <= sum) {
+      max.value = true;
+    } else {
+      max.value = false;
+    }
+
+    await subtotalval();
+    await totalval();
+    print('qty cache ------------------------------------------');
+
+    //cache.refresh();
+
+    print(cache[index].qty);
+    return sum;
+  }
+
+  deleteqty(int index, int idproduk) async {
+    max.value = false;
+    var qty = cache.value[index].qty;
+    var del = qty - 1;
+    var sum = cache[index].qty = del;
+    await subtotalval();
+    await totalval();
+    if (sum < 1) {
+      cache.value.removeWhere((element) => element.id == idproduk);
+      print('qty cache deldete ------------------------------------------');
+      cache.refresh();
+    } else {
+      cache.refresh();
+      return sum;
+    }
+  }
+
+  deleteitemcache(int idproduk) {
+    max.value = false;
+    cache.value.removeWhere((element) => element.id == idproduk);
+    subtotalval();
+    totalval();
+    cache.refresh();
+  }
+
+  var excache = <String>[];
+  RxDouble subtotal = 0.0.obs;
+  RxDouble total = 0.0.obs;
+  var diskon = 0.15.obs;
+  RxDouble displaydiskon = 0.0.obs;
+
+  displayDiskon() {
+    return displaydiskon.value = diskon.value * 100;
+  }
+
+  tambahKeranjangcache(int idproduk) async {
+    print('-------------------Tambah keranjang cache---------------------');
+    // keranjangcache.value = await GetStorage().read('keranjang');
+    var query = produkcache.value.where((element) => element.id == idproduk);
+
+    final existingIndex = cache.value.indexWhere((item) => item.id == idproduk);
+
+    if (existingIndex == -1) {
+      cache.add(
+        DataKeranjangCache(
+            id: query.map((e) => e.id).first,
+            idToko: query.map((e) => e.idToko).first.toString(),
+            idUser: query.map((e) => e.idUser).first.toString(),
+            idJenis: query.map((e) => e.idJenis).first.toString(),
+            idJenisStock: query.map((e) => e.idJenisStock).first,
+            namaJenis: query.map((e) => e.namaJenis).first,
+            idKategori: query.map((e) => e.idKategori).first.toString(),
+            namaProduk: query.map((e) => e.namaProduk).first,
+            deskripsi: query.map((e) => e.deskripsi).first,
+            qty: 1,
+            harga: query.map((e) => e.harga).first,
+            diskonBarang: query.map((e) => e.diskonBarang).first,
+            image: query.map((e) => e.image).first,
+            status: query.map((e) => e.status).first.toString(),
+            updated: query.map((e) => e.updated).first.toString(),
+            createdAt: query.map((e) => e.createdAt).first.toString(),
+            updatedAt: query.map((e) => e.updatedAt).first.toString()),
+      );
+    } else {
+      cache[existingIndex].qty++;
+    }
+    // if (int.parse(query.map((e) => e.qty).toString()) <=
+    //     cache[existingIndex].qty) {
+    //   max.value = true;
+    // }
+
+    print(cache.value.map((e) {
+      return [e.namaProduk, e.qty];
+    }).toList());
+
+    subtotalval();
+    totalval();
+    print(diskon.value);
+
+    cache.refresh();
+  }
+
+  totalval() {
+    return total.value = subtotal.value - (subtotal.value * diskon.value);
+  }
+
+  subtotalval() {
+    subtotal.value = cache.map((expense) => expense).fold(
+        0, (total, amount) => total + (amount.qty * int.parse(amount.harga)));
+  }
+
+  fetchkeranjangcache() async {
+    print('-------------------fetchkeranjang cache---------------------');
+    cache.value = await GetStorage().read('keranjang');
+  }
+
+  // fetchkeranjang() async {
+  //   print('-------------------fetchkeranjang---------------------');
+  //
+  //   var checkconn = await check_conn.check();
+  //   if (checkconn == true) {
+  //     var keranjang = await REST.kasirKeranjangData(
+  //         token, id_user.toString(), id_toko, meja.value.text);
+  //     if (keranjang != null) {
+  //       print('-------------------data keranjang---------------');
+  //       var dataKeranjang = ModelKeranjang.fromJson(keranjang);
+  //       keranjanglist.value = dataKeranjang.data;
+  //
+  //       subtotal.value = dataKeranjang.meta.subtotal;
+  //       total.value = double.parse(dataKeranjang.meta.total);
+  //       print('-------------keranjang total---------');
+  //       print(total);
+  //       //keranjanglist.refresh();
+  //       //update();
+  //       print('--------------------list keranjang---------------');
+  //       print(keranjanglist);
+  //       // await GetStorage().write('keranjang', keranjanglist.value);
+  //       //keranjangcache.value = await GetStorage().read('keranjang');
+  //
+  //       //Get.back(closeOverlays: true);
+  //
+  //       return keranjanglist;
+  //     } else {
+  //       // Get.back(closeOverlays: true);
+  //       Get.showSnackbar(
+  //           toast().bottom_snackbar_error('Error', 'Terjadi kesalahan'));
+  //     }
+  //   } else {
+  //     //  Get.back(closeOverlays: true);
+  //     Get.showSnackbar(
+  //         toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+  //   }
+  //   return [];
+  // }
 
   fetchjenis() async {
     print('-------------------fetchJenis---------------------');
@@ -227,8 +472,7 @@ class kasirController extends GetxController {
         var dataJenis = ModelJenis.fromJson(jenis);
 
         jenislist.value = dataJenis.data;
-        // jenislist.refresh();
-        //update();
+        GetStorage().write('jenis', jenislist.value);
         print('--------------------list jenis---------------');
         print(jenislist);
 
@@ -248,23 +492,53 @@ class kasirController extends GetxController {
     return [];
   }
 
-  tambahKeranjang(String idproduk, diskon_brg, qty) async {
+  var succ = false.obs;
+
+  tambahKeranjang() async {
     print('-------------------Tambah keranjang---------------------');
 
     var checkconn = await check_conn.check();
     if (checkconn == true) {
-      var keranjang = await REST.kasirKeranjangTambah(token, id_user, id_toko,
-          meja.value.text, idproduk.toString(), diskon_brg, qty);
-      if (keranjang != null) {
-        print('------------------tambah keranjang---------------');
-        await fetchkeranjang();
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Berhasil', 'berhasil di tambah'));
-      } else {
-        //Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal di tambah'));
-      }
+      cache.forEach((element) async {
+        var keranjang = await REST.kasirKeranjangTambah(
+            token,
+            id_user,
+            id_toko,
+            element.idJenisStock.toString(),
+            meja.value.text,
+            element.id.toString(),
+            element.diskonBarang.toString(),
+            element.qty.toString());
+
+        if (keranjang['success'] == true) {
+          print('------------------tambah keranjang---------------');
+          print(keranjang['message']);
+          //Get.back();
+
+          //await fetchkeranjang();
+
+          // Get.showSnackbar(
+          //     toast().bottom_snackbar_success('Berhasil', 'berhasil di tambah'));
+        } else {
+          print(keranjang['message']);
+          Get.back(closeOverlays: true);
+
+          Get.showSnackbar(
+              toast().bottom_snackbar_error('Error', keranjang['message']));
+        }
+      });
+
+      // if (keranjang != null) {
+      //   print('------------------tambah keranjang---------------');
+      //   //await fetchkeranjang();
+      //
+      //   // Get.showSnackbar(
+      //   //     toast().bottom_snackbar_success('Berhasil', 'berhasil di tambah'));
+      // } else {
+      //   //Get.back(closeOverlays: true);
+      //   Get.showSnackbar(
+      //       toast().bottom_snackbar_error('Error', 'Gagal di tambah'));
+      // }
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
@@ -282,7 +556,7 @@ class kasirController extends GetxController {
           token, id, id_user, id_toko, idproduk, meja.value.text);
       if (keranjang != null) {
         print('------------------delete keranjang---------------');
-        await fetchkeranjang();
+        // await fetchkeranjang();
         Get.back();
         // Get.showSnackbar(
         //     toast().bottom_snackbar_success('Berhasil', 'berhasil di hapus'));
@@ -298,16 +572,60 @@ class kasirController extends GetxController {
     return [];
   }
 
-  pembayaran() async {
-    print('------------------pembayaran---------------------');
+  RxString id_pelanggan = ''.obs;
+  var nama_pelanggan = TextEditingController().obs;
+  var nohp = TextEditingController().obs;
 
+  tambahPelanggan() async {
+    print('-------------------tambah beban---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
-      var keranjang = await REST.kasirPembayaran(token, id_user, id_toko,
-          meja.value.text, keypadController.value.text);
+      var pelanggan = await REST.pelangganTambah(
+          token, id_toko, nama_pelanggan.value.text, nohp.value.text);
+      if (pelanggan != null) {
+        print(pelanggan);
+        var ui = await fetchpelanggan();
+        if (ui != null) {
+          Get.back();
+          Get.back();
+          Get.showSnackbar(toast()
+              .bottom_snackbar_success('Berhasil', 'beban Berhasil di tambah'));
+        } else {
+          Get.showSnackbar(
+              toast().bottom_snackbar_error('Error', ' beban Gagal di tambah'));
+        }
+      } else {
+        Get.back();
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', ' beban Gagal di tambah'));
+      }
+    } else {
+      Get.back();
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+    return [];
+  }
+
+  pembayaran() async {
+    print('------------------pembayaran---------------------');
+// note :
+    // untuk tipe yg bukan Rx (bukan yg bis obs) itu harus di buatkan null operator (??)
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var keranjang = await REST.kasirPembayaran(
+          token: token,
+          iduser: id_user,
+          idtoko: id_toko,
+          meja: meja.value.text,
+          bayar: bayarvalue.value.toString(),
+          metodebayar: groupindex.value.toString(),
+          id_pelanggan: id_pelanggan.value);
       if (keranjang != null) {
         print('------------------pembayaran--------------');
-        await fetchkeranjang();
+        //  await fetchkeranjang();
         //popscreen().popberhasil();
         Get.back();
         Get.showSnackbar(
@@ -514,4 +832,226 @@ class kasirController extends GetxController {
 //     return [];
 //   }
 // }
+
+  var bayarvalue = 0.obs;
+  var balikvalue = 0.0.obs;
+
+  balik() {
+    var kem = bayarvalue.value - total.value;
+    kem < 0
+        ? kembalian.value.text = ''
+        : kembalian.value.text = kem
+            .toStringAsFixed(0)
+            .replaceAll(RegExp(r'[^\w\s]+'), '')
+            .replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                (Match m) => '${m[1]},');
+    balikvalue.value = kem;
+    //kembalian.value.text = kem.toString();
+    print('---kembalian----');
+    print(kembalian.value.text);
+    print('balik value---------');
+    print(balikvalue.value.toString());
+  }
+
+  add_5000(String x) {
+    if (keypadController.value.text.isEmpty) {
+      keypadController.value.text = '5,000';
+      bayarvalue.value = 5000;
+    } else {
+      var sum = int.parse(x.replaceAll(',', '')) + 5000;
+      print(sum);
+      keypadController.value.text = sum
+          .toStringAsFixed(0)
+          .replaceAll(RegExp(r'[^\w\s]+'), '')
+          .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+      bayarvalue.value = sum;
+    }
+  }
+
+  add_10000(String x) {
+    if (keypadController.value.text.isEmpty) {
+      keypadController.value.text = '10,000';
+      bayarvalue.value = 10000;
+    } else {
+      var sum = int.parse(x.replaceAll(',', '')) + 10000;
+      print(sum);
+      keypadController.value.text = sum
+          .toStringAsFixed(0)
+          .replaceAll(RegExp(r'[^\w\s]+'), '')
+          .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+      bayarvalue.value = sum;
+    }
+  }
+
+  add_20000(String x) {
+    if (keypadController.value.text.isEmpty) {
+      keypadController.value.text = '20,000';
+      bayarvalue.value = 20000;
+    } else {
+      var sum = int.parse(x.replaceAll(',', '')) + 20000;
+      print(sum);
+      keypadController.value.text = sum
+          .toStringAsFixed(0)
+          .replaceAll(RegExp(r'[^\w\s]+'), '')
+          .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+      bayarvalue.value = sum;
+    }
+  }
+
+  add_50000(String x) {
+    if (keypadController.value.text.isEmpty) {
+      keypadController.value.text = '50,000';
+      bayarvalue.value = 50000;
+    } else {
+      var sum = int.parse(x.replaceAll(',', '')) + 50000;
+      print(sum);
+      keypadController.value.text = sum
+          .toStringAsFixed(0)
+          .replaceAll(RegExp(r'[^\w\s]+'), '')
+          .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+      bayarvalue.value = sum;
+    }
+  }
+
+  add_100000(String x) {
+    if (keypadController.value.text.isEmpty) {
+      keypadController.value.text = '100,000';
+      bayarvalue.value = 100000;
+    } else {
+      var sum = int.parse(x.replaceAll(',', '')) + 100000;
+      print(sum);
+      keypadController.value.text = sum
+          .toStringAsFixed(0)
+          .replaceAll(RegExp(r'[^\w\s]+'), '')
+          .replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+      bayarvalue.value = sum;
+    }
+  }
+
+  var formKeypelangganpembayaran = GlobalKey<FormState>().obs;
+
+  tambahpelangganpembayaran() {
+    AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        contentPadding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        content: Builder(
+          builder: (context) {
+            return Container(
+                padding: EdgeInsets.zero,
+                width: context.width_query / 2,
+                height: context.height_query / 2,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Card(
+                      elevation: elevation().def_elevation,
+                      //margin: EdgeInsets.all(30),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: border_radius().def_border,
+                        side: BorderSide(
+                            color: color_template().primary, width: 3.5),
+                      ),
+
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Container(
+                          width: context.width_query / 1,
+                          //height: context.height_query / 1.3,
+                          child: Form(
+                              key: formKeypelangganpembayaran.value,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  header(
+                                    title: 'Tambah Pelanggan',
+                                    icon: FontAwesomeIcons.dollarSign,
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextFormField(
+                                    controller: nama_pelanggan.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(FontAwesomeIcons.person),
+                                      labelText: "Nama pelanggan",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Masukan nama pelanggan';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  TextFormField(
+                                    controller: nohp.value,
+                                    onChanged: ((String pass) {}),
+                                    decoration: InputDecoration(
+                                      icon: Icon(FontAwesomeIcons.phone),
+                                      labelText: "Nomor HP",
+                                      labelStyle: TextStyle(
+                                        color: Colors.black87,
+                                      ),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                    textAlign: TextAlign.start,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Masukan nomor hp';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  button_solid_custom(
+                                      onPressed: () {
+                                        if (formKeypelangganpembayaran
+                                            .value.currentState!
+                                            .validate()) {
+                                          tambahPelanggan();
+                                        }
+                                      },
+                                      child: Text(
+                                        'Tambah pelanggan'.toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      width: double.infinity,
+                                      height: 65)
+                                ],
+                              )),
+                        ),
+                      ),
+                    )));
+          },
+        ));
+  }
 }

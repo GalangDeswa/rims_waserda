@@ -90,7 +90,7 @@ class DataPenjualan {
         diskonTotal: json["diskon_total"],
         subTotal: json["sub_total"],
         total: json["total"],
-        bayar: json["bayar"],
+        bayar: json["bayar"] ?? 0.toString(),
         kembalian: json["kembalian"],
         tglPenjualan: json["tgl_penjualan"],
         metodeBayar: json["metode_bayar"],
@@ -165,32 +165,32 @@ class DetailItem {
 
 class Meta {
   Meta({
-    required this.catatan,
+    this.catatan,
     required this.pagination,
   });
 
-  Catatan catatan;
+  Catatan? catatan;
   Pagination pagination;
 
   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        catatan: Catatan.fromJson(json["catatan"]),
+        //catatan: Catatan.fromJson(json["catatan"]) ?? null,
         pagination: Pagination.fromJson(json["pagination"]),
       );
 
   Map<String, dynamic> toJson() => {
-        "catatan": catatan.toJson(),
+        "catatan": catatan?.toJson(),
         "pagination": pagination.toJson(),
       };
 }
 
 class Catatan {
   Catatan({
-    required this.status,
-    required this.metodeBayarDtl,
+    this.status,
+    this.metodeBayarDtl,
   });
 
-  String status;
-  String metodeBayarDtl;
+  String? status;
+  String? metodeBayarDtl;
 
   factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
         status: json["status"],
@@ -218,6 +218,7 @@ class Pagination {
   int perPage;
   int currentPage;
   int totalPages;
+
   //List<dynamic> links;
 
   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(

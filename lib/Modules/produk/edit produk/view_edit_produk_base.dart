@@ -23,10 +23,7 @@ class edit_produk extends GetView<editprodukController> {
         //     )),
         body: stack_bg(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(30),
-              child: edit_produk_form(),
-            ),
+            child: edit_produk_form(),
           ),
         ),
       ),

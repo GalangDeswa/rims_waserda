@@ -92,7 +92,7 @@ class history_table extends GetView<historyController> {
                   // height: context.height_query / 1.6,
                   margin: EdgeInsets.only(top: 10),
                   // width: double.infinity,
-                  child: controller.penjualan_list.value.isEmpty
+                  child: controller.succ == false
                       ? Container(width: 100, height: 100, child: showloading())
                       : DataTable2(
                           horizontalMargin: 10,
@@ -233,11 +233,11 @@ class history_table extends GetView<historyController> {
                                                 ? Container(
                                                     padding: EdgeInsets.all(6),
                                                     decoration: BoxDecoration(
-                                                        color: Colors.orange,
+                                                        color: Colors.green,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10)),
-                                                    child: Text('Hutang',
+                                                    child: Text('Selesai',
                                                         style: TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -254,13 +254,12 @@ class history_table extends GetView<historyController> {
                                                             EdgeInsets.all(6),
                                                         decoration: BoxDecoration(
                                                             color:
-                                                                Colors.purple,
+                                                                Colors.orange,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
                                                                         10)),
-                                                        child: Text(
-                                                            'Bayar Nanti',
+                                                        child: Text('Hutang',
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white,

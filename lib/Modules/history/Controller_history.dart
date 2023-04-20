@@ -81,13 +81,16 @@ class historyController extends GetxController {
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
 
+  var succ = true.obs;
+
   fetchPenjualan() async {
     print('-------------------fetch penjualan---------------------');
-
+    succ.value = false;
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var penjualan = await REST.penjualanData(token, id_user, id_toko);
       if (penjualan != null) {
+        succ.value = true;
         print('-------------------data penjualan--------------------');
         var dataPenjualan = ModelPenjualan.fromJson(penjualan);
 
@@ -110,11 +113,13 @@ class historyController extends GetxController {
 
         return penjualan_list;
       } else {
+        succ.value = true;
         // Get.back(closeOverlays: true);
         Get.showSnackbar(
             toast().bottom_snackbar_error('Error', 'Gagal fecth penjualan'));
       }
     } else {
+      succ.value = true;
       //Get.back(closeOverlays: true);
       Get.showSnackbar(
           toast().bottom_snackbar_error('Error', 'Periksa koneksi'));

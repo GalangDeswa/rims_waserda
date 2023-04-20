@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
 import '../../Templates/setting.dart';
@@ -45,7 +46,7 @@ class kasir_produk extends GetView<kasirController> {
                             }),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
-                              labelText: "cari produk",
+                              labelText: "Cari produk",
                               border: InputBorder.none,
                               labelStyle: TextStyle(
                                 color: Colors.black87,
@@ -145,22 +146,25 @@ class kasir_produk extends GetView<kasirController> {
                         absoluteZeroSpacing: false,
                         unSelectedColor: Theme.of(context).canvasColor,
                         buttonLables: ['semua'] +
-                            controller.jenislist
+                            controller.jeniscache.value
                                 .map((element) => element.namaJenis)
                                 .toList(),
                         buttonValues: ['0'] +
-                            controller.jenislist
+                            controller.jeniscache.value
                                 .map((element) => element.id.toString())
                                 .toList(),
                         buttonTextStyle: ButtonTextStyle(
                             selectedColor: Colors.white,
                             unSelectedColor: Colors.black,
                             textStyle: TextStyle(fontSize: 16)),
-                        radioButtonValue: (value) {
-                          value == '0'
-                              ? controller.fetchProduk()
-                              : controller.fetchProdukByJenis(value);
-                          print(value);
+                        radioButtonValue: (value) async {
+                          if (value == '0') {
+                            controller.produkcache.value =
+                                await GetStorage().read('produk');
+                            //controller.nextscroll();
+                          } else {
+                            controller.fetchProdukByJeniscache(value);
+                          }
                         },
                         enableShape: true,
                         padding: 100,
@@ -184,7 +188,7 @@ class kasir_produk extends GetView<kasirController> {
               // color: Colors.red,
               child: Obx(
                 () {
-                  return controller.produklist.isNotEmpty
+                  return controller.produkcache.isNotEmpty
                       ? Container(
                           width: context.width_query,
                           // height: context.height_query * 0.70,
@@ -197,10 +201,10 @@ class kasir_produk extends GetView<kasirController> {
                           //margin: EdgeInsets.all(300),
                           //color: color_template().primary.withOpacity(0.2),
                           //color: Colors.red,
-                          child: Icon(
-                            Icons.add_shopping_cart,
-                            color: color_template().primary,
-                            size: 100,
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            child: showloading(),
                           ));
                 },
               )),
@@ -219,7 +223,7 @@ class ProductTilev2 extends GetView<kasirController> {
       padding: EdgeInsets.all(15),
       height: context.height_query,
       child: GridView.builder(
-          // physics: AlwaysScrollableScrollPhysics(),
+          controller: controller.scroll.value,
           scrollDirection: Axis.vertical,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               mainAxisExtent: context.height_query / 3.5,
@@ -227,14 +231,16 @@ class ProductTilev2 extends GetView<kasirController> {
               childAspectRatio: 1 / 1,
               crossAxisSpacing: 1,
               mainAxisSpacing: 2),
-          itemCount: controller.produklist.length,
+          itemCount: controller.produkcache.length,
           itemBuilder: (BuildContext context, index) {
             return GestureDetector(
               onTap: () {
-                controller.tambahKeranjang(
-                    controller.produklist[index].id.toString(),
-                    0.toString(),
-                    1.toString());
+                // controller.tambahKeranjang(
+                //     controller.produkcache[index].id.toString(),
+                //     0.toString(),
+                //     1.toString());
+                controller
+                    .tambahKeranjangcache(controller.produkcache[index].id);
               },
               child: Card(
                 //  color: Colors.red,
@@ -254,8 +260,8 @@ class ProductTilev2 extends GetView<kasirController> {
                           topLeft: Radius.circular(20)),
                       child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
-                                width: 100,
-                                height: 100,
+                                width: 20,
+                                height: 20,
                                 child: showloading(),
                               ),
                           width: context.width_query,
@@ -266,10 +272,10 @@ class ProductTilev2 extends GetView<kasirController> {
                               child: Image.asset('assets/images/food.png'),
                             );
                           },
-                          imageUrl: controller.produklist[index].image),
+                          imageUrl: controller.produkcache[index].image),
                     )),
                     Container(
-                      padding: EdgeInsets.all(5),
+                      padding: EdgeInsets.all(10),
                       width: context.width_query,
                       height: context.height_query / 10,
                       decoration: BoxDecoration(
@@ -284,7 +290,8 @@ class ProductTilev2 extends GetView<kasirController> {
                           Expanded(
                             child: Text(
                               overflow: TextOverflow.fade,
-                              controller.produklist[index].namaProduk,
+                              controller.produkcache[index].namaProduk
+                                  .toString(),
                               style: font().produktitle,
                             ),
                           ),
@@ -292,7 +299,7 @@ class ProductTilev2 extends GetView<kasirController> {
                             child: Text(
                               'Rp. ' +
                                   controller.nominal.format(double.parse(
-                                      controller.produklist[index].harga)),
+                                      controller.produkcache[index].harga)),
                               style: font().produkharga,
                             ),
                           )

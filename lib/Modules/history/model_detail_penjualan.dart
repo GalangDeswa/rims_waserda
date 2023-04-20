@@ -90,7 +90,7 @@ class DataDetailPenjualan {
         diskonTotal: json["diskon_total"],
         subTotal: json["sub_total"],
         total: json["total"],
-        bayar: json["bayar"],
+        bayar: json["bayar"] ?? '',
         kembalian: json["kembalian"],
         tglPenjualan: json["tgl_penjualan"],
         metodeBayar: json["metode_bayar"],

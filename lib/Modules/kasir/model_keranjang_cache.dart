@@ -1,16 +1,17 @@
 // To parse this JSON data, do
 //
-//     final modelProduk = modelProdukFromJson(jsonString);
+//     final modelKeranjangCache = modelKeranjangCacheFromJson(jsonString);
 
 import 'dart:convert';
 
-ModelProduk modelProdukFromJson(String str) =>
-    ModelProduk.fromJson(json.decode(str));
+ModelKeranjangCache modelKeranjangCacheFromJson(String str) =>
+    ModelKeranjangCache.fromJson(json.decode(str));
 
-String modelProdukToJson(ModelProduk data) => json.encode(data.toJson());
+String modelKeranjangCacheToJson(ModelKeranjangCache data) =>
+    json.encode(data.toJson());
 
-class ModelProduk {
-  ModelProduk({
+class ModelKeranjangCache {
+  ModelKeranjangCache({
     required this.success,
     required this.statusCode,
     required this.messages,
@@ -21,15 +22,25 @@ class ModelProduk {
   bool success;
   int statusCode;
   String messages;
-  List<DataProduk> data;
+  List<DataKeranjangCache> data;
   Meta meta;
 
-  factory ModelProduk.fromJson(Map<String, dynamic> json) => ModelProduk(
+  double get subtotal {
+    return data.fold(
+        0, (total, item) => total + (double.parse(item.harga) * item.qty));
+  }
+
+  double get total {
+    return subtotal + (subtotal * 0.1); // add 10% tax
+  }
+
+  factory ModelKeranjangCache.fromJson(Map<String, dynamic> json) =>
+      ModelKeranjangCache(
         success: json["success"],
         statusCode: json["status_code"],
         messages: json["messages"],
-        data: List<DataProduk>.from(
-            json["data"].map((x) => DataProduk.fromJson(x))),
+        data: List<DataKeranjangCache>.from(
+            json["data"].map((x) => DataKeranjangCache.fromJson(x))),
         meta: Meta.fromJson(json["meta"]),
       );
 
@@ -42,8 +53,8 @@ class ModelProduk {
       };
 }
 
-class DataProduk {
-  DataProduk({
+class DataKeranjangCache {
+  DataKeranjangCache({
     required this.id,
     required this.idToko,
     required this.idUser,
@@ -55,33 +66,70 @@ class DataProduk {
     required this.deskripsi,
     required this.qty,
     required this.harga,
-    required this.diskonBarang,
     required this.image,
     required this.status,
     required this.updated,
     required this.createdAt,
     required this.updatedAt,
+    this.diskonBarang,
   });
 
   int id;
-  int idToko;
-  int idUser;
-  int idJenis;
+  String idToko;
+  String idUser;
+  String idJenis;
+  int? idJenisStock;
   String namaJenis;
-  int idKategori;
-  int idJenisStock;
+  String idKategori;
   String namaProduk;
   String deskripsi;
-  String qty;
+  int qty;
+  int? diskonBarang;
   String harga;
-  int diskonBarang;
   String image;
-  int status;
-  Updated? updated;
-  CreatedAt? createdAt;
-  UpdatedAt? updatedAt;
+  String status;
+  String updated;
+  String createdAt;
+  String updatedAt;
 
-  factory DataProduk.fromJson(Map<String, dynamic> json) => DataProduk(
+  DataKeranjangCache copyWith({
+    int? id,
+    String? idToko,
+    String? idUser,
+    String? idJenis,
+    String? namaJenis,
+    String? idKategori,
+    String? namaProduk,
+    String? deskripsi,
+    int? qty,
+    String? harga,
+    String? image,
+    String? status,
+    String? updated,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      DataKeranjangCache(
+        id: id ?? this.id,
+        idToko: idToko ?? this.idToko,
+        idUser: idUser ?? this.idUser,
+        idJenis: idJenis ?? this.idJenis,
+        namaJenis: namaJenis ?? this.namaJenis,
+        idKategori: idKategori ?? this.idKategori,
+        idJenisStock: idJenisStock ?? this.idJenisStock,
+        namaProduk: namaProduk ?? this.namaProduk,
+        deskripsi: deskripsi ?? this.deskripsi,
+        qty: qty ?? this.qty,
+        harga: harga ?? this.harga,
+        image: image ?? this.image,
+        status: status ?? this.status,
+        updated: updated ?? this.updated,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+
+  factory DataKeranjangCache.fromJson(Map<String, dynamic> json) =>
+      DataKeranjangCache(
         id: json["id"],
         idToko: json["id_toko"],
         idUser: json["id_user"],
@@ -96,9 +144,9 @@ class DataProduk {
         diskonBarang: json["diskon_barang"],
         image: json["image"],
         status: json["status"],
-        updated: updatedValues.map[json["updated"]],
-        createdAt: createdAtValues.map[json["created_at"]],
-        updatedAt: updatedAtValues.map[json["updated_at"]],
+        updated: json["updated"]!,
+        createdAt: json["created_at"]!,
+        updatedAt: json["updated_at"]!,
       );
 
   Map<String, dynamic> toJson() => {
@@ -106,11 +154,11 @@ class DataProduk {
         "id_toko": idToko,
         "id_user": idUser,
         "id_jenis": idJenis,
-        "nama_jenis": namaJenisValues.reverse[namaJenis],
+        "nama_jenis": namaJenis,
         "id_kategori": idKategori,
         "id_jenis_stock": idJenisStock,
         "nama_produk": namaProduk,
-        "deskripsi": deskripsiValues.reverse[deskripsi],
+        "deskripsi": deskripsi,
         "qty": qty,
         "harga": harga,
         "diskon_barang": diskonBarang,
@@ -122,34 +170,19 @@ class DataProduk {
       };
 }
 
-enum CreatedAt { THE_13042023, THE_08042023 }
+enum CreatedAt { THE_08042023, THE_13042023 }
 
 final createdAtValues = EnumValues({
   "08-04-2023": CreatedAt.THE_08042023,
   "13-04-2023": CreatedAt.THE_13042023
 });
 
-enum Deskripsi { EMPTY, SPESIAL }
+enum Updated { THE_3_DAYS_AGO, THE_1_DAY_AGO }
 
-final deskripsiValues =
-    EnumValues({"-": Deskripsi.EMPTY, "spesial": Deskripsi.SPESIAL});
+final updatedValues = EnumValues(
+    {"1 day ago": Updated.THE_1_DAY_AGO, "3 days ago": Updated.THE_3_DAYS_AGO});
 
-enum NamaJenis { MAKANAN, MINUMAN, SNACK }
-
-final namaJenisValues = EnumValues({
-  "Makanan": NamaJenis.MAKANAN,
-  "Minuman": NamaJenis.MINUMAN,
-  "Snack": NamaJenis.SNACK
-});
-
-enum Updated { THE_4_DAYS_AGO, THE_5_DAYS_AGO }
-
-final updatedValues = EnumValues({
-  "4 days ago": Updated.THE_4_DAYS_AGO,
-  "5 days ago": Updated.THE_5_DAYS_AGO
-});
-
-enum UpdatedAt { THE_13042023, THE_11042023 }
+enum UpdatedAt { THE_11042023, THE_13042023 }
 
 final updatedAtValues = EnumValues({
   "11-04-2023": UpdatedAt.THE_11042023,
@@ -203,7 +236,7 @@ class Pagination {
     required this.perPage,
     required this.currentPage,
     required this.totalPages,
-    this.links,
+    required this.links,
   });
 
   int total;
@@ -211,7 +244,7 @@ class Pagination {
   int perPage;
   int currentPage;
   int totalPages;
-  List<dynamic>? links;
+  Links links;
 
   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
         total: json["total"],
@@ -219,7 +252,7 @@ class Pagination {
         perPage: json["per_page"],
         currentPage: json["current_page"],
         totalPages: json["total_pages"],
-        links: List<dynamic>.from(json["links"].map((x) => x)),
+        links: Links.fromJson(json["links"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -228,26 +261,22 @@ class Pagination {
         "per_page": perPage,
         "current_page": currentPage,
         "total_pages": totalPages,
-        "links": List<dynamic>.from(links!.map((x) => x)),
+        "links": links.toJson(),
       };
 }
 
 class Links {
   Links({
-    this.previous,
-    this.next,
+    required this.next,
   });
 
-  String? previous;
-  String? next;
+  String next;
 
   factory Links.fromJson(Map<String, dynamic> json) => Links(
-        previous: json["previous"],
         next: json["next"],
       );
 
   Map<String, dynamic> toJson() => {
-        "previous": previous,
         "next": next,
       };
 }

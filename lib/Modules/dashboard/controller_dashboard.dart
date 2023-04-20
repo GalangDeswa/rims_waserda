@@ -7,15 +7,17 @@ import 'package:rims_waserda/Services/handler.dart';
 
 class dashboardController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
 
     print('dashboard controller ------------------------------------------->');
     print(id_toko);
-    print(GetStorage().read('konten'));
+
+    kontenlists.value = await GetStorage().read('konten');
+    print(kontenlists);
     //loadkonten();
-    loadkontenv2();
+    //loadkontenv2();
     //loadToko();
   }
 
@@ -92,7 +94,7 @@ class dashboardController extends GetxController {
     }
   }
 
-  var kontenlists = GetStorage().read('konten');
+  var kontenlists = [].obs;
 
 //var toko = Get.arguments as Map;
 

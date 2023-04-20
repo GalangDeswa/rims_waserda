@@ -173,7 +173,7 @@ class pelanggan_table extends GetView<pelangganController> {
                                     DataCell(controller.list_pelanggan[index]
                                             .riwayatPembelian
                                             .map((e) => e.status)
-                                            .contains(2)
+                                            .contains(3)
                                         ? Container(
                                             padding: EdgeInsets.all(6),
                                             decoration: BoxDecoration(

@@ -46,6 +46,11 @@ class produkController extends GetxController {
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
 
+  var check = false.obs;
+
+  var jumlahharga = 0.obs;
+  var jumlahdiskon = 0.0.obs;
+
   var produklist = <DataProduk>[].obs;
   var jenislist = <DataJenis>[].obs;
 
@@ -53,6 +58,7 @@ class produkController extends GetxController {
   var compresimagesize = ''.obs;
   var namaFile = ''.obs;
   File? pickedImageFile;
+
   var pikedImagePath = ''.obs;
   final ImagePicker picker = ImagePicker();
   List<XFile> images = [];
@@ -154,17 +160,27 @@ class produkController extends GetxController {
   var nextdata;
   var previouspage;
   var perpage = 0.obs;
+  var succ = true.obs;
 
   fetchProduk() async {
     print('-------------------fetchProduk---------------------');
-
+    succ.value = false;
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var produk = await REST.produkAll(token, id_toko, search.value.text);
       if (produk != null) {
         print('-------------------dataproduk---------------');
-        var dataProduk = ModelProduk.fromJson(produk);
+        succ.value = true;
 
+        var dataProduk = ModelProduk.fromJson(produk);
+        // if (produk['success'] == false) {
+        //   succ.value = false;
+        //   print('faslese');
+        //   print(produk['messages']);
+        //   // produklist.value = [];
+        // } else {
+        //   succ.value = true;
+        // }
         produklist.value = dataProduk.data;
         totalpage.value = dataProduk.meta.pagination.totalPages;
         totaldata.value = dataProduk.meta.pagination.total;
@@ -173,6 +189,7 @@ class produkController extends GetxController {
         count.value = dataProduk.meta.pagination.count;
         if (totalpage > 1) {
           nextdata = produk['meta']['pagination']['links']['next'];
+          previouspage = produk['meta']['pagination']['links']['previous'];
         }
 
         print('--------------------list produk---------------');
@@ -288,12 +305,25 @@ class produkController extends GetxController {
 
   String? jenisvalue;
 
+  var jenisstok = [
+    {'id': 1, 'nama': 'Stock'},
+    {
+      'id': 2,
+      'nama': 'Non stock',
+    }
+  ].obs;
+  var jj = ''.obs;
+  String? jenisstokval;
+
   var desc = TextEditingController().obs;
   var nama_produk = TextEditingController().obs;
   var harga = TextEditingController().obs;
+  var diskon_barang = TextEditingController().obs;
   var nama_jenis = TextEditingController().obs;
 
   var qty = TextEditingController().obs;
+  var displaydiskon = 0.0.obs;
+
   var image;
 
   clear() {
@@ -301,7 +331,12 @@ class produkController extends GetxController {
     nama_produk.value.clear();
     harga.value.clear();
     nama_jenis.value.clear();
-
+    jenisvalue = null;
+    jenisstokval = null;
+    diskon_barang.value.clear();
+    jumlahharga.value = 0;
+    jumlahdiskon.value = 0.0;
+    check.value == false;
     qty.value.clear();
     pikedImagePath.value = '';
   }
@@ -313,16 +348,20 @@ class produkController extends GetxController {
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var produk = await REST.produkTambah(
-          token,
-          id_toko,
-          id_user,
-          jenisvalue,
-          nama_produk.value.text,
-          desc.value.text,
-          qty.value.text,
-          harga.value.text,
-          pickedImageFile!);
+          token: token,
+          idtoko: id_toko,
+          iduser: id_user,
+          idjenis: jenisvalue,
+          idjenisstock: jenisstokval.toString(),
+          namaproduk: nama_produk.value.text,
+          desc: desc.value.text,
+          qty: qty.value.text,
+          harga: jumlahharga.value.toString(),
+          diskon_barang: jumlahdiskon.value.toString(),
+          image: pickedImageFile);
+
       if (produk != null) {
+        print(produk['message']);
         print(produk);
         clear();
         await fetchProduk();

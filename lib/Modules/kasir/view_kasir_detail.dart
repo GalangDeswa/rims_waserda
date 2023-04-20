@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
@@ -46,7 +45,7 @@ class kasir_detail extends GetView<kasirController> {
                     padding: EdgeInsets.symmetric(horizontal: 0),
                     child: Obx(() {
                       return ListView.builder(
-                          itemCount: controller.keranjanglist.length,
+                          itemCount: controller.cache.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                                 elevation: elevation().def_elevation,
@@ -56,17 +55,6 @@ class kasir_detail extends GetView<kasirController> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      CachedNetworkImage(
-                                          width: context.width_query / 15,
-                                          height: context.height_query / 8,
-                                          fit: BoxFit.cover,
-                                          imageUrl: controller
-                                              .keranjanglist[index]
-                                              .detailProduk
-                                              .image),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
                                       Expanded(
                                         child: Column(
                                           mainAxisAlignment:
@@ -74,14 +62,16 @@ class kasir_detail extends GetView<kasirController> {
                                           children: [
                                             Expanded(
                                               child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
                                                   Expanded(
                                                     child: Text(controller
-                                                        .keranjanglist[index]
-                                                        .namaBrg),
+                                                        .cache[index]
+                                                        .namaProduk),
                                                   ),
                                                   IconButton(
                                                       onPressed: () {},
@@ -93,17 +83,12 @@ class kasir_detail extends GetView<kasirController> {
                                                       )),
                                                   IconButton(
                                                       onPressed: () {
-                                                        controller.deleteKeranjang(
-                                                            controller
-                                                                .keranjanglist[
-                                                                    index]
-                                                                .id
-                                                                .toString(),
-                                                            controller
-                                                                .keranjanglist[
-                                                                    index]
-                                                                .idProduk
-                                                                .toString());
+                                                        controller
+                                                            .deleteitemcache(
+                                                                controller
+                                                                    .cache[
+                                                                        index]
+                                                                    .id);
                                                       },
                                                       icon: Icon(
                                                         size: context
@@ -129,11 +114,12 @@ class kasir_detail extends GetView<kasirController> {
                                                 children: [
                                                   Expanded(
                                                     child: Text('Rp.' +
-                                                        controller.nominal.format(
-                                                            double.parse(controller
-                                                                .keranjanglist[
-                                                                    index]
-                                                                .hargaBrg))),
+                                                        controller.nominal
+                                                            .format(double.parse(
+                                                                controller
+                                                                    .cache[
+                                                                        index]
+                                                                    .harga))),
                                                   ),
                                                   Container(
                                                     margin: EdgeInsets.only(
@@ -143,39 +129,78 @@ class kasir_detail extends GetView<kasirController> {
                                                         shape: BoxShape.circle,
                                                         color: color_template()
                                                             .select),
-                                                    child: Icon(
-                                                      Icons.remove,
-                                                      color: Colors.white,
-                                                      size:
-                                                          context.height_query /
-                                                              40,
-                                                    ),
-                                                  ),
-                                                  Text(controller
-                                                      .keranjanglist[index].qty
-                                                      .toString()),
-                                                  InkWell(
-                                                    onTap: () {},
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(
-                                                          left: 10, right: 10),
-                                                      padding:
-                                                          EdgeInsets.all(3),
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color:
-                                                              color_template()
-                                                                  .primary),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        controller.deleteqty(
+                                                            index,
+                                                            controller
+                                                                .cache[index]
+                                                                .id);
+                                                      },
                                                       child: Icon(
-                                                        Icons.add,
+                                                        Icons.remove,
                                                         color: Colors.white,
                                                         size: context
                                                                 .height_query /
                                                             40,
                                                       ),
                                                     ),
-                                                  )
+                                                  ),
+                                                  Text(controller
+                                                      .cache[index].qty
+                                                      .toString()),
+                                                  controller.max == false
+                                                      ? InkWell(
+                                                          onTap: () {
+                                                            controller
+                                                                .tambahqty(
+                                                                    index);
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    left: 10,
+                                                                    right: 10),
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    3),
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color:
+                                                                    color_template()
+                                                                        .primary),
+                                                            child: Icon(
+                                                              Icons.add,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: context
+                                                                      .height_query /
+                                                                  40,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 10,
+                                                                  right: 10),
+                                                          padding:
+                                                              EdgeInsets.all(3),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: Colors.white,
+                                                            size: context
+                                                                    .height_query /
+                                                                40,
+                                                          ),
+                                                        )
                                                 ],
                                               ),
                                             )
@@ -210,9 +235,11 @@ class kasir_detail extends GetView<kasirController> {
                           Text(
                             controller.subtotal.value == ''
                                 ? '0'
-                                : 'Rp.' +
-                                    controller.nominal.format(double.parse(
-                                        controller.subtotal.value)),
+                                : controller.cache.isEmpty
+                                    ? '0'
+                                    : 'Rp.' +
+                                        controller.nominal
+                                            .format(controller.subtotal.value),
                             style: font().reguler,
                           ),
                         ],
@@ -235,12 +262,12 @@ class kasir_detail extends GetView<kasirController> {
                         children: [
                           Expanded(
                             child: Text(
-                              'PPN :',
+                              'Diskon :',
                               style: font().reguler,
                             ),
                           ),
                           Text(
-                            '10 %',
+                            controller.displayDiskon().toStringAsFixed(0) + '%',
                             style: font().reguler,
                           ),
                         ],
@@ -265,11 +292,13 @@ class kasir_detail extends GetView<kasirController> {
                           style: font().header_black,
                         ),
                         Text(
-                          controller.total.value == ''
+                          controller.total.value == 0
                               ? 0.toString()
-                              : 'Rp.' +
-                                  controller.nominal.format(
-                                      double.parse(controller.total.value)),
+                              : controller.cache.isEmpty
+                                  ? '0'
+                                  : 'Rp.' +
+                                      controller.nominal
+                                          .format(controller.total.value),
                           style: font().header_black,
                         ),
                       ],
@@ -280,13 +309,19 @@ class kasir_detail extends GetView<kasirController> {
                 height: 8,
               ),
               button_solid_custom(
-                  onPressed: () {
+                  onPressed: () async {
+                    var x = await controller.tambahKeranjang();
+                    if (x != null) {
+                      Get.dialog(
+                        Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: context.width_query / 10,
+                                vertical: context.height_query / 10),
+                            child: kasir_keypad()),
+                      );
+                    }
+
                     print('--------------pop-------------');
-                    Get.dialog(Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: context.height_query / 10,
-                            horizontal: context.width_query / 13),
-                        child: kasir_keypad()));
                   },
                   child: Text(
                     'Bayar',

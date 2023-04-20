@@ -128,7 +128,7 @@ class produk_table extends GetView<produkController> {
                   margin: EdgeInsets.only(top: 15),
                   // width: double.infinity,
 
-                  child: controller.produklist.value.isEmpty
+                  child: controller.succ == false
                       ? Container(width: 100, height: 100, child: showloading())
                       : DataTable2(
                           fixedTopRows: 1,
@@ -159,12 +159,17 @@ class produk_table extends GetView<produkController> {
                             ),
                             DataColumn(
                               label: Text(
-                                'Qty',
+                                'Stock',
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Harga',
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Harga Diskon',
                               ),
                             ),
 
@@ -184,78 +189,127 @@ class produk_table extends GetView<produkController> {
                           ],
                           rows: List.generate(
                             controller.produklist.length,
-                            (index) => DataRow(cells: [
-                              DataCell(Text(
-                                  controller.produklist[index].namaProduk)),
-                              DataCell(
-                                  Text(controller.produklist[index].namaJenis)),
-                              DataCell(
-                                  Text(controller.produklist[index].deskripsi)),
-                              DataCell(Row(
-                                children: [
-                                  Expanded(
-                                      child: Text(controller.nominal.format(
-                                          double.parse(controller
-                                              .produklist[index].qty)))),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        right: context.width_query / 23),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          controller.addqty(controller,
-                                              controller.produklist[index]);
-                                        },
-                                        icon: Container(
-                                          padding: EdgeInsets.all(3),
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: color_template().primary),
-                                          child: Icon(
-                                            Icons.add,
-                                            size: 18,
-                                            color: Colors.white,
+                            (index) {
+                              var persen = (double.parse(
+                                          controller.produklist[index].harga) -
+                                      controller
+                                          .produklist[index].diskonBarang) /
+                                  double.parse(
+                                      controller.produklist[index].harga) *
+                                  100;
+                              String display_diskon = persen.toStringAsFixed(0);
+                              return DataRow(cells: [
+                                DataCell(Text(
+                                    controller.produklist[index].namaProduk)),
+                                DataCell(Text(
+                                    controller.produklist[index].namaJenis)),
+                                DataCell(Text(
+                                    controller.produklist[index].deskripsi)),
+                                controller.produklist[index].idJenisStock == 1
+                                    ? DataCell(Row(
+                                        children: [
+                                          Expanded(
+                                              child: Text(controller.nominal
+                                                  .format(double.parse(
+                                                      controller
+                                                          .produklist[index]
+                                                          .qty)))),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                right:
+                                                    context.width_query / 23),
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  controller.addqty(
+                                                      controller,
+                                                      controller
+                                                          .produklist[index]);
+                                                },
+                                                icon: Container(
+                                                  padding: EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: color_template()
+                                                          .primary),
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    size: 18,
+                                                    color: Colors.white,
+                                                  ),
+                                                )),
+                                          )
+                                        ],
+                                      ))
+                                    : DataCell(Text('Non stock')),
+                                DataCell(Text('Rp. ' +
+                                    controller.nominal.format(double.parse(
+                                        controller.produklist[index].harga)))),
+                                controller.produklist[index].diskonBarang == 0
+                                    ? DataCell(Text('-'))
+                                    : DataCell(Row(
+                                        children: [
+                                          Text('Rp. ' +
+                                              controller.nominal.format(
+                                                  double.parse(controller
+                                                      .produklist[index]
+                                                      .diskonBarang
+                                                      .toString()))),
+                                          SizedBox(
+                                            width: 10,
                                           ),
-                                        )),
-                                  )
-                                ],
-                              )),
-                              DataCell(Text('Rp. ' +
-                                  controller.nominal.format(double.parse(
-                                      controller.produklist[index].harga)))),
-                              DataCell(Container(
-                                // color: Colors.cyan,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(right: 10),
-                                      child: IconButton(
+                                          Container(
+                                            padding: EdgeInsets.all(6),
+                                            child: Text(
+                                              display_diskon + '%',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    color_template().primary_v2,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                          )
+                                        ],
+                                      )),
+                                DataCell(Container(
+                                  // color: Colors.cyan,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 10),
+                                        child: IconButton(
+                                            onPressed: () {
+                                              Get.toNamed('/edit_produk',
+                                                  arguments: controller
+                                                      .produklist[index]);
+                                            },
+                                            icon: Icon(
+                                              Icons.edit,
+                                              size: 18,
+                                              color: color_template().secondary,
+                                            )),
+                                      ),
+                                      IconButton(
                                           onPressed: () {
-                                            Get.toNamed('/edit_produk',
-                                                arguments: controller
-                                                    .produklist[index]);
+                                            popscreen().deleteprodukv2(
+                                                controller,
+                                                controller.produklist[index]);
                                           },
                                           icon: Icon(
-                                            Icons.edit,
+                                            Icons.delete,
                                             size: 18,
-                                            color: color_template().secondary,
-                                          )),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          popscreen().deleteprodukv2(controller,
-                                              controller.produklist[index]);
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          size: 18,
-                                          color: color_template().tritadery,
-                                        ))
-                                  ],
-                                ),
-                              )),
-                            ]),
+                                            color: color_template().tritadery,
+                                          ))
+                                    ],
+                                  ),
+                                )),
+                              ]);
+                            },
                           ),
                         ),
                 );

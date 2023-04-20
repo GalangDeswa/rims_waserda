@@ -111,7 +111,7 @@ class RiwayatPembelian {
         diskonTotal: json["diskon_total"],
         subtotal: json["subtotal"],
         total: json["total"],
-        bayar: json["bayar"],
+        bayar: json["bayar"] ?? '',
         kembalian: json["kembalian"],
         tglPenjualan: DateTime.parse(json["tgl_penjualan"]),
         metodeBayar: json["metode_bayar"],

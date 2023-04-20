@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class color_template {
-  var primary = Color.fromRGBO(16, 85, 196, 1);
+  var primary = Color.fromRGBO(10, 94, 191, 1);
   var primary_v2 = Color.fromRGBO(115, 186, 146, 1);
   var primary_v3 = Color.fromRGBO(218, 224, 128, 1);
   var primary_dark = Color.fromRGBO(43, 84, 102, 1);

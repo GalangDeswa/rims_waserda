@@ -1,10 +1,14 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
-import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
+import '../Widgets/buttons.dart';
+import '../Widgets/header.dart';
 import '../Widgets/keypad.dart';
 
 class kasir_keypad extends GetView<kasirController> {
@@ -85,14 +89,13 @@ class kasir_keypad extends GetView<kasirController> {
                         child: GroupButton(
                           isRadio: true,
                           onSelected: (string, index, bool) {
-                            controller.groupindex.value = index;
-                            print(index);
+                            controller.groupindex.value = index + 1;
+                            print(controller.groupindex.value);
                           },
                           buttons: [
-                            "Cash",
-                            "Debit Card",
-                            "Credit Card",
-                            "Cash Bon"
+                            "Tunai",
+                            "Non tunai",
+                            "Hutang",
                           ],
                           options: GroupButtonOptions(
                             selectedShadow: const [],
@@ -138,150 +141,211 @@ class kasir_keypad extends GetView<kasirController> {
                                   ),
                                 ),
                               )
-                            : Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                            : controller.groupindex.value == 3
+                                ? Row(
                                     children: [
+                                      Expanded(
+                                        child: DropdownSearch<DataPelanggan>(
+                                          popupProps: PopupProps.menu(
+                                            //showSelectedItems: true,
+                                            showSearchBox: true,
+                                            itemBuilder: dropdownPelanggan,
+                                          ),
+                                          dropdownDecoratorProps:
+                                              DropDownDecoratorProps(
+                                            dropdownSearchDecoration:
+                                                InputDecoration(
+                                              labelText: "Cari pelanggan",
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                            ),
+                                          ),
+                                          items: controller.listpelanggan.value,
+                                          itemAsString: (DataPelanggan u) {
+                                            return u.namaPelanggan;
+                                          },
+                                          onChanged: (data) {
+                                            controller.id_pelanggan.value =
+                                                data!.id.toString();
+                                            print(
+                                                'id pelanggan--------------------');
+                                            print(controller.id_pelanggan);
+                                          },
+                                        ),
+                                      ),
                                       Container(
-                                        padding: EdgeInsets.all(10),
+                                        margin:
+                                            EdgeInsets.only(right: 5, left: 30),
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color: color_template().primary),
-                                        child: GestureDetector(
+                                          shape: BoxShape.circle,
+                                          color: color_template().primary,
+                                        ),
+                                        padding: EdgeInsets.all(3),
+                                        child: IconButton(
+                                            color: Colors.white,
+                                            onPressed: () {
+                                              Get.dialog(
+                                                  tambahpelangganpembayaran());
+                                            },
+                                            icon: Icon(Icons.add)),
+                                      )
+                                    ],
+                                  )
+                                : Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color:
+                                                    color_template().primary),
+                                            child: GestureDetector(
+                                                onTap: () {
+                                                  controller.add_5000(controller
+                                                      .keypadController
+                                                      .value
+                                                      .text);
+                                                  controller.balik();
+                                                },
+                                                child: Text(
+                                                  '5.000',
+                                                  style: font().header,
+                                                )),
+                                          ),
+                                          GestureDetector(
                                             onTap: () {
-                                              controller.add_5000(controller
+                                              controller.add_10000(controller
                                                   .keypadController.value.text);
                                               controller.balik();
                                             },
-                                            child: Text(
-                                              '5.000',
-                                              style: font().header,
-                                            )),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          controller.add_10000(controller
-                                              .keypadController.value.text);
-                                          controller.balik();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: color_template().primary),
-                                          child: Text('10.000',
-                                              style: font().header),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          controller.add_20000(controller
-                                              .keypadController.value.text);
-                                          controller.balik();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: color_template().primary),
-                                          child: Text('20.000',
-                                              style: font().header),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          controller.add_50000(controller
-                                              .keypadController.value.text);
-                                          controller.balik();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: color_template().primary),
-                                          child: Text('50.000',
-                                              style: font().header),
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          controller.add_100000(controller
-                                              .keypadController.value.text);
-                                          controller.balik();
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: color_template().primary),
-                                          child: Text('100.000',
-                                              style: font().header),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          child: TextFormField(
-                                            inputFormatters: [],
-                                            keyboardType: TextInputType.number,
-                                            controller: controller
-                                                .keypadController.value,
-                                            onChanged: (value) {
-                                              print(value);
-
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      color_template().primary),
+                                              child: Text('10.000',
+                                                  style: font().header),
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              controller.add_20000(controller
+                                                  .keypadController.value.text);
                                               controller.balik();
                                             },
-                                            // readOnly: true,
-                                            decoration: InputDecoration(
-                                                prefixIcon: Icon(
-                                                    Icons.attach_money_rounded),
-                                                hintText: 'Jumlah bayar'),
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      color_template().primary),
+                                              child: Text('20.000',
+                                                  style: font().header),
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Expanded(
-                                          child: Container(
-                                        child: TextFormField(
-                                          controller:
-                                              controller.kembalian.value,
-                                          onChanged: (val) {
-                                            print(
-                                                'kembalian kasir--------------------' +
-                                                    val);
-                                          },
-                                          readOnly: true,
-                                          decoration: InputDecoration(
-                                            prefixIcon:
-                                                Icon(Icons.change_circle),
-                                            hintText: 'kembalian',
+                                          GestureDetector(
+                                            onTap: () {
+                                              controller.add_50000(controller
+                                                  .keypadController.value.text);
+                                              controller.balik();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      color_template().primary),
+                                              child: Text('50.000',
+                                                  style: font().header),
+                                            ),
                                           ),
-                                        ),
-                                      )),
+                                          GestureDetector(
+                                            onTap: () {
+                                              controller.add_100000(controller
+                                                  .keypadController.value.text);
+                                              controller.balik();
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(10),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      color_template().primary),
+                                              child: Text('100.000',
+                                                  style: font().header),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                controller: controller
+                                                    .keypadController.value,
+                                                onChanged: (value) {
+                                                  print(value);
+                                                  print('keypad chanhge');
+                                                  controller.balik();
+                                                },
+                                                // readOnly: true,
+                                                decoration: InputDecoration(
+                                                    prefixText: 'Rp. ',
+                                                    hintText: 'Jumlah bayar'),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                            child: TextFormField(
+                                              controller:
+                                                  controller.kembalian.value,
+                                              onChanged: (val) {
+                                                print(
+                                                    'kembalian kasir--------->' +
+                                                        val);
+                                              },
+                                              readOnly: true,
+                                              decoration: InputDecoration(
+                                                prefixText: 'Rp.',
+                                                hintText: 'kembalian',
+                                              ),
+                                            ),
+                                          )),
+                                        ],
+                                      ),
                                     ],
-                                  ),
-                                ],
-                              );
+                                  );
                       })
                     ],
                   ),
@@ -292,8 +356,13 @@ class kasir_keypad extends GetView<kasirController> {
                 child: KeyPad(
                   keypadController: controller.keypadController.value,
                   onChange: (String value) {
+                    // controller.keypadController.value.text = value;
+                    controller.bayarvalue.value =
+                        int.parse(value.toString().replaceAll(',', ''));
                     controller.balik();
-                    print(value);
+                    print(value + '--> mappeed string');
+                    print('bayar value ===> ' +
+                        controller.bayarvalue.value.toString());
                     // controller.change();
                   },
                   onSubmit: (String pin) {},
@@ -305,4 +374,151 @@ class kasir_keypad extends GetView<kasirController> {
       ),
     );
   }
+
+  Widget tambahpelangganpembayaran() {
+    return AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        contentPadding: EdgeInsets.zero,
+        backgroundColor: Colors.transparent,
+        content: Builder(
+          builder: (context) {
+            return SingleChildScrollView(
+              child: Container(
+                  padding: EdgeInsets.zero,
+                  width: context.width_query / 2,
+                  height: context.height_query / 2,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Card(
+                        elevation: elevation().def_elevation,
+                        //margin: EdgeInsets.all(30),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: border_radius().def_border,
+                          side: BorderSide(
+                              color: color_template().primary, width: 3.5),
+                        ),
+
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Container(
+                            width: context.width_query / 1,
+                            //height: context.height_query / 1.3,
+                            child: Form(
+                                key:
+                                    controller.formKeypelangganpembayaran.value,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    header(
+                                      title: 'Tambah Pelanggan',
+                                      icon: FontAwesomeIcons.dollarSign,
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    TextFormField(
+                                      controller:
+                                          controller.nama_pelanggan.value,
+                                      onChanged: ((String pass) {}),
+                                      decoration: InputDecoration(
+                                        icon: Icon(FontAwesomeIcons.person),
+                                        labelText: "Nama pelanggan",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ),
+                                      textAlign: TextAlign.start,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Masukan nama pelanggan';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    TextFormField(
+                                      controller: controller.nohp.value,
+                                      onChanged: ((String pass) {}),
+                                      decoration: InputDecoration(
+                                        icon: Icon(FontAwesomeIcons.phone),
+                                        labelText: "Nomor HP",
+                                        labelStyle: TextStyle(
+                                          color: Colors.black87,
+                                        ),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ),
+                                      textAlign: TextAlign.start,
+                                      validator: (value) {
+                                        if (value!.isEmpty) {
+                                          return 'Masukan nomor hp';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    button_solid_custom(
+                                        onPressed: () {
+                                          if (controller
+                                              .formKeypelangganpembayaran
+                                              .value
+                                              .currentState!
+                                              .validate()) {
+                                            controller.tambahPelanggan();
+                                          }
+                                        },
+                                        child: Text(
+                                          'Tambah pelanggan'.toUpperCase(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        width: double.infinity,
+                                        height: 65)
+                                  ],
+                                )),
+                          ),
+                        ),
+                      ))),
+            );
+          },
+        ));
+  }
+}
+
+Widget dropdownPelanggan(
+  BuildContext context,
+  DataPelanggan item,
+  bool isSelected,
+) {
+  return Container(
+      margin: EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(item.namaPelanggan),
+        subtitle: Text('Nomor hp :' + item.noHp),
+      ));
 }

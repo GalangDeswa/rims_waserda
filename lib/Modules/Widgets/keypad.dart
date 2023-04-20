@@ -104,10 +104,14 @@ class KeyPad extends GetView<kasirController> {
         style: ElevatedButton.styleFrom(primary: color_template().secondary),
         onPressed: () {
           var num = keypadController.text = keypadController.text + buttonText;
-          var x = num;
+          var x = num.replaceAll(RegExp(r'[^\w\s]+'), '').replaceAllMapped(
+              RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+          // x.replaceAllMapped(
+          //     RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},");
+
           // onChange(controller.currencyFormatter
           //     .format(int.parse(keypadController.text)));
-          onChange(x);
+          onChange(keypadController.text = x);
           //controller.change();
           //.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]}.");
         },

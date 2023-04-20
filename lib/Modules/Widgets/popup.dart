@@ -552,7 +552,9 @@ class popscreen {
                 children: [
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    color: color_template().primary,
+                    decoration: BoxDecoration(
+                        color: color_template().primary,
+                        borderRadius: BorderRadius.circular(10)),
                     child: Center(
                       child: Text(
                         'Detail Penjualan',
@@ -571,7 +573,7 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total item :', style: font().reguler),
-                      Text(controller.keranjanglist.value.length.toString(),
+                      Text(controller.cache.value.length.toString(),
                           style: font().reguler),
                     ],
                   ),
@@ -579,7 +581,14 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total harga :', style: font().reguler),
-                      Text(controller.total.toString(), style: font().reguler),
+                      Text(
+                          controller.total
+                              .toStringAsFixed(0)
+                              .replaceAll(RegExp(r'[^\w\s]+'), '')
+                              .replaceAllMapped(
+                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                  (Match m) => '${m[1]},'),
+                          style: font().reguler),
                     ],
                   ),
                   Row(
@@ -595,6 +604,21 @@ class popscreen {
                     children: [
                       Text('Kembalian :', style: font().reguler),
                       Text(controller.kembalian.value.text,
+                          style: font().reguler),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Metode bayar :', style: font().reguler),
+                      Text(
+                          controller.groupindex.value == 1
+                              ? 'Tunai'
+                              : controller.groupindex.value == 2
+                                  ? 'Non tunai'
+                                  : controller.groupindex.value == 3
+                                      ? 'Hutang'
+                                      : '-',
                           style: font().reguler),
                     ],
                   ),

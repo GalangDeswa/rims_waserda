@@ -236,17 +236,13 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   )),
                   Expanded(
                       child: Text(
-                          controller.data.metodeBayar == 0
-                              ? 'Cash'
-                              : controller.data.metodeBayar == 1
-                                  ? 'Debit card'
-                                  : controller.data.metodeBayar == 2
-                                      ? 'Credit Card'
-                                      : controller.data.metodeBayar == 3
-                                          ? 'Bayar nanti'
-                                          : controller.data.metodeBayar == 4
-                                              ? 'Reversal'
-                                              : '-',
+                          controller.data.metodeBayar == 1
+                              ? 'Tunai'
+                              : controller.data.metodeBayar == 2
+                                  ? 'Non tunai'
+                                  : controller.data.metodeBayar == 3
+                                      ? 'Hutang'
+                                      : '-',
                           style: font().primary_dark)),
                 ],
               ),
@@ -275,13 +271,13 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   )),
                   Expanded(
                       child: Text(
-                          controller.data.status == 0
+                          controller.data.status == 1
                               ? 'Selesai'
-                              : controller.data.status == 1
-                                  ? 'Hutang'
-                                  : controller.data.status == 2
-                                      ? 'Bayar nanti'
-                                      : controller.data.status == 3
+                              : controller.data.status == 2
+                                  ? 'Selesai'
+                                  : controller.data.status == 3
+                                      ? 'Hutang'
+                                      : controller.data.status == 4
                                           ? 'Reversal'
                                           : '-',
                           style: font().primary_dark)),

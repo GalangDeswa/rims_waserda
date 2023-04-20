@@ -123,7 +123,7 @@ class login_card extends GetView<loginController> {
                           ),
                           textAlign: TextAlign.center,
                           validator: (value) {
-                            if (value!.isEmpty) {
+                            if (value!.isEmpty || value.isEmail == false) {
                               return 'Masukan Email';
                             }
                             return null;
