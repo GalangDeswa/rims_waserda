@@ -82,6 +82,8 @@ dependencies:
 
   infinite_scroll_pagination: ^3.2.0
 
+  flutter_barcode_scanner: ^2.0.0
+
 
 
 

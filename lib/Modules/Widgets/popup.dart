@@ -573,7 +573,12 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total item :', style: font().reguler),
-                      Text(controller.cache.value.length.toString(),
+                      Text(
+                          controller.cache
+                              .map((e) => e.qty)
+                              .fold(
+                                  0, (previous, current) => previous + current)
+                              .toString(),
                           style: font().reguler),
                     ],
                   ),

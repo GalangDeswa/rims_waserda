@@ -45,14 +45,14 @@ class datacard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: font().header_big,
+                  style: font().header_datacard,
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 Text(
                   subtile,
-                  style: font().primary_white,
+                  style: font().primary_white_datacard,
                 )
               ],
             )

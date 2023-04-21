@@ -163,6 +163,8 @@ class kasir_produk extends GetView<kasirController> {
                                 await GetStorage().read('produk');
                             //controller.nextscroll();
                           } else {
+                            print(value + "<-- id jenis cache");
+                            await GetStorage().read('produk');
                             controller.fetchProdukByJeniscache(value);
                           }
                         },
@@ -233,12 +235,18 @@ class ProductTilev2 extends GetView<kasirController> {
               mainAxisSpacing: 2),
           itemCount: controller.produkcache.length,
           itemBuilder: (BuildContext context, index) {
+            var query = controller.produkcache.value
+                .where((element) => element.id == controller.cache[index].id);
+
+            final existingIndex = controller.cache.value.indexWhere(
+                (item) => item.id == controller.produkcache[index].id);
             return GestureDetector(
               onTap: () {
                 // controller.tambahKeranjang(
                 //     controller.produkcache[index].id.toString(),
                 //     0.toString(),
                 //     1.toString());
+
                 controller
                     .tambahKeranjangcache(controller.produkcache[index].id);
               },

@@ -32,7 +32,7 @@ class tambah_produk_form extends GetView<produkController> {
         padding: const EdgeInsets.all(15),
         child: Container(
           width: context.width_query / 1,
-          //height: context.height_query / 1.8,
+          //height: context.height_query / 1.5,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

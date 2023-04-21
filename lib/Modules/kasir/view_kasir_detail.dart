@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Modules/kasir/view_kasir_keypad.dart';
@@ -47,6 +48,10 @@ class kasir_detail extends GetView<kasirController> {
                       return ListView.builder(
                           itemCount: controller.cache.length,
                           itemBuilder: (BuildContext context, int index) {
+                            var pp = controller.produklist
+                                .where(
+                                    (e) => e.id == controller.cache[index].id)
+                                .first;
                             return Card(
                                 elevation: elevation().def_elevation,
                                 child: Container(
@@ -149,8 +154,36 @@ class kasir_detail extends GetView<kasirController> {
                                                   Text(controller
                                                       .cache[index].qty
                                                       .toString()),
-                                                  controller.max == false
-                                                      ? InkWell(
+                                                  int.parse(pp.qty) <=
+                                                              controller
+                                                                  .cache[index]
+                                                                  .qty &&
+                                                          controller
+                                                                  .cache[index]
+                                                                  .idJenisStock ==
+                                                              1
+                                                      ? Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 10,
+                                                                  right: 10),
+                                                          padding:
+                                                              EdgeInsets.all(3),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: Colors
+                                                                      .grey),
+                                                          child: Icon(
+                                                            Icons.add,
+                                                            color: Colors.white,
+                                                            size: context
+                                                                    .height_query /
+                                                                40,
+                                                          ),
+                                                        )
+                                                      : InkWell(
                                                           onTap: () {
                                                             controller
                                                                 .tambahqty(
@@ -178,27 +211,6 @@ class kasir_detail extends GetView<kasirController> {
                                                                       .height_query /
                                                                   40,
                                                             ),
-                                                          ),
-                                                        )
-                                                      : Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  left: 10,
-                                                                  right: 10),
-                                                          padding:
-                                                              EdgeInsets.all(3),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  shape: BoxShape
-                                                                      .circle,
-                                                                  color: Colors
-                                                                      .grey),
-                                                          child: Icon(
-                                                            Icons.add,
-                                                            color: Colors.white,
-                                                            size: context
-                                                                    .height_query /
-                                                                40,
                                                           ),
                                                         )
                                                 ],
@@ -306,19 +318,39 @@ class kasir_detail extends GetView<kasirController> {
               }),
 
               SizedBox(
-                height: 8,
+                height: 10,
               ),
               button_solid_custom(
                   onPressed: () async {
                     var x = await controller.tambahKeranjang();
                     if (x != null) {
                       Get.dialog(
-                        Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: context.width_query / 10,
-                                vertical: context.height_query / 10),
-                            child: kasir_keypad()),
-                      );
+                          Stack(
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: context.width_query / 10,
+                                      vertical: context.height_query / 10),
+                                  child: kasir_keypad()),
+                              Positioned(
+                                top: context.height_query / 14,
+                                left: context.width_query / 12,
+                                child: Material(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: color_template().tritadery,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      icon: Icon(
+                                        FontAwesomeIcons.close,
+                                        color: Colors.white,
+                                      )),
+                                ),
+                              )
+                            ],
+                          ),
+                          barrierDismissible: false);
                     }
 
                     print('--------------pop-------------');
@@ -328,7 +360,7 @@ class kasir_detail extends GetView<kasirController> {
                     style: font().header,
                   ),
                   width: double.infinity,
-                  height: context.height_query / 15),
+                  height: context.height_query / 14),
 
               // button_border_custom(
               //     onPressed: () {

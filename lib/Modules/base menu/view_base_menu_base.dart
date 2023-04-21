@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Modules/Widgets/logout_pop.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
+import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
 import '../../Templates/setting.dart';
 
@@ -112,7 +114,65 @@ class base_menu extends GetView<base_menuController> {
                     title: Text('Logout'),
                     leading: Icon(Icons.logout),
                   ),
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    children: [
+                      Expanded(child: Text('Tampilan Kasir')),
+                      GroupButton(
+                        options: GroupButtonOptions(
+                          selectedTextStyle: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                          selectedColor: color_template().select,
+                          selectedShadow: [shadow().reguler],
+                          unselectedShadow: const [],
+                          unselectedColor: Colors.white,
+                          unselectedTextStyle: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                          selectedBorderColor: color_template().primary,
+                          // unselectedBorderColor: color_template().select,
+                          borderRadius: BorderRadius.circular(12),
+                          spacing: 15,
+                          runSpacing: 10,
+                          groupingType: GroupingType.wrap,
+                          direction: Axis.horizontal,
+                          buttonHeight: context.height_query / 15,
+                          buttonWidth: context.width_query / 15,
+                          mainGroupAlignment: MainGroupAlignment.start,
+                          crossGroupAlignment: CrossGroupAlignment.start,
+                          groupRunAlignment: GroupRunAlignment.start,
+                          textAlign: TextAlign.center,
+                          textPadding: EdgeInsets.all(5),
+                          alignment: Alignment.center,
+                          elevation: 3,
+                        ),
+                        isRadio: true,
+                        controller: GroupButtonController(
+                            selectedIndex: controller.getlayout()),
+                        onSelected: (string, index, bool) {
+                          controller.layoutIndex.value = index;
+                          controller.layoutIndex.value == 0
+                              ? Get.find<kasirController>().layout.value = true
+                              : controller.layoutIndex.value == 1
+                                  ? Get.find<kasirController>().layout.value =
+                                      false
+                                  : null;
+                          print(index);
+                          print(Get.find<kasirController>().layout.value);
+                        },
+                        buttons: [
+                          "Cafe",
+                          "Waserda",
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

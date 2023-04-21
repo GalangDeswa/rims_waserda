@@ -1,5 +1,5 @@
 class server {
-  final String host = 'http://10.0.2.2/rimspos-standar/api-pos/';
+  final String host = 'http://192.168.100.33/rimspos-standar/api-pos/';
 }
 
 class link {

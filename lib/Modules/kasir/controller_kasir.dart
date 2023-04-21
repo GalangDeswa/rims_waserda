@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -39,7 +41,11 @@ class kasirController extends GetxController {
 
     // fetchkeranjang();
     nextscroll();
+    layout.value = false;
   }
+
+  var layout = false.obs;
+  var kasir = GetStorage().read('name');
 
   var produkcache = <DataProduk>[].obs;
   var jeniscache = <DataJenis>[].obs;
@@ -293,10 +299,15 @@ class kasirController extends GetxController {
   fetchProdukByJeniscache(String id) async {
     print('-------------------fetchProdukbyjenis cache---------------------');
     produkcache.value = await GetStorage().read('produk');
-    var jenis =
-        produkcache.value.where((element) => element.idJenis == id).toList();
-    print(produkcache);
+    var jenis = produkcache.value
+        .where((element) => element.idJenis == int.parse(id))
+        .toList();
+    print(produkcache.map((element) => element.namaProduk).toList());
+    print('<-- jnis');
+    print(jenis.map((e) => e.namaProduk));
+    print('<-- jnis');
     produkcache.value = jenis;
+    produkcache.refresh();
   }
 
   var keranjangcache = <DataKeranjangCache>[].obs;
@@ -310,11 +321,12 @@ class kasirController extends GetxController {
     var add = qty + 1;
     var sum = cache[index].qty = add;
     print(produklist[index].qty);
-    if (int.parse(produklist[index].qty) <= sum) {
-      max.value = true;
-    } else {
-      max.value = false;
-    }
+    // var pp = produklist.where((e) => e.id == cache[index].id).first;
+    // if (int.parse(pp.qty) <= sum) {
+    //   max.value = true;
+    // } else {
+    //   max.value = false;
+    // }
 
     await subtotalval();
     await totalval();
@@ -390,7 +402,16 @@ class kasirController extends GetxController {
             updatedAt: query.map((e) => e.updatedAt).first.toString()),
       );
     } else {
-      cache[existingIndex].qty++;
+      var pp = produklist.where((e) => e.id == cache[existingIndex].id).first;
+      // var xx = controller.cache.where((e) => e.id == p.id).first;
+      if (int.parse(pp.qty) <= cache[existingIndex].qty &&
+          cache[existingIndex].idJenisStock == 1) {
+        print('maxxxx-------------------------');
+        Get.showSnackbar(toast().bottom_snackbar_error(
+            "Error", 'Stock sudah habis! harap isi stock terlebih dahulu'));
+      } else {
+        cache[existingIndex].qty++;
+      }
     }
     // if (int.parse(query.map((e) => e.qty).toString()) <=
     //     cache[existingIndex].qty) {
@@ -692,33 +713,70 @@ class kasirController extends GetxController {
   var qrcode = ''.obs;
   String scaned_qr_code = '';
 
-  // Future<void> scan() async {
-  //   try {
-  //     scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
-  //         '#ff6666', 'cancel', true, ScanMode.QR);
-  //     Get.snackbar('result', scaned_qr_code);
-  //     barcodetext.value.text = scaned_qr_code;
-  //   } on PlatformException {}
-  // }
+  Future<void> scan() async {
+    try {
+      scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'cancel', true, ScanMode.QR);
+      Get.snackbar('result', scaned_qr_code);
+      barcodetext.value.text = scaned_qr_code;
+    } on PlatformException {}
+  }
 
-  // Future<void> scankasir() async {
-  //   try {
-  //     scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
-  //         '#ff6666', 'cancel', true, ScanMode.QR);
-  //     if (scaned_qr_code != '-1') {
-  //       Get.snackbar('result', scaned_qr_code);
-  //       var qr = productlist
-  //           .where((e) => e.id.toString().contains(scaned_qr_code.toString()))
-  //           .first;
-  //       print(
-  //           'test scan kasir-------------------------------------------------');
-  //       print(qr);
-  //       listbaru.add(qr);
-  //     } else {
-  //       Get.snackbar('result', "scan canceled");
-  //     }
-  //   } on PlatformException {}
-  // }
+  Future<void> scankasir() async {
+    try {
+      scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'cancel', true, ScanMode.QR);
+      if (scaned_qr_code != '-1') {
+        // Get.snackbar('result', scaned_qr_code);
+
+        var qr = produklist
+            .where((e) => e.id.toString().contains(scaned_qr_code.toString()))
+            .first;
+        final existingIndex =
+            cache.value.indexWhere((item) => item.id == qr.id);
+        print(
+            'test scan kasir-------------------------------------------------');
+        print(qr);
+        if (existingIndex == -1) {
+          cache.add(
+            DataKeranjangCache(
+                id: qr.id,
+                idToko: qr.idToko.toString(),
+                idUser: qr.idUser.toString(),
+                idJenis: qr.idJenis.toString(),
+                idJenisStock: qr.idJenisStock,
+                namaJenis: qr.namaJenis,
+                idKategori: qr.idKategori.toString(),
+                namaProduk: qr.namaProduk,
+                deskripsi: qr.deskripsi,
+                qty: 1,
+                harga: qr.harga,
+                diskonBarang: qr.diskonBarang,
+                image: qr.image,
+                status: qr.status.toString(),
+                updated: qr.updated.toString(),
+                createdAt: qr.createdAt.toString(),
+                updatedAt: qr.updatedAt.toString()),
+          );
+        } else {
+          var pp =
+              produklist.where((e) => e.id == cache[existingIndex].id).first;
+          // var xx = controller.cache.where((e) => e.id == p.id).first;
+          if (int.parse(pp.qty) <= cache[existingIndex].qty &&
+              cache[existingIndex].idJenisStock == 1) {
+            print('maxxxx-------------------------');
+            Get.showSnackbar(toast().bottom_snackbar_error(
+                "Error", 'Stock sudah habis! harap isi stock terlebih dahulu'));
+          } else {
+            cache[existingIndex].qty++;
+          }
+        }
+        cache.refresh();
+      } else {
+        Get.snackbar('result', "scan canceled");
+      }
+    } on PlatformException {}
+  }
 
   var qtydisplay = 0.obs;
 

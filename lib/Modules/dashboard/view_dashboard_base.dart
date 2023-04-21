@@ -45,7 +45,7 @@ class dashboard extends GetView<dashboardController> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
@@ -53,13 +53,15 @@ class dashboard extends GetView<dashboardController> {
                                       style: font().header_big,
                                     ),
                                     Text(
-                                      controller.jenis_toko,
+                                      controller.jenis_toko +
+                                          ' - ' +
+                                          controller.alamat_toko,
                                       style: font().reguler_white,
                                     ),
-                                    Text(
-                                      GetStorage().read('alamat_toko'),
-                                      style: font().reguler_white,
-                                    ),
+                                    // Text(
+                                    //   GetStorage().read('alamat_toko'),
+                                    //   style: font().reguler_white,
+                                    // ),
                                   ],
                                 ),
                                 GestureDetector(
