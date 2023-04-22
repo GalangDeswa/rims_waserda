@@ -5,6 +5,7 @@ class server {
 class link {
   //login----------------------------------------------------------------------
   final Uri POST_login = Uri.parse(server().host + 'auth/login');
+  final Uri POST_logout = Uri.parse(server().host + 'auth/logout');
   final Uri POST_loadtoko = Uri.parse(server().host + 'loadtoko');
   final Uri POST_userdata = Uri.parse(server().host + 'user/data');
   final Uri POST_usertambah = Uri.parse(server().host + 'user/tambah');
@@ -80,4 +81,10 @@ class link {
       Uri.parse(server().host + 'pelanggan/tambah');
   final Uri POST_pelangganedit = Uri.parse(server().host + 'pelanggan/edit');
   final Uri POST_pelangganhapus = Uri.parse(server().host + 'pelanggan/hapus');
+
+  //konten----------------------------------------------------------------------
+  final Uri GET_kontensquare =
+      Uri.parse(server().host + 'iklan/loadkonten_square');
+  final Uri GET_kontenbanner =
+      Uri.parse(server().host + 'iklan/loadkonten_banner');
 }

@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboar_konten.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_app.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_data.dart';
@@ -27,92 +26,58 @@ class dashboard extends GetView<dashboardController> {
                   Expanded(
                       child: Column(
                     children: [
-                      Container(
-                        height: context.height_query / 6,
-                        width: context.width_query,
-                        child: Card(
-                          margin: EdgeInsets.only(bottom: 10),
-                          color: color_template().primary,
-                          elevation: elevation().def_elevation,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: border_radius().def_border,
-                            side: BorderSide(
-                                color: color_template().primary, width: 3.5),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      controller.nama_toko,
-                                      style: font().header_big,
-                                    ),
-                                    Text(
-                                      controller.jenis_toko +
-                                          ' - ' +
-                                          controller.alamat_toko,
-                                      style: font().reguler_white,
-                                    ),
-                                    // Text(
-                                    //   GetStorage().read('alamat_toko'),
-                                    //   style: font().reguler_white,
-                                    // ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Get.dialog(Center(
-                                      child: Container(
-                                        child: Column(
-                                          children: [
-                                            Text('logout?'),
-                                            Row(
-                                              children: [
-                                                ElevatedButton(
-                                                  child: Text('tidak'),
-                                                  onPressed: () {
-                                                    Get.back();
-                                                  },
-                                                ),
-                                                ElevatedButton(
-                                                  child: Text('ya'),
-                                                  onPressed: () {
-                                                    GetStorage().erase();
-                                                    Get.offAndToNamed('/login');
-                                                  },
-                                                ),
-                                                ElevatedButton(
-                                                  child: Text('load toko'),
-                                                  onPressed: () {
-                                                    controller.loadToko();
-                                                  },
-                                                ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
+                      Obx(() {
+                        return Container(
+                          height: context.height_query / 6,
+                          width: context.width_query,
+                          child: Card(
+                            margin: EdgeInsets.only(bottom: 10),
+                            // color: color_template().primary,
+                            elevation: elevation().def_elevation,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: border_radius().def_border,
+                              side: BorderSide(
+                                  color: color_template().primary, width: 3.5),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        controller.nama_toko.value,
+                                        style: font().header_big_black,
                                       ),
-                                    ));
-                                    //print(GetStorage().read('token'));
-                                  },
-                                  child: CircleAvatar(
+                                      Text(
+                                        controller.jenis_toko.value +
+                                            ' - ' +
+                                            controller.alamat_toko.value,
+                                        style: font().reguler,
+                                      ),
+                                      // Text(
+                                      //   GetStorage().read('alamat_toko'),
+                                      //   style: font().reguler_white,
+                                      // ),
+                                    ],
+                                  ),
+                                  CircleAvatar(
                                     backgroundColor: Colors.white,
                                     child: CachedNetworkImage(
-                                      imageUrl: controller.logo,
+                                      imageUrl: controller.logo.value,
                                     ),
-                                    maxRadius: 30,
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                       dashboard_data()
                     ],
                   )),

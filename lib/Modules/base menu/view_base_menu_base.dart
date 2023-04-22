@@ -65,117 +65,120 @@ class base_menu extends GetView<base_menuController> {
         },
         child: Scaffold(
           drawerEnableOpenDragGesture: false,
-          endDrawer: Drawer(
-            child: ListView(
-              shrinkWrap: true,
-              padding: EdgeInsets.only(bottom: 10),
-              children: [
-                DrawerHeader(
-                    child: Column(
-                  children: [
-                    Container(
-                      width: 70,
-                      height: 70,
-                      margin: EdgeInsets.only(top: 10),
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: color_template().primary,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      GetStorage().read('name'),
-                      style: font().primary_dark,
-                    ),
-                    Text(
-                      GetStorage().read('nama_toko'),
-                      style: font().primary_dark,
-                    ),
-                  ],
-                )),
-                ListTile(
-                  title: Text('Setting'),
-                  leading: Icon(Icons.settings),
-                ),
-                InkWell(
-                  highlightColor: color_template().select,
-                  splashColor: Colors.orangeAccent,
-                  onTap: () {
-                    Get.dialog(logout_pop());
-                  },
-                  child: ListTile(
-                    title: Text('Logout'),
-                    leading: Icon(Icons.logout),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Row(
+          endDrawer: Obx(() {
+            return Drawer(
+              child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(bottom: 10),
+                children: [
+                  DrawerHeader(
+                      child: Column(
                     children: [
-                      Expanded(child: Text('Tampilan Kasir')),
-                      GroupButton(
-                        options: GroupButtonOptions(
-                          selectedTextStyle: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                          selectedColor: color_template().select,
-                          selectedShadow: [shadow().reguler],
-                          unselectedShadow: const [],
-                          unselectedColor: Colors.white,
-                          unselectedTextStyle: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                          ),
-                          selectedBorderColor: color_template().primary,
-                          // unselectedBorderColor: color_template().select,
-                          borderRadius: BorderRadius.circular(12),
-                          spacing: 15,
-                          runSpacing: 10,
-                          groupingType: GroupingType.wrap,
-                          direction: Axis.horizontal,
-                          buttonHeight: context.height_query / 15,
-                          buttonWidth: context.width_query / 15,
-                          mainGroupAlignment: MainGroupAlignment.start,
-                          crossGroupAlignment: CrossGroupAlignment.start,
-                          groupRunAlignment: GroupRunAlignment.start,
-                          textAlign: TextAlign.center,
-                          textPadding: EdgeInsets.all(5),
-                          alignment: Alignment.center,
-                          elevation: 3,
+                      Container(
+                        width: 70,
+                        height: 70,
+                        margin: EdgeInsets.only(top: 10),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                          size: 50,
                         ),
-                        isRadio: true,
-                        controller: GroupButtonController(
-                            selectedIndex: controller.getlayout()),
-                        onSelected: (string, index, bool) {
-                          controller.layoutIndex.value = index;
-                          controller.layoutIndex.value == 0
-                              ? Get.find<kasirController>().layout.value = true
-                              : controller.layoutIndex.value == 1
-                                  ? Get.find<kasirController>().layout.value =
-                                      false
-                                  : null;
-                          print(index);
-                          print(Get.find<kasirController>().layout.value);
-                        },
-                        buttons: [
-                          "Cafe",
-                          "Waserda",
-                        ],
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: color_template().primary,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        controller.namauser.value,
+                        style: font().primary_dark,
+                      ),
+                      Text(
+                        controller.namatoko.value,
+                        style: font().primary_dark,
                       ),
                     ],
+                  )),
+                  ListTile(
+                    title: Text('Setting'),
+                    leading: Icon(Icons.settings),
                   ),
-                ),
-              ],
-            ),
-          ),
+                  InkWell(
+                    highlightColor: color_template().select,
+                    splashColor: Colors.orangeAccent,
+                    onTap: () {
+                      Get.dialog(logout_pop());
+                    },
+                    child: ListTile(
+                      title: Text('Logout'),
+                      leading: Icon(Icons.logout),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      children: [
+                        Expanded(child: Text('Tampilan Kasir')),
+                        GroupButton(
+                          options: GroupButtonOptions(
+                            selectedTextStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                            selectedColor: color_template().select,
+                            selectedShadow: [shadow().reguler],
+                            unselectedShadow: const [],
+                            unselectedColor: Colors.white,
+                            unselectedTextStyle: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                            selectedBorderColor: color_template().primary,
+                            // unselectedBorderColor: color_template().select,
+                            borderRadius: BorderRadius.circular(12),
+                            spacing: 15,
+                            runSpacing: 10,
+                            groupingType: GroupingType.wrap,
+                            direction: Axis.horizontal,
+                            buttonHeight: context.height_query / 15,
+                            buttonWidth: context.width_query / 15,
+                            mainGroupAlignment: MainGroupAlignment.start,
+                            crossGroupAlignment: CrossGroupAlignment.start,
+                            groupRunAlignment: GroupRunAlignment.start,
+                            textAlign: TextAlign.center,
+                            textPadding: EdgeInsets.all(5),
+                            alignment: Alignment.center,
+                            elevation: 3,
+                          ),
+                          isRadio: true,
+                          controller: GroupButtonController(
+                              selectedIndex: controller.getlayout()),
+                          onSelected: (string, index, bool) {
+                            controller.layoutIndex.value = index;
+                            controller.layoutIndex.value == 0
+                                ? Get.find<kasirController>().layout.value =
+                                    true
+                                : controller.layoutIndex.value == 1
+                                    ? Get.find<kasirController>().layout.value =
+                                        false
+                                    : null;
+                            print(index);
+                            print(Get.find<kasirController>().layout.value);
+                          },
+                          buttons: [
+                            "Cafe",
+                            "Waserda",
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.white,
           body: Row(

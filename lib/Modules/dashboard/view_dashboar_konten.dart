@@ -50,8 +50,8 @@ class dashboard_konten extends GetView<dashboardController> {
                                   FontAwesomeIcons.warning,
                                   color: color_template().tritadery,
                                 )),
-                            fit: BoxFit.cover,
-                            imageUrl: x['photo']),
+                            fit: BoxFit.contain,
+                            imageUrl: x['foto']),
                       ))
                   .toList(),
             );

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/Widgets/buttons.dart';
+import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 
 import '../../Templates/setting.dart';
 import 'header.dart';
 
-class logout_pop extends StatelessWidget {
+class logout_pop extends GetView<base_menuController> {
   const logout_pop({Key? key}) : super(key: key);
 
   @override
@@ -40,8 +41,7 @@ class logout_pop extends StatelessWidget {
                 width: context.width_query,
                 height: context.height_query / 13,
                 onPressed: () async {
-                  await GetStorage().erase();
-                  Get.offAndToNamed('/login');
+                  await controller.logout();
                 },
               ),
               button_border_custom(

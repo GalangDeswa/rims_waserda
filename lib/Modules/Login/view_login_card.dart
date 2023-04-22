@@ -1,4 +1,3 @@
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -67,16 +66,16 @@ class login_card extends GetView<loginController> {
                         style: font().primary_bold,
                       ),
                       login_carousel(),
-                      Obx(() {
-                        return DotsIndicator(
-                          dotsCount: controller.konten.length,
-                          position: controller.current.toDouble(),
-                          decorator: DotsDecorator(
-                            color: color_template().secondary, // Inactive color
-                            activeColor: color_template().select,
-                          ),
-                        );
-                      }),
+                      // Obx(() {
+                      //   return DotsIndicator(
+                      //     dotsCount: controller.kontensquare.length,
+                      //     position: controller.current.toDouble(),
+                      //     decorator: DotsDecorator(
+                      //       color: color_template().secondary, // Inactive color
+                      //       activeColor: color_template().select,
+                      //     ),
+                      //   );
+                      // }),
                     ],
                   ),
                 ),

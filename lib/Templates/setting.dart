@@ -30,6 +30,8 @@ class font {
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
   var header_big =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white);
+  var header_big_black =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
   var header_datacard =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
   var header_xl =

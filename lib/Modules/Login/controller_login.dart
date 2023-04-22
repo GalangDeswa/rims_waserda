@@ -17,6 +17,16 @@ import '../../Services/api.dart';
 import '../dashboard/model_toko.dart';
 
 class loginController extends GetxController {
+  @override
+  Future<void> onInit() async {
+    // TODO: implement onInit
+    super.onInit();
+    kontensquare.value = await GetStorage().read('konten_square');
+  }
+
+  var kontensquare = [].obs;
+  var kontenbanner = [].obs;
+
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _user;
 
@@ -66,13 +76,6 @@ class loginController extends GetxController {
     }
   }
 
-  List<String> iklan = [
-    'assets/animation/30826-online-shopping.json',
-    'assets/animation/74384-swipe-for-shopping.json',
-    'assets/animation/lf20_4nze9dc4.json',
-    'assets/animation/110910-seasonal-shopping-scene.json'
-  ].obs;
-
   var email = TextEditingController().obs;
   var pass = TextEditingController().obs;
   var token = ''.obs;
@@ -90,58 +93,6 @@ class loginController extends GetxController {
   var logo_toko;
 
   var listkonten = <Konten>[];
-
-  // login() async {
-  //   Get.dialog(
-  //       Center(
-  //         child: CircularProgressIndicator(),
-  //       ),
-  //       barrierDismissible: false);
-  //   Loginv2 loginmodel =
-  //       Loginv2(email: email.value.text, password: pass.value.text);
-  //   var response = await REST.postApi(loginv2ToJson(loginmodel), 'login');
-  //   var data = json.decode(response);
-  //   print('dari login controller----------------------------------------->');
-  //   // print(data['data']['nama']);
-  //   if (data['accessToken'] != null) {
-  //     REST.storeToken(data['accessToken']);
-  //     GetStorage().write('nama', data['data']['nama']);
-  //     GetStorage().write('email', data['data']['email']);
-  //     GetStorage().write('toko', data['data']['store_id']);
-  //     List toko = data['data']['store_id'];
-  //     if (toko.length > 1) {
-  //       Get.back();
-  //       Get.snackbar('sukses', 'pilih toko');
-  //       print(data['data']['store_id']);
-  //       Get.offAndToNamed('/pilih_toko');
-  //     } else {
-  //       Get.back();
-  //       Get.snackbar('sukses', 'berhasil login');
-  //       Get.offAndToNamed('/base_menu');
-  //     }
-  //
-  //     //Get.snackbar('sukses', data['data']['nama']);
-  //     //print(data['data']['store_id']);
-  //     //print(networkHandler.getToken().toString());
-  //   } else {
-  //     Get.back();
-  //     Get.snackbar(
-  //       "Error",
-  //       "Login gagal, Periksa email/password",
-  //       icon: Icon(Icons.error, color: Colors.white),
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       borderRadius: 20,
-  //       margin: EdgeInsets.all(15),
-  //       colorText: Colors.white,
-  //       duration: Duration(seconds: 4),
-  //       isDismissible: true,
-  //       dismissDirection: DismissDirection.horizontal,
-  //       forwardAnimationCurve: Curves.elasticInOut,
-  //       reverseAnimationCurve: Curves.easeOut,
-  //     );
-  //   }
-  // }
 
   loginv2() async {
     Get.dialog(showloading(), barrierDismissible: false);
@@ -192,23 +143,18 @@ class loginController extends GetxController {
           print(logo_toko);
           print('-------------------konten---------------');
 
-          var dataKonten = ModelToko.fromJson(toko);
-          dataKonten.data.forEach((element) {
-            listkonten = element.konten;
-          });
-          GetStorage().write('konten', listkonten);
-          print(listkonten);
+          await checkKonenBanner();
 
           print('------------------pendapatan----------------');
           var dataPendapatan = ModelToko.fromJson(toko);
           var pendapatan = dataPendapatan.data[0].pendapatan;
-          GetStorage().write('pendapatan', pendapatan);
+          await GetStorage().write('pendapatan', pendapatan);
           print(pendapatan);
 
           print('------------------beban----------------');
           var dataBeban = ModelToko.fromJson(toko);
           var beban = dataBeban.data[0].beban;
-          GetStorage().write('beban', beban);
+          await GetStorage().write('beban', beban);
           print(beban);
         } else {
           Get.back(closeOverlays: true);
@@ -271,19 +217,37 @@ class loginController extends GetxController {
     }
   }
 
-  var konten = [
-    'assets/konten/digital marketing 1.png',
-    'assets/konten/digital marketing 2.png',
-    'assets/konten/digital marketing 3.png',
-    'assets/konten/digital marketing 4.png',
-    'assets/konten/brosur signage ig.png',
-    'assets/konten/brosur signage ig 2.png',
-    'assets/konten/rims kopsiah.png',
-    'assets/konten/rims simpeg.png',
-    'assets/konten/rims notaris.png',
-    'assets/konten/rims dental.png',
-    'assets/konten/rims butik.png',
-    'assets/konten/rims beauty.png',
-    'assets/konten/rims barbaer.png',
-  ].obs;
+  checkKonenBanner() async {
+    var banner = await GetStorage().read('konten_banner');
+    if (banner != null) {
+      print('konten banner masih ada----------------------------');
+    } else {
+      print('konten banner tidak ada-----------------------------');
+      await fetchKontenBanner();
+    }
+  }
+
+  fetchKontenBanner() async {
+    print(
+        '--fetching konten banner--------------------------------------------------------------------->');
+    // succ.value = false;
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var konten = await REST.kontenBanner();
+      if (konten != null) {
+        await GetStorage().write('konten_banner', konten['data']);
+        print(konten['data']);
+        return konten['data'];
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+    }
+    // return [];
+  }
 }

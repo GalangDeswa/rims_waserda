@@ -1376,4 +1376,77 @@ class REST extends GetConnect {
       print(response.body);
     }
   }
+
+  static Future<dynamic> kontenSquare() async {
+    var response = await http.get(link().GET_kontensquare);
+
+    if (response.statusCode == 200) {
+      print(
+          'KONTEN SQUARE network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'KONTEN SQUARE network handler----------------------------------------->');
+      print('GAGAL DATA KONTEN SQUARE');
+      print(response.statusCode);
+      print(response.body);
+      return (data);
+    }
+  }
+
+  static Future<dynamic> kontenBanner() async {
+    var response = await http.get(link().GET_kontenbanner);
+
+    if (response.statusCode == 200) {
+      print(
+          'KONTEN BANNER network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'KONTEN BANNER network handler----------------------------------------->');
+      print('GAGAL DATA KONTEN BANNER');
+      print(response.statusCode);
+      print(response.body);
+      return (data);
+    }
+  }
+
+  static Future<dynamic> logout(String token) async {
+    var response = await http.post(link().POST_logout,
+        body: ({
+          'token': token,
+        }));
+    if (response.statusCode == 200) {
+      print('LOGOUT network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      var data = json.decode(response.body);
+      print('LOGOUT network handler----------------------------------------->');
+      print('GAGAL DATA PELANGGAN EDIT');
+      print(response.statusCode);
+
+      print(response.body);
+      return data;
+    }
+  }
 }

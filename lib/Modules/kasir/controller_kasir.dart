@@ -771,9 +771,11 @@ class kasirController extends GetxController {
             cache[existingIndex].qty++;
           }
         }
+        subtotalval();
+        totalval();
         cache.refresh();
       } else {
-        Get.snackbar('result', "scan canceled");
+        print('scan canceled');
       }
     } on PlatformException {}
   }

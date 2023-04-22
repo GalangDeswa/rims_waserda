@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/loading.dart';
 
 import 'controller_login.dart';
 
@@ -9,8 +11,6 @@ class login_carousel extends GetView<loginController> {
 
   @override
   Widget build(BuildContext context) {
-    var login_con = Get.find<loginController>();
-
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
@@ -20,7 +20,7 @@ class login_carousel extends GetView<loginController> {
           return CarouselSlider(
             options: CarouselOptions(
               onPageChanged: (index, reason) {
-                login_con.current(index);
+                controller.current(index);
               },
               viewportFraction: 1.0,
               height: 450,
@@ -29,10 +29,14 @@ class login_carousel extends GetView<loginController> {
               autoPlay: true,
               autoPlayInterval: Duration(seconds: 6),
             ),
-            items: login_con.konten
+            items: controller.kontensquare
                 .map((x) => ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child: Image.asset(x),
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                            width: 50, height: 50, child: showloading()),
+                        imageUrl: x['foto'],
+                      ),
                     ))
                 .toList(),
           );
