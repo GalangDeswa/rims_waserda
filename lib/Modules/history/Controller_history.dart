@@ -19,6 +19,18 @@ class historyController extends GetxController {
     fetchPenjualan();
   }
 
+  var sort = false.obs;
+  var ColIndex = 0.obs;
+
+  String? valstatus;
+  var stts = false.obs;
+  var liststatus = [
+    {'id': 0, 'nama': 'Filter berdasar status'},
+    {'id': 1, 'nama': 'Selesai'},
+    {'id': 3, 'nama': 'Hutang'},
+    {'id': 4, 'nama': 'Reversal'}
+  ].obs;
+
   next() async {
     final respon = await http.post(Uri.parse(nextdata), body: {
       'token': token,
@@ -83,12 +95,15 @@ class historyController extends GetxController {
 
   var succ = true.obs;
 
+  var search = TextEditingController().obs;
+
   fetchPenjualan() async {
     print('-------------------fetch penjualan---------------------');
     succ.value = false;
     var checkconn = await check_conn.check();
     if (checkconn == true) {
-      var penjualan = await REST.penjualanData(token, id_user, id_toko);
+      var penjualan =
+          await REST.penjualanData(token, id_user, id_toko, search.value.text);
       if (penjualan != null) {
         succ.value = true;
         print('-------------------data penjualan--------------------');

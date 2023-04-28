@@ -45,6 +45,7 @@ class ModelProduk {
 class DataProduk {
   DataProduk({
     required this.id,
+    this.barcode,
     required this.idToko,
     required this.idUser,
     required this.idJenis,
@@ -64,6 +65,7 @@ class DataProduk {
   });
 
   int id;
+  String? barcode;
   int idToko;
   int idUser;
   int idJenis;
@@ -83,6 +85,7 @@ class DataProduk {
 
   factory DataProduk.fromJson(Map<String, dynamic> json) => DataProduk(
         id: json["id"],
+        barcode: json["barcode"],
         idToko: json["id_toko"],
         idUser: json["id_user"],
         idJenis: json["id_jenis"],
@@ -103,6 +106,7 @@ class DataProduk {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "barcode": barcode,
         "id_toko": idToko,
         "id_user": idUser,
         "id_jenis": idJenis,
@@ -203,7 +207,7 @@ class Pagination {
     required this.perPage,
     required this.currentPage,
     required this.totalPages,
-    this.links,
+    //  this.links,
   });
 
   int total;
@@ -211,7 +215,7 @@ class Pagination {
   int perPage;
   int currentPage;
   int totalPages;
-  List<dynamic>? links;
+  //List<Links>? links;
 
   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
         total: json["total"],
@@ -219,7 +223,7 @@ class Pagination {
         perPage: json["per_page"],
         currentPage: json["current_page"],
         totalPages: json["total_pages"],
-        links: List<dynamic>.from(json["links"].map((x) => x)),
+        //  links: List<Links>.from(json["links"].map((x) => Links.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -228,7 +232,7 @@ class Pagination {
         "per_page": perPage,
         "current_page": currentPage,
         "total_pages": totalPages,
-        "links": List<dynamic>.from(links!.map((x) => x)),
+        //"links": List<dynamic>.from(links!.map((x) => x)),
       };
 }
 

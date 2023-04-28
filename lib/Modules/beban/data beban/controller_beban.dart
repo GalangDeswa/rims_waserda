@@ -42,6 +42,8 @@ class bebanController extends GetxController {
   var jumlahbeban = 0.0.obs;
 
   var formKeyjenis = GlobalKey<FormState>().obs;
+  var sort = false.obs;
+  var ColIndex = 0.obs;
 
   next() async {
     final respon = await http.post(Uri.parse(nextdata), body: {
@@ -505,6 +507,7 @@ class editbebanController extends GetxController {
     tanggal.value = TextEditingController(text: data.tgl);
     jumlah.value = TextEditingController(text: data.jumlah);
     jenisbebanval.value = data.idKtrBeban.toString();
+    jumlahbeban.value = double.parse(jumlah.value.text);
     // print(jenisbebanval);
   }
 
@@ -525,6 +528,8 @@ class editbebanController extends GetxController {
   var keterangan = TextEditingController().obs;
   var tanggal = TextEditingController().obs;
   var jumlah = TextEditingController().obs;
+
+  var jumlahbeban = 0.0.obs;
 
   final dateformat = DateFormat('dd-MM-yyyy');
 

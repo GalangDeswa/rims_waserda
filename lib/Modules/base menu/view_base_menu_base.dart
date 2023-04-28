@@ -155,15 +155,15 @@ class base_menu extends GetView<base_menuController> {
                           isRadio: true,
                           controller: GroupButtonController(
                               selectedIndex: controller.getlayout()),
-                          onSelected: (string, index, bool) {
+                          onSelected: (string, index, bool) async {
                             controller.layoutIndex.value = index;
-                            controller.layoutIndex.value == 0
-                                ? Get.find<kasirController>().layout.value =
-                                    true
-                                : controller.layoutIndex.value == 1
-                                    ? Get.find<kasirController>().layout.value =
-                                        false
-                                    : null;
+                            if (controller.layoutIndex.value == 0) {
+                              Get.find<kasirController>().layout.value = true;
+                              await GetStorage().write('layout', true);
+                            } else if (controller.layoutIndex.value == 1) {
+                              Get.find<kasirController>().layout.value = false;
+                              await GetStorage().write('layout', false);
+                            }
                             print(index);
                             print(Get.find<kasirController>().layout.value);
                           },

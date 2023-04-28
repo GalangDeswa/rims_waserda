@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -41,52 +42,208 @@ class history_table extends GetView<historyController> {
             SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3),
-                    //width: 200,
-                    child: TextFormField(
-                      controller: controller.id_kas.value,
-                      onChanged: ((String pass) {}),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.add_box),
-                        labelText: "Penjualan Hari Ini",
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
+            Obx(() {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 3),
+                      //width: 200,
+                      child: TextFormField(
+                        controller: controller.search.value,
+                        onChanged: ((String pass) {
+                          controller.fetchPenjualan();
+                        }),
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.add_box),
+                          labelText: "Cari tanggal penjualan",
+                          labelStyle: TextStyle(
+                            color: Colors.black87,
+                          ),
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
                         ),
-                        border: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                        textAlign: TextAlign.center,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter email';
+                          }
+                          return null;
+                        },
                       ),
-                      textAlign: TextAlign.center,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter email';
-                        }
-                        return null;
+                    ),
+                  ),
+                  icon_button_custom(
+                      onPressed: () async {
+                        Get.dialog(showloading());
+                        await controller.fetchPenjualan();
+
+                        Get.back();
+                      },
+                      icon: Icons.search,
+                      container_color: color_template().primary),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 3),
+                      //width: 200,
+                      child: TextFormField(
+                        //controller: controller.id_kas.value,
+                        onChanged: ((String pass) {}),
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.add_box),
+                          labelText: "Penjualan Hari Ini",
+                          labelStyle: TextStyle(
+                            color: Colors.black87,
+                          ),
+                          border: UnderlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        textAlign: TextAlign.center,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter email';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                  icon_button_custom(
+                      onPressed: () async {
+                        Get.dialog(showloading());
+                        await controller.fetchPenjualanHariIni();
+
+                        Get.back();
+                      },
+                      icon: Icons.search,
+                      container_color: color_template().primary),
+                  Expanded(
+                    child: DropdownButtonFormField2(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      isExpanded: true,
+                      dropdownStyleData: DropdownStyleData(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white)),
+                      hint: Text('Filter berdasar status'),
+                      value: controller.valstatus,
+                      items: controller.liststatus.value.map((item) {
+                        return DropdownMenuItem(
+                            child: Text(item['nama'].toString()),
+                            value: item['id'].toString());
+                      }).toList(),
+                      onChanged: (val) async {
+                        controller.stts.value = true;
+                        controller.valstatus = val!.toString();
+                        var start = await controller.fetchPenjualan();
+                        var query = await start
+                            .where((e) => e.status.toString() == val)
+                            .toList();
+                        controller.penjualan_list.value = query;
+                        print(query);
+                        print(controller.valstatus);
                       },
                     ),
                   ),
-                ),
-                icon_button_custom(
-                    onPressed: () async {
-                      Get.dialog(showloading());
-                      await controller.fetchPenjualanHariIni();
-
-                      Get.back();
-                    },
-                    icon: Icons.search,
-                    container_color: color_template().primary),
-              ],
-            ),
+                  controller.stts.value == false
+                      ? Container()
+                      : IconButton(
+                          onPressed: () {
+                            controller.stts.value = true;
+                            controller.valstatus = 0.toString();
+                            print(
+                                'stts-------------------------------------------------->');
+                            print(controller.stts);
+                            print(controller.valstatus);
+                            controller.fetchPenjualan();
+                          },
+                          icon: Icon(
+                            Icons.cancel,
+                            color: color_template().tritadery,
+                          ),
+                        )
+                ],
+              );
+            }),
             Expanded(
               child: Obx(() {
-                var source =
-                    penjualanTable(controller.penjualan_list.value).obs;
+                onSortColum(int columnIndex, bool ascending) {
+                  if (columnIndex == 0) {
+                    if (ascending) {
+                      controller.penjualan_list.sort(
+                          (a, b) => a.tglPenjualan.compareTo(b.tglPenjualan));
+                    } else {
+                      controller.penjualan_list.sort(
+                          (a, b) => b.tglPenjualan.compareTo(a.tglPenjualan));
+                    }
+                  } else if (columnIndex == 1) {
+                    if (ascending) {
+                      controller.penjualan_list
+                          .sort((a, b) => a.namaUser.compareTo(b.namaUser));
+                    } else {
+                      controller.penjualan_list
+                          .sort((a, b) => b.namaUser.compareTo(a.namaUser));
+                    }
+                  } else if (columnIndex == 2) {
+                    if (ascending) {
+                      controller.penjualan_list.sort(
+                          (a, b) => b.namaPelanggan.compareTo(a.namaPelanggan));
+                    } else {
+                      controller.penjualan_list.sort(
+                          (a, b) => a.namaPelanggan.compareTo(b.namaPelanggan));
+                    }
+                  } else if (columnIndex == 3) {
+                    if (ascending) {
+                      controller.penjualan_list
+                          .sort((a, b) => b.totalItem.compareTo(a.totalItem));
+                    } else {
+                      controller.penjualan_list
+                          .sort((a, b) => a.totalItem.compareTo(b.totalItem));
+                    }
+                  } else if (columnIndex == 4) {
+                    if (ascending) {
+                      controller.penjualan_list
+                          .sort((a, b) => b.subTotal.compareTo(a.subTotal));
+                    } else {
+                      controller.penjualan_list
+                          .sort((a, b) => a.subTotal.compareTo(b.subTotal));
+                    }
+                  } else if (columnIndex == 5) {
+                    if (ascending) {
+                      controller.penjualan_list
+                          .sort((a, b) => b.total.compareTo(a.total));
+                    } else {
+                      controller.penjualan_list
+                          .sort((a, b) => a.total.compareTo(b.total));
+                    }
+                  } else if (columnIndex == 6) {
+                    if (ascending) {
+                      controller.penjualan_list
+                          .sort((a, b) => b.bayar.compareTo(a.bayar));
+                    } else {
+                      controller.penjualan_list
+                          .sort((a, b) => a.bayar.compareTo(b.bayar));
+                    }
+                  } else if (columnIndex == 7) {
+                    if (ascending) {
+                      controller.penjualan_list
+                          .sort((a, b) => b.status.compareTo(a.status));
+                    } else {
+                      controller.penjualan_list
+                          .sort((a, b) => a.status.compareTo(b.status));
+                    }
+                  }
+                }
+
                 return Container(
                   //color: Colors.red,
                   // height: context.height_query / 1.6,
@@ -95,6 +252,8 @@ class history_table extends GetView<historyController> {
                   child: controller.succ == false
                       ? Container(width: 100, height: 100, child: showloading())
                       : DataTable2(
+                          sortAscending: controller.sort.value,
+                          sortColumnIndex: controller.ColIndex.value,
                           horizontalMargin: 10,
                           //minWidth: 1000,
                           //minWidth: 10,
@@ -111,44 +270,79 @@ class history_table extends GetView<historyController> {
                               style: font().header_black,
                             ),
                           ),
-                          columns: const <DataColumn>[
+                          columns: <DataColumn>[
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'tanggal',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Nama kasir',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Nama pelanggan',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Total item',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Subtotal',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Total',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Center(
                                 child: Text(
                                   'Bayar',
@@ -157,6 +351,11 @@ class history_table extends GetView<historyController> {
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Center(
                                 child: Text(
                                   'Status',

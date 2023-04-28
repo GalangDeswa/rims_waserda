@@ -51,10 +51,10 @@ class font {
   var reguler_white_datacard = TextStyle(fontSize: 15, color: Colors.white);
 
   var produktitle =
-      TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold);
   var produkharga = TextStyle(
     fontSize: 15,
-    color: Colors.white,
+    color: Colors.black,
   );
 }
 

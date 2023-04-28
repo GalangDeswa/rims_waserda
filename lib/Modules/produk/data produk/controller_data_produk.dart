@@ -47,6 +47,10 @@ class produkController extends GetxController {
   var id_toko = GetStorage().read('id_toko');
 
   var check = false.obs;
+  var checkfoto = false.obs;
+  var checkbarcode = false.obs;
+
+  var barcode = TextEditingController().obs;
 
   var jumlahharga = 0.obs;
   var jumlahdiskon = 0.0.obs;
@@ -326,6 +330,9 @@ class produkController extends GetxController {
 
   var image;
 
+  var sort = false.obs;
+  var ColIndex = 0.obs;
+
   clear() {
     desc.value.clear();
     nama_produk.value.clear();
@@ -338,6 +345,7 @@ class produkController extends GetxController {
     jumlahdiskon.value = 0.0;
     check.value == false;
     qty.value.clear();
+    barcode.value.clear();
     pikedImagePath.value = '';
   }
 
@@ -358,6 +366,7 @@ class produkController extends GetxController {
           qty: qty.value.text,
           harga: jumlahharga.value.toString(),
           diskon_barang: jumlahdiskon.value.toString(),
+          barcode: barcode.value.text.toString(),
           image: pickedImageFile);
 
       if (produk != null) {

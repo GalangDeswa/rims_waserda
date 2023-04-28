@@ -159,13 +159,13 @@ class kasir_produk extends GetView<kasirController> {
                             textStyle: TextStyle(fontSize: 16)),
                         radioButtonValue: (value) async {
                           if (value == '0') {
-                            controller.produkcache.value =
+                            controller.produklist.value =
                                 await GetStorage().read('produk');
                             //controller.nextscroll();
                           } else {
                             print(value + "<-- id jenis cache");
                             await GetStorage().read('produk');
-                            controller.fetchProdukByJeniscache(value);
+                            controller.fetchProdukByJenis(value);
                           }
                         },
                         enableShape: true,
@@ -233,7 +233,7 @@ class ProductTilev2 extends GetView<kasirController> {
               childAspectRatio: 1 / 1,
               crossAxisSpacing: 1,
               mainAxisSpacing: 2),
-          itemCount: controller.produkcache.length,
+          itemCount: controller.produklist.length,
           itemBuilder: (BuildContext context, index) {
             var query = controller.produkcache.value
                 .where((element) => element.id == controller.cache[index].id);
@@ -280,15 +280,17 @@ class ProductTilev2 extends GetView<kasirController> {
                               child: Image.asset('assets/images/food.png'),
                             );
                           },
-                          imageUrl: controller.produkcache[index].image),
+                          imageUrl: controller.produklist[index].image),
                     )),
                     Container(
                       padding: EdgeInsets.all(10),
                       width: context.width_query,
                       height: context.height_query / 10,
                       decoration: BoxDecoration(
-                          color: color_template().primary,
+                          color: Colors.white,
                           borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20),
                               bottomLeft: Radius.circular(20),
                               bottomRight: Radius.circular(20))),
                       child: Column(
@@ -298,19 +300,47 @@ class ProductTilev2 extends GetView<kasirController> {
                           Expanded(
                             child: Text(
                               overflow: TextOverflow.fade,
-                              controller.produkcache[index].namaProduk
+                              controller.produklist[index].namaProduk
                                   .toString(),
                               style: font().produktitle,
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              'Rp. ' +
-                                  controller.nominal.format(double.parse(
-                                      controller.produkcache[index].harga)),
-                              style: font().produkharga,
-                            ),
-                          )
+                              child:
+                                  controller.produklist[index].diskonBarang == 0
+                                      ? Text(
+                                          'Rp. ' +
+                                              controller.nominal.format(
+                                                  double.parse(controller
+                                                      .produklist[index]
+                                                      .harga)),
+                                          style: font().produkharga,
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Rp. ' +
+                                                  controller.nominal.format(
+                                                      double.parse(controller
+                                                          .produklist[index]
+                                                          .diskonBarang
+                                                          .toString())),
+                                              style: font().produkharga,
+                                            ),
+                                            Text(
+                                              'Rp. ' +
+                                                  controller.nominal.format(
+                                                      double.parse(controller
+                                                          .produklist[index]
+                                                          .harga)),
+                                              style: TextStyle(
+                                                  decoration: TextDecoration
+                                                      .lineThrough),
+                                            )
+                                          ],
+                                        ))
                         ],
                       ),
                     ),

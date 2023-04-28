@@ -90,7 +90,7 @@ class produk_table extends GetView<produkController> {
                           controller.fetchProduk();
                         }),
                         decoration: InputDecoration(
-                          icon: Icon(Icons.add_box),
+                          icon: Icon(FontAwesomeIcons.searchengin),
                           labelText: "cari produk",
                           labelStyle: TextStyle(
                             color: Colors.black87,
@@ -100,7 +100,7 @@ class produk_table extends GetView<produkController> {
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter email';
@@ -121,8 +121,50 @@ class produk_table extends GetView<produkController> {
             ),
             Expanded(
               child: Obx(() {
-                var source =
-                    produkTable(controller.produklist.value, context).obs;
+                onSortColum(int columnIndex, bool ascending) {
+                  if (columnIndex == 1) {
+                    if (ascending) {
+                      controller.produklist
+                          .sort((a, b) => a.namaProduk.compareTo(b.namaProduk));
+                    } else {
+                      controller.produklist
+                          .sort((a, b) => b.namaProduk.compareTo(a.namaProduk));
+                    }
+                  } else if (columnIndex == 2) {
+                    if (ascending) {
+                      controller.produklist
+                          .sort((a, b) => a.namaJenis.compareTo(b.namaJenis));
+                    } else {
+                      controller.produklist
+                          .sort((a, b) => b.namaJenis.compareTo(a.namaJenis));
+                    }
+                  } else if (columnIndex == 4) {
+                    if (ascending) {
+                      controller.produklist.sort(
+                          (a, b) => b.idJenisStock.compareTo(a.idJenisStock));
+                    } else {
+                      controller.produklist.sort(
+                          (a, b) => a.idJenisStock.compareTo(b.idJenisStock));
+                    }
+                  } else if (columnIndex == 5) {
+                    if (ascending) {
+                      controller.produklist
+                          .sort((a, b) => b.harga.compareTo(a.harga));
+                    } else {
+                      controller.produklist
+                          .sort((a, b) => a.harga.compareTo(b.harga));
+                    }
+                  } else if (columnIndex == 6) {
+                    if (ascending) {
+                      controller.produklist.sort(
+                          (a, b) => b.diskonBarang.compareTo(a.diskonBarang));
+                    } else {
+                      controller.produklist.sort(
+                          (a, b) => a.diskonBarang.compareTo(b.diskonBarang));
+                    }
+                  }
+                }
+
                 return Container(
                   //height: context.height_query * 0.46,
                   margin: EdgeInsets.only(top: 15),
@@ -131,6 +173,8 @@ class produk_table extends GetView<produkController> {
                   child: controller.succ == false
                       ? Container(width: 100, height: 100, child: showloading())
                       : DataTable2(
+                          sortAscending: controller.sort.value,
+                          sortColumnIndex: controller.ColIndex.value,
                           fixedTopRows: 1,
                           horizontalMargin: 10,
                           columnSpacing: 5,
@@ -143,31 +187,59 @@ class produk_table extends GetView<produkController> {
                               style: font().header_black,
                             ),
                           ),
-                          columns: const <DataColumn>[
+                          columns: <DataColumn>[
                             DataColumn(
+                              label: Text('Barcode'),
+                            ),
+                            DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text('Nama Produk'),
                             ),
                             DataColumn(
-                              label: Text(
-                                'Jenis Produk',
-                              ),
-                            ),
+                                label: Text(
+                                  'Jenis Produk',
+                                ),
+                                onSort: (int columnIndex, bool ascending) {
+                                  controller.sort.value =
+                                      !controller.sort.value;
+                                  controller.ColIndex.value = columnIndex;
+                                  onSortColum(columnIndex, ascending);
+                                }),
                             DataColumn(
                               label: Text(
                                 'Deskripsi',
                               ),
                             ),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Stock',
                               ),
                             ),
                             DataColumn(
-                              label: Text(
-                                'Harga',
-                              ),
-                            ),
+                                onSort: (int columnIndex, bool ascending) {
+                                  controller.sort.value =
+                                      !controller.sort.value;
+                                  controller.ColIndex.value = columnIndex;
+                                  onSortColum(columnIndex, ascending);
+                                },
+                                label: Text(
+                                  'Harga',
+                                )),
                             DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                               label: Text(
                                 'Harga Diskon',
                               ),
@@ -199,6 +271,9 @@ class produk_table extends GetView<produkController> {
                                   100;
                               String display_diskon = persen.toStringAsFixed(0);
                               return DataRow(cells: [
+                                DataCell(Text(
+                                    controller.produklist[index].barcode ??
+                                        '-')),
                                 DataCell(Text(
                                     controller.produklist[index].namaProduk)),
                                 DataCell(Text(
@@ -263,7 +338,7 @@ class produk_table extends GetView<produkController> {
                                               display_diskon + '%',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
+                                                  color: Colors.white),
                                             ),
                                             decoration: BoxDecoration(
                                                 color:

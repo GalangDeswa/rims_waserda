@@ -7,13 +7,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rims_waserda/Modules/produk/jenis%20produk/view_tambah_jenis.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
 import '../data produk/controller_data_produk.dart';
 import '../jenis produk/model_jenisproduk.dart';
+import '../jenis produk/view_tambah_jenis.dart';
 
 class tambah_produk_form extends GetView<produkController> {
   const tambah_produk_form({Key? key}) : super(key: key);
@@ -44,90 +44,20 @@ class tambah_produk_form extends GetView<produkController> {
               SizedBox(
                 height: 25,
               ),
-              SingleChildScrollView(
-                child: Obx(() {
-                  return Form(
-                      key: controller.formKeyproduk.value,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              Obx(() {
+                return Form(
+                    key: controller.formKeyproduk.value,
+                    child: IntrinsicHeight(
+                      child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: Text('Foto produk (optional)'),
-                              ),
-                              controller.pikedImagePath.value == ''
-                                  ? Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: color_template().primary,
-                                      ),
-                                      child: Icon(
-                                        FontAwesomeIcons.image,
-                                        color: Colors.white,
-                                        size: 50,
-                                      ),
-                                    )
-                                  : Container(
-                                      width: 200,
-                                      height: 100,
-                                      child: Image.file(
-                                        File(controller.pickedImageFile!.path),
-                                        width: double.infinity,
-                                        height: 100,
-                                      ),
-                                    ),
-                              Container(
-                                margin: EdgeInsets.only(left: 10, right: 5),
-                                padding: EdgeInsets.all(3),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: color_template().primary,
-                                ),
-                                child: IconButton(
-                                  splashColor: Colors.orange,
-                                  focusColor: Colors.orange,
-                                  onPressed: () async {
-                                    DeviceInfoPlugin deviceInfo =
-                                        DeviceInfoPlugin();
-                                    AndroidDeviceInfo androidInfo =
-                                        await deviceInfo.androidInfo;
-                                    if (androidInfo.version.sdkInt >= 33) {
-                                      var status =
-                                          await Permission.camera.status;
-                                      if (!status.isGranted) {
-                                        await Permission.camera.request();
-                                      }
-                                    } else {
-                                      var status =
-                                          await Permission.camera.status;
-                                      if (!status.isGranted) {
-                                        await Permission.camera.request();
-                                      }
-                                    }
-
-                                    controller.pilihsourcefoto();
-                                  },
-                                  icon: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Container(
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 10),
                                   // width: context.width_query / 2.2,
+                                  // height: 100,
                                   child: TextFormField(
                                     controller: controller.nama_produk.value,
                                     onChanged: ((String pass) {}),
@@ -153,12 +83,8 @@ class tambah_produk_form extends GetView<produkController> {
                                     },
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Expanded(
-                                child: Container(
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 10),
                                   //  width: context.width_query / 3.3,
                                   child: TextFormField(
                                     controller: controller.desc.value,
@@ -185,184 +111,463 @@ class tambah_produk_form extends GetView<produkController> {
                                     },
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  // width: context.width_query / 3.3,
-                                  //margin: EdgeInsets.only(left: 10),
-                                  child: GetBuilder<produkController>(
-                                      builder: (logic) {
-                                    return DropdownButtonFormField2(
-                                      decoration: InputDecoration(
-                                        icon: Icon(FontAwesomeIcons.boxOpen),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      child: CheckboxListTile(
+                                        subtitle: Text("opsional"),
+                                        title: Text("Foto produk?"),
+                                        checkColor: Colors.white,
+                                        //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                        value: controller.checkfoto.value,
+                                        onChanged: (bool? value) {
+                                          controller.checkfoto.value = value!;
+                                          print(controller.checkfoto.value);
+                                          // controller.check == true;
+                                        },
                                       ),
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Pilih jenis produk';
-                                        }
-                                        return null;
-                                      },
-                                      isExpanded: true,
-                                      dropdownStyleData: DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.white)),
-                                      hint: Text('Pilih jenis produk'),
-                                      value: logic.jenisstokval,
-                                      items: logic.jenisstok.value.map((item) {
-                                        return DropdownMenuItem(
-                                          child: Text(item['nama'].toString()),
-                                          value: item['id'].toString(),
-                                        );
-                                      }).toList(),
-                                      onChanged: (val) {
-                                        logic.jenisstokval = val.toString();
-                                        logic.jj.value = val.toString();
-                                        print(logic.jj.value);
-                                        print(logic.jenisstokval);
-                                        logic.update();
-                                      },
-                                    );
-                                  }),
+                                    ),
+                                    controller.checkfoto.value == false
+                                        ? Container()
+                                        : controller.pikedImagePath.value == ''
+                                            ? Expanded(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      padding:
+                                                          EdgeInsets.all(10),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: color_template()
+                                                            .primary,
+                                                      ),
+                                                      child: Icon(
+                                                        FontAwesomeIcons.image,
+                                                        color: Colors.white,
+                                                        size: 50,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10, right: 5),
+                                                      padding:
+                                                          EdgeInsets.all(3),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: color_template()
+                                                            .primary,
+                                                      ),
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Colors.orange,
+                                                        focusColor:
+                                                            Colors.orange,
+                                                        onPressed: () async {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt >=
+                                                              33) {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          } else {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          }
+
+                                                          controller
+                                                              .pilihsourcefoto();
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Expanded(
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      child: Image.file(
+                                                        File(controller
+                                                            .pickedImageFile!
+                                                            .path),
+                                                        width: 100,
+                                                        height: 100,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin: EdgeInsets.only(
+                                                          left: 10, right: 5),
+                                                      padding:
+                                                          EdgeInsets.all(3),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: color_template()
+                                                            .primary,
+                                                      ),
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Colors.orange,
+                                                        focusColor:
+                                                            Colors.orange,
+                                                        onPressed: () async {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt >=
+                                                              33) {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          } else {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          }
+
+                                                          controller
+                                                              .pilihsourcefoto();
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                  ],
                                 ),
-                              ),
-                              controller.jj.value == '2' ||
-                                      controller.jj.value == ''
-                                  ? Container()
-                                  : Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: TextFormField(
-                                          keyboardType: TextInputType.number,
-                                          controller: controller.qty.value,
+                              ],
+                            ),
+                          ),
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: VerticalDivider(
+                                color: color_template().primary,
+                                thickness: 1,
+                              )),
+                          Expanded(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      //width: context.width_query / 3.3,
+
+                                      child: GetBuilder<produkController>(
+                                          builder: (logic) {
+                                        return DropdownButtonFormField2(
                                           decoration: InputDecoration(
-                                            icon: Icon(
-                                                FontAwesomeIcons.boxesStacked),
-                                            labelText: "Jumlah stock",
-                                            labelStyle: TextStyle(
-                                              color: Colors.black87,
-                                            ),
+                                            icon:
+                                                Icon(FontAwesomeIcons.boxOpen),
                                             border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
                                           ),
-                                          textAlign: TextAlign.center,
                                           validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return 'Masukan stock barang';
-                                            } else if (value.isNumericOnly ==
-                                                false) {
-                                              return 'Stock harus berupa angka';
+                                            if (value == null) {
+                                              return 'Pilih kategori produk';
                                             }
                                             return null;
                                           },
-                                        ),
-                                      ),
-                                    ),
-                              Expanded(
-                                child: Container(
-                                  //width: context.width_query / 3.3,
-                                  margin: EdgeInsets.only(left: 15),
-                                  child: GetBuilder<produkController>(
-                                      builder: (logic) {
-                                    return DropdownButtonFormField2(
-                                      decoration: InputDecoration(
-                                        icon: Icon(FontAwesomeIcons.boxOpen),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Pilih kategori produk';
-                                        }
-                                        return null;
-                                      },
-                                      isExpanded: true,
-                                      dropdownStyleData: DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.white)),
-                                      hint: Text('Pilih kategori produk'),
-                                      value: logic.jenisvalue,
-                                      items: logic.jenislist.value
-                                          .map((DataJenis item) {
-                                        return DropdownMenuItem(
-                                          child:
-                                              Text(item.namaJenis.toString()),
-                                          value: item.id.toString(),
-                                        );
-                                      }).toList(),
-                                      onChanged: (val) {
-                                        logic.jenisvalue = val!.toString();
-                                        print(logic.jenisvalue);
+                                          isExpanded: true,
+                                          dropdownStyleData: DropdownStyleData(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.white)),
+                                          hint: Text('Pilih kategori produk'),
+                                          value: logic.jenisvalue,
+                                          items: logic.jenislist.value
+                                              .map((DataJenis item) {
+                                            return DropdownMenuItem(
+                                              child: Text(
+                                                  item.namaJenis.toString()),
+                                              value: item.id.toString(),
+                                            );
+                                          }).toList(),
+                                          onChanged: (val) {
+                                            logic.jenisvalue = val!.toString();
+                                            print(logic.jenisvalue);
 
-                                        logic.update();
-                                      },
-                                    );
-                                  }),
-                                ),
+                                            logic.update();
+                                          },
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 30, right: 5),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: color_template().primary,
+                                    ),
+                                    padding: EdgeInsets.all(3),
+                                    child: IconButton(
+                                        color: Colors.white,
+                                        onPressed: () {
+                                          Get.dialog(AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              20.0))),
+                                              contentPadding: EdgeInsets.zero,
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              content: Builder(
+                                                builder: (context) {
+                                                  return Container(
+                                                      padding: EdgeInsets.zero,
+                                                      width:
+                                                          context.width_query /
+                                                              2,
+                                                      height:
+                                                          context.height_query /
+                                                              2,
+                                                      child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30),
+                                                          child:
+                                                              tambah_jenis()));
+                                                },
+                                              )));
+                                        },
+                                        icon: Icon(Icons.add)),
+                                  )
+                                ],
                               ),
-                              Container(
-                                margin: EdgeInsets.only(left: 30, right: 5),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: color_template().primary,
-                                ),
-                                padding: EdgeInsets.all(3),
-                                child: IconButton(
-                                    color: Colors.white,
-                                    onPressed: () {
-                                      Get.dialog(AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(20.0))),
-                                          contentPadding: EdgeInsets.zero,
-                                          backgroundColor: Colors.transparent,
-                                          content: Builder(
-                                            builder: (context) {
-                                              return Container(
-                                                  padding: EdgeInsets.zero,
-                                                  width:
-                                                      context.width_query / 2,
-                                                  height:
-                                                      context.height_query / 2,
-                                                  child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      child: tambah_jenis()));
-                                            },
-                                          )));
-                                    },
-                                    icon: Icon(Icons.add)),
-                              )
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      // width: context.width_query / 3.3,
+                                      //margin: EdgeInsets.only(left: 10),
+                                      child: GetBuilder<produkController>(
+                                          builder: (logic) {
+                                        return DropdownButtonFormField2(
+                                          decoration: InputDecoration(
+                                            icon:
+                                                Icon(FontAwesomeIcons.boxOpen),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                          ),
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return 'Pilih jenis produk';
+                                            }
+                                            return null;
+                                          },
+                                          isExpanded: true,
+                                          dropdownStyleData: DropdownStyleData(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.white)),
+                                          hint: Text('Pilih jenis produk'),
+                                          value: logic.jenisstokval,
+                                          items:
+                                              logic.jenisstok.value.map((item) {
+                                            return DropdownMenuItem(
+                                              child:
+                                                  Text(item['nama'].toString()),
+                                              value: item['id'].toString(),
+                                            );
+                                          }).toList(),
+                                          onChanged: (val) {
+                                            logic.jenisstokval = val.toString();
+                                            logic.jj.value = val.toString();
+                                            print(logic.jj.value);
+                                            print(logic.jenisstokval);
+                                            logic.update();
+                                          },
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                  controller.jj.value == '2' ||
+                                          controller.jj.value == ''
+                                      ? Container()
+                                      : Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.only(
+                                                left: 10, bottom: 10),
+                                            child: TextFormField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              controller: controller.qty.value,
+                                              decoration: InputDecoration(
+                                                labelText: "Jumlah stock",
+                                                labelStyle: TextStyle(
+                                                  color: Colors.black87,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Masukan stock barang';
+                                                } else if (value
+                                                        .isNumericOnly ==
+                                                    false) {
+                                                  return 'Stock harus berupa angka';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                ],
+                              ),
+                              Expanded(
+                                  child: Row(
+                                children: [
+                                  Container(
+                                    width: 200,
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    child: CheckboxListTile(
+                                      subtitle: Text("opsional"),
+                                      title: Text("Barcode?"),
+                                      checkColor: Colors.white,
+                                      //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                      value: controller.checkbarcode.value,
+                                      onChanged: (bool? value) {
+                                        controller.checkbarcode.value = value!;
+                                        print(controller.checkbarcode.value);
+                                        // controller.check == true;
+                                      },
+                                    ),
+                                  ),
+                                  controller.checkbarcode == false
+                                      ? Container()
+                                      : Expanded(
+                                          child: Container(
+                                            //margin: EdgeInsets.only(bottom: 10),
+                                            // width: context.width_query / 2.2,
+                                            // height: 100,
+                                            child: TextFormField(
+                                              controller:
+                                                  controller.barcode.value,
+                                              onChanged: ((String pass) {}),
+                                              decoration: InputDecoration(
+                                                icon: Icon(
+                                                    FontAwesomeIcons.barcode),
+                                                labelText: "Barcode",
+                                                labelStyle: TextStyle(
+                                                  color: Colors.black87,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Masukan barcode';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                ],
+                              ))
                             ],
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          )),
+                          Container(
+                              margin: EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: VerticalDivider(
+                                color: color_template().primary,
+                                thickness: 1,
+                              )),
+                          Expanded(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Expanded(
                                 child: TextFormField(
@@ -396,67 +601,79 @@ class tambah_produk_form extends GetView<produkController> {
                                   },
                                 ),
                               ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              Container(
-                                width: 200,
-                                child: CheckboxListTile(
-                                  title: Text("Diskon produk?"),
-                                  checkColor: Colors.white,
-                                  //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                  value: controller.check.value,
-                                  onChanged: (bool? value) {
-                                    controller.check.value = value!;
-                                    print(controller.check.value);
-                                    // controller.check == true;
-                                  },
-                                ),
-                              ),
-                              controller.check == false
-                                  ? Container()
-                                  : Expanded(
-                                      child: TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        controller:
-                                            controller.diskon_barang.value,
-                                        inputFormatters: [ThousandsFormatter()],
-                                        onChanged: ((String num) {
-                                          controller.jumlahdiskon.value =
-                                              double.parse(num.toString()
-                                                  .replaceAll(',', ''));
-                                          print(controller.jumlahdiskon);
-                                        }),
-                                        decoration: InputDecoration(
-                                          icon: Icon(FontAwesomeIcons.percent),
-                                          labelText: "Harga setelah diskon",
-                                          labelStyle: TextStyle(
-                                            color: Colors.black87,
-                                          ),
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Masukan potongan diskon';
-                                          }
-                                          return null;
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      child: CheckboxListTile(
+                                        title: Text("Diskon produk?"),
+                                        subtitle: Text('opsional'),
+                                        checkColor: Colors.white,
+                                        //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                        value: controller.check.value,
+                                        onChanged: (bool? value) {
+                                          controller.check.value = value!;
+                                          print(controller.check.value);
+                                          // controller.check == true;
                                         },
                                       ),
                                     ),
+                                    controller.check == false
+                                        ? Container()
+                                        : Expanded(
+                                            child: TextFormField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              controller: controller
+                                                  .diskon_barang.value,
+                                              inputFormatters: [
+                                                ThousandsFormatter()
+                                              ],
+                                              onChanged: ((String num) {
+                                                controller.jumlahdiskon.value =
+                                                    double.parse(num.toString()
+                                                        .replaceAll(',', ''));
+                                                print(controller.jumlahdiskon);
+                                              }),
+                                              decoration: InputDecoration(
+                                                icon: Icon(
+                                                    FontAwesomeIcons.percent),
+                                                labelText:
+                                                    "Harga setelah diskon",
+                                                labelStyle: TextStyle(
+                                                  color: Colors.black87,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'Masukan potongan diskon';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                              ),
                             ],
-                          ),
-                          SizedBox(
-                            height: 25,
-                          ),
+                          )),
                         ],
-                      ));
-                }),
+                      ),
+                    ));
+              }),
+              SizedBox(
+                height: 25,
               ),
               button_solid_custom(
                   onPressed: () {

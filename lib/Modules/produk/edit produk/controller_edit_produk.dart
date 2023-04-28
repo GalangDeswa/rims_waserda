@@ -19,10 +19,11 @@ import '../jenis produk/model_jenisproduk.dart';
 
 class editprodukController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchjenis();
+    await fetchjenis();
+
     nama_produk.value = TextEditingController(text: data.namaProduk);
     desc.value = TextEditingController(text: data.deskripsi);
     harga.value = TextEditingController(text: data.harga);
@@ -30,14 +31,53 @@ class editprodukController extends GetxController {
     diskon_barang.value =
         TextEditingController(text: data.diskonBarang.toString());
 
-    pikedImagePath.value = data.image.toString();
+    //pikedImagePath.value = data.image.toString();
     //pickedImageFile = File(data.image);
+
+    barcode.value =
+        TextEditingController(text: data?.barcode.toString() ?? '-');
+
+    data.diskonBarang == 0 ? check.value = false : check.value = true;
+    data.barcode == null || data.barcode == '-'
+        ? checkbarcode.value = false
+        : checkbarcode.value = true;
+
+    data.image == '' ? checkfoto.value = false : checkfoto.value = true;
 
     jenisvalue.value = data.idJenis.toString();
     jenisstokval.value = data.idJenisStock.toString();
+
+    jumlahharga.value = int.parse(data.harga);
+    jumlahdiskon.value = data.diskonBarang.toDouble();
+    print('jumlah harga-----------------------------------');
+    print(jumlahharga.value.toString());
     print('id jenis stock-----------------------------------');
     print(jenisstokval);
     jj.value = data.idJenisStock.toString();
+    cekfoto();
+  }
+
+  var check = false.obs;
+  var checkfoto = false.obs;
+  var checkbarcode = false.obs;
+
+  var barcode = TextEditingController().obs;
+
+  cekfoto() {
+    print('---------------------------------------------------- chek foto-->');
+    print(data.image);
+    if (data.image == '') {
+      print('------------------------ data.image kosong-------------------');
+    }
+    if (data.image != '') {
+      print('------------------------ data. image ada---------------------');
+    }
+    if (pikedImagePath.value == '') {
+      print('------------------------------piked path kosong-------------');
+    }
+    if (pikedImagePath.value != '') {
+      print('--------------------------------piked path ada--------------');
+    }
   }
 
   pilihsourcefoto() {
@@ -161,6 +201,7 @@ class editprodukController extends GetxController {
           diskon_barang: jumlahdiskon.value.toString(),
           harga: jumlahharga.value.toString(),
           namaproduk: nama_produk.value.text,
+          barcode: barcode.value.text.toString(),
           image: pickedImageFile);
       if (produk != null) {
         print(produk);

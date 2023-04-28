@@ -317,6 +317,7 @@ class REST extends GetConnect {
       qty,
       harga,
       diskon_barang,
+      barcode,
       File? image}) async {
     var response = http.MultipartRequest("POST", link().POST_produktambah);
 
@@ -340,6 +341,7 @@ class REST extends GetConnect {
     response.fields['qty'] = qty;
     response.fields['harga'] = harga;
     response.fields['diskon_barang'] = diskon_barang;
+    response.fields['barcode'] = barcode;
 
     print('next diskon000000000000');
     //response.fields['diskon_barang'] = diskon_barang;
@@ -369,6 +371,7 @@ class REST extends GetConnect {
       desc,
       harga,
       diskon_barang,
+      barcode,
       File? image}) async {
     var response = http.MultipartRequest("POST", link().POST_produkedit);
 
@@ -389,6 +392,7 @@ class REST extends GetConnect {
     response.fields['id'] = id.toString();
     response.fields['harga'] = harga;
     response.fields['diskon_barang'] = diskon_barang;
+    response.fields['barcode'] = barcode;
 
     final streamedResponse = await response.send();
     final datarespon = await http.Response.fromStream(streamedResponse);
@@ -987,12 +991,14 @@ class REST extends GetConnect {
     }
   }
 
-  static Future<dynamic> penjualanData(String token, iduser, idtoko) async {
+  static Future<dynamic> penjualanData(
+      String token, iduser, idtoko, search) async {
     var response = await http.post(link().POST_penjualadata,
         body: ({
           'token': token,
           'id_user': iduser.toString(),
           'id_toko': idtoko,
+          'search': search,
         }));
     if (response.statusCode == 200) {
       print(

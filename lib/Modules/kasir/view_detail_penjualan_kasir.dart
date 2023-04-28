@@ -59,6 +59,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                           children: [
                             Text('Total item :', style: font().reguler),
                             Text(
+                                //controller.testlist.length.toString()
                                 controller.cache
                                     .map((e) => e.qty)
                                     .fold(

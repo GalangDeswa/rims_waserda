@@ -162,7 +162,42 @@ class beban_table extends GetView<bebanController> {
             ),
             Expanded(
               child: Obx(() {
-                var source = bebanTable(controller.databebanlist.value).obs;
+                onSortColum(int columnIndex, bool ascending) {
+                  if (columnIndex == 0) {
+                    if (ascending) {
+                      controller.databebanlist
+                          .sort((a, b) => a.tgl.compareTo(b.tgl));
+                    } else {
+                      controller.databebanlist
+                          .sort((a, b) => b.tgl.compareTo(a.tgl));
+                    }
+                  } else if (columnIndex == 1) {
+                    if (ascending) {
+                      controller.databebanlist
+                          .sort((a, b) => a.nama.compareTo(b.nama));
+                    } else {
+                      controller.databebanlist
+                          .sort((a, b) => b.nama.compareTo(a.nama));
+                    }
+                  } else if (columnIndex == 2) {
+                    if (ascending) {
+                      controller.databebanlist
+                          .sort((a, b) => b.jumlah.compareTo(a.jumlah));
+                    } else {
+                      controller.databebanlist
+                          .sort((a, b) => a.jumlah.compareTo(b.jumlah));
+                    }
+                  } else if (columnIndex == 3) {
+                    if (ascending) {
+                      controller.databebanlist.sort(
+                          (a, b) => b.namaKtrBeban.compareTo(a.namaKtrBeban));
+                    } else {
+                      controller.databebanlist.sort(
+                          (a, b) => a.namaKtrBeban.compareTo(b.namaKtrBeban));
+                    }
+                  }
+                }
+
                 return Container(
                   // height: context.height_query / 2.5,
                   margin: EdgeInsets.only(top: 12),
@@ -174,6 +209,8 @@ class beban_table extends GetView<bebanController> {
                       //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
 
                       DataTable2(
+                          sortAscending: controller.sort.value,
+                          sortColumnIndex: controller.ColIndex.value,
                           fixedTopRows: 1,
                           horizontalMargin: 10,
                           columnSpacing: 5,
@@ -185,21 +222,41 @@ class beban_table extends GetView<bebanController> {
                               label: Text(
                                 'Tanggal',
                               ),
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                             ),
                             DataColumn(
                               label: Text(
                                 'Nama Beban',
                               ),
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                             ),
                             DataColumn(
                               label: Text(
                                 'jumlah',
                               ),
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                             ),
                             DataColumn(
                               label: Text(
                                 'Kategori',
                               ),
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
                             ),
                             DataColumn(
                               label: Text(

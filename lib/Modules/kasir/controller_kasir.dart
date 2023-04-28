@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
@@ -33,6 +34,7 @@ class kasirController extends GetxController {
     await fetchjenis();
     jeniscache.value = await GetStorage().read('jenis');
     fetchpelanggan();
+    await MobileScannerController().stop();
 
     // fetchkeranjangcache();
 
@@ -41,7 +43,7 @@ class kasirController extends GetxController {
 
     // fetchkeranjang();
     nextscroll();
-    layout.value = false;
+    layout.value = await GetStorage().read('layout');
   }
 
   var layout = false.obs;
@@ -147,6 +149,50 @@ class kasirController extends GetxController {
         forwardAnimationCurve: Curves.elasticInOut,
         reverseAnimationCurve: Curves.easeOut,
       );
+    }
+    return [];
+  }
+
+  Future<List<DataProduk>> fetchprodukv2() async {
+    print('-------------------userdata---------------------');
+
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var produk = await REST.produkAll(token, id_toko, search.value.text);
+      if (produk != null) {
+        print('-------------------dataproduk---------------');
+        return ModelProduk.fromJson(produk).data;
+
+        // produklist.value = dataProduk.data;
+        // totalpage.value = dataProduk.meta.pagination.totalPages;
+        // totaldata.value = dataProduk.meta.pagination.total;
+        // perpage.value = dataProduk.meta.pagination.perPage;
+        // currentpage.value = produk['meta']['pagination']['current_page'];
+        // count.value = dataProduk.meta.pagination.count;
+        // if (totalpage > 1) {
+        //   nextdata = produk['meta']['pagination']['links']['next'] ?? '';
+        // }
+        // print(
+        //     '--------------------list produk cache----------------------------');
+        // await GetStorage().write('produk', produklist.value);
+        //
+        // // print(produklist);
+        //
+        // //Get.back(closeOverlays: true);
+        //
+        // return produklist;
+      } else {
+        // Get.back(closeOverlays: true);
+
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Terjadi kesalahan'));
+        return [];
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+      return [];
     }
     return [];
   }
@@ -282,7 +328,7 @@ class kasirController extends GetxController {
 
         //Get.back(closeOverlays: true);
 
-        return produklist;
+        return produklist.value;
       } else {
         // Get.back(closeOverlays: true);
         Get.showSnackbar(
@@ -721,6 +767,27 @@ class kasirController extends GetxController {
       barcodetext.value.text = scaned_qr_code;
     } on PlatformException {}
   }
+
+  // Barcode? result;
+  // QRViewController? controllerscan;
+  // final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  var testlist = [].obs;
+
+  // void onQRViewCreated(QRViewController controller) {
+  //   controllerscan = controller;
+  //   controller.scannedDataStream.listen((scanData) {
+  //     result = scanData;
+  //     print(result);
+  //     testlist.add(result!.code);
+  //     Get.showSnackbar(
+  //         toast().bottom_snackbar_success('scan', result!.code.toString()));
+  //
+  //     // setState(() {
+  //     //   result = scanData;
+  //     // });
+  //   });
+  // }
 
   Future<void> scankasir() async {
     try {

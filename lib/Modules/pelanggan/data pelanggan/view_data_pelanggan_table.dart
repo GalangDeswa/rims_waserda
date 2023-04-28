@@ -95,7 +95,7 @@ class pelanggan_table extends GetView<pelangganController> {
                         }),
                         decoration: InputDecoration(
                           icon: Icon(Icons.add_box),
-                          labelText: "cari beban",
+                          labelText: "Cari pelanggan",
                           labelStyle: TextStyle(
                             color: Colors.black87,
                           ),
@@ -298,8 +298,30 @@ class pelanggan_table extends GetView<pelangganController> {
                                                                               Center(child: Text(controller.list_pelanggan[index].riwayatPembelian[i].bayar))),
                                                                           DataCell(
                                                                               Center(child: Text(controller.list_pelanggan[index].riwayatPembelian[i].tglPenjualan.toString()))),
-                                                                          DataCell(
-                                                                              Center(child: Text(controller.list_pelanggan[index].riwayatPembelian[i].status.toString())))
+                                                                          DataCell(Center(
+                                                                              child: controller.list_pelanggan[index].riwayatPembelian[i].status == 1
+                                                                                  ? Container(
+                                                                                      padding: EdgeInsets.all(6),
+                                                                                      decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10)),
+                                                                                      child: Text(
+                                                                                        'Lunas',
+                                                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                      ))
+                                                                                  : controller.list_pelanggan[index].riwayatPembelian[i].status == 2
+                                                                                      ? Container(
+                                                                                          padding: EdgeInsets.all(6),
+                                                                                          decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10)),
+                                                                                          child: Text(
+                                                                                            'Lunas',
+                                                                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                          ))
+                                                                                      : Container(
+                                                                                          padding: EdgeInsets.all(6),
+                                                                                          decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(10)),
+                                                                                          child: Text(
+                                                                                            'Hutang',
+                                                                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                          ))))
                                                                         ]))),
                                                       )
                                                     ],
