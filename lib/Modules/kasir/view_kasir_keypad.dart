@@ -8,6 +8,7 @@ import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelan
 import 'package:rims_waserda/Templates/setting.dart';
 
 import '../Widgets/buttons.dart';
+import '../Widgets/card_custom.dart';
 import '../Widgets/header.dart';
 import '../Widgets/keypad.dart';
 
@@ -16,13 +17,8 @@ class kasir_keypad extends GetView<kasirController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: elevation().def_elevation,
-      //margin: EdgeInsets.all(30),
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Center(

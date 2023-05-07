@@ -90,6 +90,12 @@ dependencies:
 
   audioplayers: ^4.0.1
 
+  sqflite: ^2.2.8
+
+
+
+
+
 
 
 

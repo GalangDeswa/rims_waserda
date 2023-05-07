@@ -126,6 +126,7 @@ class DetailItem {
     required this.idKategori,
     required this.namaBrg,
     required this.hargaBrg,
+    required this.hargaModal,
     required this.qty,
     required this.diskonBrg,
     required this.total,
@@ -136,6 +137,7 @@ class DetailItem {
   int idKategori;
   String namaBrg;
   String hargaBrg;
+  String hargaModal;
   String qty;
   String diskonBrg;
   String total;
@@ -146,6 +148,7 @@ class DetailItem {
         idKategori: json["id_kategori"],
         namaBrg: json["nama_brg"],
         hargaBrg: json["harga_brg"],
+        hargaModal: json["harga_modal"] ?? '0',
         qty: json["qty"],
         diskonBrg: json["diskon_brg"],
         total: json["total"],
@@ -157,6 +160,7 @@ class DetailItem {
         "id_kategori": idKategori,
         "nama_brg": namaBrg,
         "harga_brg": hargaBrg,
+        "harga_modal": hargaModal,
         "qty": qty,
         "diskon_brg": diskonBrg,
         "total": total,

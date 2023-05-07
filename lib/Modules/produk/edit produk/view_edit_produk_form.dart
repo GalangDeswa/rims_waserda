@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/produk/edit%20produk/controller_edit_produk.dart';
 
 import '../../../Templates/setting.dart';
@@ -20,14 +21,8 @@ class edit_produk_form extends GetView<editprodukController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: elevation().def_elevation,
-      //margin: EdgeInsets.all(30),
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
-
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Container(
@@ -608,6 +603,38 @@ class edit_produk_form extends GetView<editprodukController> {
                               child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
+                              Expanded(
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  controller: controller.hargamodal.value,
+                                  inputFormatters: [ThousandsFormatter()],
+                                  onChanged: ((String num) {
+                                    controller.jumlahhargamodal.value =
+                                        int.parse(
+                                            num.toString().replaceAll(',', ''));
+                                    print(controller.jumlahhargamodal.value);
+                                  }),
+                                  decoration: InputDecoration(
+                                    labelText: "Harga modal",
+                                    labelStyle: TextStyle(
+                                      color: Colors.black87,
+                                    ),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Masukan harga modal';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
                               Expanded(
                                 child: TextFormField(
                                   keyboardType: TextInputType.number,

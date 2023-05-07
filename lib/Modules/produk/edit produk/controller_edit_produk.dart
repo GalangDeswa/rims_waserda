@@ -49,6 +49,10 @@ class editprodukController extends GetxController {
 
     jumlahharga.value = int.parse(data.harga);
     jumlahdiskon.value = data.diskonBarang.toDouble();
+
+    hargamodal.value = TextEditingController(text: data.hargaModal);
+    jumlahhargamodal.value = int.parse(data.hargaModal);
+
     print('jumlah harga-----------------------------------');
     print(jumlahharga.value.toString());
     print('id jenis stock-----------------------------------');
@@ -184,6 +188,9 @@ class editprodukController extends GetxController {
     }
   ].obs;
 
+  var jumlahhargamodal = 0.obs;
+  var hargamodal = TextEditingController().obs;
+
   ProdukEdit() async {
     print('-------------------edit Produk---------------------');
 
@@ -200,6 +207,7 @@ class editprodukController extends GetxController {
           desc: desc.value.text,
           diskon_barang: jumlahdiskon.value.toString(),
           harga: jumlahharga.value.toString(),
+          harga_modal: jumlahhargamodal.value.toString(),
           namaproduk: nama_produk.value.text,
           barcode: barcode.value.text.toString(),
           image: pickedImageFile);

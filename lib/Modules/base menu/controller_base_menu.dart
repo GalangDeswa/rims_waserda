@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_base.dart';
+import 'package:rims_waserda/Modules/dashboard/view_dashboard_base_v2.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/user/data%20user/view_data_user_base.dart';
 
 import '../../Services/handler.dart';
 import '../Widgets/toast.dart';
-import '../dashboard/view_dashboard_base.dart';
 import '../history/view_history_base.dart';
 import '../kasir/controller_kasir.dart';
 import '../kasir/view_kasir_basev2.dart';
@@ -30,7 +30,7 @@ class base_menuController extends GetxController {
   var token = ''.obs;
 
   List<Widget> views = const [
-    dashboard(),
+    dashboard_v2(),
     kasirv2(),
     produk(),
     beban(),

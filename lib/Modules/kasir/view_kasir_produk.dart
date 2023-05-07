@@ -3,6 +3,7 @@ import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
 import '../../Templates/setting.dart';
@@ -20,14 +21,8 @@ class kasir_produk extends GetView<kasirController> {
         Row(
           children: [
             Expanded(
-              child: Card(
-                //color: Colors.red,
-                elevation: elevation().def_elevation,
-                shape: RoundedRectangleBorder(
-                  borderRadius: border_radius().def_border,
-                  side: BorderSide(color: color_template().primary, width: 3.5),
-                ),
-                // margin: EdgeInsets.only(left: 5, top: 10, bottom: 10, right: 10),
+              child: Card_custom(
+                border: false,
                 child: Padding(
                   padding: const EdgeInsets.all(3),
                   child: Row(
@@ -78,13 +73,10 @@ class kasir_produk extends GetView<kasirController> {
             ),
             Container(
               width: context.width_query / 10,
-              child: Card(
+              child: Card_custom(
+                border: false,
                 //color: Colors.red,
-                elevation: elevation().def_elevation,
-                shape: RoundedRectangleBorder(
-                  borderRadius: border_radius().def_border,
-                  side: BorderSide(color: color_template().primary, width: 3.5),
-                ),
+
                 // margin: EdgeInsets.only(left: 5, top: 10, bottom: 10, right: 10),
                 child: Padding(
                   padding: const EdgeInsets.all(3),
@@ -181,12 +173,9 @@ class kasir_produk extends GetView<kasirController> {
           ),
         ),
         Expanded(
-          child: Card(
-              elevation: elevation().def_elevation,
-              shape: RoundedRectangleBorder(
-                borderRadius: border_radius().def_border,
-                side: BorderSide(color: color_template().primary, width: 3.5),
-              ),
+          child: Card_custom(
+              border: false,
+
               // color: Colors.red,
               child: Obx(
                 () {
@@ -228,8 +217,8 @@ class ProductTilev2 extends GetView<kasirController> {
           controller: controller.scroll.value,
           scrollDirection: Axis.vertical,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              mainAxisExtent: context.height_query / 3.5,
-              maxCrossAxisExtent: context.width_query / 5.7,
+              mainAxisExtent: context.height_query / 3.2,
+              maxCrossAxisExtent: context.width_query / 5.3,
               childAspectRatio: 1 / 1,
               crossAxisSpacing: 1,
               mainAxisSpacing: 2),
@@ -250,14 +239,8 @@ class ProductTilev2 extends GetView<kasirController> {
                 controller
                     .tambahKeranjangcache(controller.produkcache[index].id);
               },
-              child: Card(
-                //  color: Colors.red,
-                margin: EdgeInsets.all(5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: border_radius().def_border,
-                  side: BorderSide(color: color_template().primary, width: 2),
-                ),
-                elevation: 5,
+              child: Card_custom(
+                border: false,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -306,41 +289,45 @@ class ProductTilev2 extends GetView<kasirController> {
                             ),
                           ),
                           Expanded(
-                              child:
-                                  controller.produklist[index].diskonBarang == 0
-                                      ? Text(
+                              child: controller
+                                          .produklist[index].diskonBarang ==
+                                      0
+                                  ? Text(
+                                      'Rp. ' +
+                                          controller.nominal.format(
+                                              double.parse(controller
+                                                  .produklist[index].harga)),
+                                      style: font().produkharga,
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Text(
                                           'Rp. ' +
                                               controller.nominal.format(
                                                   double.parse(controller
                                                       .produklist[index]
-                                                      .harga)),
+                                                      .diskonBarang
+                                                      .toString())),
                                           style: font().produkharga,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: Text(
+                                            'Rp. ' +
+                                                controller.nominal.format(
+                                                    double.parse(controller
+                                                        .produklist[index]
+                                                        .harga)),
+                                            style: TextStyle(
+                                                decoration:
+                                                    TextDecoration.lineThrough),
+                                          ),
                                         )
-                                      : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              'Rp. ' +
-                                                  controller.nominal.format(
-                                                      double.parse(controller
-                                                          .produklist[index]
-                                                          .diskonBarang
-                                                          .toString())),
-                                              style: font().produkharga,
-                                            ),
-                                            Text(
-                                              'Rp. ' +
-                                                  controller.nominal.format(
-                                                      double.parse(controller
-                                                          .produklist[index]
-                                                          .harga)),
-                                              style: TextStyle(
-                                                  decoration: TextDecoration
-                                                      .lineThrough),
-                                            )
-                                          ],
-                                        ))
+                                      ],
+                                    ))
                         ],
                       ),
                     ),

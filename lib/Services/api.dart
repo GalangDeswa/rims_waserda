@@ -87,4 +87,9 @@ class link {
       Uri.parse(server().host + 'iklan/loadkonten_square');
   final Uri GET_kontenbanner =
       Uri.parse(server().host + 'iklan/loadkonten_banner');
+
+  //hutang----------------------------------------------------------------------
+  final Uri POST_hutangall = Uri.parse(server().host + 'hutang/data');
+  final Uri POST_hutangbayar = Uri.parse(server().host + 'hutang/bayar');
+  final Uri POST_hutangdetail = Uri.parse(server().host + 'hutang_detail/data');
 }

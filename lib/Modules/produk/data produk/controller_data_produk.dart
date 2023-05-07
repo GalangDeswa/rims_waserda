@@ -55,6 +55,10 @@ class produkController extends GetxController {
   var jumlahharga = 0.obs;
   var jumlahdiskon = 0.0.obs;
 
+  // carikdiskon(){
+  //   jumlahharga.value * (jumlahharga.value - jumlahdiskon.value/jumlahharga)
+  // }
+
   var produklist = <DataProduk>[].obs;
   var jenislist = <DataJenis>[].obs;
 
@@ -349,6 +353,9 @@ class produkController extends GetxController {
     pikedImagePath.value = '';
   }
 
+  var jumlahhargamodal = 0.obs;
+  var hargamodal = TextEditingController().obs;
+
   ProdukTambah() async {
     print('-------------------tambah Produk---------------------');
 
@@ -365,6 +372,7 @@ class produkController extends GetxController {
           desc: desc.value.text,
           qty: qty.value.text,
           harga: jumlahharga.value.toString(),
+          harga_modal: jumlahhargamodal.value.toString(),
           diskon_barang: jumlahdiskon.value.toString(),
           barcode: barcode.value.text.toString(),
           image: pickedImageFile);

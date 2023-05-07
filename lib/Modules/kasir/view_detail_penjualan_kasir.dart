@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/view_kasir_keypad.dart';
 
 import '../../Templates/setting.dart';
@@ -12,13 +13,8 @@ class detail_penjualan_kasir extends GetView<kasirController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(left: 10),
-      elevation: elevation().def_elevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Container(
@@ -90,13 +86,19 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                         );
                       }),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Diskon :', style: font().reguler),
+                          Expanded(
+                              child: Text('Diskon :', style: font().reguler)),
                           Text(
                               controller.displayDiskon().toStringAsFixed(0) +
                                   '%',
                               style: font().reguler),
+                          IconButton(
+                              onPressed: () {
+                                controller.editDiskonKasir(controller);
+                              },
+                              icon: Icon(Icons.edit)),
                         ],
                       ),
                     ],

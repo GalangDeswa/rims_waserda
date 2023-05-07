@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 
@@ -16,13 +17,8 @@ class produk_table extends GetView<produkController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: elevation().def_elevation,
-      //margin: EdgeInsets.all(30),
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -234,16 +230,6 @@ class produk_table extends GetView<produkController> {
                                 label: Text(
                                   'Harga',
                                 )),
-                            DataColumn(
-                              onSort: (int columnIndex, bool ascending) {
-                                controller.sort.value = !controller.sort.value;
-                                controller.ColIndex.value = columnIndex;
-                                onSortColum(columnIndex, ascending);
-                              },
-                              label: Text(
-                                'Harga Diskon',
-                              ),
-                            ),
 
                             // DataColumn(
                             //   label: Expanded(
@@ -290,9 +276,7 @@ class produk_table extends GetView<produkController> {
                                                           .produklist[index]
                                                           .qty)))),
                                           Padding(
-                                            padding: EdgeInsets.only(
-                                                right:
-                                                    context.width_query / 23),
+                                            padding: EdgeInsets.only(right: 15),
                                             child: IconButton(
                                                 onPressed: () {
                                                   controller.addqty(
@@ -316,12 +300,14 @@ class produk_table extends GetView<produkController> {
                                         ],
                                       ))
                                     : DataCell(Text('Non stock')),
-                                DataCell(Text('Rp. ' +
-                                    controller.nominal.format(double.parse(
-                                        controller.produklist[index].harga)))),
-                                controller.produklist[index].diskonBarang == 0
-                                    ? DataCell(Text('-'))
-                                    : DataCell(Row(
+                                DataCell(controller
+                                            .produklist[index].diskonBarang ==
+                                        0
+                                    ? Text('Rp. ' +
+                                        controller.nominal.format(double.parse(
+                                            controller
+                                                .produklist[index].harga)))
+                                    : Row(
                                         children: [
                                           Text('Rp. ' +
                                               controller.nominal.format(

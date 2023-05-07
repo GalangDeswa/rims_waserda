@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 import '../../Services/handler.dart';
 import '../Widgets/toast.dart';
@@ -20,6 +21,8 @@ class detailpenjualanController extends GetxController {
   var id_toko = GetStorage().read('id_toko');
   var isi = <DetailItem>[].obs;
   var det = <String>[];
+
+  final nominal = NumberFormat("#,##0");
 
   penjualanDetail(String id) async {
     print('-------------------penjualan detail---------------------');

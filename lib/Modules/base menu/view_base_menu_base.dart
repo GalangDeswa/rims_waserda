@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:group_button/group_button.dart';
+import 'package:rims_waserda/Modules/Widgets/buttons.dart';
 import 'package:rims_waserda/Modules/Widgets/logout_pop.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
@@ -28,32 +29,50 @@ class base_menu extends GetView<base_menuController> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: const Text('Do you to go back?'),
+                  title: const Text('Keluar aplikasi?'),
                   actionsAlignment: MainAxisAlignment.spaceBetween,
                   actions: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: color_template().secondary),
-                          onPressed: () {
-                            Navigator.pop(context, false);
-                          },
-                          child: Center(
-                            child: Text('No'),
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: color_template().secondary),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                          child: Center(
-                            child: Text('YES'),
-                          ),
-                        ),
+                        button_border_custom(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            child: Text(
+                              "Batal",
+                              style: TextStyle(color: color_template().primary),
+                            ),
+                            height: 50,
+                            width: 100),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //       backgroundColor: color_template().secondary),
+                        //   onPressed: () {
+                        //     Navigator.pop(context, false);
+                        //   },
+                        //   child: Center(
+                        //     child: Text('No'),
+                        //   ),
+                        // ),
+
+                        button_solid_custom(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: Text('Keluar'),
+                            width: 100,
+                            height: 50),
+                        // ElevatedButton(
+                        //   style: ElevatedButton.styleFrom(
+                        //       backgroundColor: color_template().secondary),
+                        //   onPressed: () {
+                        //     Navigator.pop(context, true);
+                        //   },
+                        //   child: Center(
+                        //     child: Text('YES'),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],
@@ -72,35 +91,45 @@ class base_menu extends GetView<base_menuController> {
                 padding: EdgeInsets.only(bottom: 10),
                 children: [
                   DrawerHeader(
-                      child: Column(
-                    children: [
-                      Container(
-                        width: 70,
-                        height: 70,
-                        margin: EdgeInsets.only(top: 10),
-                        child: Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 50,
-                        ),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
+                      decoration: BoxDecoration(
                           color: color_template().primary,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        controller.namauser.value,
-                        style: font().primary_dark,
-                      ),
-                      Text(
-                        controller.namatoko.value,
-                        style: font().primary_dark,
-                      ),
-                    ],
-                  )),
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/bg_login.png'),
+                            fit: BoxFit.cover,
+                            alignment: Alignment(1.0, -0.5),
+                            colorFilter: ColorFilter.mode(
+                                color_template().primary.withOpacity(1),
+                                BlendMode.dstATop),
+                          )),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 70,
+                            height: 70,
+                            margin: EdgeInsets.only(top: 10),
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 50,
+                            ),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: color_template().primary,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            controller.namauser.value,
+                            style: font().primary_dark,
+                          ),
+                          Text(
+                            controller.namatoko.value,
+                            style: font().primary_dark,
+                          ),
+                        ],
+                      )),
                   ListTile(
                     title: Text('Setting'),
                     leading: Icon(Icons.settings),
@@ -265,7 +294,7 @@ class base_menu extends GetView<base_menuController> {
                                     FaIcon(FontAwesomeIcons.cashRegister),
                                 label: Padding(
                                   padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Penjualan'),
+                                  child: Text('POS'),
                                 ),
                               ),
                               NavigationRailDestination(

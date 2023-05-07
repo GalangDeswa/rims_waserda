@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
 
 import '../../../Templates/setting.dart';
@@ -27,14 +28,8 @@ class tambah_jenis extends GetView<produkController> {
         body: stack_bg(
           child: Container(
             width: context.width_query / 2,
-            child: Card(
-              elevation: elevation().def_elevation,
-              //margin: EdgeInsets.all(30),
-              shape: RoundedRectangleBorder(
-                borderRadius: border_radius().def_border,
-                side: BorderSide(color: color_template().primary, width: 3.5),
-              ),
-
+            child: Card_custom(
+              border: false,
               child: Padding(
                 padding: const EdgeInsets.all(15),
                 child: Container(

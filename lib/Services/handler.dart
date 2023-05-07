@@ -316,6 +316,7 @@ class REST extends GetConnect {
       desc,
       qty,
       harga,
+      harga_modal,
       diskon_barang,
       barcode,
       File? image}) async {
@@ -340,6 +341,7 @@ class REST extends GetConnect {
     response.fields['deskripsi'] = desc;
     response.fields['qty'] = qty;
     response.fields['harga'] = harga;
+    response.fields['harga_modal'] = harga_modal;
     response.fields['diskon_barang'] = diskon_barang;
     response.fields['barcode'] = barcode;
 
@@ -370,6 +372,7 @@ class REST extends GetConnect {
       namaproduk,
       desc,
       harga,
+      harga_modal,
       diskon_barang,
       barcode,
       File? image}) async {
@@ -391,6 +394,7 @@ class REST extends GetConnect {
     response.fields['deskripsi'] = desc;
     response.fields['id'] = id.toString();
     response.fields['harga'] = harga;
+    response.fields['harga_modal'] = harga_modal;
     response.fields['diskon_barang'] = diskon_barang;
     response.fields['barcode'] = barcode;
 
@@ -880,8 +884,16 @@ class REST extends GetConnect {
     }
   }
 
-  static Future<dynamic> kasirKeranjangTambah(String token, iduser, idtoko,
-      idjenisstock, meja, idproduk, diskon_brg, qty) async {
+  static Future<dynamic> kasirKeranjangTambah(
+      {required String token,
+      iduser,
+      idtoko,
+      idjenisstock,
+      meja,
+      idproduk,
+      diskon_brg,
+      diskon_kasir,
+      qty}) async {
     var response = await http.post(link().POST_kasirkeranjangtambah,
         body: ({
           'token': token,
@@ -892,6 +904,7 @@ class REST extends GetConnect {
           'diskon_brg': diskon_brg,
           'qty': qty,
           'id_jenis_stock': idjenisstock,
+          'diskon_kasir': diskon_kasir,
         }));
     if (response.statusCode == 200) {
       print(
@@ -1449,6 +1462,104 @@ class REST extends GetConnect {
       var data = json.decode(response.body);
       print('LOGOUT network handler----------------------------------------->');
       print('GAGAL DATA PELANGGAN EDIT');
+      print(response.statusCode);
+
+      print(response.body);
+      return data;
+    }
+  }
+
+  static Future<dynamic> hutangAll({
+    required String token,
+    required String id_toko,
+  }) async {
+    var response = await http.post(link().POST_hutangall,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'HUTANG ALL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print('HUTANG network handler----------------------------------------->');
+      print('GAGAL DATA HUTANG ALL');
+      print(response.statusCode);
+
+      print(response.body);
+      return data;
+    }
+  }
+
+  static Future<dynamic> hutangDetail({
+    required String token,
+    required String id_toko,
+    required String id_hutang,
+  }) async {
+    var response = await http.post(link().POST_hutangdetail,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+          'id_hutang': id_hutang.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'HUTANG DETAIL network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'HUTANG DETAIL network handler----------------------------------------->');
+      print('GAGAL DATA HUTANG DETAIL');
+      print(response.statusCode);
+
+      print(response.body);
+      return data;
+    }
+  }
+
+  static Future<dynamic> hutangBayar({
+    required String token,
+    required String id_toko,
+    required String id_hutang,
+    required String bayar,
+  }) async {
+    var response = await http.post(link().POST_hutangbayar,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+          'id': id_hutang.toString(),
+          'bayar': bayar,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'HUTANG BAYAR network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'HUTANG BAYAR network handler----------------------------------------->');
+      print('GAGAL DATA HUTANG BAYAR');
       print(response.statusCode);
 
       print(response.body);

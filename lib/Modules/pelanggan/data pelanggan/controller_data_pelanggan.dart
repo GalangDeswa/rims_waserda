@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_table.dart';
+import 'package:rims_waserda/Modules/pelanggan/hutang/view_hutang_table.dart';
 
 import '../../../Services/handler.dart';
 import '../../Widgets/loading.dart';
@@ -17,6 +19,13 @@ class pelangganController extends GetxController {
     super.onInit();
     fetchDataPelanggan();
   }
+
+  List<Widget> table = [
+    pelanggan_table(),
+    hutang_table(),
+  ];
+
+  var selectedIndex = 0.obs;
 
   var formKeypelanggan = GlobalKey<FormState>().obs;
   var id_user = GetStorage().read('id_user');

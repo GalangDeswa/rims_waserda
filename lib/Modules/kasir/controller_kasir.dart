@@ -416,7 +416,96 @@ class kasirController extends GetxController {
   RxDouble displaydiskon = 0.0.obs;
 
   displayDiskon() {
-    return displaydiskon.value = diskon.value * 100;
+    return displaydiskon.value = jumlahdiskonkasir.value;
+  }
+
+  var textdiskon = TextEditingController().obs;
+
+  var jumlahdiskonkasir = 0.0.obs;
+
+  editDiskonKasir(kasirController controller) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Edit diskon',
+          icon: Icons.add,
+          icon_color: color_template().primary,
+          base_color: color_template().primary),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                width: context.width_query / 2.6,
+                height: context.height_query / 2.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Masukan potongan harga'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                suffixText: '%',
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              textAlign: TextAlign.center,
+                              controller: textdiskon.value,
+                              style: font().header_black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    button_solid_custom(
+                        onPressed: () {
+                          jumlahdiskonkasir.value =
+                              double.parse(textdiskon.value.text);
+                          totalval();
+                          Get.back();
+                        },
+                        child: Text(
+                          'Edit diskon',
+                          style: font().primary_white,
+                        ),
+                        width: context.width_query,
+                        height: context.height_query / 11),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    button_border_custom(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          'Batal',
+                          style: font().primary,
+                        ),
+                        width: context.width_query,
+                        height: context.height_query / 11)
+                  ],
+                )),
+          );
+        },
+      ),
+    ));
   }
 
   tambahKeranjangcache(int idproduk) async {
@@ -440,7 +529,9 @@ class kasirController extends GetxController {
             deskripsi: query.map((e) => e.deskripsi).first,
             qty: 1,
             harga: query.map((e) => e.harga).first,
-            diskonBarang: query.map((e) => e.diskonBarang).first,
+            diskonBarang:
+                query.map((e) => int.parse(e.harga) - e.diskonBarang).first,
+            diskonKasir: jumlahdiskonkasir.value.toInt(),
             image: query.map((e) => e.image).first,
             status: query.map((e) => e.status).first.toString(),
             updated: query.map((e) => e.updated).first.toString(),
@@ -465,7 +556,7 @@ class kasirController extends GetxController {
     // }
 
     print(cache.value.map((e) {
-      return [e.namaProduk, e.qty];
+      return [e.namaProduk, e.qty, e.diskonKasir];
     }).toList());
 
     subtotalval();
@@ -476,12 +567,16 @@ class kasirController extends GetxController {
   }
 
   totalval() {
-    return total.value = subtotal.value - (subtotal.value * diskon.value);
+    return total.value =
+        subtotal.value - (subtotal.value * jumlahdiskonkasir.value / 100);
   }
 
   subtotalval() {
     subtotal.value = cache.map((expense) => expense).fold(
-        0, (total, amount) => total + (amount.qty * int.parse(amount.harga)));
+        0,
+        (total, amount) =>
+            total +
+            (amount.qty * int.parse(amount.harga) - amount.diskonBarang!));
   }
 
   fetchkeranjangcache() async {
@@ -568,14 +663,15 @@ class kasirController extends GetxController {
     if (checkconn == true) {
       cache.forEach((element) async {
         var keranjang = await REST.kasirKeranjangTambah(
-            token,
-            id_user,
-            id_toko,
-            element.idJenisStock.toString(),
-            meja.value.text,
-            element.id.toString(),
-            element.diskonBarang.toString(),
-            element.qty.toString());
+            token: token,
+            iduser: id_user,
+            idtoko: id_toko,
+            idjenisstock: element.idJenisStock.toString(),
+            meja: meja.value.text,
+            idproduk: element.id.toString(),
+            diskon_brg: element.diskonBarang.toString(),
+            qty: element.qty.toString(),
+            diskon_kasir: jumlahdiskonkasir.toString());
 
         if (keranjang['success'] == true) {
           print('------------------tambah keranjang---------------');

@@ -43,7 +43,7 @@ class laporan extends GetView<laporanController> {
                           fontSize: 12,
                           color: Colors.white,
                         ),
-                        selectedBorderColor: color_template().primary,
+                        //selectedBorderColor: color_template().primary,
                         // unselectedBorderColor: color_template().select,
                         borderRadius: BorderRadius.circular(12),
                         spacing: 15,

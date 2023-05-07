@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class color_template {
+  var offwhite = Color.fromRGBO(242, 249, 252, 1);
   var primary = Color.fromRGBO(10, 94, 191, 1);
   var primary_v2 = Color.fromRGBO(115, 186, 146, 1);
   var primary_v3 = Color.fromRGBO(218, 224, 128, 1);
@@ -76,8 +77,9 @@ extension MediaQueryValues on BuildContext {
 class border_radius {
   var def_border = BorderRadius.circular(20);
   var header_border = BorderRadius.circular(15);
+  var icon_border = BorderRadius.circular(10);
 }
 
 class elevation {
-  var def_elevation = 9.0;
+  var def_elevation = 7.0;
 }

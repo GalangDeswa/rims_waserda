@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/stack%20bg.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 
-import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
 
@@ -19,14 +19,8 @@ class edit_user_password extends GetView<edituserController> {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(30),
-          child: Card(
-            elevation: elevation().def_elevation,
-            //margin: EdgeInsets.all(30),
-            shape: RoundedRectangleBorder(
-              borderRadius: border_radius().def_border,
-              side: BorderSide(color: color_template().primary, width: 3.5),
-            ),
-
+          child: Card_custom(
+            border: false,
             child: Padding(
               padding: const EdgeInsets.all(15),
               child: Column(

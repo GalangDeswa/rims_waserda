@@ -72,6 +72,7 @@ class DataKeranjangCache {
     required this.createdAt,
     required this.updatedAt,
     this.diskonBarang,
+    this.diskonKasir,
   });
 
   int id;
@@ -85,6 +86,7 @@ class DataKeranjangCache {
   String deskripsi;
   int qty;
   int? diskonBarang;
+  int? diskonKasir;
   String harga;
   String image;
   String status;
@@ -142,6 +144,7 @@ class DataKeranjangCache {
         qty: json["qty"],
         harga: json["harga"],
         diskonBarang: json["diskon_barang"],
+        diskonKasir: json["diskon_kasir"],
         image: json["image"],
         status: json["status"],
         updated: json["updated"]!,
@@ -162,6 +165,7 @@ class DataKeranjangCache {
         "qty": qty,
         "harga": harga,
         "diskon_barang": diskonBarang,
+        "diskon_kasir": diskonKasir,
         "image": image,
         "status": status,
         "updated": updatedValues.reverse[updated],

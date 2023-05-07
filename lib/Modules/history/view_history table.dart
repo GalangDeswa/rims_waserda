@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
 import 'package:rims_waserda/Modules/history/model_penjualan.dart';
@@ -18,13 +19,8 @@ class history_table extends GetView<historyController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: elevation().def_elevation,
-      //margin: EdgeInsets.all(30),
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
@@ -123,35 +119,38 @@ class history_table extends GetView<historyController> {
                       icon: Icons.search,
                       container_color: color_template().primary),
                   Expanded(
-                    child: DropdownButtonFormField2(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5),
+                      child: DropdownButtonFormField2(
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                         ),
+                        isExpanded: true,
+                        dropdownStyleData: DropdownStyleData(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white)),
+                        hint: Text('Filter berdasar status'),
+                        value: controller.valstatus,
+                        items: controller.liststatus.value.map((item) {
+                          return DropdownMenuItem(
+                              child: Text(item['nama'].toString()),
+                              value: item['id'].toString());
+                        }).toList(),
+                        onChanged: (val) async {
+                          controller.stts.value = true;
+                          controller.valstatus = val!.toString();
+                          var start = await controller.fetchPenjualan();
+                          var query = await start
+                              .where((e) => e.status.toString() == val)
+                              .toList();
+                          controller.penjualan_list.value = query;
+                          print(query);
+                          print(controller.valstatus);
+                        },
                       ),
-                      isExpanded: true,
-                      dropdownStyleData: DropdownStyleData(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white)),
-                      hint: Text('Filter berdasar status'),
-                      value: controller.valstatus,
-                      items: controller.liststatus.value.map((item) {
-                        return DropdownMenuItem(
-                            child: Text(item['nama'].toString()),
-                            value: item['id'].toString());
-                      }).toList(),
-                      onChanged: (val) async {
-                        controller.stts.value = true;
-                        controller.valstatus = val!.toString();
-                        var start = await controller.fetchPenjualan();
-                        var query = await start
-                            .where((e) => e.status.toString() == val)
-                            .toList();
-                        controller.penjualan_list.value = query;
-                        print(query);
-                        print(controller.valstatus);
-                      },
                     ),
                   ),
                   controller.stts.value == false

@@ -56,6 +56,7 @@ class DataProduk {
     required this.deskripsi,
     required this.qty,
     required this.harga,
+    required this.hargaModal,
     required this.diskonBarang,
     required this.image,
     required this.status,
@@ -76,6 +77,7 @@ class DataProduk {
   String deskripsi;
   String qty;
   String harga;
+  String hargaModal;
   int diskonBarang;
   String image;
   int status;
@@ -96,6 +98,7 @@ class DataProduk {
         deskripsi: json["deskripsi"],
         qty: json["qty"],
         harga: json["harga"],
+        hargaModal: json["harga_modal"],
         diskonBarang: json["diskon_barang"],
         image: json["image"],
         status: json["status"],
@@ -117,6 +120,7 @@ class DataProduk {
         "deskripsi": deskripsiValues.reverse[deskripsi],
         "qty": qty,
         "harga": harga,
+        "harga_modal": hargaModal,
         "diskon_barang": diskonBarang,
         "image": image,
         "status": status,

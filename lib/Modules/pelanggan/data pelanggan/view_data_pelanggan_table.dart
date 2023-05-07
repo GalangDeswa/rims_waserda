@@ -2,6 +2,7 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 
@@ -15,13 +16,8 @@ class pelanggan_table extends GetView<pelangganController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: elevation().def_elevation,
-      //margin: EdgeInsets.all(30),
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(

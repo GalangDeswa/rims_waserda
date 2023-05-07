@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart';
 
 import '../../../Templates/setting.dart';
@@ -15,14 +16,8 @@ class tambah_user_form extends GetView<datauserController> {
   Widget build(BuildContext context) {
     return Container(
       height: context.height_query,
-      child: Card(
-        elevation: elevation().def_elevation,
-        //margin: EdgeInsets.all(30),
-        shape: RoundedRectangleBorder(
-          borderRadius: border_radius().def_border,
-          side: BorderSide(color: color_template().primary, width: 3.5),
-        ),
-
+      child: Card_custom(
+        border: false,
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(

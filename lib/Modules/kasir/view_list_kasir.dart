@@ -1,16 +1,12 @@
-import 'dart:math' as math;
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
-import '../Widgets/toast.dart';
 import 'controller_kasir.dart';
 
 class list_kasir extends GetView<kasirController> {
@@ -26,17 +22,12 @@ class list_kasir extends GetView<kasirController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(bottom: 15),
-          child: Card(
-            //color: Colors.red,
-            elevation: elevation().def_elevation,
-            shape: RoundedRectangleBorder(
-              borderRadius: border_radius().def_border,
-              side: BorderSide(color: color_template().primary, width: 3.5),
-            ),
+          padding: const EdgeInsets.only(bottom: 5),
+          child: Card_custom(
+            border: false,
             // margin: EdgeInsets.only(left: 5, top: 10, bottom: 10, right: 10),
             child: Padding(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.all(10),
               child: Obx(() {
                 // final scanWindow = Rect.fromCenter(
                 //   center: MediaQuery.of(context).size.center(Offset.zero),
@@ -46,122 +37,127 @@ class list_kasir extends GetView<kasirController> {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Transform.rotate(
-                      angle: -math.pi / 2.0,
-                      child: Container(
-                        color: Colors.red,
-                        width: 50,
-                        height: 50,
-                        child: MobileScanner(
-                          // scanWindow: Rect.fromCenter(
-                          //   center:
-                          //       MediaQuery.of(context).size.center(Offset.zero),
-                          //   width: 500,
-                          //   height: 500,
-                          // ),
-                          controller: MobileScannerController(
-                            detectionSpeed: DetectionSpeed.normal,
-                            torchEnabled: true,
-                            detectionTimeoutMs: 1000,
-                            facing: CameraFacing.front,
-                          ),
-                          // scanWindow: scanWindow,
-                          onDetect: (capture) async {
-                            print(
-                                '-------------------------start----print scan-------------------------------------->');
-                            var bar = capture.barcodes
-                                .map((e) => e.rawValue.toString())
-                                .first;
-                            print(bar);
-
-                            //var bar = '258';
-
-                            var query = controller.produklist
-                                .where((e) => e.barcode
-                                    .toString()
-                                    .contains(bar.toString()))
-                                .first;
-
-                            final existingIndex = controller.cache.value
-                                .indexWhere((item) => item.id == query.id);
-
-                            if (existingIndex == -1) {
-                              await AudioPlayer()
-                                  .play(AssetSource('audio/scan.wav'));
-                              controller.cache.add(
-                                DataKeranjangCache(
-                                    id: query.id,
-                                    idToko: query.idToko.toString(),
-                                    idUser: query.idUser.toString(),
-                                    idJenis: query.idJenis.toString(),
-                                    idJenisStock: query.idJenisStock,
-                                    namaJenis: query.namaJenis,
-                                    idKategori: query.idKategori.toString(),
-                                    namaProduk: query.namaProduk,
-                                    deskripsi: query.deskripsi,
-                                    qty: 1,
-                                    harga: query.harga,
-                                    diskonBarang: query.diskonBarang,
-                                    image: query.image,
-                                    status: query.status.toString(),
-                                    updated: query.updated.toString(),
-                                    createdAt: query.createdAt.toString(),
-                                    updatedAt: query.updatedAt.toString()),
-                              );
-                            } else {
-                              var pp = controller.produklist
-                                  .where((e) =>
-                                      e.id ==
-                                      controller.cache[existingIndex].id)
-                                  .first;
-                              if (int.parse(pp.qty) <=
-                                      controller.cache[existingIndex].qty &&
-                                  controller
-                                          .cache[existingIndex].idJenisStock ==
-                                      1) {
-                                await AudioPlayer()
-                                    .play(AssetSource('audio/max.mp3'));
-                                print('maxxxx-------------------------');
-                                Get.showSnackbar(toast().bottom_snackbar_error(
-                                    "Error",
-                                    'Stock sudah habis! harap isi stock terlebih dahulu'));
-                              } else {
-                                await AudioPlayer()
-                                    .play(AssetSource('audio/scan.wav'));
-                                controller.cache[existingIndex].qty++;
-                              }
-                            }
-                            controller.subtotalval();
-                            controller.totalval();
-                            controller.cache.refresh();
-
-                            print(
-                                '--------------------------------print scan-------------------------------------->');
-                            // print(capture.barcodes.map((e) => e.displayValue));
-                            print(
-                                'stop-------------------------------------->');
-                            // MobileScannerController().stop();
-                            // Future.delayed(const Duration(milliseconds: 500))
-                            //     .then((_) async {
-                            //   print('starrt----------------------------->');
-                            //   MobileScannerController().start();
-                            // });
-
-                            // MobileScannerController().dispose();
-                            //MobileScannerController().start();
-                          },
-                        ),
-                      ),
-                    ),
+                    // Transform.rotate(
+                    //   angle: -math.pi / 2.0,
+                    //   child: Container(
+                    //     color: Colors.red,
+                    //     width: 50,
+                    //     height: 50,
+                    //     child: MobileScanner(
+                    //       // scanWindow: Rect.fromCenter(
+                    //       //   center:
+                    //       //       MediaQuery.of(context).size.center(Offset.zero),
+                    //       //   width: 500,
+                    //       //   height: 500,
+                    //       // ),
+                    //       controller: MobileScannerController(
+                    //         detectionSpeed: DetectionSpeed.normal,
+                    //         torchEnabled: true,
+                    //         detectionTimeoutMs: 1000,
+                    //         facing: CameraFacing.front,
+                    //       ),
+                    //       // scanWindow: scanWindow,
+                    //       onDetect: (capture) async {
+                    //         print(
+                    //             '-------------------------start----print scan-------------------------------------->');
+                    //         var bar = capture.barcodes
+                    //             .map((e) => e.rawValue.toString())
+                    //             .first;
+                    //         print(bar);
+                    //
+                    //         //var bar = '258';
+                    //
+                    //         var query = controller.produklist
+                    //             .where((e) => e.barcode
+                    //                 .toString()
+                    //                 .contains(bar.toString()))
+                    //             .first;
+                    //
+                    //         if (query == null) {
+                    //           await AudioPlayer()
+                    //               .play(AssetSource('audio/max.mp3'));
+                    //         }
+                    //
+                    //         final existingIndex = controller.cache.value
+                    //             .indexWhere((item) => item.id == query.id);
+                    //
+                    //         if (existingIndex == -1) {
+                    //           await AudioPlayer()
+                    //               .play(AssetSource('audio/scan.wav'));
+                    //           controller.cache.add(
+                    //             DataKeranjangCache(
+                    //                 id: query.id,
+                    //                 idToko: query.idToko.toString(),
+                    //                 idUser: query.idUser.toString(),
+                    //                 idJenis: query.idJenis.toString(),
+                    //                 idJenisStock: query.idJenisStock,
+                    //                 namaJenis: query.namaJenis,
+                    //                 idKategori: query.idKategori.toString(),
+                    //                 namaProduk: query.namaProduk,
+                    //                 deskripsi: query.deskripsi,
+                    //                 qty: 1,
+                    //                 harga: query.harga,
+                    //                 diskonBarang: query.diskonBarang,
+                    //                 image: query.image,
+                    //                 status: query.status.toString(),
+                    //                 updated: query.updated.toString(),
+                    //                 createdAt: query.createdAt.toString(),
+                    //                 updatedAt: query.updatedAt.toString()),
+                    //           );
+                    //         } else {
+                    //           var pp = controller.produklist
+                    //               .where((e) =>
+                    //                   e.id ==
+                    //                   controller.cache[existingIndex].id)
+                    //               .first;
+                    //           if (int.parse(pp.qty) <=
+                    //                   controller.cache[existingIndex].qty &&
+                    //               controller
+                    //                       .cache[existingIndex].idJenisStock ==
+                    //                   1) {
+                    //             await AudioPlayer()
+                    //                 .play(AssetSource('audio/max.mp3'));
+                    //             print('maxxxx-------------------------');
+                    //             Get.showSnackbar(toast().bottom_snackbar_error(
+                    //                 "Error",
+                    //                 'Stock sudah habis! harap isi stock terlebih dahulu'));
+                    //           } else {
+                    //             await AudioPlayer()
+                    //                 .play(AssetSource('audio/scan.wav'));
+                    //             controller.cache[existingIndex].qty++;
+                    //           }
+                    //         }
+                    //         controller.subtotalval();
+                    //         controller.totalval();
+                    //         controller.cache.refresh();
+                    //
+                    //         print(
+                    //             '--------------------------------print scan-------------------------------------->');
+                    //         // print(capture.barcodes.map((e) => e.displayValue));
+                    //         print(
+                    //             'stop-------------------------------------->');
+                    //         // MobileScannerController().stop();
+                    //         // Future.delayed(const Duration(milliseconds: 500))
+                    //         //     .then((_) async {
+                    //         //   print('starrt----------------------------->');
+                    //         //   MobileScannerController().start();
+                    //         // });
+                    //
+                    //         // MobileScannerController().dispose();
+                    //         //MobileScannerController().start();
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                     // icon_button_custom(
                     //     onPressed: () {
                     //       controller.scankasir();
                     //     },
                     //     icon: Icons.qr_code_scanner,
                     //     container_color: color_template().primary),
-                    SizedBox(
-                      width: 10,
-                    ),
+                    // SizedBox(
+                    //   width: 10,
+                    // ),
                     Expanded(
                       child: Container(
                           //color: Colors.red,
@@ -236,7 +232,7 @@ class list_kasir extends GetView<kasirController> {
               elevation: elevation().def_elevation,
               shape: RoundedRectangleBorder(
                 borderRadius: border_radius().def_border,
-                side: BorderSide(color: color_template().primary, width: 3.5),
+                // side: BorderSide(color: color_template().primary, width: 3.5),
               ),
               // color: Colors.red,
               child: Obx(
@@ -317,6 +313,19 @@ class ProductTilev2 extends GetView<kasirController> {
           DataColumn(label: Text("Aksi")),
         ],
         rows: List.generate(controller.cache.length, (index) {
+          var query = controller.produklist
+              .where((e) => e.id == controller.cache[index].id)
+              .first;
+          var persen = (double.parse(query.harga) - query.diskonBarang) /
+              double.parse(query.harga) *
+              100;
+
+          // var persen = (double.parse(controller.cache[index].harga) -
+          //         controller.cache[index].diskonBarang!) /
+          //     double.parse(controller.cache[index].harga) *
+          //     100;
+
+          String display_diskon = persen.toStringAsFixed(0);
           var pp = controller.produklist
               .where((e) => e.id == controller.cache[index].id)
               .first;
@@ -325,9 +334,33 @@ class ProductTilev2 extends GetView<kasirController> {
               Text(controller.cache[index].namaProduk),
             ),
             DataCell(
-              Text("Rp." +
-                  controller.nominal
-                      .format(double.parse(controller.cache[index].harga))),
+              controller.cache[index].diskonBarang == 0
+                  ? Text("Rp." +
+                      controller.nominal
+                          .format(double.parse(controller.cache[index].harga)))
+                  : Row(
+                      children: [
+                        Text('Rp. ' +
+                            controller.nominal.format(double.parse(controller
+                                .produklist[index].diskonBarang
+                                .toString()))),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(6),
+                          child: Text(
+                            display_diskon + '%',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          decoration: BoxDecoration(
+                              color: color_template().primary_v2,
+                              borderRadius: BorderRadius.circular(10)),
+                        )
+                      ],
+                    ),
             ),
             DataCell(
               Row(

@@ -8,6 +8,7 @@ import '../dashboard/controller_dashboard.dart';
 import '../history/Controller_history.dart';
 import '../kasir/controller_kasir.dart';
 import '../laporan/Controller_laporan.dart';
+import '../pelanggan/hutang/controller_hutang.dart';
 import '../produk/data produk/controller_data_produk.dart';
 import '../produk/tambah produk/controller_tambah_produk.dart';
 import '../produk/tambah_stock/controller_tambah_stock.dart';
@@ -41,6 +42,8 @@ class base_menuBinding extends Bindings {
         fenix: true);
 
     Get.lazyPut<pelangganController>(() => pelangganController());
+
+    Get.lazyPut<hutangController>(() => hutangController());
 
     //Get.lazyPut(() => edituserController());
   }

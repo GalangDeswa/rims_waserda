@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Modules/kasir/view_kasir_keypad.dart';
 
@@ -12,13 +13,8 @@ class kasir_detail extends GetView<kasirController> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(left: 10),
-      elevation: elevation().def_elevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: border_radius().def_border,
-        side: BorderSide(color: color_template().primary, width: 3.5),
-      ),
+    return Card_custom(
+      border: false,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Container(
@@ -55,6 +51,7 @@ class kasir_detail extends GetView<kasirController> {
                             return Card(
                                 elevation: elevation().def_elevation,
                                 child: Container(
+                                  padding: EdgeInsets.all(5),
                                   height: context.height_query / 8,
                                   child: Row(
                                     mainAxisAlignment:
