@@ -1,6 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
@@ -25,7 +24,7 @@ class jenis_table extends GetView<produkController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -40,7 +39,8 @@ class jenis_table extends GetView<produkController> {
                         icon_funtion: Icons.refresh,
                         //icon_color: color_template().primary,
                         function: () async {
-                          Get.dialog(showloading(), barrierDismissible: false);
+                          Get.dialog(const showloading(),
+                              barrierDismissible: false);
                           await controller.fetchjenis();
                           Get.back();
                         },
@@ -71,7 +71,7 @@ class jenis_table extends GetView<produkController> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
@@ -79,15 +79,17 @@ class jenis_table extends GetView<produkController> {
               children: [
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 3),
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
                     //width: 200,
                     child: TextFormField(
-                      //controller: email,
-                      onChanged: ((String pass) {}),
+                      controller: controller.searchjenis.value,
+                      onChanged: ((String pass) {
+                        controller.searchjenislocal();
+                      }),
                       decoration: InputDecoration(
-                        icon: Icon(Icons.add_box),
+                        icon: const Icon(Icons.add_box),
                         labelText: "Cari Kategori",
-                        labelStyle: TextStyle(
+                        labelStyle: const TextStyle(
                           color: Colors.black87,
                         ),
                         border: UnderlineInputBorder(
@@ -95,7 +97,7 @@ class jenis_table extends GetView<produkController> {
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
-                      textAlign: TextAlign.center,
+                      textAlign: TextAlign.start,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Please enter email';
@@ -107,7 +109,7 @@ class jenis_table extends GetView<produkController> {
                 ),
                 icon_button_custom(
                     onPressed: () {
-                      //controller.getprodukall();
+                      controller.searchjenislocal();
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
@@ -115,15 +117,19 @@ class jenis_table extends GetView<produkController> {
             ),
             Expanded(
               child: Obx(() {
+                var source =
+                    jenisprodukTable(controller.jenislistlocal.value, context)
+                        .obs;
                 return Container(
                     // height: context.height_query * 0.46,
-                    margin: EdgeInsets.only(top: 10),
+                    margin: const EdgeInsets.only(top: 10),
                     // width: double.infinity,
-                    child: controller.jenislist.value.isEmpty
+                    child: controller.jenislistlocal.isEmpty
                         ? Container(
-                            width: 100, height: 100, child: showloading())
-                        : DataTable2(
+                            width: 100, height: 100, child: const showloading())
+                        : PaginatedDataTable2(
                             horizontalMargin: 10,
+                            renderEmptyRowsInTheEnd: false,
                             columnSpacing: 5,
                             headingRowColor: MaterialStateColor.resolveWith(
                                 (states) =>
@@ -154,88 +160,55 @@ class jenis_table extends GetView<produkController> {
                                 ),
                               ),
                             ],
-                            rows: List.generate(
-                              controller.jenislist.length,
-                              (index) => DataRow(cells: [
-                                DataCell(Text(
-                                    controller.jenislist[index].namaJenis)),
-                                DataCell(Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {
-                                          Get.toNamed('/edit_jenis',
-                                              arguments:
-                                                  controller.produklist[index]);
-                                        },
-                                        icon: Icon(
-                                          Icons.edit,
-                                          size: 18,
-                                          color: color_template().secondary,
-                                        )),
-                                    IconButton(
-                                        onPressed: () {
-                                          popscreen().deletejenis(controller,
-                                              controller.jenislist[index]);
-                                        },
-                                        icon: Icon(
-                                          Icons.delete,
-                                          size: 18,
-                                          color: color_template().tritadery,
-                                        ))
-                                  ],
-                                )),
-                              ]),
-                            ),
-                          ));
+                            source: source.value));
               }),
             ),
-            Obx(() {
-              return Container(
-                margin: EdgeInsets.only(left: context.width_query / 1.9),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Data perbaris :'),
-                    Text(controller.perpagejenis.value.toString()),
-                    controller.currentpagejenis > 1
-                        ? IconButton(
-                            onPressed: () {
-                              controller.backjenis();
-                            },
-                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleLeft,
-                              size: 20,
-                              color: Colors.grey,
-                            )),
-                    Text(controller.currentpagejenis.value.toString() +
-                        ' - ' +
-                        controller.totalpagejenis.value.toString()),
-                    controller.currentpagejenis <
-                            controller.totalpagejenis.value
-                        ? IconButton(
-                            onPressed: () {
-                              controller.nextjenis();
-                            },
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              size: 20,
-                            ))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              color: Colors.grey,
-                              size: 20,
-                            ))
-                  ],
-                ),
-              );
-            })
+            // Obx(() {
+            //   return Container(
+            //     margin: EdgeInsets.only(left: context.width_query / 1.9),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //       children: [
+            //         const Text('Data perbaris :'),
+            //         Text(controller.perpagejenis.value.toString()),
+            //         controller.currentpagejenis > 1
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.backjenis();
+            //                 },
+            //                 icon: const Icon(FontAwesomeIcons.angleLeft,
+            //                     size: 20))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleLeft,
+            //                   size: 20,
+            //                   color: Colors.grey,
+            //                 )),
+            //         Text(controller.currentpagejenis.value.toString() +
+            //             ' - ' +
+            //             controller.totalpagejenis.value.toString()),
+            //         controller.currentpagejenis <
+            //                 controller.totalpagejenis.value
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.nextjenis();
+            //                 },
+            //                 icon: const Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   size: 20,
+            //                 ))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   color: Colors.grey,
+            //                   size: 20,
+            //                 ))
+            //       ],
+            //     ),
+            //   );
+            // })
           ],
         ),
       ),
@@ -245,8 +218,9 @@ class jenis_table extends GetView<produkController> {
 
 class jenisprodukTable extends DataTableSource {
   final List<DataJenis> data;
+  final BuildContext context;
 
-  jenisprodukTable(this.data);
+  jenisprodukTable(this.data, this.context);
 
   var con = Get.find<produkController>();
 
@@ -262,7 +236,7 @@ class jenisprodukTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].namaJenis)),
+      DataCell(Text(data[index].namaJenis!)),
       DataCell(Row(
         children: [
           Expanded(

@@ -4,8 +4,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 
 import '../../../Services/handler.dart';
+import '../../../db_helper.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
+import '../../dashboard/controller_dashboard.dart';
+import '../../kasir/controller_kasir.dart';
+import '../data pelanggan/model_data_pelanggan.dart';
+import '../hutang/controller_hutang.dart';
 
 class editpelangganController extends GetxController {
   @override
@@ -25,6 +30,45 @@ class editpelangganController extends GetxController {
   var search = TextEditingController().obs;
   var nama_pelanggan = TextEditingController().obs;
   var no_hp = TextEditingController().obs;
+
+  editpelangganlocal() async {
+    print('-------------------edit pelanggan local---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().UPDATE(
+        table: 'pelanggan_local',
+        data: DataPelanggan(
+                id: data.id,
+                idToko: int.parse(id_toko),
+                namaPelanggan: nama_pelanggan.value.text,
+                noHp: no_hp.value.text,
+                sync: 'N',
+                aktif: 'Y')
+            .toMapForDb(),
+        id: data.id);
+    print('edit local berhasil------------------------------------->');
+    print(query);
+    if (query == 1) {
+      await Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
+      await Get.find<kasirController>().fetchDataPelangganlocal(id_toko);
+      await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+      await Get.find<dashboardController>().loadpelanggantotal();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('sukses', 'Pelanggan berhasil diedit'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal edit data local'));
+    }
+
+    // if (add != null) {
+    //   print(add);
+    //   await Get.find<produkController>().fetchProduk();
+    //   Get.back();
+    // }
+  }
 
   editpelanggan() async {
     print('-------------------tambah beban---------------------');

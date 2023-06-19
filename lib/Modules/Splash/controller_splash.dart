@@ -20,6 +20,9 @@ class splashController extends GetxController {
     // await fetchKontenSquare();
   }
 
+  var x = Duration(seconds: 1);
+  //Timer.periodic(Duration(secon), (timer) { })
+
   // Future askPermission() async {
   //   return await [
   //     Permission.photos,
@@ -74,6 +77,7 @@ class splashController extends GetxController {
     await checkKonten();
     var loginStatus = await GetStorage().read('token');
     var toko_user = await GetStorage().read('id_toko');
+    //var db = await GetStorage().read('db_local');
 
     print("LOGIN " + loginStatus.toString());
     if (loginStatus != null) {

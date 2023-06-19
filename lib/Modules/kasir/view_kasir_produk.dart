@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:convert';
+
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
@@ -37,7 +37,7 @@ class kasir_produk extends GetView<kasirController> {
                           child: TextFormField(
                             controller: controller.search.value,
                             onChanged: ((String pass) {
-                              controller.fetchProduk();
+                              controller.searchproduklocal();
                             }),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
@@ -61,7 +61,7 @@ class kasir_produk extends GetView<kasirController> {
                         padding: EdgeInsets.only(right: 5),
                         child: icon_button_custom(
                             onPressed: () {
-                              controller.fetchProduk();
+                              controller.searchproduklocal();
                             },
                             icon: Icons.search,
                             container_color: color_template().primary),
@@ -138,11 +138,11 @@ class kasir_produk extends GetView<kasirController> {
                         absoluteZeroSpacing: false,
                         unSelectedColor: Theme.of(context).canvasColor,
                         buttonLables: ['semua'] +
-                            controller.jeniscache.value
-                                .map((element) => element.namaJenis)
+                            controller.jenislistlocal
+                                .map((element) => element.namaJenis!)
                                 .toList(),
                         buttonValues: ['0'] +
-                            controller.jeniscache.value
+                            controller.jenislistlocal.value
                                 .map((element) => element.id.toString())
                                 .toList(),
                         buttonTextStyle: ButtonTextStyle(
@@ -151,13 +151,14 @@ class kasir_produk extends GetView<kasirController> {
                             textStyle: TextStyle(fontSize: 16)),
                         radioButtonValue: (value) async {
                           if (value == '0') {
-                            controller.produklist.value =
-                                await GetStorage().read('produk');
-                            //controller.nextscroll();
+                            await controller
+                                .fetchProduklocal(controller.id_toko);
                           } else {
-                            print(value + "<-- id jenis cache");
-                            await GetStorage().read('produk');
-                            controller.fetchProdukByJenis(value);
+                            await controller.fetchProduklocalbyjenis(
+                                controller.id_toko, value);
+                            print(value);
+                            // print('lengt------------------------------------>');
+                            // print(x.length);
                           }
                         },
                         enableShape: true,
@@ -179,7 +180,7 @@ class kasir_produk extends GetView<kasirController> {
               // color: Colors.red,
               child: Obx(
                 () {
-                  return controller.produkcache.isNotEmpty
+                  return controller.succ.value != false
                       ? Container(
                           width: context.width_query,
                           // height: context.height_query * 0.70,
@@ -214,7 +215,7 @@ class ProductTilev2 extends GetView<kasirController> {
       padding: EdgeInsets.all(15),
       height: context.height_query,
       child: GridView.builder(
-          controller: controller.scroll.value,
+          //controller: controller.scroll.value,
           scrollDirection: Axis.vertical,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
               mainAxisExtent: context.height_query / 3.2,
@@ -222,22 +223,29 @@ class ProductTilev2 extends GetView<kasirController> {
               childAspectRatio: 1 / 1,
               crossAxisSpacing: 1,
               mainAxisSpacing: 2),
-          itemCount: controller.produklist.length,
+          itemCount: controller.produklistlocal.length,
           itemBuilder: (BuildContext context, index) {
-            var query = controller.produkcache.value
+            var hargadiskon = controller.produklistlocal[index].harga! -
+                (controller.produklistlocal[index].harga! *
+                    controller.produklistlocal[index].diskonBarang! /
+                    100);
+            var persen = controller.produklistlocal[index].diskonBarang;
+            String display_diskon = persen!.toStringAsFixed(0);
+
+            var query = controller.produklistlocal.value
                 .where((element) => element.id == controller.cache[index].id);
 
             final existingIndex = controller.cache.value.indexWhere(
-                (item) => item.id == controller.produkcache[index].id);
+                (item) => item.id == controller.produklistlocal[index].id);
             return GestureDetector(
               onTap: () {
                 // controller.tambahKeranjang(
-                //     controller.produkcache[index].id.toString(),
+                //     controller.produklistlocal[index].id.toString(),
                 //     0.toString(),
                 //     1.toString());
 
-                controller
-                    .tambahKeranjangcache(controller.produkcache[index].id);
+                controller.tambahKeranjangcache(
+                    controller.produklistlocal[index].id!);
               },
               child: Card_custom(
                 border: false,
@@ -246,25 +254,28 @@ class ProductTilev2 extends GetView<kasirController> {
                   children: [
                     Expanded(
                         child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20)),
-                      child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                                width: 20,
-                                height: 20,
-                                child: showloading(),
-                              ),
-                          width: context.width_query,
-                          height: context.height_query,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) {
-                            return Container(
-                              child: Image.asset('assets/images/food.png'),
-                            );
-                          },
-                          imageUrl: controller.produklist[index].image),
-                    )),
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20),
+                                topLeft: Radius.circular(20)),
+                            child: controller.produklistlocal[index].image ==
+                                        null ||
+                                    controller.produklistlocal[index].image ==
+                                        '' ||
+                                    controller.produklistlocal[index].image ==
+                                        '-'
+                                ? Image.asset(
+                                    'assets/images/food.png',
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    color: Colors.red,
+                                    width: context.width_query,
+                                    child: Image.memory(
+                                      base64Decode(controller
+                                          .produklistlocal[index].image!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ))),
                     Container(
                       padding: EdgeInsets.all(10),
                       width: context.width_query,
@@ -283,51 +294,45 @@ class ProductTilev2 extends GetView<kasirController> {
                           Expanded(
                             child: Text(
                               overflow: TextOverflow.fade,
-                              controller.produklist[index].namaProduk
+                              controller.produklistlocal[index].namaProduk
                                   .toString(),
                               style: font().produktitle,
                             ),
                           ),
                           Expanded(
-                              child: controller
-                                          .produklist[index].diskonBarang ==
-                                      0
-                                  ? Text(
-                                      'Rp. ' +
-                                          controller.nominal.format(
-                                              double.parse(controller
-                                                  .produklist[index].harga)),
-                                      style: font().produkharga,
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Rp. ' +
-                                              controller.nominal.format(
-                                                  double.parse(controller
-                                                      .produklist[index]
-                                                      .diskonBarang
-                                                      .toString())),
-                                          style: font().produkharga,
+                            child: controller
+                                        .produklistlocal[index].diskonBarang ==
+                                    0
+                                ? Text(
+                                    'Rp. ' +
+                                        controller.nominal.format(controller
+                                            .produklistlocal[index].harga),
+                                    style: font().produkharga,
+                                  )
+                                : Row(
+                                    children: [
+                                      Text('Rp. ' +
+                                          controller.nominal
+                                              .format(hargadiskon)),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(6),
+                                        child: Text(
+                                          display_diskon + '%',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white),
                                         ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            'Rp. ' +
-                                                controller.nominal.format(
-                                                    double.parse(controller
-                                                        .produklist[index]
-                                                        .harga)),
-                                            style: TextStyle(
-                                                decoration:
-                                                    TextDecoration.lineThrough),
-                                          ),
-                                        )
-                                      ],
-                                    ))
+                                        decoration: BoxDecoration(
+                                            color: color_template().primary_v2,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      )
+                                    ],
+                                  ),
+                          )
                         ],
                       ),
                     ),

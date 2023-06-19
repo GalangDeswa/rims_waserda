@@ -14,6 +14,9 @@ class link {
   final Uri POST_userdelete = Uri.parse(server().host + 'user/hapus');
 
   //produk----------------------------------------------------------------------
+  final Uri POST_produklocaltodb =
+      Uri.parse(server().host + 'produk/sync_produk');
+
   final Uri POST_produkall = Uri.parse(server().host + 'produk/data/allproduk');
   final Uri POST_produkjenis = Uri.parse(server().host + 'produk/jenis/data');
   final Uri POST_produktambah = Uri.parse(server().host + 'produk/tambah');
@@ -29,6 +32,8 @@ class link {
   final Uri POST_produkbyjenis =
       Uri.parse(server().host + 'produk/data/byjenis');
   final Uri POST_produkedit = Uri.parse(server().host + 'produk/edit');
+  final Uri POST_syncprodukjenis =
+      Uri.parse(server().host + 'produk/jenis/sync_produk_jenis');
 
   //beban----------------------------------------------------------------------
   final Uri POST_bebankategori =
@@ -47,6 +52,9 @@ class link {
   final Uri POST_bebandatatambah = Uri.parse(server().host + 'beban/tambah');
   final Uri POST_bebandataedit = Uri.parse(server().host + 'beban/edit');
   final Uri POST_bebandatahapus = Uri.parse(server().host + 'beban/hapus');
+  final Uri POST_syncbeban = Uri.parse(server().host + 'beban/sync_beban');
+  final Uri POST_syncbebankategori =
+      Uri.parse(server().host + 'beban/kategori/sync_beban_kategori');
 
 //kasir----------------------------------------------------------------------
   final Uri POST_kasirkeranjangdata =
@@ -62,10 +70,18 @@ class link {
   final Uri POST_penjualadata = Uri.parse(server().host + 'penjualan/data');
   final Uri POST_penjualadatadetail =
       Uri.parse(server().host + 'penjualan/data/detail');
+
+  final Uri POST_penjualadatadetailall =
+      Uri.parse(server().host + 'penjualan/data/detail_all');
+
   final Uri POST_penjualadatahariini =
       Uri.parse(server().host + 'penjualan/data/hariini');
   final Uri POST_penjualanreversal =
       Uri.parse(server().host + 'penjualan/reversal');
+  final Uri POST_syncpenjualan =
+      Uri.parse(server().host + 'penjualan/sync_penjualan');
+  final Uri POST_syncpenjualandetail =
+      Uri.parse(server().host + 'penjualan/sync_penjualan_detail');
 
 //laporan----------------------------------------------------------------------
   final Uri POST_laporanumum = Uri.parse(server().host + 'laporan/umum');
@@ -81,6 +97,8 @@ class link {
       Uri.parse(server().host + 'pelanggan/tambah');
   final Uri POST_pelangganedit = Uri.parse(server().host + 'pelanggan/edit');
   final Uri POST_pelangganhapus = Uri.parse(server().host + 'pelanggan/hapus');
+  final Uri POST_syncpelanggan =
+      Uri.parse(server().host + 'pelanggan/sync_pelanggan');
 
   //konten----------------------------------------------------------------------
   final Uri GET_kontensquare =
@@ -92,4 +110,7 @@ class link {
   final Uri POST_hutangall = Uri.parse(server().host + 'hutang/data');
   final Uri POST_hutangbayar = Uri.parse(server().host + 'hutang/bayar');
   final Uri POST_hutangdetail = Uri.parse(server().host + 'hutang_detail/data');
+  final Uri POST_synchutang = Uri.parse(server().host + 'hutang/sync_hutang');
+  final Uri POST_synchutangdetail =
+      Uri.parse(server().host + 'hutang_detail/sync_hutang_detail');
 }

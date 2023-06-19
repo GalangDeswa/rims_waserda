@@ -24,8 +24,8 @@ class detail_penjualan extends GetView<detailpenjualanController> {
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                padding: EdgeInsets.all(5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     color: color_template().primary,
                     borderRadius: border_radius().header_border),
@@ -41,7 +41,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Kasir :',
                   )),
@@ -54,7 +54,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Tanggal transaksi :',
                   )),
@@ -67,7 +67,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Nomor meja :',
                   )),
@@ -80,7 +80,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Total item :',
                   )),
@@ -90,8 +90,8 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 ],
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                padding: EdgeInsets.all(5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     color: color_template().primary,
                     borderRadius: border_radius().header_border),
@@ -111,19 +111,19 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     return DataTable2(
                         headingRowHeight: 15,
                         columns: <DataColumn>[
-                          DataColumn(
+                          const DataColumn(
                             label: Text(
                               'Produk',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
-                          DataColumn(
+                          const DataColumn(
                             label: Text(
                               'Qty',
                               style: TextStyle(fontStyle: FontStyle.italic),
                             ),
                           ),
-                          DataColumn(
+                          const DataColumn(
                             label: Text(
                               'Harga',
                               style: TextStyle(fontStyle: FontStyle.italic),
@@ -131,20 +131,23 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                           ),
                         ],
                         rows: List.generate(
-                            controller.isi.length,
+                            controller.isilocal.length,
                             (index) => DataRow(cells: <DataCell>[
-                                  DataCell(Text(controller.isi[index].namaBrg)),
-                                  DataCell(Text(controller.isi[index].qty)),
+                                  DataCell(Text(
+                                      controller.isilocal[index].namaBrg!)),
+                                  DataCell(Text(controller.isilocal[index].qty
+                                      .toString())),
                                   DataCell(Text('Rp.' +
                                       controller.nominal.format(double.parse(
-                                          controller.isi[index].hargaBrg)))),
+                                          controller.isilocal[index].hargaBrg
+                                              .toString())))),
                                 ])));
                   }),
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 5),
-                padding: EdgeInsets.all(5),
+                margin: const EdgeInsets.symmetric(vertical: 5),
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     color: color_template().primary,
                     borderRadius: border_radius().header_border),
@@ -160,59 +163,54 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Subtotal :',
                   )),
                   Text(
-                    'Rp.' +
-                        controller.nominal
-                            .format(double.parse(controller.data.subTotal)),
+                    'Rp.' + controller.nominal.format(controller.data.subTotal),
                   )
                 ],
               ),
               Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Diskon total :',
                   )),
                   Text('Rp.' +
-                      controller.nominal
-                          .format(double.parse(controller.data.diskonTotal))),
+                      controller.nominal.format(controller.data.diskonTotal)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Total :',
                   )),
-                  Text('Rp.' +
-                      controller.nominal
-                          .format(double.parse(controller.data.total))),
+                  Text(
+                      'Rp.' + controller.nominal.format(controller.data.total)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Bayar :',
                   )),
-                  Text('Rp.' +
-                      controller.nominal
-                          .format(double.parse(controller.data.bayar))),
+                  Text(
+                      'Rp.' + controller.nominal.format(controller.data.bayar)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Metode Bayar :',
                   )),
@@ -231,20 +229,19 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Kembali :',
                   )),
                   Text('Rp.' +
-                      controller.nominal
-                          .format(double.parse(controller.data.kembalian))),
+                      controller.nominal.format(controller.data.kembalian)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
+                  const Expanded(
                       child: Text(
                     'Status :',
                   )),

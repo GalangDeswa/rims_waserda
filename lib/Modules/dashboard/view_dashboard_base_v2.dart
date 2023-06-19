@@ -70,6 +70,14 @@ class dashboard_v2 extends GetView<dashboardController> {
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 30),
+                                child: Text(
+                                  controller.dateFormatdashboard
+                                      .format(DateTime.now()),
+                                  style: font().header,
+                                ),
+                              ),
                               CircleAvatar(
                                 radius: 25,
                                 backgroundColor: Colors.white,
@@ -114,11 +122,15 @@ class dashboard_v2 extends GetView<dashboardController> {
                                               ),
                                             ),
                                             title: Text(
-                                              'Rp. 5.250.000',
+                                              'Rp.' +
+                                                  controller.nominal.format(
+                                                      controller
+                                                          .pendapatanhariini
+                                                          .value),
                                               style: font().header_big_black,
                                             ),
                                             subtitle: Text(
-                                              'Pendapatan',
+                                              'Pendapatan hari ini',
                                               style: font().header_black,
                                             ),
                                           ),
@@ -158,11 +170,14 @@ class dashboard_v2 extends GetView<dashboardController> {
                                               ),
                                             ),
                                             title: Text(
-                                              'Rp. 250.000',
+                                              'Rp.' +
+                                                  controller.nominal.format(
+                                                      controller
+                                                          .bebanhariini.value),
                                               style: font().header_big_black,
                                             ),
                                             subtitle: Text(
-                                              'Beban',
+                                              'Beban hari ini',
                                               style: font().header_black,
                                             ),
                                           ),
@@ -201,7 +216,9 @@ class dashboard_v2 extends GetView<dashboardController> {
                                               ),
                                             ),
                                             title: Text(
-                                              '20',
+                                              controller.nominal.format(
+                                                  controller
+                                                      .transaksihariini.value),
                                               style: font().header_big_black,
                                             ),
                                             subtitle: Text(
@@ -240,64 +257,125 @@ class dashboard_v2 extends GetView<dashboardController> {
                                             subtitle: Text('Detail data toko'),
                                           ),
                                           Expanded(
-                                            child: Container(
-                                                //height: context.height_query / 3,
-                                                // color: Colors.red,
-                                                child: ListView(
-                                              children: [
-                                                Card(
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        border_radius()
-                                                            .icon_border,
-                                                    // side: BorderSide(color: color_template().primary, width: 3.5),
+                                            child: Obx(() {
+                                              return Container(
+                                                  //height: context.height_query / 3,
+                                                  // color: Colors.red,
+                                                  child: ListView(
+                                                children: [
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text(controller
+                                                          .nominal
+                                                          .format(controller
+                                                              .totalproduk
+                                                              .value)),
+                                                      subtitle:
+                                                          Text('Total produk'),
+                                                    ),
                                                   ),
-                                                  elevation:
-                                                      elevation().def_elevation,
-                                                  child: ListTile(
-                                                    title: Text('Rp. 150.000'),
-                                                    subtitle:
-                                                        Text('Total hutang'),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text(controller
+                                                          .nominal
+                                                          .format(controller
+                                                              .totalpelanggan
+                                                              .value)),
+                                                      subtitle: Text(
+                                                          'Total pelanggan'),
+                                                    ),
                                                   ),
-                                                ),
-                                                Card(
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        border_radius()
-                                                            .icon_border,
-                                                    // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text('Rp. ' +
+                                                          controller.nominal
+                                                              .format(controller
+                                                                  .totalpendapatan
+                                                                  .value)),
+                                                      subtitle: Text(
+                                                          'Total pendapatan'),
+                                                    ),
                                                   ),
-                                                  elevation:
-                                                      elevation().def_elevation,
-                                                  child: ListTile(
-                                                    title: Text('115'),
-                                                    subtitle:
-                                                        Text('Total produk'),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text(controller
+                                                          .nominal
+                                                          .format(controller
+                                                              .totaltransaksi
+                                                              .value)),
+                                                      subtitle: Text(
+                                                          'Total Transaksi '),
+                                                    ),
                                                   ),
-                                                ),
-                                                Card(
-                                                  margin: EdgeInsets.only(
-                                                      bottom: 10),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        border_radius()
-                                                            .icon_border,
-                                                    // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text('Rp. ' +
+                                                          controller.nominal
+                                                              .format(controller
+                                                                  .totalhutang
+                                                                  .value)),
+                                                      subtitle: Text(
+                                                          'Total hutang yang belum lunas'),
+                                                    ),
                                                   ),
-                                                  elevation:
-                                                      elevation().def_elevation,
-                                                  child: ListTile(
-                                                    title: Text('115'),
-                                                    subtitle:
-                                                        Text('Total produk'),
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
+                                                ],
+                                              ));
+                                            }),
                                           )
                                         ],
                                       ),

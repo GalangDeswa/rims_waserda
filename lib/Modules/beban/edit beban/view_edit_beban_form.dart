@@ -1,12 +1,10 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/controller_beban.dart';
-import 'package:rims_waserda/Modules/beban/edit%20jenis%20beban/view_tambah_jenis_beban.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
@@ -27,12 +25,12 @@ class edit_beban_form extends GetView<editbebanController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              header(
+              const header(
                 title: 'Edit Beban',
                 icon: FontAwesomeIcons.dollarSign,
                 iscenter: false,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Obx(() {
@@ -46,16 +44,17 @@ class edit_beban_form extends GetView<editbebanController> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  margin: const EdgeInsets.only(bottom: 10),
                                   // width: context.width_query / 2.2,
                                   // height: 100,
                                   child: TextFormField(
                                     controller: controller.nama.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: Icon(FontAwesomeIcons.boxOpen),
+                                      icon:
+                                          const Icon(FontAwesomeIcons.boxOpen),
                                       labelText: "Nama beban",
-                                      labelStyle: TextStyle(
+                                      labelStyle: const TextStyle(
                                         color: Colors.black87,
                                       ),
                                       border: OutlineInputBorder(
@@ -75,15 +74,15 @@ class edit_beban_form extends GetView<editbebanController> {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  margin: const EdgeInsets.only(bottom: 10),
                                   //  width: context.width_query / 3.3,
                                   child: TextFormField(
                                     controller: controller.keterangan.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: Icon(FontAwesomeIcons.pencil),
+                                      icon: const Icon(FontAwesomeIcons.pencil),
                                       labelText: "Deskripsi",
-                                      labelStyle: TextStyle(
+                                      labelStyle: const TextStyle(
                                         color: Colors.black87,
                                       ),
                                       border: OutlineInputBorder(
@@ -102,105 +101,106 @@ class edit_beban_form extends GetView<editbebanController> {
                                     },
                                   ),
                                 ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        child: Obx(() {
-                                          return DropdownButtonFormField2(
-                                            validator: (value) {
-                                              if (value == null) {
-                                                return 'Pilih kategori beban';
-                                              }
-                                              return null;
-                                            },
-                                            decoration: InputDecoration(
-                                              icon: Icon(
-                                                  FontAwesomeIcons.dollarSign),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                            ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        color: Colors.white)),
-                                            isExpanded: true,
-                                            hint: Text('Pilih Kategori'),
-                                            value:
-                                                controller.jenisbebanval.value,
-                                            items: controller
-                                                .jenisbebanlist.value
-                                                .map((item) {
-                                              return DropdownMenuItem(
-                                                child: Text(
-                                                    item.kategori.toString()),
-                                                value: item.id.toString(),
-                                              );
-                                            }).toList(),
-                                            onChanged: (val) {
-                                              controller.jenisbebanval.value =
-                                                  val!.toString();
-                                              print(controller.jenisbebanval);
-                                            },
-                                          );
-                                        }),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(left: 30, right: 5),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: color_template().primary,
-                                      ),
-                                      padding: EdgeInsets.all(3),
-                                      child: IconButton(
-                                          color: Colors.white,
-                                          onPressed: () {
-                                            Get.dialog(AlertDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0))),
-                                                contentPadding: EdgeInsets.zero,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                content: Builder(
-                                                  builder: (context) {
-                                                    return Container(
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        width: context
-                                                                .width_query /
-                                                            2,
-                                                        height: context
-                                                                .height_query /
-                                                            2,
-                                                        child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        30),
-                                                            child:
-                                                                tambah_jenis_beban()));
-                                                  },
-                                                )));
-                                          },
-                                          icon: Icon(Icons.add)),
-                                    )
-                                  ],
-                                ),
+                                // Row(
+                                //   children: [
+                                //     Expanded(
+                                //       child: Container(
+                                //         child: Obx(() {
+                                //           return DropdownButtonFormField2(
+                                //             validator: (value) {
+                                //               if (value == null) {
+                                //                 return 'Pilih kategori beban';
+                                //               }
+                                //               return null;
+                                //             },
+                                //             decoration: InputDecoration(
+                                //               icon: const Icon(
+                                //                   FontAwesomeIcons.dollarSign),
+                                //               border: OutlineInputBorder(
+                                //                 borderRadius:
+                                //                     BorderRadius.circular(15),
+                                //               ),
+                                //             ),
+                                //             dropdownStyleData:
+                                //                 DropdownStyleData(
+                                //                     decoration: BoxDecoration(
+                                //                         borderRadius:
+                                //                             BorderRadius
+                                //                                 .circular(10),
+                                //                         color: Colors.white)),
+                                //             isExpanded: true,
+                                //             hint: const Text('Pilih Kategori'),
+                                //             value:
+                                //                 controller.jenisbebanval.value,
+                                //             items: controller
+                                //                 .jenisbebanlistlocal
+                                //                 .map((item) {
+                                //               return DropdownMenuItem(
+                                //                 child: Text(
+                                //                     item.kategori.toString()),
+                                //                 value: item.id.toString(),
+                                //               );
+                                //             }).toList(),
+                                //             onChanged: (val) {
+                                //               controller.jenisbebanval.value =
+                                //                   val!.toString();
+                                //               print(controller.jenisbebanval);
+                                //             },
+                                //           );
+                                //         }),
+                                //       ),
+                                //     ),
+                                //     Container(
+                                //       margin: const EdgeInsets.only(
+                                //           left: 30, right: 5),
+                                //       decoration: BoxDecoration(
+                                //         shape: BoxShape.circle,
+                                //         color: color_template().primary,
+                                //       ),
+                                //       padding: const EdgeInsets.all(3),
+                                //       child: IconButton(
+                                //           color: Colors.white,
+                                //           onPressed: () {
+                                //             Get.dialog(AlertDialog(
+                                //                 shape:
+                                //                     const RoundedRectangleBorder(
+                                //                         borderRadius:
+                                //                             BorderRadius.all(
+                                //                                 Radius.circular(
+                                //                                     20.0))),
+                                //                 contentPadding: EdgeInsets.zero,
+                                //                 backgroundColor:
+                                //                     Colors.transparent,
+                                //                 content: Builder(
+                                //                   builder: (context) {
+                                //                     return Container(
+                                //                         padding:
+                                //                             EdgeInsets.zero,
+                                //                         width: context
+                                //                                 .width_query /
+                                //                             2,
+                                //                         height: context
+                                //                                 .height_query /
+                                //                             2,
+                                //                         child: ClipRRect(
+                                //                             borderRadius:
+                                //                                 BorderRadius
+                                //                                     .circular(
+                                //                                         30),
+                                //                             child:
+                                //                                 const tambah_jenis_beban()));
+                                //                   },
+                                //                 )));
+                                //           },
+                                //           icon: const Icon(Icons.add)),
+                                //     )
+                                //   ],
+                                // ),
                               ],
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               child: VerticalDivider(
                                 color: color_template().primary,
@@ -211,7 +211,7 @@ class edit_beban_form extends GetView<editbebanController> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(bottom: 10),
+                                margin: const EdgeInsets.only(bottom: 10),
                                 child: TextFormField(
                                   onTap: () {
                                     FocusScope.of(context)
@@ -251,9 +251,9 @@ class edit_beban_form extends GetView<editbebanController> {
                                   controller: controller.tanggal.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
-                                    icon: Icon(FontAwesomeIcons.calendar),
+                                    icon: const Icon(FontAwesomeIcons.calendar),
                                     labelText: "Tanggal",
-                                    labelStyle: TextStyle(
+                                    labelStyle: const TextStyle(
                                       color: Colors.black87,
                                     ),
                                     border: OutlineInputBorder(
@@ -283,9 +283,9 @@ class edit_beban_form extends GetView<editbebanController> {
                                   print(controller.jumlahbeban.value);
                                 }),
                                 decoration: InputDecoration(
-                                  icon: Icon(Icons.pin_drop),
+                                  icon: const Icon(Icons.pin_drop),
                                   labelText: "Jumlah",
-                                  labelStyle: TextStyle(
+                                  labelStyle: const TextStyle(
                                     color: Colors.black87,
                                   ),
                                   border: OutlineInputBorder(
@@ -304,7 +304,7 @@ class edit_beban_form extends GetView<editbebanController> {
                             ],
                           )),
                           Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               child: VerticalDivider(
                                 color: color_template().primary,
@@ -314,19 +314,20 @@ class edit_beban_form extends GetView<editbebanController> {
                       ),
                     ));
               }),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               button_solid_custom(
                   onPressed: () {
                     if (controller.formKeybeban.value.currentState!
                         .validate()) {
-                      controller.editBeban();
+                      controller.editBebanLocal();
+                      //controller.jjj();
                     }
                   },
                   child: Text(
                     'edit beban'.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),

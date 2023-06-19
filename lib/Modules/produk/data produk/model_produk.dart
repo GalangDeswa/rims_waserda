@@ -15,14 +15,15 @@ class ModelProduk {
     required this.statusCode,
     required this.messages,
     required this.data,
-    required this.meta,
+    // required this.meta,
   });
 
   bool success;
   int statusCode;
   String messages;
   List<DataProduk> data;
-  Meta meta;
+
+  //Meta meta;
 
   factory ModelProduk.fromJson(Map<String, dynamic> json) => ModelProduk(
         success: json["success"],
@@ -30,7 +31,7 @@ class ModelProduk {
         messages: json["messages"],
         data: List<DataProduk>.from(
             json["data"].map((x) => DataProduk.fromJson(x))),
-        meta: Meta.fromJson(json["meta"]),
+        // meta: Meta.fromJson(json["meta"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,60 +39,62 @@ class ModelProduk {
         "status_code": statusCode,
         "messages": messages,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        "meta": meta.toJson(),
+        //"meta": meta.toJson(),
       };
 }
 
 class DataProduk {
   DataProduk({
-    required this.id,
+    this.id,
     this.barcode,
     required this.idToko,
-    required this.idUser,
+    this.idUser,
     required this.idJenis,
-    required this.namaJenis,
-    required this.idKategori,
+    this.namaJenis,
+    this.idKategori,
     required this.idJenisStock,
     required this.namaProduk,
     required this.deskripsi,
-    required this.qty,
+    this.qty,
     required this.harga,
     required this.hargaModal,
-    required this.diskonBarang,
-    required this.image,
-    required this.status,
-    required this.updated,
-    required this.createdAt,
-    required this.updatedAt,
+    this.diskonBarang,
+    this.image,
+    this.status,
+    this.updated,
+    this.createdAt,
+    this.updatedAt,
+    this.sync,
   });
 
-  int id;
+  int? id;
   String? barcode;
   int idToko;
-  int idUser;
+  int? idUser;
   int idJenis;
-  String namaJenis;
-  int idKategori;
+  String? namaJenis;
+  int? idKategori;
   int idJenisStock;
   String namaProduk;
   String deskripsi;
-  String qty;
-  String harga;
-  String hargaModal;
-  int diskonBarang;
-  String image;
-  int status;
-  Updated? updated;
-  CreatedAt? createdAt;
-  UpdatedAt? updatedAt;
+  int? qty;
+  int harga;
+  int hargaModal;
+  int? diskonBarang;
+  String? image;
+  int? status;
+  String? updated;
+  String? createdAt;
+  String? updatedAt;
+  String? sync;
 
   factory DataProduk.fromJson(Map<String, dynamic> json) => DataProduk(
         id: json["id"],
-        barcode: json["barcode"],
+        barcode: json["barcode"] ?? '-',
         idToko: json["id_toko"],
         idUser: json["id_user"],
         idJenis: json["id_jenis"],
-        namaJenis: json["nama_jenis"],
+        namaJenis: json["nama_jenis"] ?? '-',
         idKategori: json["id_kategori"],
         idJenisStock: json["id_jenis_stock"],
         namaProduk: json["nama_produk"],
@@ -102,9 +105,10 @@ class DataProduk {
         diskonBarang: json["diskon_barang"],
         image: json["image"],
         status: json["status"],
-        updated: updatedValues.map[json["updated"]],
-        createdAt: createdAtValues.map[json["created_at"]],
-        updatedAt: updatedAtValues.map[json["updated_at"]],
+        updated: json["updated"] ?? '-',
+        createdAt: json["created_at"] ?? '-',
+        updatedAt: json["updated_at"] ?? '-',
+        sync: json['sync'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -127,7 +131,44 @@ class DataProduk {
         "updated": updatedValues.reverse[updated],
         "created_at": createdAtValues.reverse[createdAt],
         "updated_at": updatedAtValues.reverse[updatedAt],
+        "sync": sync,
       };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+    map['id'] = id;
+    map['id_user'] = idUser;
+    map['barcode'] = barcode ?? '-';
+    map['id_toko'] = idToko;
+    map['id_jenis'] = idJenis;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_produk'] = namaProduk;
+    map['deskripsi'] = deskripsi;
+    map['qty'] = qty;
+    map['harga'] = harga;
+    map['harga_modal'] = hargaModal;
+    map['diskon_barang'] = diskonBarang;
+    map['image'] = image ?? '-';
+    map['status'] = status;
+    map['sync'] = sync;
+    map['nama_jenis'] = namaJenis ?? '-';
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
+
+  Map<String, dynamic> synclocal() {
+    var map = <String, dynamic>{};
+
+    map['sync'] = sync;
+
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
 }
 
 enum CreatedAt { THE_13042023, THE_08042023 }
@@ -164,101 +205,102 @@ final updatedAtValues = EnumValues({
   "13-04-2023": UpdatedAt.THE_13042023
 });
 
-class Meta {
-  Meta({
-    required this.catatan,
-    required this.pagination,
-  });
-
-  Catatan catatan;
-  Pagination pagination;
-
-  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        catatan: Catatan.fromJson(json["catatan"]),
-        pagination: Pagination.fromJson(json["pagination"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "catatan": catatan.toJson(),
-        "pagination": pagination.toJson(),
-      };
-}
-
-class Catatan {
-  Catatan({
-    required this.kategori,
-    required this.status,
-  });
-
-  String kategori;
-  String status;
-
-  factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
-        kategori: json["kategori"],
-        status: json["status"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "kategori": kategori,
-        "status": status,
-      };
-}
-
-class Pagination {
-  Pagination({
-    required this.total,
-    required this.count,
-    required this.perPage,
-    required this.currentPage,
-    required this.totalPages,
-    //  this.links,
-  });
-
-  int total;
-  int count;
-  int perPage;
-  int currentPage;
-  int totalPages;
-  //List<Links>? links;
-
-  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        total: json["total"],
-        count: json["count"],
-        perPage: json["per_page"],
-        currentPage: json["current_page"],
-        totalPages: json["total_pages"],
-        //  links: List<Links>.from(json["links"].map((x) => Links.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "total": total,
-        "count": count,
-        "per_page": perPage,
-        "current_page": currentPage,
-        "total_pages": totalPages,
-        //"links": List<dynamic>.from(links!.map((x) => x)),
-      };
-}
-
-class Links {
-  Links({
-    this.previous,
-    this.next,
-  });
-
-  String? previous;
-  String? next;
-
-  factory Links.fromJson(Map<String, dynamic> json) => Links(
-        previous: json["previous"],
-        next: json["next"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "previous": previous,
-        "next": next,
-      };
-}
+// class Meta {
+//   Meta({
+//     required this.catatan,
+//     required this.pagination,
+//   });
+//
+//   Catatan catatan;
+//   Pagination pagination;
+//
+//   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+//         catatan: Catatan.fromJson(json["catatan"]),
+//         pagination: Pagination.fromJson(json["pagination"]),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "catatan": catatan.toJson(),
+//         "pagination": pagination.toJson(),
+//       };
+// }
+//
+// class Catatan {
+//   Catatan({
+//     required this.kategori,
+//     required this.status,
+//   });
+//
+//   String kategori;
+//   String status;
+//
+//   factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
+//         kategori: json["kategori"],
+//         status: json["status"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "kategori": kategori,
+//         "status": status,
+//       };
+// }
+//
+// class Pagination {
+//   Pagination({
+//     required this.total,
+//     required this.count,
+//     required this.perPage,
+//     required this.currentPage,
+//     required this.totalPages,
+//     //  this.links,
+//   });
+//
+//   int total;
+//   int count;
+//   int perPage;
+//   int currentPage;
+//   int totalPages;
+//
+//   //List<Links>? links;
+//
+//   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+//         total: json["total"],
+//         count: json["count"],
+//         perPage: json["per_page"],
+//         currentPage: json["current_page"],
+//         totalPages: json["total_pages"],
+//         //  links: List<Links>.from(json["links"].map((x) => Links.fromJson(x))),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "total": total,
+//         "count": count,
+//         "per_page": perPage,
+//         "current_page": currentPage,
+//         "total_pages": totalPages,
+//         //"links": List<dynamic>.from(links!.map((x) => x)),
+//       };
+// }
+//
+// class Links {
+//   Links({
+//     this.previous,
+//     this.next,
+//   });
+//
+//   String? previous;
+//   String? next;
+//
+//   factory Links.fromJson(Map<String, dynamic> json) => Links(
+//         previous: json["previous"],
+//         next: json["next"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "previous": previous,
+//         "next": next,
+//       };
+// }
 
 class EnumValues<T> {
   Map<String, T> map;

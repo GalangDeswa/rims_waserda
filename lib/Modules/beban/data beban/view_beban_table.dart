@@ -25,7 +25,7 @@ class beban_table extends GetView<bebanController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -41,10 +41,11 @@ class beban_table extends GetView<bebanController> {
                           Get.dialog(Container(
                             width: 300,
                             height: 150,
-                            child: showloading(),
+                            child: const showloading(),
                           ));
-                          await controller.fetchDataBeban();
-                          await controller.fetchJenisBeban();
+                          print(DateTime.now());
+                          // await controller.fetchDataBeban();
+                          // await controller.fetchJenisBeban();
                           Get.back();
                         },
                       ),
@@ -74,7 +75,7 @@ class beban_table extends GetView<bebanController> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Row(
@@ -83,17 +84,18 @@ class beban_table extends GetView<bebanController> {
                 Obx(() {
                   return Expanded(
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       //width: 200,
                       child: TextFormField(
                         controller: controller.search.value,
                         onChanged: ((String pass) {
-                          controller.fetchDataBeban();
+                          controller.searchbebanlocal();
                         }),
                         decoration: InputDecoration(
-                          icon: Icon(Icons.add_box),
+                          icon: const Icon(Icons.add_box),
                           labelText: "cari beban",
-                          labelStyle: TextStyle(
+                          hintText: 'Nama beban / Tanggal beban',
+                          labelStyle: const TextStyle(
                             color: Colors.black87,
                           ),
                           border: UnderlineInputBorder(
@@ -101,7 +103,7 @@ class beban_table extends GetView<bebanController> {
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
                         ),
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please enter email';
@@ -118,104 +120,73 @@ class beban_table extends GetView<bebanController> {
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    //width: 200,
-                    child: TextFormField(
-                      controller: controller.searchhariini.value,
-                      onChanged: ((String pass) {
-                        controller.fetchDataBebanHariIni();
-                      }),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.edit_calendar_outlined),
-                        labelText: "cari beban hari ini",
-                        labelStyle: TextStyle(
-                          color: Colors.black87,
-                        ),
-                        border: UnderlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      textAlign: TextAlign.center,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter email';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                ),
-                icon_button_custom(
-                    onPressed: () {
-                      controller.fetchDataBebanHariIni();
-                    },
-                    icon: Icons.search,
-                    container_color: color_template().primary),
               ],
             ),
             Expanded(
               child: Obx(() {
+                var source =
+                    bebanTable(controller.databebanlistlocal.value, context)
+                        .obs;
                 onSortColum(int columnIndex, bool ascending) {
                   if (columnIndex == 0) {
                     if (ascending) {
-                      controller.databebanlist
-                          .sort((a, b) => a.tgl.compareTo(b.tgl));
+                      controller.databebanlistlocal
+                          .sort((a, b) => a.tgl!.compareTo(b.tgl!));
                     } else {
-                      controller.databebanlist
-                          .sort((a, b) => b.tgl.compareTo(a.tgl));
+                      controller.databebanlistlocal
+                          .sort((a, b) => b.tgl!.compareTo(a.tgl!));
                     }
                   } else if (columnIndex == 1) {
                     if (ascending) {
-                      controller.databebanlist
-                          .sort((a, b) => a.nama.compareTo(b.nama));
+                      controller.databebanlistlocal
+                          .sort((a, b) => a.nama!.compareTo(b.nama!));
                     } else {
-                      controller.databebanlist
-                          .sort((a, b) => b.nama.compareTo(a.nama));
+                      controller.databebanlistlocal
+                          .sort((a, b) => b.nama!.compareTo(a.nama!));
                     }
                   } else if (columnIndex == 2) {
                     if (ascending) {
-                      controller.databebanlist
-                          .sort((a, b) => b.jumlah.compareTo(a.jumlah));
+                      controller.databebanlistlocal
+                          .sort((a, b) => b.jumlah!.compareTo(a.jumlah!));
                     } else {
-                      controller.databebanlist
-                          .sort((a, b) => a.jumlah.compareTo(b.jumlah));
+                      controller.databebanlistlocal
+                          .sort((a, b) => a.jumlah!.compareTo(b.jumlah!));
                     }
                   } else if (columnIndex == 3) {
                     if (ascending) {
-                      controller.databebanlist.sort(
-                          (a, b) => b.namaKtrBeban.compareTo(a.namaKtrBeban));
+                      controller.databebanlistlocal.sort(
+                          (a, b) => b.namaKtrBeban!.compareTo(a.namaKtrBeban!));
                     } else {
-                      controller.databebanlist.sort(
-                          (a, b) => a.namaKtrBeban.compareTo(b.namaKtrBeban));
+                      controller.databebanlistlocal.sort(
+                          (a, b) => a.namaKtrBeban!.compareTo(b.namaKtrBeban!));
                     }
                   }
                 }
 
                 return Container(
                   // height: context.height_query / 2.5,
-                  margin: EdgeInsets.only(top: 12),
+                  margin: const EdgeInsets.only(top: 12),
                   // width: double.infinity,
-                  child: controller.databebanlist.value.isEmpty
-                      ? Container(width: 100, height: 100, child: showloading())
+                  child: controller.succ == false
+                      ? Container(
+                          width: 100, height: 100, child: const showloading())
                       :
                       //untuk paginated table yg pakek data source harus buat var lg di dalam obx
                       //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
 
-                      DataTable2(
+                      PaginatedDataTable2(
                           sortAscending: controller.sort.value,
                           sortColumnIndex: controller.ColIndex.value,
                           fixedTopRows: 1,
                           horizontalMargin: 10,
+                          renderEmptyRowsInTheEnd: false,
                           columnSpacing: 5,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
                           columns: <DataColumn>[
                             DataColumn(
-                              label: Text(
+                              label: const Text(
                                 'Tanggal',
                               ),
                               onSort: (int columnIndex, bool ascending) {
@@ -225,7 +196,7 @@ class beban_table extends GetView<bebanController> {
                               },
                             ),
                             DataColumn(
-                              label: Text(
+                              label: const Text(
                                 'Nama Beban',
                               ),
                               onSort: (int columnIndex, bool ascending) {
@@ -235,7 +206,7 @@ class beban_table extends GetView<bebanController> {
                               },
                             ),
                             DataColumn(
-                              label: Text(
+                              label: const Text(
                                 'jumlah',
                               ),
                               onSort: (int columnIndex, bool ascending) {
@@ -245,7 +216,7 @@ class beban_table extends GetView<bebanController> {
                               },
                             ),
                             DataColumn(
-                              label: Text(
+                              label: const Text(
                                 'Kategori',
                               ),
                               onSort: (int columnIndex, bool ascending) {
@@ -254,56 +225,13 @@ class beban_table extends GetView<bebanController> {
                                 onSortColum(columnIndex, ascending);
                               },
                             ),
-                            DataColumn(
+                            const DataColumn(
                               label: Text(
                                 'Aksi',
                               ),
                             ),
                           ],
-                          rows: List.generate(
-                              controller.databebanlist.length,
-                              (index) => DataRow(cells: [
-                                    DataCell(Text(
-                                        controller.databebanlist[index].tgl)),
-                                    DataCell(Text(
-                                        controller.databebanlist[index].nama)),
-                                    DataCell(Text('Rp. ' +
-                                        controller.nominal.format(double.parse(
-                                            controller.databebanlist[index]
-                                                .jumlah)))),
-                                    DataCell(Text(controller
-                                        .databebanlist[index].namaKtrBeban)),
-                                    DataCell(Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        IconButton(
-                                            onPressed: () {
-                                              Get.toNamed('/edit_beban',
-                                                  arguments: controller
-                                                      .databebanlist[index]);
-                                            },
-                                            icon: Icon(
-                                              Icons.edit,
-                                              size: 18,
-                                              color: color_template().secondary,
-                                            )),
-                                        IconButton(
-                                            onPressed: () {
-                                              popscreen().deletebebanv2(
-                                                  controller,
-                                                  controller
-                                                      .databebanlist[index]);
-                                            },
-                                            icon: Icon(
-                                              Icons.delete,
-                                              size: 18,
-                                              color: color_template().tritadery,
-                                            ))
-                                      ],
-                                    )),
-                                  ])),
+                          source: source.value,
                           empty: Center(
                             child: Text(
                               "Data Kosong",
@@ -313,50 +241,51 @@ class beban_table extends GetView<bebanController> {
                 );
               }),
             ),
-            Obx(() {
-              return Container(
-                margin: EdgeInsets.only(left: context.width_query / 1.9),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Data perbaris :'),
-                    Text(controller.perpage.value.toString()),
-                    controller.currentpage > 1
-                        ? IconButton(
-                            onPressed: () {
-                              controller.back();
-                            },
-                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleLeft,
-                              size: 20,
-                              color: Colors.grey,
-                            )),
-                    Text(controller.currentpage.value.toString() +
-                        ' - ' +
-                        controller.totalpage.value.toString()),
-                    controller.currentpage < controller.totalpage.value
-                        ? IconButton(
-                            onPressed: () {
-                              controller.next();
-                            },
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              size: 20,
-                            ))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              color: Colors.grey,
-                              size: 20,
-                            ))
-                  ],
-                ),
-              );
-            })
+            // Obx(() {
+            //   return Container(
+            //     margin: EdgeInsets.only(left: context.width_query / 1.9),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //       children: [
+            //         const Text('Data perbaris :'),
+            //         Text(controller.perpage.value.toString()),
+            //         controller.currentpage > 1
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.back();
+            //                 },
+            //                 icon: const Icon(FontAwesomeIcons.angleLeft,
+            //                     size: 20))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleLeft,
+            //                   size: 20,
+            //                   color: Colors.grey,
+            //                 )),
+            //         Text(controller.currentpage.value.toString() +
+            //             ' - ' +
+            //             controller.totalpage.value.toString()),
+            //         controller.currentpage < controller.totalpage.value
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.next();
+            //                 },
+            //                 icon: const Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   size: 20,
+            //                 ))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   color: Colors.grey,
+            //                   size: 20,
+            //                 ))
+            //       ],
+            //     ),
+            //   );
+            // })
           ],
         ),
       ),
@@ -366,8 +295,9 @@ class beban_table extends GetView<bebanController> {
 
 class bebanTable extends DataTableSource {
   final List<DataBeban> data;
+  final BuildContext context;
 
-  bebanTable(this.data);
+  bebanTable(this.data, this.context);
 
   var con = Get.find<bebanController>();
 
@@ -383,40 +313,35 @@ class bebanTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Center(child: Text(data[index].nama))),
-      DataCell(Center(child: Text(data[index].keterangan))),
-      DataCell(Center(child: Text(data[index].tgl))),
-      DataCell(Center(
-          child: Text(
-              'Rp. ' + con.nominal.format(double.parse(data[index].jumlah))))),
-      DataCell(Center(child: Text(data[index].namaKtrBeban))),
-      DataCell(Center(
-        child: Row(
-          children: [
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    Get.toNamed('/edit_beban', arguments: data[index]);
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    size: 18,
-                    color: color_template().secondary,
-                  )),
-            ),
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    popscreen().deletebebanv2(con, data[index]);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    size: 18,
-                    color: color_template().tritadery,
-                  )),
-            )
-          ],
-        ),
+      DataCell(Text(con.dateFormat.format(DateTime.parse(data[index].tgl!)))),
+      DataCell(Text(data[index].nama!)),
+      DataCell(Text('Rp. ' + con.nominal.format(data[index].jumlah))),
+      DataCell(Text(data[index].namaKtrBeban.toString())),
+      DataCell(Row(
+        children: [
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  Get.toNamed('/edit_beban', arguments: data[index]);
+                },
+                icon: Icon(
+                  Icons.edit,
+                  size: 18,
+                  color: color_template().secondary,
+                )),
+          ),
+          Expanded(
+            child: IconButton(
+                onPressed: () {
+                  popscreen().deletebebanv2(con, data[index]);
+                },
+                icon: Icon(
+                  Icons.delete,
+                  size: 18,
+                  color: color_template().tritadery,
+                )),
+          )
+        ],
       )),
     ]);
   }

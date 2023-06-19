@@ -50,12 +50,12 @@ class popscreen {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "Hapus " + arg.namaPelanggan + '?',
+                    "Hapus " + arg.namaPelanggan! + '?',
                     style: font().header_black,
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.hapusPelanggan(arg.id.toString());
+                        controller.hapuspelangganlocal(arg.id!);
                         //controller.deleteproduk(arg.id.toString());
                       },
                       child: Text(
@@ -109,8 +109,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.reversalPenjualan(arg.id.toString());
-                        //controller.deleteproduk(arg.id.toString());
+                        controller.reversalPenjualanlocal(arg.id!);
                       },
                       child: Text(
                         'Batalkan',
@@ -161,7 +160,7 @@ class popscreen {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          "Hapus beban " + arg.nama + '?',
+                          "Hapus beban " + arg.nama! + '?',
                           style: font().header_black,
                         ),
                         button_solid_custom(
@@ -215,12 +214,12 @@ class popscreen {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "Hapus beban " + arg.nama + '?',
+                    "Hapus beban " + arg.nama! + '?',
                     style: font().header_black,
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.hapusBeban(arg.id.toString());
+                        controller.deletebebanlocal(arg.id!);
                         //controller.deleteproduk(arg.id.toString());
                       },
                       child: Text(
@@ -326,12 +325,12 @@ class popscreen {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "Hapus kategori " + arg.kategori + '?',
+                    "Hapus kategori " + arg.kategori! + '?',
                     style: font().header_black,
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.deleteJenisBeban(arg.id.toString());
+                        controller.deletejenisbebanlocal(arg.id!);
                       },
                       child: Text(
                         'Hapus',
@@ -340,7 +339,9 @@ class popscreen {
                       width: context.width_query / 4,
                       height: context.height_query / 10),
                   button_border_custom(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                      },
                       child: Text(
                         'Batal',
                         style: font().primary,
@@ -376,12 +377,12 @@ class popscreen {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "Hapus data " + arg.namaJenis + '?',
+                    "Hapus data " + arg.namaJenis! + '?',
                     style: font().header_black,
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.deletejenis(arg.id.toString());
+                        controller.deletejenislocal(arg.id!);
                       },
                       child: Text(
                         'Hapus',
@@ -390,7 +391,9 @@ class popscreen {
                       width: context.width_query / 4,
                       height: context.height_query / 10),
                   button_border_custom(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                      },
                       child: Text(
                         'Batal',
                         style: font().primary,
@@ -456,6 +459,58 @@ class popscreen {
     ));
   }
 
+  deleteproduklocal(produkController controller, DataProduk arg) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Hapus Data',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+          base_color: color_template().tritadery),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    "Hapus produk " + arg.namaProduk + '?',
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        controller.deleteproduklocal(arg.id!);
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query / 4,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
+  }
+
   void deleteproduk(
       BuildContext context, produkController controller, DataProduk arg) {
     showDialog(
@@ -496,7 +551,9 @@ class popscreen {
                             width: context.width_query / 4,
                             height: context.height_query / 10),
                         button_border_custom(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.back();
+                            },
                             child: Text(
                               'Batal',
                               style: font().primary,
@@ -596,11 +653,27 @@ class popscreen {
                           style: font().reguler),
                     ],
                   ),
+                  controller.meja.value.text.isEmpty ||
+                          controller.meja.value.text == null ||
+                          controller.meja.value.text == ''
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Meja:', style: font().reguler),
+                            Text(controller.meja.value.text,
+                                style: font().reguler),
+                          ],
+                        ),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Pembayaran:', style: font().reguler),
-                      Text(controller.keypadController.value.text,
+                      Text(
+                          controller.keypadController.value.text.isNotEmpty
+                              ? controller.keypadController.value.text
+                              : '-',
                           style: font().reguler),
                     ],
                   ),
@@ -608,7 +681,10 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Kembalian :', style: font().reguler),
-                      Text(controller.kembalian.value.text,
+                      Text(
+                          controller.kembalian.value.text.isNotEmpty
+                              ? controller.kembalian.value.text
+                              : '-',
                           style: font().reguler),
                     ],
                   ),
@@ -653,9 +729,13 @@ class popscreen {
                           height: 50),
                       button_solid_custom(
                           onPressed: () {
-                            controller.pembayaran();
+                            print(
+                                'bayar local------------------------------->');
+                            controller.pembayaranlocal(controller.id_toko);
                           },
-                          child: Text('Bayar'),
+                          child: Text(controller.groupindex.value != 3
+                              ? 'Bayar'
+                              : 'Hutang'),
                           width: 100,
                           height: 50),
                     ],
@@ -1430,7 +1510,7 @@ class popscreen {
                       child: SingleChildScrollView(
                         child: Obx(() {
                           return Form(
-                              key: controller.formKey.value,
+                              key: controller.formKeyedituser.value,
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,

@@ -73,14 +73,18 @@ class edit_jenis_beban extends GetView<editjenisbebanController> {
                                     textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
-                                        return 'Please enter email';
+                                        return 'Masukan kategori beban';
                                       }
                                       return null;
                                     },
                                   ),
                                   button_solid_custom(
                                       onPressed: () {
-                                        controller.editJenisBeban();
+                                        if (controller
+                                            .formKeyjenis.value.currentState!
+                                            .validate()) {
+                                          controller.editJenisBebanLocal();
+                                        }
                                       },
                                       child: Text(
                                         'edit jenis',

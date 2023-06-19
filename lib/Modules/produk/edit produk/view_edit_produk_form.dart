@@ -1,8 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,6 @@ import 'package:rims_waserda/Modules/produk/edit%20produk/controller_edit_produk
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import '../jenis produk/model_jenisproduk.dart';
 
 class edit_produk_form extends GetView<editprodukController> {
   const edit_produk_form({Key? key}) : super(key: key);
@@ -31,12 +29,12 @@ class edit_produk_form extends GetView<editprodukController> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              header(
+              const header(
                 title: 'Edit Produk',
                 icon: FontAwesomeIcons.boxOpen,
                 iscenter: false,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Obx(() {
@@ -50,16 +48,17 @@ class edit_produk_form extends GetView<editprodukController> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  margin: const EdgeInsets.only(bottom: 10),
                                   // width: context.width_query / 2.2,
                                   // height: 100,
                                   child: TextFormField(
                                     controller: controller.nama_produk.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: Icon(FontAwesomeIcons.boxOpen),
+                                      icon:
+                                          const Icon(FontAwesomeIcons.boxOpen),
                                       labelText: "Nama produk",
-                                      labelStyle: TextStyle(
+                                      labelStyle: const TextStyle(
                                         color: Colors.black87,
                                       ),
                                       border: OutlineInputBorder(
@@ -79,15 +78,15 @@ class edit_produk_form extends GetView<editprodukController> {
                                   ),
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(bottom: 10),
+                                  margin: const EdgeInsets.only(bottom: 10),
                                   //  width: context.width_query / 3.3,
                                   child: TextFormField(
                                     controller: controller.desc.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: Icon(FontAwesomeIcons.pencil),
+                                      icon: const Icon(FontAwesomeIcons.pencil),
                                       labelText: "Deskripsi",
-                                      labelStyle: TextStyle(
+                                      labelStyle: const TextStyle(
                                         color: Colors.black87,
                                       ),
                                       border: OutlineInputBorder(
@@ -111,14 +110,21 @@ class edit_produk_form extends GetView<editprodukController> {
                                     Container(
                                       width: 200,
                                       child: CheckboxListTile(
-                                        subtitle: Text("opsional"),
-                                        title: Text("Foto produk?"),
+                                        subtitle: const Text("opsional"),
+                                        title: const Text("Foto produk?"),
                                         checkColor: Colors.white,
                                         //  fillColor: MaterialStateProperty.resolveWith(getColor),
                                         value: controller.checkfoto.value,
                                         onChanged: (bool? value) {
                                           controller.checkfoto.value = value!;
+                                          if (controller.checkfoto.value ==
+                                              false) {
+                                            controller.data.image = null;
+                                          } else {
+                                            controller.data.image = '-';
+                                          }
                                           print(controller.checkfoto.value);
+                                          print(controller.data.image);
                                           // controller.check == true;
                                         },
                                       ),
@@ -141,9 +147,11 @@ class edit_produk_form extends GetView<editprodukController> {
                                                     ),
                                                   ),
                                                   Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10, right: 5),
-                                                    padding: EdgeInsets.all(3),
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 10, right: 5),
+                                                    padding:
+                                                        const EdgeInsets.all(3),
                                                     decoration: BoxDecoration(
                                                       shape: BoxShape.circle,
                                                       color: color_template()
@@ -190,7 +198,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                                         controller
                                                             .pilihsourcefoto();
                                                       },
-                                                      icon: Icon(
+                                                      icon: const Icon(
                                                         Icons.add,
                                                         color: Colors.white,
                                                       ),
@@ -198,7 +206,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                                   ),
                                                 ],
                                               )
-                                            : controller.data.image != ''
+                                            : controller.data.image != '-'
                                                 ? Row(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
@@ -206,17 +214,18 @@ class edit_produk_form extends GetView<editprodukController> {
                                                       Container(
                                                         width: 100,
                                                         height: 100,
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl: controller
-                                                              .data.image,
-                                                        ),
+                                                        child: Image.memory(
+                                                            base64Decode(
+                                                                controller.data
+                                                                    .image)),
                                                       ),
                                                       Container(
-                                                        margin: EdgeInsets.only(
+                                                        margin: const EdgeInsets
+                                                                .only(
                                                             left: 10, right: 5),
                                                         padding:
-                                                            EdgeInsets.all(3),
+                                                            const EdgeInsets
+                                                                .all(3),
                                                         decoration:
                                                             BoxDecoration(
                                                           shape:
@@ -268,7 +277,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                                             controller
                                                                 .pilihsourcefoto();
                                                           },
-                                                          icon: Icon(
+                                                          icon: const Icon(
                                                             Icons.add,
                                                             color: Colors.white,
                                                           ),
@@ -284,7 +293,8 @@ class edit_produk_form extends GetView<editprodukController> {
                                                         width: 100,
                                                         height: 100,
                                                         padding:
-                                                            EdgeInsets.all(10),
+                                                            const EdgeInsets
+                                                                .all(10),
                                                         decoration:
                                                             BoxDecoration(
                                                           borderRadius:
@@ -294,7 +304,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                                               color_template()
                                                                   .primary,
                                                         ),
-                                                        child: Icon(
+                                                        child: const Icon(
                                                           FontAwesomeIcons
                                                               .image,
                                                           color: Colors.white,
@@ -302,10 +312,12 @@ class edit_produk_form extends GetView<editprodukController> {
                                                         ),
                                                       ),
                                                       Container(
-                                                        margin: EdgeInsets.only(
+                                                        margin: const EdgeInsets
+                                                                .only(
                                                             left: 10, right: 5),
                                                         padding:
-                                                            EdgeInsets.all(3),
+                                                            const EdgeInsets
+                                                                .all(3),
                                                         decoration:
                                                             BoxDecoration(
                                                           shape:
@@ -357,7 +369,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                                             controller
                                                                 .pilihsourcefoto();
                                                           },
-                                                          icon: Icon(
+                                                          icon: const Icon(
                                                             Icons.add,
                                                             color: Colors.white,
                                                           ),
@@ -371,7 +383,7 @@ class edit_produk_form extends GetView<editprodukController> {
                             ),
                           ),
                           Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               child: VerticalDivider(
                                 color: color_template().primary,
@@ -381,158 +393,158 @@ class edit_produk_form extends GetView<editprodukController> {
                               child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(bottom: 10),
-                                      //width: context.width_query / 3.3,
-
-                                      child: Obx(() {
-                                        return DropdownButtonFormField2(
-                                          decoration: InputDecoration(
-                                            icon:
-                                                Icon(FontAwesomeIcons.boxOpen),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                          // validator: (value) {
-                                          //   if (value != null) {
-                                          //     return 'Pilih kategori produk';
-                                          //   }
-                                          //   return null;
-                                          // },
-                                          isExpanded: true,
-                                          dropdownStyleData: DropdownStyleData(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: Colors.white)),
-                                          hint: Text('Pilih kategori produk'),
-                                          value: controller.jenisvalue.value,
-                                          items: controller.jenislist
-                                              .map((DataJenis item) {
-                                            return DropdownMenuItem(
-                                              child: Text(
-                                                  item.namaJenis.toString()),
-                                              value: item.id.toString(),
-                                            );
-                                          }).toList(),
-                                          onChanged: (val) {
-                                            controller.jenisvalue.value =
-                                                val!.toString();
-                                            print(controller.jenisvalue);
-                                          },
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(bottom: 10),
-                                      // width: context.width_query / 3.3,
-                                      //margin: EdgeInsets.only(left: 10),
-                                      child: Obx(() {
-                                        return DropdownButtonFormField2(
-                                          decoration: InputDecoration(
-                                            icon:
-                                                Icon(FontAwesomeIcons.boxOpen),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                          ),
-                                          validator: (value) {
-                                            if (value == null) {
-                                              return 'Pilih jenis produk';
-                                            }
-                                            return null;
-                                          },
-                                          isExpanded: true,
-                                          dropdownStyleData: DropdownStyleData(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: Colors.white)),
-                                          hint: Text('Pilih jenis produk'),
-                                          value: controller.jenisstokval.value,
-                                          items: controller.jenisstok.value
-                                              .map((item) {
-                                            return DropdownMenuItem(
-                                              child:
-                                                  Text(item['nama'].toString()),
-                                              value: item['id'].toString(),
-                                            );
-                                          }).toList(),
-                                          onChanged: (val) {
-                                            controller.jenisstokval.value =
-                                                val.toString();
-                                            controller.jj.value =
-                                                val.toString();
-                                            print(controller.jj.value);
-                                            print(controller.jenisstokval);
-                                          },
-                                        );
-                                      }),
-                                    ),
-                                  ),
-                                  // controller.jj.value == '2' ||
-                                  //         controller.jj.value == ''
-                                  //     ? Container()
-                                  //     : Expanded(
-                                  //         child: Container(
-                                  //           margin: EdgeInsets.only(
-                                  //               left: 10, bottom: 10),
-                                  //           child: TextFormField(
-                                  //             keyboardType:
-                                  //                 TextInputType.number,
-                                  //             controller: controller.qty.value,
-                                  //             decoration: InputDecoration(
-                                  //               labelText: "Jumlah stock",
-                                  //               labelStyle: TextStyle(
-                                  //                 color: Colors.black87,
-                                  //               ),
-                                  //               border: OutlineInputBorder(
-                                  //                   borderRadius:
-                                  //                       BorderRadius.circular(
-                                  //                           10)),
-                                  //               focusedBorder:
-                                  //                   OutlineInputBorder(
-                                  //                       borderRadius:
-                                  //                           BorderRadius
-                                  //                               .circular(10)),
-                                  //             ),
-                                  //             textAlign: TextAlign.center,
-                                  //             validator: (value) {
-                                  //               if (value!.isEmpty) {
-                                  //                 return 'Masukan stock barang';
-                                  //               } else if (value
-                                  //                       .isNumericOnly ==
-                                  //                   false) {
-                                  //                 return 'Stock harus berupa angka';
-                                  //               }
-                                  //               return null;
-                                  //             },
-                                  //           ),
-                                  //         ),
-                                  //       ),
-                                ],
-                              ),
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: Container(
+                              //         margin: EdgeInsets.only(bottom: 10),
+                              //         //width: context.width_query / 3.3,
+                              //
+                              //         child: Obx(() {
+                              //           return DropdownButtonFormField2(
+                              //             decoration: InputDecoration(
+                              //               icon:
+                              //                   Icon(FontAwesomeIcons.boxOpen),
+                              //               border: OutlineInputBorder(
+                              //                 borderRadius:
+                              //                     BorderRadius.circular(15),
+                              //               ),
+                              //             ),
+                              //             // validator: (value) {
+                              //             //   if (value != null) {
+                              //             //     return 'Pilih kategori produk';
+                              //             //   }
+                              //             //   return null;
+                              //             // },
+                              //             isExpanded: true,
+                              //             dropdownStyleData: DropdownStyleData(
+                              //                 decoration: BoxDecoration(
+                              //                     borderRadius:
+                              //                         BorderRadius.circular(10),
+                              //                     color: Colors.white)),
+                              //             hint: Text('Pilih kategori produk'),
+                              //             value: controller.jenisvalue.value,
+                              //             items: controller.jenislist
+                              //                 .map((DataJenis item) {
+                              //               return DropdownMenuItem(
+                              //                 child: Text(
+                              //                     item.namaJenis.toString()),
+                              //                 value: item.id.toString(),
+                              //               );
+                              //             }).toList(),
+                              //             onChanged: (val) {
+                              //               controller.jenisvalue.value =
+                              //                   val!.toString();
+                              //               print(controller.jenisvalue);
+                              //             },
+                              //           );
+                              //         }),
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              // Row(
+                              //   children: [
+                              //     Expanded(
+                              //       child: Container(
+                              //         margin: EdgeInsets.only(bottom: 10),
+                              //         // width: context.width_query / 3.3,
+                              //         //margin: EdgeInsets.only(left: 10),
+                              //         child: Obx(() {
+                              //           return DropdownButtonFormField2(
+                              //             decoration: InputDecoration(
+                              //               icon:
+                              //                   Icon(FontAwesomeIcons.boxOpen),
+                              //               border: OutlineInputBorder(
+                              //                 borderRadius:
+                              //                     BorderRadius.circular(15),
+                              //               ),
+                              //             ),
+                              //             validator: (value) {
+                              //               if (value == null) {
+                              //                 return 'Pilih jenis produk';
+                              //               }
+                              //               return null;
+                              //             },
+                              //             isExpanded: true,
+                              //             dropdownStyleData: DropdownStyleData(
+                              //                 decoration: BoxDecoration(
+                              //                     borderRadius:
+                              //                         BorderRadius.circular(10),
+                              //                     color: Colors.white)),
+                              //             hint: Text('Pilih jenis produk'),
+                              //             value: controller.jenisstokval.value,
+                              //             items: controller.jenisstok.value
+                              //                 .map((item) {
+                              //               return DropdownMenuItem(
+                              //                 child:
+                              //                     Text(item['nama'].toString()),
+                              //                 value: item['id'].toString(),
+                              //               );
+                              //             }).toList(),
+                              //             onChanged: (val) {
+                              //               controller.jenisstokval.value =
+                              //                   val.toString();
+                              //               controller.jj.value =
+                              //                   val.toString();
+                              //               print(controller.jj.value);
+                              //               print(controller.jenisstokval);
+                              //             },
+                              //           );
+                              //         }),
+                              //       ),
+                              //     ),
+                              //     // controller.jj.value == '2' ||
+                              //     //         controller.jj.value == ''
+                              //     //     ? Container()
+                              //     //     : Expanded(
+                              //     //         child: Container(
+                              //     //           margin: EdgeInsets.only(
+                              //     //               left: 10, bottom: 10),
+                              //     //           child: TextFormField(
+                              //     //             keyboardType:
+                              //     //                 TextInputType.number,
+                              //     //             controller: controller.qty.value,
+                              //     //             decoration: InputDecoration(
+                              //     //               labelText: "Jumlah stock",
+                              //     //               labelStyle: TextStyle(
+                              //     //                 color: Colors.black87,
+                              //     //               ),
+                              //     //               border: OutlineInputBorder(
+                              //     //                   borderRadius:
+                              //     //                       BorderRadius.circular(
+                              //     //                           10)),
+                              //     //               focusedBorder:
+                              //     //                   OutlineInputBorder(
+                              //     //                       borderRadius:
+                              //     //                           BorderRadius
+                              //     //                               .circular(10)),
+                              //     //             ),
+                              //     //             textAlign: TextAlign.center,
+                              //     //             validator: (value) {
+                              //     //               if (value!.isEmpty) {
+                              //     //                 return 'Masukan stock barang';
+                              //     //               } else if (value
+                              //     //                       .isNumericOnly ==
+                              //     //                   false) {
+                              //     //                 return 'Stock harus berupa angka';
+                              //     //               }
+                              //     //               return null;
+                              //     //             },
+                              //     //           ),
+                              //     //         ),
+                              //     //       ),
+                              //   ],
+                              // ),
                               Expanded(
                                   child: Row(
                                 children: [
                                   Expanded(
                                     child: Container(
-                                      margin: EdgeInsets.only(bottom: 10),
+                                      margin: const EdgeInsets.only(bottom: 10),
                                       child: CheckboxListTile(
-                                        subtitle: Text("opsional"),
-                                        title: Text("Barcode?"),
+                                        subtitle: const Text("opsional"),
+                                        title: const Text("Barcode?"),
 
                                         checkColor: Colors.white,
                                         //  fillColor: MaterialStateProperty.resolveWith(getColor),
@@ -562,10 +574,10 @@ class edit_produk_form extends GetView<editprodukController> {
                                                   controller.barcode.value,
                                               onChanged: ((String pass) {}),
                                               decoration: InputDecoration(
-                                                icon: Icon(
+                                                icon: const Icon(
                                                     FontAwesomeIcons.barcode),
                                                 labelText: "Barcode",
-                                                labelStyle: TextStyle(
+                                                labelStyle: const TextStyle(
                                                   color: Colors.black87,
                                                 ),
                                                 border: OutlineInputBorder(
@@ -593,7 +605,7 @@ class edit_produk_form extends GetView<editprodukController> {
                             ],
                           )),
                           Container(
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 10),
                               child: VerticalDivider(
                                 color: color_template().primary,
@@ -616,7 +628,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                   }),
                                   decoration: InputDecoration(
                                     labelText: "Harga modal",
-                                    labelStyle: TextStyle(
+                                    labelStyle: const TextStyle(
                                       color: Colors.black87,
                                     ),
                                     border: OutlineInputBorder(
@@ -646,9 +658,10 @@ class edit_produk_form extends GetView<editprodukController> {
                                     print(controller.jumlahharga.value);
                                   }),
                                   decoration: InputDecoration(
-                                    icon: Icon(FontAwesomeIcons.moneyBill),
+                                    icon:
+                                        const Icon(FontAwesomeIcons.moneyBill),
                                     labelText: "Harga jual",
-                                    labelStyle: TextStyle(
+                                    labelStyle: const TextStyle(
                                       color: Colors.black87,
                                     ),
                                     border: OutlineInputBorder(
@@ -673,8 +686,8 @@ class edit_produk_form extends GetView<editprodukController> {
                                     Container(
                                       width: 200,
                                       child: CheckboxListTile(
-                                        title: Text("Diskon produk?"),
-                                        subtitle: Text('opsional'),
+                                        title: const Text("Diskon produk?"),
+                                        subtitle: const Text('opsional'),
                                         checkColor: Colors.white,
                                         //  fillColor: MaterialStateProperty.resolveWith(getColor),
                                         value: controller.check.value,
@@ -708,11 +721,16 @@ class edit_produk_form extends GetView<editprodukController> {
                                                 print(controller.jumlahdiskon);
                                               }),
                                               decoration: InputDecoration(
-                                                icon: Icon(
+                                                icon: const Icon(
                                                     FontAwesomeIcons.percent),
-                                                labelText:
-                                                    "Harga setelah diskon",
-                                                labelStyle: TextStyle(
+                                                suffix: Text(
+                                                  '%',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                labelText: "Besar diskon",
+                                                labelStyle: const TextStyle(
                                                   color: Colors.black87,
                                                 ),
                                                 border: OutlineInputBorder(
@@ -743,19 +761,19 @@ class edit_produk_form extends GetView<editprodukController> {
                       ),
                     ));
               }),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               button_solid_custom(
                   onPressed: () {
                     if (controller.formKeyprodukedit.value.currentState!
                         .validate()) {
-                      controller.ProdukEdit();
+                      controller.ProdukEditlocal();
                     }
                   },
                   child: Text(
                     'edit produk'.toUpperCase(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),

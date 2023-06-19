@@ -12,6 +12,7 @@ import 'package:rims_waserda/Modules/laporan/view_laporan_table_beban.dart';
 import 'package:rims_waserda/Modules/laporan/view_laporan_table_penjualan.dart';
 import 'package:rims_waserda/Modules/laporan/view_laporan_table_reversal.dart';
 import 'package:rims_waserda/Modules/laporan/view_laporan_table_umum.dart';
+import 'package:rims_waserda/main.dart';
 
 import '../../Services/handler.dart';
 import '../Widgets/toast.dart';
@@ -61,10 +62,12 @@ class laporanController extends GetxController {
   File? pdffile_reversal;
 
   laporanUmum() async {
+    path_umum.value = '';
     print('-------------------fetch laporan umum---------------------');
     Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
+      await syncAll(id_toko);
       var laporan = await REST.laporanUmum(token, id_toko, date1, date2);
       if (laporan != null) {
         String filename = 'Laporan umum tanggal ' + date1 + ' s-d ' + date2;
@@ -91,10 +94,12 @@ class laporanController extends GetxController {
   }
 
   laporanPenjualan() async {
+    path_penjualan.value = '';
     print('-------------------fetch laporan umum---------------------');
     Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
+      await syncAll(id_toko);
       var laporan = await REST.laporanPenjualan(token, id_toko, date1, date2);
       if (laporan != null) {
         String filename =
@@ -123,10 +128,12 @@ class laporanController extends GetxController {
   }
 
   laporanBeban() async {
+    path_beban.value = '';
     print('-------------------fetch laporan beban---------------------');
     Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
+      await syncAll(id_toko);
       var laporan = await REST.laporanBeban(token, id_toko, date1, date2);
       if (laporan != null) {
         String filename = 'Laporan beban tanggal ' + date1 + ' s-d ' + date2;
@@ -154,10 +161,12 @@ class laporanController extends GetxController {
   }
 
   laporanReversal() async {
+    path_reversal.value = '';
     print('-------------------fetch laporan reversal---------------------');
     Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
+      await syncAll(id_toko);
       var laporan = await REST.laporanReversal(token, id_toko, date1, date2);
       if (laporan != null) {
         String filename = 'Laporan reversal tanggal ' + date1 + ' s-d ' + date2;

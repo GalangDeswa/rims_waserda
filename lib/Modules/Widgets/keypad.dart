@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 
 import '../../Templates/setting.dart';
 import '../kasir/controller_kasir.dart';
@@ -80,7 +81,23 @@ class KeyPad extends GetView<kasirController> {
                 padding: EdgeInsets.all(10),
                 child: IconButton(
                     onPressed: () {
-                      popscreen().popkonfirmasi(context, controller);
+                      if (controller.groupindex.value == 9) {
+                        Get.showSnackbar(toast().bottom_snackbar_error(
+                            'Gagal', 'Pilih metode bayar terlebih dahulu'));
+                      } else if (controller.groupindex.value == 3) {
+                        if (controller.id_pelanggan.value.isEmpty) {
+                          Get.showSnackbar(toast().bottom_snackbar_error(
+                              'Gagal', 'Pilih pelanggan terlebih dahulu'));
+                        } else {
+                          popscreen().popkonfirmasi(context, controller);
+                        }
+                      } else if (controller
+                          .keypadController.value.text.isEmpty) {
+                        Get.showSnackbar(toast().bottom_snackbar_error(
+                            'Gagal', 'masukan jumlah bayar terlebih dahulu'));
+                      } else {
+                        popscreen().popkonfirmasi(context, controller);
+                      }
                     },
                     icon: Icon(
                       Icons.check,

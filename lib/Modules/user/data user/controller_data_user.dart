@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Services/handler.dart';
 
 import '../../Widgets/loading.dart';
 import 'model_data_user.dart';
-import 'package:http/http.dart' as http;
 
 class datauserController extends GetxController {
   @override
@@ -156,6 +157,7 @@ class datauserController extends GetxController {
   }
 
   var password = TextEditingController().obs;
+  var konfirmasipassword = TextEditingController().obs;
   var nama = TextEditingController().obs;
   var alamat = TextEditingController().obs;
   var hp = TextEditingController().obs;
@@ -170,6 +172,15 @@ class datauserController extends GetxController {
   //var id_toko = GetStorage().read('id_toko');
   var id_user = GetStorage().read('id_user');
 
+  clear() {
+    nama.value.clear();
+    email.value.clear();
+    password.value.clear();
+    konfirmasipassword.value.clear();
+    roleval.value = 0;
+    hp.value.clear();
+  }
+
   tambahuser() async {
     Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
@@ -183,60 +194,22 @@ class datauserController extends GetxController {
           password.value.text,
           roleval.value.toString(),
           hp.value.text);
-      if (user != null) {
+      if (user['success'] == true) {
         print(user);
         await userdata();
+        clear();
         Get.back(closeOverlays: true, result: user);
-        Get.snackbar(
-          "Berhasil",
-          "Data user ditambah",
-          icon: Icon(Icons.check_box, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blueAccent,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(toast()
+            .bottom_snackbar_success('Sukses', 'User behasil di tambah'));
       } else {
         Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data user gagal,user error",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Gagal', user['message']));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,koneksi tidak ada",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Gagal', 'Periksa koneksi'));
     }
   }
 
@@ -254,56 +227,17 @@ class datauserController extends GetxController {
         await userdata();
         Get.back(closeOverlays: true);
 
-        Get.snackbar(
-          "Berhasil",
-          "user di hapus",
-          icon: Icon(Icons.check_box, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blueAccent,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_success('Sukses', 'User behasil dihapus'));
       } else {
         Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data user gagal,user error",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Gagal', 'user gagal dihapus'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,koneksi tidak ada",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Gagal', 'Periksa koneksi'));
     }
   }
 }

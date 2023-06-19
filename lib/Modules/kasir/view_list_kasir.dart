@@ -14,10 +14,6 @@ class list_kasir extends GetView<kasirController> {
 
   @override
   Widget build(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -67,7 +63,7 @@ class list_kasir extends GetView<kasirController> {
                     //
                     //         //var bar = '258';
                     //
-                    //         var query = controller.produklist
+                    //         var query = controller.produklistlocal
                     //             .where((e) => e.barcode
                     //                 .toString()
                     //                 .contains(bar.toString()))
@@ -105,7 +101,7 @@ class list_kasir extends GetView<kasirController> {
                     //                 updatedAt: query.updatedAt.toString()),
                     //           );
                     //         } else {
-                    //           var pp = controller.produklist
+                    //           var pp = controller.produklistlocal
                     //               .where((e) =>
                     //                   e.id ==
                     //                   controller.cache[existingIndex].id)
@@ -191,10 +187,10 @@ class list_kasir extends GetView<kasirController> {
                           ),
                         ),
 
-                        items: controller.produkcache.value,
+                        items: controller.produklistlocal.value,
 
                         onChanged: (value) {
-                          controller.tambahKeranjangcache(value!.id);
+                          controller.tambahKeranjangcache(value!.id!);
                           // controller.isikeranjang(value!.kodeProduk.toString());
                           // controller.getkeranjang();
                           //  controller.totalkeranjang();
@@ -204,7 +200,9 @@ class list_kasir extends GetView<kasirController> {
                         },
                         //items: controller.produk_list,
                         itemAsString: (DataProduk u) {
-                          return u.namaProduk.toString() + "  Rp. " + u.harga;
+                          return u.namaProduk.toString() +
+                              "  Rp. " +
+                              u.harga.toString();
                         },
                       )),
                     ),
@@ -240,7 +238,7 @@ class list_kasir extends GetView<kasirController> {
                   return controller.cache.value.isNotEmpty
                       ? Container(
                           width: context.width_query,
-                          padding: EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(15),
                           // height: context.height_query * 0.70,
                           //: color_template().primary.withOpacity(0.2),
                           //color: Colors.red,
@@ -269,7 +267,7 @@ class list_kasir extends GetView<kasirController> {
     bool isSelected,
   ) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
           ? null
           : BoxDecoration(
@@ -304,54 +302,53 @@ class ProductTilev2 extends GetView<kasirController> {
         //sortAscending: sort,
         //sortColumnIndex: 0,
         columns: [
-          DataColumn(label: Text("Nama produk")),
-          DataColumn(label: Text("harga")),
-          DataColumn(
+          const DataColumn(label: Text("Nama produk")),
+          const DataColumn(label: Text("harga")),
+          const DataColumn(
               label: Text(
             "QTY",
           )),
-          DataColumn(label: Text("Aksi")),
+          const DataColumn(label: Text("Aksi")),
         ],
         rows: List.generate(controller.cache.length, (index) {
-          var query = controller.produklist
+          var query = controller.produklistlocal
               .where((e) => e.id == controller.cache[index].id)
               .first;
-          var persen = (double.parse(query.harga) - query.diskonBarang) /
-              double.parse(query.harga) *
-              100;
+          var persen = controller.cache[index].diskonBarang;
 
           // var persen = (double.parse(controller.cache[index].harga) -
           //         controller.cache[index].diskonBarang!) /
           //     double.parse(controller.cache[index].harga) *
           //     100;
 
-          String display_diskon = persen.toStringAsFixed(0);
-          var pp = controller.produklist
+          var hargadiskon = controller.cache[index].harga! -
+              (controller.cache[index].harga! *
+                  controller.cache[index].diskonBarang! /
+                  100);
+
+          String display_diskon = persen!.toStringAsFixed(0);
+          var pp = controller.produklistlocal
               .where((e) => e.id == controller.cache[index].id)
               .first;
           return DataRow(cells: [
             DataCell(
-              Text(controller.cache[index].namaProduk),
+              Text(controller.cache[index].namaProduk!),
             ),
             DataCell(
               controller.cache[index].diskonBarang == 0
                   ? Text("Rp." +
-                      controller.nominal
-                          .format(double.parse(controller.cache[index].harga)))
+                      controller.nominal.format(controller.cache[index].harga))
                   : Row(
                       children: [
-                        Text('Rp. ' +
-                            controller.nominal.format(double.parse(controller
-                                .produklist[index].diskonBarang
-                                .toString()))),
-                        SizedBox(
+                        Text('Rp. ' + controller.nominal.format(hargadiskon)),
+                        const SizedBox(
                           width: 10,
                         ),
                         Container(
-                          padding: EdgeInsets.all(6),
+                          padding: const EdgeInsets.all(6),
                           child: Text(
                             display_diskon + '%',
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white),
                           ),
@@ -369,13 +366,14 @@ class ProductTilev2 extends GetView<kasirController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(right: 15),
-                    padding: EdgeInsets.all(3),
+                    margin: const EdgeInsets.only(right: 15),
+                    padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: color_template().select),
                     child: InkWell(
                       onTap: () {
-                        controller.deleteqty(index, controller.cache[index].id);
+                        controller.deleteqty(
+                            index, controller.cache[index].id!);
                       },
                       child: Icon(
                         Icons.remove,
@@ -385,12 +383,12 @@ class ProductTilev2 extends GetView<kasirController> {
                     ),
                   ),
                   Text(controller.cache[index].qty.toString()),
-                  int.parse(pp.qty) <= controller.cache[index].qty &&
+                  controller.cache[index].qty >= pp.qty! &&
                           controller.cache[index].idJenisStock == 1
                       ? Container(
-                          margin: EdgeInsets.only(left: 15, right: 15),
-                          padding: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
+                          margin: const EdgeInsets.only(left: 15, right: 15),
+                          padding: const EdgeInsets.all(3),
+                          decoration: const BoxDecoration(
                               shape: BoxShape.circle, color: Colors.grey),
                           child: Icon(
                             Icons.add,
@@ -403,8 +401,8 @@ class ProductTilev2 extends GetView<kasirController> {
                             controller.tambahqty(index);
                           },
                           child: Container(
-                            margin: EdgeInsets.only(left: 15, right: 15),
-                            padding: EdgeInsets.all(3),
+                            margin: const EdgeInsets.only(left: 15, right: 15),
+                            padding: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: color_template().primary),
@@ -427,7 +425,7 @@ class ProductTilev2 extends GetView<kasirController> {
                   IconButton(
                       onPressed: () {
                         Get.toNamed('/edit_produk',
-                            arguments: controller.produklist[index]);
+                            arguments: controller.produklistlocal[index]);
                       },
                       icon: Icon(
                         Icons.edit,
@@ -436,7 +434,7 @@ class ProductTilev2 extends GetView<kasirController> {
                       )),
                   IconButton(
                       onPressed: () {
-                        controller.deleteitemcache(controller.cache[index].id);
+                        controller.deleteitemcache(controller.cache[index].id!);
                       },
                       icon: Icon(
                         size: context.height_query / 35,
@@ -451,7 +449,7 @@ class ProductTilev2 extends GetView<kasirController> {
   }
 
 // Iterable<DataRow> mapItemToDataRows(List<DataKeranjangCache> items) {
-//   var pp = controller.produklist
+//   var pp = controller.produklistlocal
 //       .where((e) => e.id == items.map((e) => e.id).first)
 //       .first;
 //   final List uniqueList = Set.from(items).toList();

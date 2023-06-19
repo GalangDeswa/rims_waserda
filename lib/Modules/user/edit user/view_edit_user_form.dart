@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 
-import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
 
@@ -33,7 +32,7 @@ class edit_user_form extends GetView<edituserController> {
                   child: SingleChildScrollView(
                     child: Obx(() {
                       return Form(
-                          key: controller.formKey.value,
+                          key: controller.formKeyedituser.value,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -55,7 +54,7 @@ class edit_user_form extends GetView<edituserController> {
                                 textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Please enter email';
+                                    return 'Masukan nama user';
                                   }
                                   return null;
                                 },
@@ -80,7 +79,7 @@ class edit_user_form extends GetView<edituserController> {
                                 textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Please enter email';
+                                    return 'Masukan email user';
                                   }
                                   return null;
                                 },
@@ -105,7 +104,7 @@ class edit_user_form extends GetView<edituserController> {
                                 textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Please enter email';
+                                    return 'Masukan nomor hp user';
                                   }
                                   return null;
                                 },
@@ -118,8 +117,12 @@ class edit_user_form extends GetView<edituserController> {
                               ),
                               button_solid_custom(
                                   onPressed: () {
-                                    // controller.tambahuser();
-                                    controller.edituser();
+                                    print('edit user-----------------------');
+                                    if (controller
+                                        .formKeyedituser.value.currentState!
+                                        .validate()) {
+                                      controller.edituser();
+                                    }
                                   },
                                   child: Text(
                                     'Edit User',

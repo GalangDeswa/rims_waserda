@@ -65,7 +65,7 @@ class tambah_jenis extends GetView<produkController> {
                                 textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
-                                    return 'Please enter email';
+                                    return 'Masukan kategori produk';
                                   }
                                   return null;
                                 },
@@ -74,7 +74,10 @@ class tambah_jenis extends GetView<produkController> {
                           )),
                       button_solid_custom(
                           onPressed: () {
-                            controller.jenisTambah();
+                            if (controller.formKeyjenis.value.currentState!
+                                .validate()) {
+                              controller.jenisTambahlocal();
+                            }
                           },
                           child: Text('Tambah Kategori', style: font().header),
                           width: double.infinity,

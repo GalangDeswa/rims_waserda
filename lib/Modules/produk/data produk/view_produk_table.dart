@@ -25,7 +25,7 @@ class produk_table extends GetView<produkController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -38,9 +38,25 @@ class produk_table extends GetView<produkController> {
                         icon: FontAwesomeIcons.boxOpen,
                         icon_funtion: Icons.refresh,
                         function: () async {
-                          Get.dialog(showloading(), barrierDismissible: false);
-                          await controller.fetchProduk();
-                          Get.back(closeOverlays: true);
+                          //  Get.dialog(showloading(), barrierDismissible: false);
+
+                          controller.fetchProduklocal(controller.id_toko);
+
+                          // Get.back();
+                          // Get.dialog(showloading(), barrierDismissible: false);
+                          // await controller.fetchProduk();
+                          //controller.fetchProduklocal(controller.id_toko);
+                          // Workmanager().registerOneOffTask(
+                          //   'sync_test',
+                          //   sync,
+                          //   constraints:
+                          //       Constraints(networkType: NetworkType.connected),
+                          // );
+
+                          // controller.syncProdukv2();
+                          // REST.produkAllv2(
+                          //     controller.token, controller.id_toko);
+                          //Get.back(closeOverlays: true);
                         },
                       ),
                     ),
@@ -69,7 +85,7 @@ class produk_table extends GetView<produkController> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
             Row(
@@ -78,17 +94,18 @@ class produk_table extends GetView<produkController> {
                 Obx(() {
                   return Expanded(
                     child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 3),
+                      margin: const EdgeInsets.symmetric(horizontal: 3),
                       //width: 200,
                       child: TextFormField(
                         controller: controller.search.value,
                         onChanged: ((String pass) {
-                          controller.fetchProduk();
+                          controller.searchproduklocal();
                         }),
                         decoration: InputDecoration(
-                          icon: Icon(FontAwesomeIcons.searchengin),
+                          icon: const Icon(FontAwesomeIcons.searchengin),
                           labelText: "cari produk",
-                          labelStyle: TextStyle(
+                          hintText: 'Nama produk / Barcode',
+                          labelStyle: const TextStyle(
                             color: Colors.black87,
                           ),
                           border: UnderlineInputBorder(
@@ -109,7 +126,7 @@ class produk_table extends GetView<produkController> {
                 }),
                 icon_button_custom(
                     onPressed: () {
-                      controller.fetchProduk();
+                      controller.searchproduklocal();
                     },
                     icon: Icons.search,
                     container_color: color_template().primary),
@@ -117,63 +134,67 @@ class produk_table extends GetView<produkController> {
             ),
             Expanded(
               child: Obx(() {
+                var source =
+                    produkTable(controller.produklistlocal.value, context).obs;
                 onSortColum(int columnIndex, bool ascending) {
                   if (columnIndex == 1) {
                     if (ascending) {
-                      controller.produklist
+                      controller.produklistlocal
                           .sort((a, b) => a.namaProduk.compareTo(b.namaProduk));
                     } else {
-                      controller.produklist
+                      controller.produklistlocal
                           .sort((a, b) => b.namaProduk.compareTo(a.namaProduk));
                     }
                   } else if (columnIndex == 2) {
                     if (ascending) {
-                      controller.produklist
-                          .sort((a, b) => a.namaJenis.compareTo(b.namaJenis));
+                      controller.produklistlocal
+                          .sort((a, b) => a.namaJenis!.compareTo(b.namaJenis!));
                     } else {
-                      controller.produklist
-                          .sort((a, b) => b.namaJenis.compareTo(a.namaJenis));
+                      controller.produklistlocal
+                          .sort((a, b) => b.namaJenis!.compareTo(a.namaJenis!));
                     }
                   } else if (columnIndex == 4) {
                     if (ascending) {
-                      controller.produklist.sort(
+                      controller.produklistlocal.sort(
                           (a, b) => b.idJenisStock.compareTo(a.idJenisStock));
                     } else {
-                      controller.produklist.sort(
+                      controller.produklistlocal.sort(
                           (a, b) => a.idJenisStock.compareTo(b.idJenisStock));
                     }
                   } else if (columnIndex == 5) {
                     if (ascending) {
-                      controller.produklist
+                      controller.produklistlocal
                           .sort((a, b) => b.harga.compareTo(a.harga));
                     } else {
-                      controller.produklist
+                      controller.produklistlocal
                           .sort((a, b) => a.harga.compareTo(b.harga));
                     }
                   } else if (columnIndex == 6) {
                     if (ascending) {
-                      controller.produklist.sort(
-                          (a, b) => b.diskonBarang.compareTo(a.diskonBarang));
+                      controller.produklistlocal.sort(
+                          (a, b) => b.diskonBarang!.compareTo(a.diskonBarang!));
                     } else {
-                      controller.produklist.sort(
-                          (a, b) => a.diskonBarang.compareTo(b.diskonBarang));
+                      controller.produklistlocal.sort(
+                          (a, b) => a.diskonBarang!.compareTo(b.diskonBarang!));
                     }
                   }
                 }
 
                 return Container(
                   //height: context.height_query * 0.46,
-                  margin: EdgeInsets.only(top: 15),
+                  margin: const EdgeInsets.only(top: 15),
                   // width: double.infinity,
 
                   child: controller.succ == false
-                      ? Container(width: 100, height: 100, child: showloading())
-                      : DataTable2(
+                      ? Container(
+                          width: 100, height: 100, child: const showloading())
+                      : PaginatedDataTable2(
                           sortAscending: controller.sort.value,
                           sortColumnIndex: controller.ColIndex.value,
                           fixedTopRows: 1,
                           horizontalMargin: 10,
                           columnSpacing: 5,
+                          renderEmptyRowsInTheEnd: false,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
@@ -184,7 +205,7 @@ class produk_table extends GetView<produkController> {
                             ),
                           ),
                           columns: <DataColumn>[
-                            DataColumn(
+                            const DataColumn(
                               label: Text('Barcode'),
                             ),
                             DataColumn(
@@ -193,10 +214,10 @@ class produk_table extends GetView<produkController> {
                                 controller.ColIndex.value = columnIndex;
                                 onSortColum(columnIndex, ascending);
                               },
-                              label: Text('Nama Produk'),
+                              label: const Text('Nama Produk'),
                             ),
                             DataColumn(
-                                label: Text(
+                                label: const Text(
                                   'Jenis Produk',
                                 ),
                                 onSort: (int columnIndex, bool ascending) {
@@ -205,7 +226,7 @@ class produk_table extends GetView<produkController> {
                                   controller.ColIndex.value = columnIndex;
                                   onSortColum(columnIndex, ascending);
                                 }),
-                            DataColumn(
+                            const DataColumn(
                               label: Text(
                                 'Deskripsi',
                               ),
@@ -216,7 +237,7 @@ class produk_table extends GetView<produkController> {
                                 controller.ColIndex.value = columnIndex;
                                 onSortColum(columnIndex, ascending);
                               },
-                              label: Text(
+                              label: const Text(
                                 'Stock',
                               ),
                             ),
@@ -227,7 +248,7 @@ class produk_table extends GetView<produkController> {
                                   controller.ColIndex.value = columnIndex;
                                   onSortColum(columnIndex, ascending);
                                 },
-                                label: Text(
+                                label: const Text(
                                   'Harga',
                                 )),
 
@@ -239,187 +260,62 @@ class produk_table extends GetView<produkController> {
                             //     ),
                             //   ),
                             // ),
-                            DataColumn(
+                            const DataColumn(
                               label: Text(
                                 'Aksi',
                               ),
                             ),
                           ],
-                          rows: List.generate(
-                            controller.produklist.length,
-                            (index) {
-                              var persen = (double.parse(
-                                          controller.produklist[index].harga) -
-                                      controller
-                                          .produklist[index].diskonBarang) /
-                                  double.parse(
-                                      controller.produklist[index].harga) *
-                                  100;
-                              String display_diskon = persen.toStringAsFixed(0);
-                              return DataRow(cells: [
-                                DataCell(Text(
-                                    controller.produklist[index].barcode ??
-                                        '-')),
-                                DataCell(Text(
-                                    controller.produklist[index].namaProduk)),
-                                DataCell(Text(
-                                    controller.produklist[index].namaJenis)),
-                                DataCell(Text(
-                                    controller.produklist[index].deskripsi)),
-                                controller.produklist[index].idJenisStock == 1
-                                    ? DataCell(Row(
-                                        children: [
-                                          Expanded(
-                                              child: Text(controller.nominal
-                                                  .format(double.parse(
-                                                      controller
-                                                          .produklist[index]
-                                                          .qty)))),
-                                          Padding(
-                                            padding: EdgeInsets.only(right: 15),
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  controller.addqty(
-                                                      controller,
-                                                      controller
-                                                          .produklist[index]);
-                                                },
-                                                icon: Container(
-                                                  padding: EdgeInsets.all(3),
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: color_template()
-                                                          .primary),
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 18,
-                                                    color: Colors.white,
-                                                  ),
-                                                )),
-                                          )
-                                        ],
-                                      ))
-                                    : DataCell(Text('Non stock')),
-                                DataCell(controller
-                                            .produklist[index].diskonBarang ==
-                                        0
-                                    ? Text('Rp. ' +
-                                        controller.nominal.format(double.parse(
-                                            controller
-                                                .produklist[index].harga)))
-                                    : Row(
-                                        children: [
-                                          Text('Rp. ' +
-                                              controller.nominal.format(
-                                                  double.parse(controller
-                                                      .produklist[index]
-                                                      .diskonBarang
-                                                      .toString()))),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.all(6),
-                                            child: Text(
-                                              display_diskon + '%',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                            decoration: BoxDecoration(
-                                                color:
-                                                    color_template().primary_v2,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                          )
-                                        ],
-                                      )),
-                                DataCell(Container(
-                                  // color: Colors.cyan,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 10),
-                                        child: IconButton(
-                                            onPressed: () {
-                                              Get.toNamed('/edit_produk',
-                                                  arguments: controller
-                                                      .produklist[index]);
-                                            },
-                                            icon: Icon(
-                                              Icons.edit,
-                                              size: 18,
-                                              color: color_template().secondary,
-                                            )),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            popscreen().deleteprodukv2(
-                                                controller,
-                                                controller.produklist[index]);
-                                          },
-                                          icon: Icon(
-                                            Icons.delete,
-                                            size: 18,
-                                            color: color_template().tritadery,
-                                          ))
-                                    ],
-                                  ),
-                                )),
-                              ]);
-                            },
-                          ),
+                          source: source.value,
                         ),
                 );
               }),
             ),
-            Obx(() {
-              return Container(
-                margin: EdgeInsets.only(left: context.width_query / 1.9),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Data perbaris :'),
-                    Text(controller.perpage.value.toString()),
-                    controller.currentpage > 1
-                        ? IconButton(
-                            onPressed: () {
-                              controller.back();
-                            },
-                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleLeft,
-                              size: 20,
-                              color: Colors.grey,
-                            )),
-                    Text(controller.currentpage.value.toString() +
-                        ' - ' +
-                        controller.totalpage.value.toString()),
-                    controller.currentpage < controller.totalpage.value
-                        ? IconButton(
-                            onPressed: () {
-                              controller.next();
-                            },
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              size: 20,
-                            ))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              color: Colors.grey,
-                              size: 20,
-                            ))
-                  ],
-                ),
-              );
-            })
+            // Obx(() {
+            //   return Container(
+            //     margin: EdgeInsets.only(left: context.width_query / 1.9),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //       children: [
+            //         const Text('Data perbaris :'),
+            //         Text(controller.perpage.value.toString()),
+            //         controller.currentpage > 1
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.back();
+            //                 },
+            //                 icon: const Icon(FontAwesomeIcons.angleLeft,
+            //                     size: 20))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleLeft,
+            //                   size: 20,
+            //                   color: Colors.grey,
+            //                 )),
+            //         Text(controller.currentpage.value.toString() +
+            //             ' - ' +
+            //             controller.totalpage.value.toString()),
+            //         controller.currentpage < controller.totalpage.value
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.next();
+            //                 },
+            //                 icon: const Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   size: 20,
+            //                 ))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   color: Colors.grey,
+            //                   size: 20,
+            //                 ))
+            //       ],
+            //     ),
+            //   );
+            // })
           ],
         ),
       ),
@@ -446,39 +342,71 @@ class produkTable extends DataTableSource {
 
   @override
   DataRow getRow(int index) {
+    var hargadiskon = data[index].harga! -
+        (data[index].harga! * data[index].diskonBarang! / 100);
+
+    var persen =
+        data[index].harga - data[index].diskonBarang! / data[index].harga * 100;
+    String display_diskon = data[index].diskonBarang.toString();
     return DataRow(cells: [
+      DataCell(Text(data[index].barcode ?? '-')),
       DataCell(Text(data[index].namaProduk)),
-      DataCell(Text(data[index].namaJenis)),
-      DataCell(Text(data[index].deskripsi)),
-      DataCell(Row(
-        children: [
-          Expanded(
-              child: Text(con.nominal.format(double.parse(data[index].qty)))),
-          Padding(
-            padding: EdgeInsets.only(right: context.width_query / 23),
-            child: IconButton(
-                onPressed: () {
-                  con.addqty(con, data[index]);
-                },
-                icon: Container(
-                  padding: EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: color_template().primary),
-                  child: Icon(
-                    Icons.add,
-                    size: 18,
-                    color: Colors.white,
+      DataCell(Text(data[index].namaJenis ?? '-')),
+      DataCell(Text(data[index].deskripsi ?? '-')),
+      DataCell(data[index].qty == 0 && data[index].idJenisStock == 2
+          ? Text('Non Stock')
+          : Row(
+              children: [
+                Expanded(child: Text(con.nominal.format(data[index].qty))),
+                Padding(
+                  padding: EdgeInsets.only(right: context.width_query / 23),
+                  child: IconButton(
+                      onPressed: () {
+                        con.addqty(con, data[index]);
+                      },
+                      icon: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: color_template().primary),
+                        child: const Icon(
+                          Icons.add,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      )),
+                )
+              ],
+            )),
+      DataCell(data[index].diskonBarang == 0
+          ? Text('Rp. ' + con.nominal.format(data[index].harga))
+          : Row(
+              children: [
+                Text('Rp. ' + con.nominal.format(hargadiskon)),
+                const SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  child: Text(
+                    display_diskon + '%',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                )),
-          )
-        ],
-      )),
-      DataCell(
-          Text('Rp. ' + con.nominal.format(double.parse(data[index].harga)))),
-      DataCell(Center(
+                  decoration: BoxDecoration(
+                      color: color_template().primary_v2,
+                      borderRadius: BorderRadius.circular(10)),
+                )
+              ],
+            )),
+      DataCell(Container(
+        // color: Colors.cyan,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
               child: IconButton(
                   onPressed: () {
                     Get.toNamed('/edit_produk', arguments: data[index]);
@@ -489,17 +417,15 @@ class produkTable extends DataTableSource {
                     color: color_template().secondary,
                   )),
             ),
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    popscreen().deleteprodukv2(con, data[index]);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    size: 18,
-                    color: color_template().tritadery,
-                  )),
-            )
+            IconButton(
+                onPressed: () {
+                  popscreen().deleteproduklocal(con, data[index]);
+                },
+                icon: Icon(
+                  Icons.delete,
+                  size: 18,
+                  color: color_template().tritadery,
+                ))
           ],
         ),
       )),

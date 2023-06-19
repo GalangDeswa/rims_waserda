@@ -15,14 +15,14 @@ class ModelPenjualan {
     required this.statusCode,
     required this.messages,
     required this.data,
-    required this.meta,
+    //  required this.meta,
   });
 
   bool success;
   int statusCode;
   String messages;
   List<DataPenjualan> data;
-  Meta meta;
+  //Meta meta;
 
   factory ModelPenjualan.fromJson(Map<String, dynamic> json) => ModelPenjualan(
         success: json["success"],
@@ -30,7 +30,7 @@ class ModelPenjualan {
         messages: json["messages"],
         data: List<DataPenjualan>.from(
             json["data"].map((x) => DataPenjualan.fromJson(x))),
-        meta: Meta.fromJson(json["meta"]),
+        // meta: Meta.fromJson(json["meta"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -38,53 +38,62 @@ class ModelPenjualan {
         "status_code": statusCode,
         "messages": messages,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        "meta": meta.toJson(),
+        // "meta": meta.toJson(),
       };
 }
 
 class DataPenjualan {
   DataPenjualan({
-    required this.id,
-    required this.meja,
-    required this.idToko,
-    required this.idUser,
-    required this.namaPelanggan,
-    required this.namaUser,
-    required this.totalItem,
-    required this.diskonTotal,
-    required this.subTotal,
-    required this.total,
-    required this.bayar,
-    required this.kembalian,
-    required this.tglPenjualan,
-    required this.metodeBayar,
-    required this.status,
-    required this.detailItem,
+    this.id,
+    this.meja,
+    this.idToko,
+    this.idUser,
+    this.namaPelanggan,
+    this.namaUser,
+    this.totalItem,
+    this.diskonTotal,
+    this.subTotal,
+    this.total,
+    this.bayar,
+    this.kembalian,
+    this.tglPenjualan,
+    this.metodeBayar,
+    this.status,
+    this.sync,
+    this.idPelanggan,
+    required this.aktif,
+    this.idHutang,
   });
 
-  int id;
-  int meja;
-  int idToko;
-  int idUser;
-  String namaPelanggan;
-  String namaUser;
-  String totalItem;
-  String diskonTotal;
-  String subTotal;
-  String total;
-  String bayar;
-  String kembalian;
-  String tglPenjualan;
-  int metodeBayar;
-  int status;
-  List<DetailItem> detailItem;
+  int? id;
+  String? meja;
+  int? idToko;
+  int? idUser;
+  int? idPelanggan;
+  String? namaPelanggan;
+  String? namaUser;
+  int? totalItem;
+  int? diskonTotal;
+  int? subTotal;
+  int? total;
+  int? bayar;
+  int? kembalian;
+  String? tglPenjualan;
+  int? metodeBayar;
+  int? status;
+  String? sync;
+  String aktif;
+  int? idHutang;
+
+  // List<DetailItem>? detailItem;
 
   factory DataPenjualan.fromJson(Map<String, dynamic> json) => DataPenjualan(
         id: json["id"],
-        meja: json["meja"],
+        meja: json["meja"] ?? '0',
         idToko: json["id_toko"],
         idUser: json["id_user"],
-        namaPelanggan: json["nama_pelanggan"],
+        idPelanggan: json["id_pelanggan"] ?? 0,
+        namaPelanggan: json["nama_pelanggan"] ?? '-',
         namaUser: json["nama_user"],
         totalItem: json["total_item"],
         diskonTotal: json["diskon_total"],
@@ -95,8 +104,11 @@ class DataPenjualan {
         tglPenjualan: json["tgl_penjualan"],
         metodeBayar: json["metode_bayar"],
         status: json["status"],
-        detailItem: List<DetailItem>.from(
-            json["detail_item"].map((x) => DetailItem.fromJson(x))),
+        sync: json["sync"],
+        aktif: json["aktif"],
+        idHutang: json["id_hutang"] ?? 0,
+        // detailItem: List<DetailItem>.from(
+        //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -104,6 +116,7 @@ class DataPenjualan {
         "meja": meja,
         "id_toko": idToko,
         "id_user": idUser,
+        "id_pelanggan": idPelanggan,
         "nama_pelanggan": namaPelanggan,
         "nama_user": namaUser,
         "total_item": totalItem,
@@ -115,32 +128,60 @@ class DataPenjualan {
         "tgl_penjualan": tglPenjualan,
         "metode_bayar": metodeBayar,
         "status": status,
-        "detail_item": List<dynamic>.from(detailItem.map((x) => x.toJson())),
+        "sync": sync,
+        "aktif": aktif,
+        "id_hutang": idHutang,
+        //   "detail_item": List<dynamic>.from(detailItem!.map((x) => x.toJson())),
       };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+    map['id'] = id;
+    map['id_user'] = idUser;
+    map['meja'] = meja;
+    map['id_toko'] = idToko;
+    map['id_pelanggan'] = idPelanggan ?? 0;
+    map['nama_pelanggan'] = namaPelanggan ?? '-';
+    map['nama_user'] = namaUser;
+    map['total_item'] = totalItem;
+    map['diskon_total'] = diskonTotal;
+    map['sub_total'] = subTotal;
+    map['total'] = total;
+    map['bayar'] = bayar;
+    map['kembalian'] = kembalian;
+    map['tgl_penjualan'] = tglPenjualan;
+    map['metode_bayar'] = metodeBayar;
+    map['sync'] = sync;
+    map['status'] = status;
+    map['aktif'] = aktif;
+    map['id_hutang'] = idHutang;
+
+    return map;
+  }
 }
 
 class DetailItem {
   DetailItem({
-    required this.idPenjualan,
-    required this.idProduk,
-    required this.idKategori,
-    required this.namaBrg,
-    required this.hargaBrg,
-    required this.hargaModal,
-    required this.qty,
-    required this.diskonBrg,
-    required this.total,
+    this.idPenjualan,
+    this.idProduk,
+    this.idKategori,
+    this.namaBrg,
+    this.hargaBrg,
+    this.hargaModal,
+    this.qty,
+    this.diskonBrg,
+    this.total,
   });
 
-  int idPenjualan;
-  int idProduk;
-  int idKategori;
-  String namaBrg;
-  String hargaBrg;
-  String hargaModal;
-  String qty;
-  String diskonBrg;
-  String total;
+  int? idPenjualan;
+  int? idProduk;
+  int? idKategori;
+  String? namaBrg;
+  int? hargaBrg;
+  int? hargaModal;
+  int? qty;
+  int? diskonBrg;
+  int? total;
 
   factory DetailItem.fromJson(Map<String, dynamic> json) => DetailItem(
         idPenjualan: json["id_penjualan"],
@@ -165,81 +206,97 @@ class DetailItem {
         "diskon_brg": diskonBrg,
         "total": total,
       };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+    map['id_penjualan'] = idPenjualan;
+    map['id_produk'] = idProduk;
+    map['id_kategori'] = idKategori;
+    map['nama_brg'] = namaBrg;
+    map['harga_brg'] = hargaBrg;
+    map['harga_modal'] = hargaModal;
+    map['qty'] = qty;
+    map['diskon_barang'] = diskonBrg;
+
+    map['total'] = total;
+
+    return map;
+  }
 }
 
-class Meta {
-  Meta({
-    this.catatan,
-    required this.pagination,
-  });
-
-  Catatan? catatan;
-  Pagination pagination;
-
-  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        //catatan: Catatan.fromJson(json["catatan"]) ?? null,
-        pagination: Pagination.fromJson(json["pagination"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "catatan": catatan?.toJson(),
-        "pagination": pagination.toJson(),
-      };
-}
-
-class Catatan {
-  Catatan({
-    this.status,
-    this.metodeBayarDtl,
-  });
-
-  String? status;
-  String? metodeBayarDtl;
-
-  factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
-        status: json["status"],
-        metodeBayarDtl: json["metode_bayar_dtl"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "metode_bayar_dtl": metodeBayarDtl,
-      };
-}
-
-class Pagination {
-  Pagination({
-    required this.total,
-    required this.count,
-    required this.perPage,
-    required this.currentPage,
-    required this.totalPages,
-    //required this.links,
-  });
-
-  int total;
-  int count;
-  int perPage;
-  int currentPage;
-  int totalPages;
-
-  //List<dynamic> links;
-
-  factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        total: json["total"],
-        count: json["count"],
-        perPage: json["per_page"],
-        currentPage: json["current_page"],
-        totalPages: json["total_pages"],
-        //links: List<dynamic>.from(json["links"].map((x) => x)),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "total": total,
-        "count": count,
-        "per_page": perPage,
-        "current_page": currentPage,
-        "total_pages": totalPages,
-        //"links": List<dynamic>.from(links.map((x) => x)),
-      };
-}
+// class Meta {
+//   Meta({
+//     this.catatan,
+//     required this.pagination,
+//   });
+//
+//   Catatan? catatan;
+//   Pagination pagination;
+//
+//   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+//         //catatan: Catatan.fromJson(json["catatan"]) ?? null,
+//         pagination: Pagination.fromJson(json["pagination"]),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "catatan": catatan?.toJson(),
+//         "pagination": pagination.toJson(),
+//       };
+// }
+//
+// class Catatan {
+//   Catatan({
+//     this.status,
+//     this.metodeBayarDtl,
+//   });
+//
+//   String? status;
+//   String? metodeBayarDtl;
+//
+//   factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
+//         status: json["status"],
+//         metodeBayarDtl: json["metode_bayar_dtl"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "status": status,
+//         "metode_bayar_dtl": metodeBayarDtl,
+//       };
+// }
+//
+// class Pagination {
+//   Pagination({
+//     required this.total,
+//     required this.count,
+//     required this.perPage,
+//     required this.currentPage,
+//     required this.totalPages,
+//     //required this.links,
+//   });
+//
+//   int total;
+//   int count;
+//   int perPage;
+//   int currentPage;
+//   int totalPages;
+//
+//   //List<dynamic> links;
+//
+//   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
+//         total: json["total"],
+//         count: json["count"],
+//         perPage: json["per_page"],
+//         currentPage: json["current_page"],
+//         totalPages: json["total_pages"],
+//         //links: List<dynamic>.from(json["links"].map((x) => x)),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "total": total,
+//         "count": count,
+//         "per_page": perPage,
+//         "current_page": currentPage,
+//         "total_pages": totalPages,
+//         //"links": List<dynamic>.from(links.map((x) => x)),
+//       };
+// }

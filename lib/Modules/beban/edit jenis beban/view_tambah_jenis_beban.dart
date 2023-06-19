@@ -43,7 +43,7 @@ class tambah_jenis_beban extends GetView<bebanController> {
                           icon: FontAwesomeIcons.dollarSign,
                         ),
                         Form(
-                            key: controller.formKeyjenis.value,
+                            key: controller.formKeyjenisbeban.value,
                             child: TextFormField(
                               controller: controller.kategori.value,
                               onChanged: ((String pass) {}),
@@ -61,14 +61,18 @@ class tambah_jenis_beban extends GetView<bebanController> {
                               textAlign: TextAlign.center,
                               validator: (value) {
                                 if (value!.isEmpty) {
-                                  return 'Please enter email';
+                                  return 'Masukan kategori beban';
                                 }
                                 return null;
                               },
                             )),
                         button_solid_custom(
                             onPressed: () {
-                              controller.tambahJenisBeban();
+                              if (controller
+                                  .formKeyjenisbeban.value.currentState!
+                                  .validate()) {
+                                controller.bebanjenisTambahlocal();
+                              }
                             },
                             child: Text(
                               'Tambah Kategori',

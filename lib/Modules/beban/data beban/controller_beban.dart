@@ -6,8 +6,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_table.dart';
+import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
 
 import '../../../Services/handler.dart';
+import '../../../db_helper.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
 import '../edit jenis beban/model_jenis_beban.dart';
@@ -20,8 +22,8 @@ class bebanController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     print('----------------------bebancon init--------------------');
-    fetchJenisBeban();
-    fetchDataBeban();
+    fetchJenisBebanlocal(id_toko);
+    fetchBebanlocal(id_toko);
   }
 
   var format = NumberFormat.simpleCurrency(locale: 'id', decimalDigits: 0);
@@ -41,9 +43,20 @@ class bebanController extends GetxController {
   var jumlah = TextEditingController().obs;
   var jumlahbeban = 0.0.obs;
 
-  var formKeyjenis = GlobalKey<FormState>().obs;
+  var formKeyjenisbeban = GlobalKey<FormState>().obs;
   var sort = false.obs;
   var ColIndex = 0.obs;
+
+  clear() {
+    nama.value.clear();
+    kategori.value.clear();
+    keterangan.value.clear();
+    tanggal.value.clear();
+    datedata.clear();
+    jumlah.value.clear();
+    jumlahbeban.value = 0;
+    jenisbebanval = null;
+  }
 
   next() async {
     final respon = await http.post(Uri.parse(nextdata), body: {
@@ -164,13 +177,14 @@ class bebanController extends GetxController {
 
   String? jenisbebanval;
 
-  final dateformat = DateFormat('dd-MM-yyyy');
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+
   final nominal = NumberFormat("#,##0");
 
   final numformat = NumberFormat.currency(locale: 'id', decimalDigits: 0);
 
   stringdate() {
-    var ff = dateformat.format(datedata[0]!);
+    var ff = dateFormat.format(datedata.first!);
     tanggal.value.text = ff;
   }
 
@@ -199,6 +213,45 @@ class bebanController extends GetxController {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
           toast().bottom_snackbar_success('Error', 'periksa koneksi'));
+    }
+  }
+
+  deletebebanlocal(int id) async {
+    print('delete beban local---------------------------------------->');
+    Get.dialog(const showloading(), barrierDismissible: false);
+    var select = databebanlistlocal.where((x) => x.id == id).first;
+    var delete = await DBHelper().UPDATE(
+      id: select.id,
+      table: 'beban_local',
+      data: DataBeban(
+              aktif: 'N',
+              sync: 'N',
+              id: select.id,
+              idToko: select.idToko,
+              jumlah: select.jumlah,
+              tgl: select.tgl,
+              keterangan: select.keterangan,
+              nama: select.nama,
+              idKtrBeban: select.idKtrBeban,
+              idUser: select.idUser,
+              namaKtrBeban: select.namaKtrBeban)
+          .toMapForDb(),
+    );
+
+    // var query = await DBHelper().DELETE('produk_local', id);
+    if (delete == 1) {
+      await fetchBebanlocal(id_toko);
+      await Get.find<dashboardController>().loadbebanhariini();
+      await Get.find<dashboardController>().loadpendapatanhariini();
+      await Get.find<dashboardController>().loadpendapatantotal();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_success('Sukses', 'Beban berhasil dihapus'));
+      print('deleted ' + id.toString());
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_error('Error', 'gagal menghapus kategori beban'));
     }
   }
 
@@ -231,6 +284,36 @@ class bebanController extends GetxController {
     return [];
   }
 
+  deletejenisbebanlocal(int id) async {
+    print('delete jenis beban local---------------------------------------->');
+    Get.dialog(showloading(), barrierDismissible: false);
+    var select = jenisbebanlistlocal.where((x) => x.id == id).first;
+    var delete = await DBHelper().UPDATE(
+      id: select.id,
+      table: 'beban_kategori_local',
+      data: DataJenisBeban(
+              aktif: 'N',
+              sync: 'N',
+              idToko: select.idToko,
+              id: select.id,
+              kategori: select.kategori)
+          .toMapForDb(),
+    );
+
+    // var query = await DBHelper().DELETE('produk_local', id);
+    if (delete == 1) {
+      await fetchJenisBebanlocal(id_toko);
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_success(
+          'Sukses', 'Kategori beban berhasil dihapus'));
+      print('deleted ' + id.toString());
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_error('Error', 'gagal menghapus kategori beban'));
+    }
+  }
+
   deleteJenisBeban(String id) async {
     print('-------------------delete jenis beban---------------------');
 
@@ -257,13 +340,315 @@ class bebanController extends GetxController {
     return [];
   }
 
-  clear() {
-    nama.value.clear();
-    kategori.value.clear();
-    keterangan.value.clear();
-    tanggal.value.clear();
-    jumlah.value.clear();
-    datedata = [];
+  Map<String, dynamic> synclocal(data) {
+    var map = <String, dynamic>{};
+
+    map['sync'] = data;
+
+    return map;
+  }
+
+  searchbebanlocal() async {
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_local WHERE id_toko = $id_toko AND aktif = "Y" AND nama LIKE "%${search.value.text}%" OR  tgl LIKE "%${search.value.text}%" ORDER BY ID DESC');
+    List<DataBeban> jenis = query.isNotEmpty
+        ? query.map((e) => DataBeban.fromJson(e)).toList()
+        : [];
+    databebanlistlocal.value = jenis;
+
+    return jenis;
+  }
+
+  syncBeban(id_toko) async {
+    print('-----------------SYNC BEBAN LOCAL TO HOST-------------------');
+
+    //Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      List<DataBeban> beban = await fetchBebansync(id_toko);
+      // databebanlistlocal.refresh();
+      print('start up DB SYNC BEBAN--------------------------------------->');
+      var query = beban.where((x) => x.sync == 'N').toList();
+      if (query.isEmpty) {
+        print(query.toString() +
+            '----------------------------------------------->');
+        print(' all data sync -------------------------------->');
+      } else {
+        await Future.forEach(query, (e) async {
+          var x = await REST.syncbeban(
+            token: token,
+            id: e.id,
+            idtoko: e.idToko.toString(),
+            idkatbeban: e.idKtrBeban.toString(),
+            iduser: e.idUser.toString(),
+            nama: e.nama,
+            keterangan: e.keterangan,
+            tgl: e.tgl,
+            jumlah: e.jumlah.toString(),
+            aktif: e.aktif,
+          );
+          print('print x--------------------->');
+          print(x);
+          print("BEBAN UP --------->   " +
+              e.nama! +
+              "------------------------------------------>");
+
+          if (x == false) {
+            print('gagal sync beban x= gagal------------------------>');
+            return;
+          } else {
+            print('beban local sync = y------------------------>');
+            await DBHelper()
+                .UPDATE(table: 'beban_local', data: synclocal('Y'), id: e.id);
+          }
+        });
+
+        // Get.showSnackbar(
+        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
+      }
+
+      //Get.back(closeOverlays: true);
+
+      // return [];
+    } else {
+      // Get.back(closeOverlays: true);
+      // Get.showSnackbar(
+      //     toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+  }
+
+  syncBebanKategori(id_toko) async {
+    print(
+        '-----------------SYNC BEBAN KATEGORI LOCAL TO HOST-------------------');
+
+    //Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      List<DataJenisBeban> bebankategori = await fetchJenisBebansync(id_toko);
+      // jenisbebanlistlocal.refresh();
+      print(
+          'start up DB SYNC BEBAN KATEGORI LOCAL--------------------------------------->');
+      var query = bebankategori.where((x) => x.sync == 'N').toList();
+      if (query.isEmpty) {
+        print(query.toString() +
+            '----------------------------------------------->');
+        print(' all data sync -------------------------------->');
+      } else {
+        await Future.forEach(query, (e) async {
+          var sync = await REST.syncbebanJenis(
+              token, e.id, e.idToko.toString(), e.kategori, e.aktif);
+          print("BEBAN KATEGORI UP ------>    " +
+              e.kategori! +
+              "------------------------------------------>");
+          if (sync != null) {
+            await DBHelper().UPDATE(
+                table: 'beban_kategori_local', data: synclocal('Y'), id: e.id);
+          }
+        });
+
+        // Get.showSnackbar(
+        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
+      }
+
+      //Get.back(closeOverlays: true);
+
+      // return [];
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+  }
+
+  var succ = false.obs;
+
+  initBebanToLocal(id_toko) async {
+    //login -> sync -> init
+
+    List<DataBeban> beban_local = await fetchDataBeban();
+    List<DataJenisBeban> beban_kategori_local = await fetchJenisBeban();
+
+    print('-------------------init beban local---------------------');
+    //Get.dialog(showloading(), barrierDismissible: false);
+    await Future.forEach(beban_local, (e) async {
+      await DBHelper().INSERT(
+          'beban_local',
+          DataBeban(
+                  id: e.id,
+                  idToko: e.idToko,
+                  idUser: e.idUser,
+                  nama: e.nama,
+                  keterangan: e.keterangan,
+                  tgl: e.tgl,
+                  jumlah: e.jumlah,
+                  idKtrBeban: e.idKtrBeban,
+                  namaKtrBeban: e.namaKtrBeban,
+                  sync: 'Y',
+                  aktif: e.aktif)
+              .toMapForDb());
+    });
+
+    await Future.forEach(beban_kategori_local, (e) async {
+      await DBHelper().INSERT(
+          'beban_kategori_local',
+          DataJenisBeban(
+                  aktif: e.aktif,
+                  id: e.id,
+                  idToko: e.idToko,
+                  kategori: e.kategori,
+                  sync: 'Y')
+              .toMapForDb());
+    });
+
+    // if (up != null) {
+    //  print(up.toString());
+    print('init success---------------------------------------------------->');
+    await fetchBebanlocal(id_toko);
+    await fetchJenisBebanlocal(id_toko);
+    // Get.back(closeOverlays: true);
+    //Get.showSnackbar(toast()
+    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
+    // } else {
+    //   // Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+
+    // if (add == 1) {
+    //
+    // } else {
+    //   Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+  }
+
+  var databebanlistlocal = <DataBeban>[].obs;
+  var jenisbebanlistlocal = <DataJenisBeban>[].obs;
+
+  fetchBebansync(id_toko) async {
+    print('-------------------fetch beban sync---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_local WHERE id_toko = $id_toko ORDER BY ID DESC');
+    List<DataBeban> beban = query.isNotEmpty
+        ? query.map((e) => DataBeban.fromJson(e)).toList()
+        : [];
+    databebanlistlocal.value = beban;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return beban;
+  }
+
+  fetchBebanlocal(id_toko) async {
+    print('-------------------fetch beban local---------------------');
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataBeban> beban = query.isNotEmpty
+        ? query.map((e) => DataBeban.fromJson(e)).toList()
+        : [];
+    databebanlistlocal.value = beban;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return beban;
+  }
+
+  //TODO : chek join2 table, validasi edit di table lain
+
+  fetchBebanlocalv2(id_toko) async {
+    print('-------------------fetch beban local---------------------');
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT beban_local.*,beban_kategori_local.kategori FROM beban_local JOIN beban_kategori_local on beban_local.id_ktr_beban = beban_kategori_local.id  WHERE beban_local.id_toko = $id_toko AND beban_local.aktif = "Y" AND beban_kategori_local.aktif = "Y" ORDER BY ID DESC');
+    List<DataBeban> beban = query.isNotEmpty
+        ? query.map((e) => DataBeban.fromJson(e)).toList()
+        : [];
+    databebanlistlocal.value = beban;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return beban;
+  }
+
+  //DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+
+  bebanTambahlocal() async {
+    print('-------------------tambah beban local---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().INSERT(
+        'beban_local',
+        DataBeban(
+                aktif: 'Y',
+                sync: 'N',
+                idToko: int.parse(id_toko),
+                idKtrBeban: int.parse(jenisbebanval!),
+                namaKtrBeban: jenisbebanlistlocal
+                    .where((e) => e.id == int.parse(jenisbebanval!))
+                    .first
+                    .kategori
+                    .toString(),
+                idUser: id_user,
+                nama: nama.value.text,
+                keterangan: keterangan.value.text,
+                tgl: datedata.first!.toString(),
+                jumlah: jumlahbeban.value.toInt())
+            .toMapForDb());
+
+    if (query != null) {
+      print(query);
+      print('id user------------>');
+      print(id_user);
+      await fetchBebanlocal(id_toko);
+      await Get.find<dashboardController>().loadbebanhariini();
+      await Get.find<dashboardController>().loadpendapatanhariini();
+      await Get.find<dashboardController>().loadpendapatantotal();
+      clear();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    }
+
+    // if (add == 1) {
+    //
+    // } else {
+    //   Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+  }
+
+  fetchJenisBebansync(id_toko) async {
+    print('-------------------fetch jenis beban sync---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_kategori_local WHERE id_toko = $id_toko ORDER BY ID DESC');
+    List<DataJenisBeban> beban_kategori = query.isNotEmpty
+        ? query.map((e) => DataJenisBeban.fromJson(e)).toList()
+        : [];
+    jenisbebanlistlocal.value = beban_kategori;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return beban_kategori;
+  }
+
+  fetchJenisBebanlocal(id_toko) async {
+    print('-------------------fetch jenis beban local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_kategori_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataJenisBeban> beban_kategori = query.isNotEmpty
+        ? query.map((e) => DataJenisBeban.fromJson(e)).toList()
+        : [];
+    jenisbebanlistlocal.value = beban_kategori;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return beban_kategori;
   }
 
   fetchJenisBeban() async {
@@ -279,14 +664,14 @@ class bebanController extends GetxController {
         jenisbebanlist.value = dataJenis.data;
 
         jenisbebanlist.value = dataJenis.data;
-        totalpagejenis.value = dataJenis.meta.pagination.totalPages;
-        totaldatajenis.value = dataJenis.meta.pagination.total;
-        perpagejenis.value = dataJenis.meta.pagination.perPage;
-        currentpagejenis.value = jenis['meta']['pagination']['current_page'];
-        countjenis.value = dataJenis.meta.pagination.count;
-        if (totalpagejenis > 1) {
-          nextdatajenis = jenis['meta']['pagination']['links']['next'];
-        }
+        // totalpagejenis.value = dataJenis.meta.pagination.totalPages;
+        // totaldatajenis.value = dataJenis.meta.pagination.total;
+        // perpagejenis.value = dataJenis.meta.pagination.perPage;
+        // currentpagejenis.value = jenis['meta']['pagination']['current_page'];
+        // countjenis.value = dataJenis.meta.pagination.count;
+        // if (totalpagejenis > 1) {
+        //   nextdatajenis = jenis['meta']['pagination']['links']['next'];
+        // }
 
         print('--------------------list jenis---------------');
         print(jenisbebanlist);
@@ -318,14 +703,14 @@ class bebanController extends GetxController {
         var dataBeban = ModelBeban.fromJson(beban);
 
         databebanlist.value = dataBeban.data;
-        totalpage.value = dataBeban.meta.pagination.totalPages;
-        totaldata.value = dataBeban.meta.pagination.total;
-        perpage.value = dataBeban.meta.pagination.perPage;
-        currentpage.value = beban['meta']['pagination']['current_page'];
-        count.value = dataBeban.meta.pagination.count;
-        if (totalpage > 1) {
-          nextdata = beban['meta']['pagination']['links']['next'];
-        }
+        // totalpage.value = dataBeban.meta.pagination.totalPages;
+        // totaldata.value = dataBeban.meta.pagination.total;
+        // perpage.value = dataBeban.meta.pagination.perPage;
+        // currentpage.value = beban['meta']['pagination']['current_page'];
+        // count.value = dataBeban.meta.pagination.count;
+        // if (totalpage > 1) {
+        //   nextdata = beban['meta']['pagination']['links']['next'];
+        // }
 
         print('--------------------list data beban---------------');
         print(databebanlist);
@@ -419,6 +804,47 @@ class bebanController extends GetxController {
     return [];
   }
 
+  bebanjenisTambahlocal() async {
+    print('-------------------tambah beban jenis local---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().INSERT(
+        'beban_kategori_local',
+        DataJenisBeban(
+                aktif: 'Y',
+                idToko: int.parse(id_toko),
+                kategori: kategori.value.text,
+                sync: 'N')
+            .toMapForDb());
+
+    if (query != null) {
+      print(query);
+      jenisbebanval = query.toString();
+      await fetchJenisBebanlocal(id_toko);
+      await fetchBebanlocal(id_toko);
+
+      Get.back();
+      Get.back();
+      Get.showSnackbar(
+          toast().bottom_snackbar_success('Sukses', 'kategori beban ditambah'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_error('error', 'kategori beban gagal ditambah'));
+    }
+
+    // if (add == 1) {
+    //
+    // } else {
+    //   Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+  }
+
+  clearbeban() {}
+
   tambahJenisBeban() async {
     print('-------------------tambah jenis beban---------------------');
 
@@ -467,6 +893,42 @@ class editjenisbebanController extends GetxController {
 
   var formKeyjenis = GlobalKey<FormState>().obs;
 
+  editJenisBebanLocal() async {
+    print('-------------------edit jenis beban local---------------------');
+
+    Get.dialog(const showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().UPDATE(
+        table: 'beban_kategori_local',
+        data: DataJenisBeban(
+                aktif: 'Y',
+                sync: 'N',
+                kategori: kategori.value.text,
+                idToko: int.parse(id_toko),
+                id: data.id)
+            .toMapForDb(),
+        id: data.id);
+    print(
+        'edit jenis beban local berhasil------------------------------------->');
+    print(query);
+    if (query == 1) {
+      await Get.find<bebanController>().fetchJenisBebanlocal(id_toko);
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('sukses', 'Kategori beban berhasil diedit'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal edit data local'));
+    }
+
+    // if (add != null) {
+    //   print(add);
+    //   await Get.find<produkController>().fetchProduk();
+    //   Get.back();
+    // }
+  }
+
   editJenisBeban() async {
     print('-------------------edit jenis beban---------------------');
 
@@ -497,18 +959,20 @@ class editjenisbebanController extends GetxController {
 
 class editbebanController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
     print('-------------edit beban conn-----------');
-    fetchJenisBeban();
+    fetchJenisBebanlocal(id_toko);
     nama.value = TextEditingController(text: data.nama);
     keterangan.value = TextEditingController(text: data.keterangan);
-    tanggal.value = TextEditingController(text: data.tgl);
-    jumlah.value = TextEditingController(text: data.jumlah);
+    tanggal.value = TextEditingController(
+        text: dateFormatdisplay.format(DateTime.parse(data.tgl)));
+    jumlah.value = TextEditingController(text: data.jumlah.toString());
     jenisbebanval.value = data.idKtrBeban.toString();
+    // await chekjj();
     jumlahbeban.value = double.parse(jumlah.value.text);
-    // print(jenisbebanval);
+    datedata.add(DateTime.tryParse(data.tgl));
   }
 
   RxList databebanlist = <DataBeban>[].obs;
@@ -517,8 +981,30 @@ class editbebanController extends GetxController {
   var id_toko = GetStorage().read('id_toko');
 
   var jenisbebanlist = <DataJenisBeban>[].obs;
+  var jenisbebanlistlocal = <DataJenisBeban>[].obs;
 
   var data = Get.arguments;
+
+  jjj() {
+    var x = jenisbebanlistlocal
+            .firstWhereOrNull((e) => e.id == int.parse(jenisbebanval.value))
+            ?.kategori ??
+        '-';
+    print(x);
+    return x;
+  }
+
+  chekjj() async {
+    var xxx = await jenisbebanlistlocal.first.kategori.toString();
+    var c =
+        jenisbebanlistlocal.firstWhereOrNull((e) => e.id == data.idKtrBeban);
+    if (c == null) {
+      jenisbebanval.value = xxx;
+    } else {
+      jenisbebanval.value = data.idKtrBeban.toString();
+    }
+  }
+
   late var jenisbebanval = data.idKtrBeban.toString().obs;
 
   var formKeybeban = GlobalKey<FormState>().obs;
@@ -531,11 +1017,28 @@ class editbebanController extends GetxController {
 
   var jumlahbeban = 0.0.obs;
 
-  final dateformat = DateFormat('dd-MM-yyyy');
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
+
+  DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
 
   stringdate() {
-    var ff = dateformat.format(datedata[0]!);
+    print(datedata.first);
+    var ff = dateFormatdisplay.format(datedata.first!);
     tanggal.value.text = ff;
+  }
+
+  fetchJenisBebanlocal(id_toko) async {
+    print('-------------------fetch Produk local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_kategori_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataJenisBeban> beban_kategori = query.isNotEmpty
+        ? query.map((e) => DataJenisBeban.fromJson(e)).toList()
+        : [];
+    jenisbebanlistlocal.value = beban_kategori;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return beban_kategori;
   }
 
   fetchJenisBeban() async {
@@ -570,6 +1073,51 @@ class editbebanController extends GetxController {
     return [];
   }
 
+  editBebanLocal() async {
+    print('-------------------edit beban local---------------------');
+
+    Get.dialog(const showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().UPDATE(
+        table: 'beban_local',
+        data: DataBeban(
+                aktif: 'Y',
+                idUser: data.idUser,
+                namaKtrBeban: jjj(),
+                sync: 'N',
+                id: data.id,
+                idToko: int.parse(id_toko),
+                idKtrBeban: int.parse(jenisbebanval.value),
+                nama: nama.value.text,
+                keterangan: keterangan.value.text,
+                tgl: datedata.first.toString(),
+                jumlah: jumlahbeban.value.toInt())
+            .toMapForDb(),
+        id: data.id);
+    print('edit beban local berhasil------------------------------------->');
+    print(query);
+    if (query == 1) {
+      await Get.find<bebanController>().fetchBebanlocal(id_toko);
+
+      await Get.find<dashboardController>().loadbebanhariini();
+      await Get.find<dashboardController>().loadpendapatanhariini();
+      await Get.find<dashboardController>().loadpendapatantotal();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('sukses', 'Kategori beban berhasil diedit'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal edit data local'));
+    }
+
+    // if (add != null) {
+    //   print(add);
+    //   await Get.find<produkController>().fetchProduk();
+    //   Get.back();
+    // }
+  }
+
   editBeban() async {
     print('-------------------tambah beban---------------------');
 
@@ -584,7 +1132,7 @@ class editbebanController extends GetxController {
           nama.value.text,
           keterangan.value.text,
           tanggal.value.text,
-          jumlah.value.text);
+          jumlahbeban.value.toString());
       if (beban != null) {
         print(beban);
         clear();
@@ -620,7 +1168,9 @@ class editbebanController extends GetxController {
     kategori.value.clear();
     keterangan.value.clear();
     tanggal.value.clear();
+    datedata.clear();
     jumlah.value.clear();
+    jumlahbeban.value = 0;
   }
 
   fetchDataBeban() async {
@@ -656,7 +1206,5 @@ class editbebanController extends GetxController {
     return [];
   }
 
-  List<DateTime?> datedata = [
-    //DateTime.now(),
-  ];
+  List<DateTime?> datedata = [];
 }

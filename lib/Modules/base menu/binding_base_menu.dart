@@ -9,6 +9,7 @@ import '../history/Controller_history.dart';
 import '../kasir/controller_kasir.dart';
 import '../laporan/Controller_laporan.dart';
 import '../pelanggan/hutang/controller_hutang.dart';
+import '../pelanggan/hutang/controller_hutang_detail.dart';
 import '../produk/data produk/controller_data_produk.dart';
 import '../produk/tambah produk/controller_tambah_produk.dart';
 import '../produk/tambah_stock/controller_tambah_stock.dart';
@@ -30,7 +31,7 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<tambah_stockController>(() => tambah_stockController());
     Get.lazyPut<tambah_produkController>(() => tambah_produkController());
     Get.lazyPut<produkController>(() => produkController(), fenix: true);
-    Get.lazyPut<historyController>(() => historyController());
+    Get.lazyPut<historyController>(() => historyController(), fenix: true);
     Get.lazyPut<bebanController>(() => bebanController(), fenix: true);
     Get.lazyPut<datauserController>(() => datauserController(), fenix: true);
     //Get.lazyPut(() => datauserController(), fenix: true);
@@ -41,9 +42,11 @@ class base_menuBinding extends Bindings {
     Get.lazyPut<detailpenjualanController>(() => detailpenjualanController(),
         fenix: true);
 
-    Get.lazyPut<pelangganController>(() => pelangganController());
+    Get.lazyPut<pelangganController>(() => pelangganController(), fenix: true);
 
-    Get.lazyPut<hutangController>(() => hutangController());
+    Get.lazyPut<hutangController>(() => hutangController(), fenix: true);
+    Get.lazyPut<hutang_detailController>(() => hutang_detailController(),
+        fenix: true);
 
     //Get.lazyPut(() => edituserController());
   }

@@ -8,16 +8,24 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
+import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
+import 'package:rims_waserda/Modules/history/Controller_history.dart';
+import 'package:rims_waserda/Modules/history/model_penjualan.dart';
 import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
+import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
 import '../../Services/handler.dart';
+import '../../db_helper.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/header.dart';
 import '../Widgets/loading.dart';
+import '../history/model_detail_penjualan_v2.dart';
+import '../pelanggan/data pelanggan/controller_data_pelanggan.dart';
+import '../pelanggan/hutang/controller_hutang.dart';
+import '../pelanggan/hutang/model_hutang.dart';
 import '../produk/data produk/model_produk.dart';
 import '../produk/jenis produk/model_jenisproduk.dart';
 import 'model_kasir.dart';
@@ -29,21 +37,26 @@ class kasirController extends GetxController {
     super.onInit();
 
     print('kasir init------------------------------------------------->');
-    await fetchProduk();
-    produkcache.value = await GetStorage().read('produk');
-    await fetchjenis();
-    jeniscache.value = await GetStorage().read('jenis');
-    fetchpelanggan();
-    await MobileScannerController().stop();
-
-    // fetchkeranjangcache();
-
-    //keypadController.value = TextEditingController(text: '0');
-    // kembalian.value = TextEditingController(text: '0');
-
-    // fetchkeranjang();
-    nextscroll();
+    await fetchProduklocal(id_toko);
+    await fetchjenislocal(id_toko);
+    // produkcache.value = await GetStorage().read('produk');
+    // await fetchjenis();
+    // jeniscache.value = await GetStorage().read('jenis');
+    await fetchDataPelangganlocal(id_toko);
     layout.value = await GetStorage().read('layout');
+  }
+
+  searchproduklocal() async {
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 AND nama_produk LIKE "%${search.value.text}%" OR  barcode LIKE "%${search.value.text}%" OR  nama_jenis LIKE "%${search.value.text}%" ORDER BY ID DESC');
+    List<DataProduk> produk = query.isNotEmpty
+        ? query.map((e) => DataProduk.fromJson(e)).toList()
+        : [];
+    produklistlocal.value = produk;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return produk;
   }
 
   var layout = false.obs;
@@ -51,6 +64,7 @@ class kasirController extends GetxController {
 
   var produkcache = <DataProduk>[].obs;
   var jeniscache = <DataJenis>[].obs;
+  var nama_user = GetStorage().read('name');
 
   Future<void> refresh() async {
     await fetchProduk();
@@ -194,7 +208,6 @@ class kasirController extends GetxController {
           toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
       return [];
     }
-    return [];
   }
 
   nextscroll() {
@@ -264,6 +277,51 @@ class kasirController extends GetxController {
     //return produk_list;
   }
 
+  var produklistlocal = <DataProduk>[].obs;
+  var jenislistlocal = <DataJenis>[].obs;
+
+  fetchProduklocal(id_toko) async {
+    print('-------------------fetch Produk local---------------------');
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 ORDER BY ID DESC');
+    List<DataProduk> produk = query.isNotEmpty
+        ? query.map((e) => DataProduk.fromJson(e)).toList()
+        : [];
+    produklistlocal.value = produk;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return produk;
+  }
+
+  fetchProduklocalbyjenis(id_toko, id_jenis) async {
+    print('-------------------fetch Produk local---------------------');
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 AND id_jenis = $id_jenis ORDER BY ID DESC');
+    List<DataProduk> produk = query.isNotEmpty
+        ? query.map((e) => DataProduk.fromJson(e)).toList()
+        : [];
+    produklistlocal.value = produk;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return produk;
+  }
+
+  fetchjenislocal(id_toko) async {
+    print('-------------------fetch jenis local---------------------');
+
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM produK_jenis_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataJenis> jenis = query.isNotEmpty
+        ? query.map((e) => DataJenis.fromJson(e)).toList()
+        : [];
+    jenislistlocal.value = jenis;
+    print(jenislistlocal);
+
+    return jenis;
+  }
+
   fetchProduk() async {
     print('-------------------fetchProduk---------------------');
 
@@ -279,14 +337,14 @@ class kasirController extends GetxController {
         var dataProduk = ModelProduk.fromJson(produk);
 
         produklist.value = dataProduk.data;
-        totalpage.value = dataProduk.meta.pagination.totalPages;
-        totaldata.value = dataProduk.meta.pagination.total;
-        perpage.value = dataProduk.meta.pagination.perPage;
-        currentpage.value = produk['meta']['pagination']['current_page'];
-        count.value = dataProduk.meta.pagination.count;
-        if (totalpage > 1) {
-          nextdata = produk['meta']['pagination']['links']['next'] ?? '';
-        }
+        // totalpage.value = dataProduk.meta.pagination.totalPages;
+        // totaldata.value = dataProduk.meta.pagination.total;
+        // perpage.value = dataProduk.meta.pagination.perPage;
+        // currentpage.value = produk['meta']['pagination']['current_page'];
+        // count.value = dataProduk.meta.pagination.count;
+        // if (totalpage > 1) {
+        //   nextdata = produk['meta']['pagination']['links']['next'] ?? '';
+        // }
         print(
             '--------------------list produk cache----------------------------');
         await GetStorage().write('produk', produklist.value);
@@ -366,7 +424,7 @@ class kasirController extends GetxController {
     var qty = cache.value[index].qty;
     var add = qty + 1;
     var sum = cache[index].qty = add;
-    print(produklist[index].qty);
+    print(produklistlocal[index].qty);
     // var pp = produklist.where((e) => e.id == cache[index].id).first;
     // if (int.parse(pp.qty) <= sum) {
     //   max.value = true;
@@ -376,11 +434,13 @@ class kasirController extends GetxController {
 
     await subtotalval();
     await totalval();
+    await hitungbesardiskonkasir();
     print('qty cache ------------------------------------------');
 
     //cache.refresh();
 
     print(cache[index].qty);
+    print(cache[index]);
     return sum;
   }
 
@@ -391,6 +451,7 @@ class kasirController extends GetxController {
     var sum = cache[index].qty = del;
     await subtotalval();
     await totalval();
+    await hitungbesardiskonkasir();
     if (sum < 1) {
       cache.value.removeWhere((element) => element.id == idproduk);
       print('qty cache deldete ------------------------------------------');
@@ -407,19 +468,25 @@ class kasirController extends GetxController {
     subtotalval();
     totalval();
     cache.refresh();
+    hitungbesardiskonkasir();
   }
 
   var excache = <String>[];
   RxDouble subtotal = 0.0.obs;
   RxDouble total = 0.0.obs;
-  var diskon = 0.15.obs;
+
+  // var diskon = 0.15.obs;
   RxDouble displaydiskon = 0.0.obs;
 
-  displayDiskon() {
-    return displaydiskon.value = jumlahdiskonkasir.value;
-  }
+  // displayDiskon() {
+  //   return displaydiskon.value = jumlahdiskonkasir.value;
+  // }
 
   var textdiskon = TextEditingController().obs;
+
+  hitungbesardiskonkasir() {
+    return jumlahdiskonkasir.value = subtotal.value * displaydiskon.value / 100;
+  }
 
   var jumlahdiskonkasir = 0.0.obs;
 
@@ -476,9 +543,12 @@ class kasirController extends GetxController {
                     ),
                     button_solid_custom(
                         onPressed: () {
-                          jumlahdiskonkasir.value =
+                          displaydiskon.value =
                               double.parse(textdiskon.value.text);
                           totalval();
+                          hitungbesardiskonkasir();
+                          print(
+                              ' jumalh diskon kasir ---------------------> == $jumlahdiskonkasir');
                           Get.back();
                         },
                         child: Text(
@@ -511,64 +581,77 @@ class kasirController extends GetxController {
   tambahKeranjangcache(int idproduk) async {
     print('-------------------Tambah keranjang cache---------------------');
     // keranjangcache.value = await GetStorage().read('keranjang');
-    var query = produkcache.value.where((element) => element.id == idproduk);
+    var query =
+        produklistlocal.value.where((element) => element.id == idproduk);
 
     final existingIndex = cache.value.indexWhere((item) => item.id == idproduk);
 
-    if (existingIndex == -1) {
-      cache.add(
-        DataKeranjangCache(
-            id: query.map((e) => e.id).first,
-            idToko: query.map((e) => e.idToko).first.toString(),
-            idUser: query.map((e) => e.idUser).first.toString(),
-            idJenis: query.map((e) => e.idJenis).first.toString(),
-            idJenisStock: query.map((e) => e.idJenisStock).first,
-            namaJenis: query.map((e) => e.namaJenis).first,
-            idKategori: query.map((e) => e.idKategori).first.toString(),
-            namaProduk: query.map((e) => e.namaProduk).first,
-            deskripsi: query.map((e) => e.deskripsi).first,
-            qty: 1,
-            harga: query.map((e) => e.harga).first,
-            diskonBarang:
-                query.map((e) => int.parse(e.harga) - e.diskonBarang).first,
-            diskonKasir: jumlahdiskonkasir.value.toInt(),
-            image: query.map((e) => e.image).first,
-            status: query.map((e) => e.status).first.toString(),
-            updated: query.map((e) => e.updated).first.toString(),
-            createdAt: query.map((e) => e.createdAt).first.toString(),
-            updatedAt: query.map((e) => e.updatedAt).first.toString()),
-      );
+    if (query.map((e) => e.qty).first == 0 &&
+        query.map((e) => e.idJenisStock).first == 1) {
+      Get.showSnackbar(toast().bottom_snackbar_error(
+          "Error", 'Stock sudah habis! harap isi stock terlebih dahulu'));
     } else {
-      var pp = produklist.where((e) => e.id == cache[existingIndex].id).first;
-      // var xx = controller.cache.where((e) => e.id == p.id).first;
-      if (int.parse(pp.qty) <= cache[existingIndex].qty &&
-          cache[existingIndex].idJenisStock == 1) {
-        print('maxxxx-------------------------');
-        Get.showSnackbar(toast().bottom_snackbar_error(
-            "Error", 'Stock sudah habis! harap isi stock terlebih dahulu'));
+      if (existingIndex == -1) {
+        cache.add(
+          DataKeranjangCache(
+              id: query.map((e) => e.id!).first,
+              idToko: query.map((e) => e.idToko).first,
+              idUser: query.map((e) => e.idUser!).first,
+              idJenis: query.map((e) => e.idJenis).first,
+              idJenisStock: query.map((e) => e.idJenisStock).first,
+              namaJenis: query.map((e) => e.namaJenis!).first,
+              idKategori: query.map((e) => e.idKategori!).first,
+              namaProduk: query.map((e) => e.namaProduk).first,
+              deskripsi: query.map((e) => e.deskripsi).first,
+              qty: 1,
+              harga: query.map((e) => e.harga).first,
+              hargaModal: query.map((e) => e.hargaModal).first,
+              diskonBarang: query.map((e) => e.diskonBarang!).first,
+              diskonKasir: jumlahdiskonkasir.value.toInt(),
+              image: query.map((e) => e.image).first ?? '-',
+              status: query.map((e) => e.status).first.toString(),
+              updated: query.map((e) => e.updated).first.toString(),
+              createdAt: query.map((e) => e.createdAt).first.toString(),
+              updatedAt: query.map((e) => e.updatedAt).first.toString()),
+        );
       } else {
-        cache[existingIndex].qty++;
+        var pp =
+            produklistlocal.where((e) => e.id == cache[existingIndex].id).first;
+        // var xx = controller.cache.where((e) => e.id == p.id).first;
+        if (cache[existingIndex].qty >= pp.qty! &&
+            cache[existingIndex].idJenisStock == 1) {
+          print('maxxxx-------------------------');
+          Get.showSnackbar(toast().bottom_snackbar_error(
+              "Error", 'Stock sudah habis! harap isi stock terlebih dahulu'));
+        } else {
+          cache[existingIndex].qty++;
+        }
       }
     }
+
     // if (int.parse(query.map((e) => e.qty).toString()) <=
     //     cache[existingIndex].qty) {
     //   max.value = true;
     // }
 
+    // print(cache.value.map((e) {
+    //   return [e.namaProduk, e.qty, e.diskonKasir];
+    // }).toList());
+    print('diskon barang -------------------------->');
     print(cache.value.map((e) {
-      return [e.namaProduk, e.qty, e.diskonKasir];
+      return [e.namaProduk, e.diskonBarang];
     }).toList());
 
     subtotalval();
     totalval();
-    print(diskon.value);
+    hitungbesardiskonkasir();
 
     cache.refresh();
   }
 
   totalval() {
     return total.value =
-        subtotal.value - (subtotal.value * jumlahdiskonkasir.value / 100);
+        subtotal.value - (subtotal.value * displaydiskon.value / 100);
   }
 
   subtotalval() {
@@ -576,7 +659,9 @@ class kasirController extends GetxController {
         0,
         (total, amount) =>
             total +
-            (amount.qty * int.parse(amount.harga) - amount.diskonBarang!));
+            (amount.qty *
+                (amount.harga! -
+                    (amount.harga! * amount.diskonBarang! / 100))));
   }
 
   fetchkeranjangcache() async {
@@ -710,6 +795,44 @@ class kasirController extends GetxController {
     return [];
   }
 
+  //TODO : perbaiki harga, proses insert penjualan belum
+
+  tambahKeranjanglocal() async {
+    print('-------------------Tambah keranjang local---------------------');
+    await Future.forEach(cache, (e) async {
+      await DBHelper().INSERT(
+          'keranjang_local',
+          DataKeranjangCachev2(
+                  qty: 1,
+                  idToko: e.idToko,
+                  id: e.idProduk,
+                  idUser: e.idUser,
+                  idKategori: e.idKategori,
+                  meja: '1',
+                  idJenisStock: e.idJenisStock,
+                  namaBrg: e.namaProduk,
+                  hargaBrg: e.harga,
+                  diskonBrg: e.diskonBarang)
+              .toMapForDb());
+
+      print('in keranjang local--------------------------------->');
+      print(e.idProduk);
+      print(e.id);
+    });
+
+    // if (keranjang != null) {
+    //   print('------------------tambah keranjang---------------');
+    //   //await fetchkeranjang();
+    //
+    //   // Get.showSnackbar(
+    //   //     toast().bottom_snackbar_success('Berhasil', 'berhasil di tambah'));
+    // } else {
+    //   //Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('Error', 'Gagal di tambah'));
+    // }
+  }
+
   deleteKeranjang(String id, idproduk) async {
     print('-------------------delete keranjang---------------------');
 
@@ -770,6 +893,277 @@ class kasirController extends GetxController {
           toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
     }
     return [];
+  }
+
+  // caridiskonproper() {
+  //   var x =
+  //   diskonpropervalue.value = jumlahharga.value * jumlahdiskon.value / 100;
+  //   print(x);
+  // }
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
+
+  pembayaranlocal(id_toko) async {
+    print('-------------------pembayaran local local---------------------');
+
+    Get.dialog(const showloading(), barrierDismissible: false);
+
+    var diskonbarangtotal = cache
+        .map((e) => e)
+        .fold(0, (total, x) => (x.harga! * x.diskonBarang! / 100).toInt());
+
+    if (groupindex.value != 3) {
+      print('pembayaran local------------------------------------->');
+      var query = await DBHelper().INSERT(
+          'penjualan_local',
+          DataPenjualan(
+                  aktif: 'Y',
+                  sync: 'N',
+                  idUser: id_user,
+                  idToko: int.parse(id_toko),
+                  total: total.value.toInt(),
+                  totalItem: cache
+                      .map((e) => e.qty)
+                      .fold(0, (previous, current) => previous! + current),
+                  tglPenjualan: DateTime.now().toString(),
+                  subTotal: subtotal.value.toInt(),
+                  namaUser: nama_user,
+                  namaPelanggan:
+                      groupindex.value == 3 ? nama_pelanggan.value.text : '-',
+                  // idPelanggan: listpelanggan.,
+                  metodeBayar: groupindex.value,
+                  meja: meja.value.text.isEmpty ? '0' : meja.value.text,
+                  kembalian: balikvalue.value.toInt(),
+                  diskonTotal:
+                      diskonbarangtotal + jumlahdiskonkasir.value.toInt(),
+                  bayar: bayarvalue.value,
+                  status: groupindex.value == 3 ? 3 : 1)
+              .toMapForDb());
+      // print('diskon barang total------------------------->');
+      // print(diskonbarangtotal);
+
+      if (query != null) {
+        print('insert detail penjualan---------------------->');
+        var detailpenjualan = Future.forEach(cache, (e) async {
+          var dd = e.harga! * e.diskonBarang! / 100;
+          await DBHelper().INSERT(
+              'penjualan_detail_local',
+              DataPenjualanDetailV2(
+                      aktif: 'Y',
+                      sync: 'N',
+                      idUser: id_user,
+                      idPenjualan: query,
+                      idJenisStock: e.idJenisStock,
+                      idKategori: e.idKategori,
+                      idProduk: e.id,
+                      namaBrg: e.namaProduk,
+                      hargaBrg: e.harga,
+                      diskonBrg: dd.toInt(),
+                      qty: e.qty,
+                      tgl: DateTime.now().toString(),
+                      hargaModal: e.hargaModal,
+                      diskonKasir: jumlahdiskonkasir.value.toInt(),
+                      total: total.value.toInt())
+                  .toMapForDb());
+          // print('diskon barang------------>');
+          // print(dd);
+        });
+
+        // kurang qty ----------------------------------------------------->
+        List<DataProduk> qty =
+            await Get.find<produkController>().fetchProduklocal(id_toko);
+        Future.forEach(cache, (e) async {
+          var kurangqty = qty.where((x) => x.id == e.id).first;
+          if (kurangqty.idJenisStock == 1) {
+            await DBHelper().UPDATE(
+                table: 'produk_local',
+                data: DataProduk(
+                        idToko: kurangqty.idToko,
+                        hargaModal: kurangqty.hargaModal,
+                        idJenisStock: kurangqty.idJenisStock,
+                        harga: kurangqty.harga,
+                        namaProduk: kurangqty.namaProduk,
+                        deskripsi: kurangqty.deskripsi,
+                        idJenis: kurangqty.idJenis,
+                        id: kurangqty.id,
+                        status: kurangqty.status,
+                        sync: 'N',
+                        idUser: kurangqty.idUser,
+                        idKategori: kurangqty.idKategori,
+                        diskonBarang: kurangqty.diskonBarang,
+                        namaJenis: kurangqty.namaJenis,
+                        image: kurangqty.image,
+                        barcode: kurangqty.barcode,
+                        qty: kurangqty.qty! - e.qty)
+                    .toMapForDb(),
+                id: kurangqty.id);
+          }
+        });
+
+        await Get.find<produkController>().fetchProduklocal(id_toko);
+        await fetchProduklocal(id_toko);
+        await Get.find<historyController>().fetchPenjualanlocal(id_toko);
+        await Get.find<dashboardController>().loadhutangtotal();
+        await Get.find<dashboardController>().loadpelanggantotal();
+        await Get.find<dashboardController>().loadpendapatanhariini();
+        await Get.find<dashboardController>().loadpendapatantotal();
+        await Get.find<dashboardController>().loadtransaksihariini();
+        await Get.find<dashboardController>().loadtransaksitotal();
+        await Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
+        await Get.find<pelangganController>()
+            .fetchstatusPelangganlocal(id_toko);
+        await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+        await clear();
+        cache.refresh();
+        Get.back();
+        Get.back();
+        Get.back();
+        Get.showSnackbar(
+            toast().bottom_snackbar_success('Sukses', 'Pembayaran berhasil'));
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('error', 'Pembayaran gagal'));
+      }
+    } else {
+      print('hutang local-------------------------------->');
+      var hutang = await DBHelper().INSERT(
+          'hutang_local',
+          DataHutang(
+            idToko: int.parse(id_toko),
+            idPelanggan: int.parse(id_pelanggan.value),
+            tglHutang: DateTime.now().toString(),
+            sync: 'N',
+            aktif: 'Y',
+            hutang: total.value.toInt(),
+            status: 2,
+          ).toMapForDb());
+
+      var query = await DBHelper().INSERT(
+          'penjualan_local',
+          DataPenjualan(
+                  aktif: 'Y',
+                  sync: 'N',
+                  idPelanggan: int.parse(id_pelanggan.value),
+                  idHutang: hutang,
+                  idUser: id_user,
+                  idToko: int.parse(id_toko),
+                  total: total.value.toInt(),
+                  totalItem: cache
+                      .map((e) => e.qty)
+                      .fold(0, (previous, current) => previous! + current),
+                  tglPenjualan: DateTime.now().toString(),
+                  subTotal: subtotal.value.toInt(),
+                  namaUser: nama_user,
+                  metodeBayar: groupindex.value,
+                  meja: meja.value.text.isEmpty ? '1' : meja.value.text,
+                  kembalian: 0,
+                  diskonTotal: 0,
+                  bayar: 0,
+                  status: 3)
+              .toMapForDb());
+      print('diskon barang total------------------------->');
+      print(diskonbarangtotal);
+
+      if (query != null) {
+        print('insert detail penjualan---------------------->');
+        var detailpenjualan = Future.forEach(cache, (e) async {
+          var dd = e.harga! * e.diskonBarang! / 100;
+          await DBHelper().INSERT(
+              'penjualan_detail_local',
+              DataPenjualanDetailV2(
+                      aktif: 'Y',
+                      sync: 'N',
+                      idUser: id_user,
+                      idPenjualan: query,
+                      idJenisStock: e.idJenisStock,
+                      idKategori: e.idKategori,
+                      idProduk: e.id,
+                      namaBrg: e.namaProduk,
+                      hargaBrg: e.harga,
+                      diskonBrg: dd.toInt(),
+                      qty: e.qty,
+                      tgl: DateTime.now().toString(),
+                      hargaModal: e.hargaModal,
+                      diskonKasir: jumlahdiskonkasir.value.toInt(),
+                      total: 0)
+                  .toMapForDb());
+          print('diskon barang------------>');
+          print(dd);
+        });
+
+        // kurang qty ----------------------------------------------------->
+        List<DataProduk> qty =
+            await Get.find<produkController>().fetchProduklocal(id_toko);
+        Future.forEach(cache, (e) async {
+          var kurangqty = qty.where((x) => x.id == e.id).first;
+          if (kurangqty.idJenisStock == 1) {
+            await DBHelper().UPDATE(
+                table: 'produk_local',
+                data: DataProduk(
+                        idToko: kurangqty.idToko,
+                        hargaModal: kurangqty.hargaModal,
+                        idJenisStock: kurangqty.idJenisStock,
+                        harga: kurangqty.harga,
+                        namaProduk: kurangqty.namaProduk,
+                        deskripsi: kurangqty.deskripsi,
+                        idJenis: kurangqty.idJenis,
+                        id: kurangqty.id,
+                        status: kurangqty.status,
+                        sync: 'N',
+                        idUser: kurangqty.idUser,
+                        idKategori: kurangqty.idKategori,
+                        diskonBarang: kurangqty.diskonBarang,
+                        namaJenis: kurangqty.namaJenis,
+                        image: kurangqty.image,
+                        barcode: kurangqty.barcode,
+                        qty: kurangqty.qty! - e.qty)
+                    .toMapForDb(),
+                id: kurangqty.id);
+          }
+        });
+
+        await Get.find<produkController>().fetchProduklocal(id_toko);
+        await fetchProduklocal(id_toko);
+        await Get.find<historyController>().fetchPenjualanlocal(id_toko);
+        await Get.find<dashboardController>().loadhutangtotal();
+        await Get.find<dashboardController>().loadpelanggantotal();
+        await Get.find<dashboardController>().loadpendapatanhariini();
+        await Get.find<dashboardController>().loadpendapatantotal();
+        await Get.find<dashboardController>().loadtransaksihariini();
+        await Get.find<dashboardController>().loadtransaksitotal();
+        await Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
+        await Get.find<pelangganController>()
+            .fetchstatusPelangganlocal(id_toko);
+        await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+        await clear();
+        cache.refresh();
+        Get.back();
+        Get.back();
+        Get.back();
+        Get.showSnackbar(
+            toast().bottom_snackbar_success('Sukses', 'Hutang berhasil'));
+      } else {
+        Get.back(closeOverlays: true);
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('error', 'Hutang gagal'));
+      }
+    }
+  }
+
+  clear() {
+    cache.value.clear();
+    meja.value.clear();
+    subtotal.value = 0;
+    total.value = 0;
+    groupindex.value = 9;
+    keypadController.value.clear();
+    kembalian.value.clear();
+    id_pelanggan.value = '';
+  }
+
+  deletekeranjanglocal(String table) async {
+    await DBHelper().DELETEALL(table);
+    print("isi ${table} di hapus----------------------->");
   }
 
   pembayaran() async {
@@ -851,6 +1245,59 @@ class kasirController extends GetxController {
     Get.put<kasirController>;
   }
 
+  tambahPelangganlocal() async {
+    print('-------------------tambah pelanggan local---------------------');
+
+    Get.dialog(const showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().INSERT(
+        'pelanggan_local',
+        DataPelanggan(
+                idToko: int.parse(id_toko),
+                namaPelanggan: nama_pelanggan.value.text,
+                noHp: nohp.value.text,
+                sync: 'N',
+                aktif: 'Y')
+            .toMapForDb());
+
+    if (query != null) {
+      print(query);
+      await fetchDataPelangganlocal(id_toko);
+      Get.back();
+      Get.back();
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('Sukses', 'Pelanggan berhasil ditambah'));
+    } else {
+      Get.back();
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    }
+
+    // if (add == 1) {
+    //
+    // } else {
+    //   Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+  }
+
+  var list_pelanggan_local = <DataPelanggan>[].obs;
+
+  fetchDataPelangganlocal(id_toko) async {
+    print('-------------------fetch pelanggan local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM pelanggan_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataPelanggan> pelanggan = query.isNotEmpty
+        ? query.map((e) => DataPelanggan.fromJson(e)).toList()
+        : [];
+    list_pelanggan_local.value = pelanggan;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return pelanggan;
+  }
+
   var barcodetext = TextEditingController().obs;
   var qrcode = ''.obs;
   String scaned_qr_code = '';
@@ -903,19 +1350,19 @@ class kasirController extends GetxController {
         if (existingIndex == -1) {
           cache.add(
             DataKeranjangCache(
-                id: qr.id,
-                idToko: qr.idToko.toString(),
-                idUser: qr.idUser.toString(),
-                idJenis: qr.idJenis.toString(),
+                id: qr.id!,
+                idToko: qr.idToko,
+                idUser: qr.idUser!,
+                idJenis: qr.idJenis,
                 idJenisStock: qr.idJenisStock,
-                namaJenis: qr.namaJenis,
-                idKategori: qr.idKategori.toString(),
+                namaJenis: qr.namaJenis!,
+                idKategori: qr.idKategori!,
                 namaProduk: qr.namaProduk,
                 deskripsi: qr.deskripsi,
                 qty: 1,
                 harga: qr.harga,
                 diskonBarang: qr.diskonBarang,
-                image: qr.image,
+                image: qr.image!,
                 status: qr.status.toString(),
                 updated: qr.updated.toString(),
                 createdAt: qr.createdAt.toString(),
@@ -925,7 +1372,7 @@ class kasirController extends GetxController {
           var pp =
               produklist.where((e) => e.id == cache[existingIndex].id).first;
           // var xx = controller.cache.where((e) => e.id == p.id).first;
-          if (int.parse(pp.qty) <= cache[existingIndex].qty &&
+          if (pp.qty! <= cache[existingIndex].qty &&
               cache[existingIndex].idJenisStock == 1) {
             print('maxxxx-------------------------');
             Get.showSnackbar(toast().bottom_snackbar_error(

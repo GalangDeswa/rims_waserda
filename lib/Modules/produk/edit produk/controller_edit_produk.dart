@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,13 +8,17 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
+import 'package:rims_waserda/db_helperv2.dart';
 
 import '../../../Services/handler.dart';
 import '../../../Templates/setting.dart';
+import '../../../db_helper.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
+import '../../dashboard/controller_dashboard.dart';
+import '../../kasir/controller_kasir.dart';
 import '../data produk/model_produk.dart';
 import '../jenis produk/model_jenisproduk.dart';
 
@@ -22,12 +27,16 @@ class editprodukController extends GetxController {
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    await fetchjenis();
+    await fetchjenislocal(id_toko);
+    print(
+        ' ${data.namaProduk} ----------------------------------------------------------------->');
+    print(
+        ' ${data.idKategori} ----------------------------------------------------------------->');
 
     nama_produk.value = TextEditingController(text: data.namaProduk);
     desc.value = TextEditingController(text: data.deskripsi);
-    harga.value = TextEditingController(text: data.harga);
-    qty.value = TextEditingController(text: data.qty);
+    harga.value = TextEditingController(text: data.harga.toString());
+    qty.value = TextEditingController(text: data.qty.toString());
     diskon_barang.value =
         TextEditingController(text: data.diskonBarang.toString());
 
@@ -38,20 +47,22 @@ class editprodukController extends GetxController {
         TextEditingController(text: data?.barcode.toString() ?? '-');
 
     data.diskonBarang == 0 ? check.value = false : check.value = true;
-    data.barcode == null || data.barcode == '-'
+    data.barcode == null || data.barcode == '-' || data.barcode == ''
         ? checkbarcode.value = false
         : checkbarcode.value = true;
 
-    data.image == '' ? checkfoto.value = false : checkfoto.value = true;
+    data.image == '' || data.image == null || data.image == '-'
+        ? checkfoto.value = false
+        : checkfoto.value = true;
 
     jenisvalue.value = data.idJenis.toString();
     jenisstokval.value = data.idJenisStock.toString();
 
-    jumlahharga.value = int.parse(data.harga);
+    jumlahharga.value = int.parse(data.harga.toString());
     jumlahdiskon.value = data.diskonBarang.toDouble();
 
-    hargamodal.value = TextEditingController(text: data.hargaModal);
-    jumlahhargamodal.value = int.parse(data.hargaModal);
+    hargamodal.value = TextEditingController(text: data.hargaModal.toString());
+    jumlahhargamodal.value = int.parse(data.hargaModal.toString());
 
     print('jumlah harga-----------------------------------');
     print(jumlahharga.value.toString());
@@ -137,6 +148,8 @@ class editprodukController extends GetxController {
     ));
   }
 
+  var image64;
+
   Future pickImageCamera() async {
     try {
       final image = await ImagePicker().pickImage(
@@ -146,8 +159,12 @@ class editprodukController extends GetxController {
           maxWidth: 300);
       if (image == null) return;
       pickedImageFile = File(image.path);
+      final bytes = File(image!.path).readAsBytesSync();
+      String base64Image = base64Encode(bytes);
+      image64 = base64Image;
       pikedImagePath.value = pickedImageFile!.path;
       print(pikedImagePath);
+      print(image64);
       Get.back();
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
@@ -163,8 +180,12 @@ class editprodukController extends GetxController {
           maxWidth: 300);
       if (image == null) return;
       pickedImageFile = File(image.path);
+      final bytes = File(image!.path).readAsBytesSync();
+      String base64Image = base64Encode(bytes);
+      image64 = base64Image;
       pikedImagePath.value = pickedImageFile!.path;
       print(pikedImagePath);
+      print(image64);
       Get.back();
     } on PlatformException catch (e) {
       print('Failed to pick image: $e');
@@ -201,7 +222,7 @@ class editprodukController extends GetxController {
           token: token,
           idjenis: jenisvalue.value,
           id: data.id,
-          // idjenisstock: jenisstokval.value,
+          idjenisstock: jenisstokval.value,
           idtoko: id_toko,
           iduser: id_user,
           desc: desc.value.text,
@@ -229,6 +250,126 @@ class editprodukController extends GetxController {
           toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
     }
     return [];
+  }
+
+  var jenislistlocal = <DataJenis>[].obs;
+
+  fetchjenislocal(id_toko) async {
+    print('-------------------fetch jenis local---------------------');
+
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM produK_jenis_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataJenis> jenis = query.isNotEmpty
+        ? query.map((e) => DataJenis.fromJson(e)).toList()
+        : [];
+    jenislistlocal.value = jenis;
+    print(jenislistlocal);
+
+    return jenis;
+  }
+
+  jjj() {
+    var x = jenislistlocal
+            .firstWhereOrNull((e) => e.id == int.parse(jenisvalue.value))
+            ?.namaJenis ??
+        '-';
+    return x;
+  }
+
+  //TODO : coba fix nama jenis bad state karna pas edit produk, jenisnya ke hapus\
+  //TODO : chek update sesuatu trus di tempat lain ke update jugak gak cuman nambah kalok di tambah
+
+  ProdukEditlocal() async {
+    print('-------------------edit Produk local---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().UPDATE(
+        table: 'produk_local',
+        data: DataProduk(
+                id: data.id,
+                status: data.status,
+                idKategori: data.idKategori,
+                idJenisStock: int.parse(jenisstokval.value),
+                idToko: int.parse(id_toko),
+                idJenis: int.parse(jenisvalue.value),
+                idUser: id_user,
+                qty: data.qty,
+                deskripsi: desc.value.text,
+                diskonBarang: int.parse(jumlahdiskon.value.toInt().toString()),
+                harga: int.parse(jumlahharga.value.toString()),
+                hargaModal: int.parse(jumlahhargamodal.value.toString()),
+                namaProduk: nama_produk.value.text,
+                barcode: barcode.value.text.toString(),
+                image: image64 ?? data.image,
+                // namaJenis: jenislistlocal
+                //     .where((e) => e.id == int.parse(jenisvalue.value))
+                //     .first
+                //     .namaJenis
+                //     .toString(),
+                namaJenis: jjj(),
+                sync: 'N')
+            .toMapForDb(),
+        id: data.id);
+    print('edit local berhasil------------------------------------->');
+    print(query);
+    if (query == 1) {
+      await Get.find<produkController>().fetchProduklocal(id_toko);
+      await Get.find<kasirController>().fetchProduklocal(id_toko);
+      await Get.find<dashboardController>().loadproduktotal();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_success('sukses', 'Produk berhasil diedit'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal edit data local'));
+    }
+
+    // if (add != null) {
+    //   print(add);
+    //   await Get.find<produkController>().fetchProduk();
+    //   Get.back();
+    // }
+  }
+
+  ProdukEditlocalv2() async {
+    print('-------------------edit Produk---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+
+    var db = DatabaseHelper.instance;
+
+    var add = await db.updateProdukv2(DataProduk(
+      id: data.id,
+      idJenisStock: int.parse(jenisstokval.value),
+      idToko: int.parse(id_toko),
+      idJenis: int.parse(jenisvalue.value),
+      idUser: id_user,
+      deskripsi: desc.value.text,
+      diskonBarang: int.parse(jumlahdiskon.value.toInt().toString()),
+      harga: int.parse(jumlahharga.value.toString()),
+      hargaModal: int.parse(jumlahhargamodal.value.toString()),
+      namaProduk: nama_produk.value.text,
+      barcode: barcode.value.text.toString(),
+      //image: pickedImageFile
+    ));
+    print('edit local berhasil------------------------------------->');
+    print(add);
+    if (add == 1) {
+      await Get.find<produkController>().fetchProduklocalv2();
+      Get.back(closeOverlays: true);
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal edit data local'));
+    }
+
+    // if (add != null) {
+    //   print(add);
+    //   await Get.find<produkController>().fetchProduk();
+    //   Get.back();
+    // }
   }
 
   var data = Get.arguments;

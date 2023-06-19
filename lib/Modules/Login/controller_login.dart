@@ -6,15 +6,22 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 import 'package:rims_waserda/Modules/Login/model_login.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
+import 'package:rims_waserda/Modules/history/Controller_history.dart';
+import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
+import 'package:rims_waserda/Modules/pelanggan/hutang/controller_hutang.dart';
 import 'package:rims_waserda/Services/handler.dart';
-import 'package:rims_waserda/Templates/setting.dart';
+import 'package:rims_waserda/main.dart';
+import 'package:workmanager/workmanager.dart';
 
 import '../../Services/api.dart';
+import '../../Templates/setting.dart';
+import '../beban/data beban/controller_beban.dart';
 import '../dashboard/model_toko.dart';
+import '../history/controller_detail_penjualan.dart';
+import '../produk/data produk/controller_data_produk.dart';
 
 class loginController extends GetxController {
   @override
@@ -34,17 +41,17 @@ class loginController extends GetxController {
   var username = ''.obs;
   var useremail = ''.obs;
 
+  var points = 0.0.obs;
+
   Future<void> handleSignIn() async {
     Get.dialog(
         Center(
           child: Container(
-            width: 300,
-            height: 250,
-            child: LoadingIndicator(
-              indicatorType: Indicator.ballPulseSync,
-              colors: [color_template().primary, color_template().select],
-            ),
-          ),
+              width: 300,
+              height: 250,
+              child: CircularProgressIndicator(
+                value: points.value,
+              )),
         ),
         barrierDismissible: false);
     try {
@@ -95,7 +102,8 @@ class loginController extends GetxController {
   var listkonten = <Konten>[];
 
   loginv2() async {
-    Get.dialog(showloading(), barrierDismissible: false);
+    // Get.dialog(showloading(), barrierDismissible: false);
+
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var response = await post(link().POST_login,
@@ -116,6 +124,8 @@ class loginController extends GetxController {
         await GetStorage().write('id_toko', dataUser.idToko);
         await GetStorage().write('token', dataUser.token);
         await GetStorage().write('id_user', dataUser.id);
+
+        points.value = points.value + 0.1;
 
         var toko = await REST.loadToko(dataUser.token, dataUser.idToko);
         if (toko != null) {
@@ -144,6 +154,8 @@ class loginController extends GetxController {
           print('-------------------konten---------------');
 
           await checkKonenBanner();
+
+          points.value = points.value + 0.1;
 
           print('------------------pendapatan----------------');
           var dataPendapatan = ModelToko.fromJson(toko);
@@ -174,6 +186,41 @@ class loginController extends GetxController {
             reverseAnimationCurve: Curves.easeOut,
           );
         }
+        print('loading database : produk------------------------------------>');
+
+        var db = await GetStorage().read('db_local');
+        print(db);
+
+        if (db == 'new') {
+          await bebanController().initBebanToLocal(dataUser.idToko);
+          points.value = points.value + 0.1;
+          await produkController().initProdukToLocal(dataUser.idToko);
+          points.value = points.value + 0.1;
+          await historyController().initPenjualanToLocal(dataUser.idToko);
+          points.value = points.value + 0.1;
+          await detailpenjualanController()
+              .initPenjualanDetailToLocal(dataUser.idToko);
+          points.value = points.value + 0.1;
+          await pelangganController().initPelangganToLocal(dataUser.idToko);
+          points.value = points.value + 0.1;
+          await hutangController().initHutangToLocal(dataUser.idToko);
+          points.value = points.value + 0.1;
+          await hutangController().initHutangDetailToLocal(dataUser.idToko);
+        }
+
+        points.value = points.value + 0.1;
+
+        await Workmanager().registerPeriodicTask('sync_auto', syncAuto,
+            frequency: Duration(minutes: 15),
+            constraints: Constraints(
+              networkType: NetworkType.connected,
+            ));
+        points.value = points.value + 0.1;
+
+        // Workmanager().registerPeriodicTask(
+        //     'sync_produk', 'sync produk local to host',
+        //     constraints: Constraints(networkType: NetworkType.connected),
+        //     frequency: Duration(minutes: 15));
 
         Get.back(closeOverlays: true);
         Get.showSnackbar(toast().bottom_snackbar_success(

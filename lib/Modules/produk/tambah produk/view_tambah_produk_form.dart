@@ -127,6 +127,13 @@ class tambah_produk_form extends GetView<produkController> {
                                                 onChanged: (bool? value) {
                                                   controller.checkfoto.value =
                                                       value!;
+                                                  if (controller
+                                                          .checkfoto.value ==
+                                                      false) {
+                                                    controller.pikedImagePath
+                                                        .value = '';
+                                                    controller.image64 = null;
+                                                  }
                                                   print(controller
                                                       .checkfoto.value);
                                                   // controller.check == true;
@@ -347,45 +354,41 @@ class tambah_produk_form extends GetView<produkController> {
                                       margin: EdgeInsets.only(bottom: 10),
                                       //width: context.width_query / 3.3,
 
-                                      child: GetBuilder<produkController>(
-                                          builder: (logic) {
-                                        return DropdownButtonFormField2(
-                                          decoration: InputDecoration(
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
+                                      child: DropdownButtonFormField2(
+                                        decoration: InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(15),
                                           ),
-                                          validator: (value) {
-                                            if (value == null) {
-                                              return 'Pilih kategori produk';
-                                            }
-                                            return null;
-                                          },
-                                          isExpanded: true,
-                                          dropdownStyleData: DropdownStyleData(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color: Colors.white)),
-                                          hint: Text('Pilih kategori produk'),
-                                          value: logic.jenisvalue,
-                                          items: logic.jenislist.value
-                                              .map((DataJenis item) {
-                                            return DropdownMenuItem(
-                                              child: Text(
-                                                  item.namaJenis.toString()),
-                                              value: item.id.toString(),
-                                            );
-                                          }).toList(),
-                                          onChanged: (val) {
-                                            logic.jenisvalue = val!.toString();
-                                            print(logic.jenisvalue);
-
-                                            logic.update();
-                                          },
-                                        );
-                                      }),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'Pilih kategori produk';
+                                          }
+                                          return null;
+                                        },
+                                        isExpanded: true,
+                                        dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.white)),
+                                        hint: Text('Pilih kategori produk'),
+                                        value: controller.jenisvalue,
+                                        items: controller.jenislistlocal
+                                            .map((DataJenis item) {
+                                          return DropdownMenuItem(
+                                            child:
+                                                Text(item.namaJenis.toString()),
+                                            value: item.id.toString(),
+                                          );
+                                        }).toList(),
+                                        onChanged: (val) {
+                                          controller.jenisvalue =
+                                              val!.toString();
+                                          print(controller.jenisvalue);
+                                        },
+                                      ),
                                     ),
                                   ),
                                   Container(
@@ -546,6 +549,12 @@ class tambah_produk_form extends GetView<produkController> {
                                             onChanged: (bool? value) {
                                               controller.checkbarcode.value =
                                                   value!;
+                                              if (controller
+                                                      .checkbarcode.value ==
+                                                  false) {
+                                                controller.barcode.value.text =
+                                                    '-';
+                                              }
                                               print(controller
                                                   .checkbarcode.value);
                                               // controller.check == true;
@@ -775,8 +784,8 @@ class tambah_produk_form extends GetView<produkController> {
                                                 print(controller.jumlahdiskon);
                                               }),
                                               decoration: InputDecoration(
-                                                labelText:
-                                                    "Harga setelah diskon",
+                                                suffix: Text('%'),
+                                                labelText: "Besar diskon",
                                                 labelStyle: TextStyle(
                                                   color: Colors.black87,
                                                 ),
@@ -815,7 +824,7 @@ class tambah_produk_form extends GetView<produkController> {
                   onPressed: () {
                     if (controller.formKeyproduk.value.currentState!
                         .validate()) {
-                      controller.ProdukTambah();
+                      controller.ProdukTambahlocal();
                     }
                   },
                   child: Text(

@@ -26,8 +26,7 @@ class ModelKeranjangCache {
   Meta meta;
 
   double get subtotal {
-    return data.fold(
-        0, (total, item) => total + (double.parse(item.harga) * item.qty));
+    return data.fold(0, (total, item) => total + (item.harga! * item.qty!));
   }
 
   double get total {
@@ -55,84 +54,53 @@ class ModelKeranjangCache {
 
 class DataKeranjangCache {
   DataKeranjangCache({
-    required this.id,
-    required this.idToko,
-    required this.idUser,
-    required this.idJenis,
-    required this.namaJenis,
-    required this.idKategori,
-    required this.idJenisStock,
-    required this.namaProduk,
-    required this.deskripsi,
+    this.id,
+    this.idToko,
+    this.idUser,
+    this.idJenis,
+    this.namaJenis,
+    this.idKategori,
+    this.idJenisStock,
+    this.namaProduk,
+    this.deskripsi,
     required this.qty,
-    required this.harga,
-    required this.image,
-    required this.status,
-    required this.updated,
-    required this.createdAt,
-    required this.updatedAt,
+    this.harga,
+    this.hargaModal,
+    this.image,
+    this.status,
+    this.updated,
+    this.createdAt,
+    this.updatedAt,
     this.diskonBarang,
     this.diskonKasir,
+    this.idProduk,
   });
 
-  int id;
-  String idToko;
-  String idUser;
-  String idJenis;
+  int? id;
+  int? idProduk;
+  int? idToko;
+  int? idUser;
+  int? idJenis;
   int? idJenisStock;
-  String namaJenis;
-  String idKategori;
-  String namaProduk;
-  String deskripsi;
+  String? namaJenis;
+  int? idKategori;
+  String? namaProduk;
+  String? deskripsi;
   int qty;
   int? diskonBarang;
   int? diskonKasir;
-  String harga;
-  String image;
-  String status;
-  String updated;
-  String createdAt;
-  String updatedAt;
-
-  DataKeranjangCache copyWith({
-    int? id,
-    String? idToko,
-    String? idUser,
-    String? idJenis,
-    String? namaJenis,
-    String? idKategori,
-    String? namaProduk,
-    String? deskripsi,
-    int? qty,
-    String? harga,
-    String? image,
-    String? status,
-    String? updated,
-    String? createdAt,
-    String? updatedAt,
-  }) =>
-      DataKeranjangCache(
-        id: id ?? this.id,
-        idToko: idToko ?? this.idToko,
-        idUser: idUser ?? this.idUser,
-        idJenis: idJenis ?? this.idJenis,
-        namaJenis: namaJenis ?? this.namaJenis,
-        idKategori: idKategori ?? this.idKategori,
-        idJenisStock: idJenisStock ?? this.idJenisStock,
-        namaProduk: namaProduk ?? this.namaProduk,
-        deskripsi: deskripsi ?? this.deskripsi,
-        qty: qty ?? this.qty,
-        harga: harga ?? this.harga,
-        image: image ?? this.image,
-        status: status ?? this.status,
-        updated: updated ?? this.updated,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-      );
+  int? harga;
+  int? hargaModal;
+  String? image;
+  String? status;
+  String? updated;
+  String? createdAt;
+  String? updatedAt;
 
   factory DataKeranjangCache.fromJson(Map<String, dynamic> json) =>
       DataKeranjangCache(
         id: json["id"],
+        idProduk: json["id_produk"],
         idToko: json["id_toko"],
         idUser: json["id_user"],
         idJenis: json["id_jenis"],
@@ -143,17 +111,19 @@ class DataKeranjangCache {
         deskripsi: json["deskripsi"],
         qty: json["qty"],
         harga: json["harga"],
+        hargaModal: json["harga_modal"],
         diskonBarang: json["diskon_barang"],
         diskonKasir: json["diskon_kasir"],
         image: json["image"],
         status: json["status"],
-        updated: json["updated"]!,
-        createdAt: json["created_at"]!,
-        updatedAt: json["updated_at"]!,
+        // updated: json["updated"]!,
+        // createdAt: json["created_at"]!,
+        // updatedAt: json["updated_at"]!,
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_produk": idProduk,
         "id_toko": idToko,
         "id_user": idUser,
         "id_jenis": idJenis,
@@ -164,15 +134,141 @@ class DataKeranjangCache {
         "deskripsi": deskripsi,
         "qty": qty,
         "harga": harga,
+        "harga_modal": hargaModal,
         "diskon_barang": diskonBarang,
         "diskon_kasir": diskonKasir,
         "image": image,
         "status": status,
-        "updated": updatedValues.reverse[updated],
-        "created_at": createdAtValues.reverse[createdAt],
-        "updated_at": updatedAtValues.reverse[updatedAt],
+        // "updated": updatedValues.reverse[updated],
+        // "created_at": createdAtValues.reverse[createdAt],
+        // "updated_at": updatedAtValues.reverse[updatedAt],
       };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+    map['id_produk'] = idProduk;
+    map['id_user'] = idUser;
+    map['id_toko'] = idToko;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_brg'] = namaProduk;
+    map['qty'] = qty;
+    map['harga_brg'] = harga;
+    map['diskon_kasir'] = diskonKasir;
+    map['diskon_brg'] = diskonBarang;
+    map['harga_modal'] = hargaModal;
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
+
+  Map<String, dynamic> penjualantoMapForDb() {
+    var map = <String, dynamic>{};
+    map['id_produk'] = idProduk;
+    map['id_user'] = idUser;
+    map['id_toko'] = idToko;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_brg'] = namaProduk;
+    map['qty'] = qty;
+    map['harga_brg'] = harga;
+    map['diskon_kasir'] = diskonKasir;
+    map['diskon_brg'] = diskonBarang;
+    map['harga_modal'] = hargaModal;
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
 }
+
+class DataKeranjangCachev2 {
+  DataKeranjangCachev2(
+      {this.id,
+      this.idToko,
+      this.meja,
+      this.idKategori,
+      this.idJenisStock,
+      this.idUser,
+      this.namaBrg,
+      this.hargaBrg,
+      this.diskonBrg,
+      this.qty});
+
+  int? id;
+
+  int? idToko;
+  int? idUser;
+  String? meja;
+  int? idKategori;
+  int? idJenisStock;
+  String? namaBrg;
+  int? hargaBrg;
+  int? diskonBrg;
+  int? qty;
+
+  factory DataKeranjangCachev2.fromJson(Map<String, dynamic> json) =>
+      DataKeranjangCachev2(
+        id: json["id"],
+
+        idToko: json["id_toko"],
+        idUser: json["id_user"],
+        meja: json["meja"],
+        idKategori: json["id_kategori"],
+        idJenisStock: json["id_jenis_stock"],
+        namaBrg: json["nama_brg"],
+        diskonBrg: json["diskon_brg"],
+        hargaBrg: json["harga_brg"],
+        qty: json["qty"],
+
+        // updated: json["updated"]!,
+        // createdAt: json["created_at"]!,
+        // updatedAt: json["updated_at"]!,
+      );
+
+  // Map<String, dynamic> toJson() => {
+  //       "id": id,
+  //       "id_produk": idProduk,
+  //       "id_toko": idToko,
+  //       "id_user": idUser,
+  //       "id_jenis": idJenis,
+  //       "nama_jenis": namaJenis,
+  //       "id_kategori": idKategori,
+  //       "id_jenis_stock": idJenisStock,
+  //       "nama_produk": namaProduk,
+  //       "deskripsi": deskripsi,
+  //       "qty": qty,
+  //       "harga": harga,
+  //       "diskon_barang": diskonBarang,
+  //       "diskon_kasir": diskonKasir,
+  //       "image": image,
+  //       "status": status,
+  //       // "updated": updatedValues.reverse[updated],
+  //       // "created_at": createdAtValues.reverse[createdAt],
+  //       // "updated_at": updatedAtValues.reverse[updatedAt],
+  //     };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+
+    map['id_user'] = idUser;
+    map['id_toko'] = idToko;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_brg'] = namaBrg;
+    map['qty'] = qty;
+    map['harga_brg'] = hargaBrg;
+    map['diskon_brg'] = diskonBrg;
+
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
+}
+
+//TODO : crud penjualan local
 
 enum CreatedAt { THE_08042023, THE_13042023 }
 

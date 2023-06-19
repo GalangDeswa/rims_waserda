@@ -76,17 +76,21 @@ class edit_jenis extends GetView<editjenisController> {
                                         textAlign: TextAlign.center,
                                         validator: (value) {
                                           if (value!.isEmpty) {
-                                            return 'Please enter email';
+                                            return 'Masukan kategori produk';
                                           }
                                           return null;
                                         },
                                       ),
                                       button_solid_custom(
                                           onPressed: () {
-                                            controller.jenisEdit();
+                                            if (controller.formKeyjenis.value
+                                                .currentState!
+                                                .validate()) {
+                                              controller.jenisEditlocal();
+                                            }
                                           },
                                           child: Text(
-                                            'tambah jenis',
+                                            'EDIT KATEGORI',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),

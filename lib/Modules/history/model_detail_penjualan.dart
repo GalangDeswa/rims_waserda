@@ -16,14 +16,14 @@ class ModelDetailPenjualan {
     required this.statusCode,
     required this.messages,
     required this.data,
-    required this.meta,
+    // required this.meta,
   });
 
   bool success;
   int statusCode;
   String messages;
   List<DataDetailPenjualan> data;
-  Meta meta;
+  //Meta meta;
 
   factory ModelDetailPenjualan.fromJson(Map<String, dynamic> json) =>
       ModelDetailPenjualan(
@@ -32,7 +32,7 @@ class ModelDetailPenjualan {
         messages: json["messages"],
         data: List<DataDetailPenjualan>.from(
             json["data"].map((x) => DataDetailPenjualan.fromJson(x))),
-        meta: Meta.fromJson(json["meta"]),
+        // meta: Meta.fromJson(json["meta"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,44 +40,45 @@ class ModelDetailPenjualan {
         "status_code": statusCode,
         "messages": messages,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
-        "meta": meta.toJson(),
+        // "meta": meta.toJson(),
       };
 }
 
 class DataDetailPenjualan {
   DataDetailPenjualan({
-    required this.id,
-    required this.meja,
-    required this.idToko,
-    required this.idUser,
-    required this.namaUser,
-    required this.totalItem,
-    required this.diskonTotal,
-    required this.subTotal,
-    required this.total,
-    required this.bayar,
-    required this.kembalian,
-    required this.tglPenjualan,
-    required this.metodeBayar,
-    required this.status,
-    required this.detailItem,
+    this.id,
+    this.meja,
+    this.idToko,
+    this.idUser,
+    this.namaUser,
+    this.totalItem,
+    this.diskonTotal,
+    this.subTotal,
+    this.total,
+    this.bayar,
+    this.kembalian,
+    this.tglPenjualan,
+    this.metodeBayar,
+    this.status,
+    // this.detailItem,
   });
 
-  int id;
-  int meja;
-  int idToko;
-  int idUser;
-  String namaUser;
-  String totalItem;
-  String diskonTotal;
-  String subTotal;
-  String total;
-  String bayar;
-  String kembalian;
-  String tglPenjualan;
-  int metodeBayar;
-  int status;
-  List<DetailItem> detailItem;
+  int? id;
+  int? meja;
+  int? idToko;
+  int? idUser;
+  String? namaUser;
+  int? totalItem;
+  int? diskonTotal;
+  int? subTotal;
+  int? total;
+  int? bayar;
+  int? kembalian;
+  String? tglPenjualan;
+  int? metodeBayar;
+  int? status;
+
+  // List<DetailItem>? detailItem;
 
   factory DataDetailPenjualan.fromJson(Map<String, dynamic> json) =>
       DataDetailPenjualan(
@@ -90,13 +91,13 @@ class DataDetailPenjualan {
         diskonTotal: json["diskon_total"],
         subTotal: json["sub_total"],
         total: json["total"],
-        bayar: json["bayar"] ?? '',
+        bayar: json["bayar"] ?? 0,
         kembalian: json["kembalian"],
         tglPenjualan: json["tgl_penjualan"],
         metodeBayar: json["metode_bayar"],
         status: json["status"],
-        detailItem: List<DetailItem>.from(
-            json["detail_item"].map((x) => DetailItem.fromJson(x))),
+        // detailItem: List<DetailItem>.from(
+        //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -114,30 +115,30 @@ class DataDetailPenjualan {
         "tgl_penjualan": tglPenjualan,
         "metode_bayar": metodeBayar,
         "status": status,
-        "detail_item": List<dynamic>.from(detailItem.map((x) => x.toJson())),
+        // "detail_item": List<dynamic>.from(detailItem!.map((x) => x.toJson())),
       };
 }
 
 class DetailItem {
   DetailItem({
-    required this.idPenjualan,
-    required this.idProduk,
-    required this.idKategori,
-    required this.namaBrg,
-    required this.hargaBrg,
-    required this.qty,
-    required this.diskonBrg,
-    required this.total,
+    this.idPenjualan,
+    this.idProduk,
+    this.idKategori,
+    this.namaBrg,
+    this.hargaBrg,
+    this.qty,
+    this.diskonBrg,
+    this.total,
   });
 
-  int idPenjualan;
-  int idProduk;
-  int idKategori;
-  String namaBrg;
-  String hargaBrg;
-  String qty;
-  String diskonBrg;
-  String total;
+  int? idPenjualan;
+  int? idProduk;
+  int? idKategori;
+  String? namaBrg;
+  int? hargaBrg;
+  int? qty;
+  int? diskonBrg;
+  int? total;
 
   factory DetailItem.fromJson(Map<String, dynamic> json) => DetailItem(
         idPenjualan: json["id_penjualan"],
@@ -160,40 +161,55 @@ class DetailItem {
         "diskon_brg": diskonBrg,
         "total": total,
       };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+    map['id_penjualan'] = idPenjualan;
+    map['id_produk'] = idProduk;
+    map['id_kategori'] = idKategori;
+    map['nama_brg'] = namaBrg;
+    map['harga_brg'] = hargaBrg;
+    map['qty'] = qty;
+    map['diskon_brg'] = diskonBrg;
+
+    map['total'] = total;
+
+    return map;
+  }
 }
 
-class Meta {
-  Meta({
-    required this.catatan,
-  });
-
-  Catatan catatan;
-
-  factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-        catatan: Catatan.fromJson(json["catatan"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "catatan": catatan.toJson(),
-      };
-}
-
-class Catatan {
-  Catatan({
-    required this.status,
-    required this.metodeBayarDtl,
-  });
-
-  String status;
-  String metodeBayarDtl;
-
-  factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
-        status: json["status"],
-        metodeBayarDtl: json["metode_bayar_dtl"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "status": status,
-        "metode_bayar_dtl": metodeBayarDtl,
-      };
-}
+// class Meta {
+//   Meta({
+//     required this.catatan,
+//   });
+//
+//   Catatan catatan;
+//
+//   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+//         catatan: Catatan.fromJson(json["catatan"]),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "catatan": catatan.toJson(),
+//       };
+// }
+//
+// class Catatan {
+//   Catatan({
+//     required this.status,
+//     required this.metodeBayarDtl,
+//   });
+//
+//   String status;
+//   String metodeBayarDtl;
+//
+//   factory Catatan.fromJson(Map<String, dynamic> json) => Catatan(
+//         status: json["status"],
+//         metodeBayarDtl: json["metode_bayar_dtl"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "status": status,
+//         "metode_bayar_dtl": metodeBayarDtl,
+//       };
+// }

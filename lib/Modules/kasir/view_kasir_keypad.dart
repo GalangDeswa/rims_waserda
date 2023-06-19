@@ -36,9 +36,9 @@ class kasir_keypad extends GetView<kasirController> {
                         children: [
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(right: 10),
+                              margin: const EdgeInsets.only(right: 10),
                               height: context.height_query / 8,
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: color_template().primary),
@@ -47,8 +47,8 @@ class kasir_keypad extends GetView<kasirController> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    padding: EdgeInsets.all(10),
+                                    margin: const EdgeInsets.only(right: 10),
+                                    padding: const EdgeInsets.all(10),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
@@ -61,7 +61,7 @@ class kasir_keypad extends GetView<kasirController> {
                                   ),
                                   Text('Total Tagihan :',
                                       style: font().header_big),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Expanded(
@@ -95,14 +95,14 @@ class kasir_keypad extends GetView<kasirController> {
                           ],
                           options: GroupButtonOptions(
                             selectedShadow: const [],
-                            selectedTextStyle: TextStyle(
+                            selectedTextStyle: const TextStyle(
                               fontSize: 20,
                               color: Colors.white,
                             ),
                             selectedColor: color_template().select,
                             unselectedShadow: const [],
                             unselectedColor: Colors.white,
-                            unselectedTextStyle: TextStyle(
+                            unselectedTextStyle: const TextStyle(
                               fontSize: 15,
                               color: Colors.black,
                             ),
@@ -142,7 +142,7 @@ class kasir_keypad extends GetView<kasirController> {
                                     children: [
                                       Expanded(
                                         child: DropdownSearch<DataPelanggan>(
-                                          popupProps: PopupProps.menu(
+                                          popupProps: const PopupProps.menu(
                                             //showSelectedItems: true,
                                             showSearchBox: true,
                                             itemBuilder: dropdownPelanggan,
@@ -162,9 +162,10 @@ class kasir_keypad extends GetView<kasirController> {
                                                           10)),
                                             ),
                                           ),
-                                          items: controller.listpelanggan.value,
+                                          items: controller
+                                              .list_pelanggan_local.value,
                                           itemAsString: (DataPelanggan u) {
-                                            return u.namaPelanggan;
+                                            return u.namaPelanggan!;
                                           },
                                           onChanged: (data) {
                                             controller.id_pelanggan.value =
@@ -176,20 +177,20 @@ class kasir_keypad extends GetView<kasirController> {
                                         ),
                                       ),
                                       Container(
-                                        margin:
-                                            EdgeInsets.only(right: 5, left: 30),
+                                        margin: const EdgeInsets.only(
+                                            right: 5, left: 30),
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: color_template().primary,
                                         ),
-                                        padding: EdgeInsets.all(3),
+                                        padding: const EdgeInsets.all(3),
                                         child: IconButton(
                                             color: Colors.white,
                                             onPressed: () {
                                               Get.dialog(
                                                   tambahpelangganpembayaran());
                                             },
-                                            icon: Icon(Icons.add)),
+                                            icon: const Icon(Icons.add)),
                                       )
                                     ],
                                   )
@@ -200,7 +201,7 @@ class kasir_keypad extends GetView<kasirController> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Container(
-                                            padding: EdgeInsets.all(10),
+                                            padding: const EdgeInsets.all(10),
                                             decoration: BoxDecoration(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
@@ -226,7 +227,7 @@ class kasir_keypad extends GetView<kasirController> {
                                               controller.balik();
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(10),
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -243,7 +244,7 @@ class kasir_keypad extends GetView<kasirController> {
                                               controller.balik();
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(10),
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -260,7 +261,7 @@ class kasir_keypad extends GetView<kasirController> {
                                               controller.balik();
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(10),
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -277,7 +278,7 @@ class kasir_keypad extends GetView<kasirController> {
                                               controller.balik();
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(10),
                                               decoration: BoxDecoration(
                                                   borderRadius:
                                                       BorderRadius.circular(10),
@@ -289,7 +290,7 @@ class kasir_keypad extends GetView<kasirController> {
                                           ),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 30,
                                       ),
                                       Row(
@@ -297,22 +298,20 @@ class kasir_keypad extends GetView<kasirController> {
                                             MainAxisAlignment.spaceAround,
                                         children: [
                                           Expanded(
-                                            child: Container(
-                                              child: TextFormField(
-                                                keyboardType:
-                                                    TextInputType.number,
-                                                controller: controller
-                                                    .keypadController.value,
-                                                onChanged: (value) {
-                                                  print(value);
-                                                  print('keypad chanhge');
-                                                  controller.balik();
-                                                },
-                                                // readOnly: true,
-                                                decoration: InputDecoration(
-                                                    prefixText: 'Rp. ',
-                                                    hintText: 'Jumlah bayar'),
-                                              ),
+                                            child: TextFormField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              controller: controller
+                                                  .keypadController.value,
+                                              onChanged: (value) {
+                                                print(value);
+                                                print('keypad chanhge');
+                                                controller.balik();
+                                              },
+                                              // readOnly: true,
+                                              decoration: const InputDecoration(
+                                                  prefixText: 'Rp. ',
+                                                  hintText: 'Jumlah bayar'),
                                             ),
                                           )
                                         ],
@@ -332,7 +331,7 @@ class kasir_keypad extends GetView<kasirController> {
                                                         val);
                                               },
                                               readOnly: true,
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 prefixText: 'Rp.',
                                                 hintText: 'kembalian',
                                               ),
@@ -373,7 +372,7 @@ class kasir_keypad extends GetView<kasirController> {
 
   Widget tambahpelangganpembayaran() {
     return AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         contentPadding: EdgeInsets.zero,
         backgroundColor: Colors.transparent,
@@ -407,11 +406,11 @@ class kasir_keypad extends GetView<kasirController> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    header(
+                                    const header(
                                       title: 'Tambah Pelanggan',
                                       icon: FontAwesomeIcons.dollarSign,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     TextFormField(
@@ -419,9 +418,10 @@ class kasir_keypad extends GetView<kasirController> {
                                           controller.nama_pelanggan.value,
                                       onChanged: ((String pass) {}),
                                       decoration: InputDecoration(
-                                        icon: Icon(FontAwesomeIcons.person),
+                                        icon:
+                                            const Icon(FontAwesomeIcons.person),
                                         labelText: "Nama pelanggan",
-                                        labelStyle: TextStyle(
+                                        labelStyle: const TextStyle(
                                           color: Colors.black87,
                                         ),
                                         border: OutlineInputBorder(
@@ -439,16 +439,17 @@ class kasir_keypad extends GetView<kasirController> {
                                         return null;
                                       },
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     TextFormField(
                                       controller: controller.nohp.value,
                                       onChanged: ((String pass) {}),
                                       decoration: InputDecoration(
-                                        icon: Icon(FontAwesomeIcons.phone),
+                                        icon:
+                                            const Icon(FontAwesomeIcons.phone),
                                         labelText: "Nomor HP",
-                                        labelStyle: TextStyle(
+                                        labelStyle: const TextStyle(
                                           color: Colors.black87,
                                         ),
                                         border: OutlineInputBorder(
@@ -466,7 +467,7 @@ class kasir_keypad extends GetView<kasirController> {
                                         return null;
                                       },
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 15,
                                     ),
                                     button_solid_custom(
@@ -476,12 +477,12 @@ class kasir_keypad extends GetView<kasirController> {
                                               .value
                                               .currentState!
                                               .validate()) {
-                                            controller.tambahPelanggan();
+                                            controller.tambahPelangganlocal();
                                           }
                                         },
                                         child: Text(
                                           'Tambah pelanggan'.toUpperCase(),
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
@@ -504,7 +505,7 @@ Widget dropdownPelanggan(
   bool isSelected,
 ) {
   return Container(
-      margin: EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
           ? null
           : BoxDecoration(
@@ -514,7 +515,7 @@ Widget dropdownPelanggan(
             ),
       child: ListTile(
         selected: isSelected,
-        title: Text(item.namaPelanggan),
-        subtitle: Text('Nomor hp :' + item.noHp),
+        title: Text(item.namaPelanggan!),
+        subtitle: Text('Nomor hp :' + item.noHp!),
       ));
 }

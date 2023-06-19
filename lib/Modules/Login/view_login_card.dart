@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../Modules/Login/view_login_carousel.dart';
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
+import '../Widgets/loading.dart';
 import 'controller_login.dart';
 
 class login_card extends GetView<loginController> {
@@ -171,6 +172,30 @@ class login_card extends GetView<loginController> {
                               onPressed: () {
                                 if (controller.loginKey.value.currentState!
                                     .validate()) {
+                                  Get.dialog(Obx(() {
+                                    return Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(150.0),
+                                        child: Column(
+                                          children: [
+                                            showloading(),
+                                            SizedBox(
+                                              height: 15,
+                                            ),
+                                            Container(
+                                              width: 200,
+                                              child: LinearProgressIndicator(
+                                                value: controller.points.value,
+                                                backgroundColor: Colors.white,
+                                                color: color_template().primary,
+                                                minHeight: 5,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }));
                                   controller.loginv2();
                                 }
 

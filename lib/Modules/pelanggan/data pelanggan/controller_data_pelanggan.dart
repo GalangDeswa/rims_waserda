@@ -1,15 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_table.dart';
 import 'package:rims_waserda/Modules/pelanggan/hutang/view_hutang_table.dart';
 
 import '../../../Services/handler.dart';
+import '../../../Templates/setting.dart';
+import '../../../db_helper.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
+import '../../dashboard/controller_dashboard.dart';
+import '../hutang/controller_hutang.dart';
 import 'model_data_pelanggan.dart';
 
 class pelangganController extends GetxController {
@@ -17,7 +22,8 @@ class pelangganController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    fetchDataPelanggan();
+    fetchDataPelangganlocal(id_toko);
+    fetchstatusPelangganlocal(id_toko);
   }
 
   List<Widget> table = [
@@ -90,6 +96,242 @@ class pelangganController extends GetxController {
     //return produk_list;
   }
 
+  var list_pelanggan_local = <DataPelanggan>[].obs;
+
+  Map<String, dynamic> synclocal(data) {
+    var map = <String, dynamic>{};
+
+    map['sync'] = data;
+
+    return map;
+  }
+
+  syncPelanggan(id_toko) async {
+    print('-----------------SYNC PELANGGAN LOCAL TO HOST-------------------');
+
+    //Get.dialog(showloading(), barrierDismissible: false);
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      List<DataPelanggan> pelanggan = await fetchDataPelanggansync(id_toko);
+      // list_pelanggan_local.refresh();
+      print(
+          'start up DB SYNC PELANGGAN--------------------------------------->');
+      var query = pelanggan.where((x) => x.sync == 'N').toList();
+      if (query.isEmpty) {
+        print(query.toString() +
+            '----------------------------------------------->');
+        print(' all data sync -------------------------------->');
+      } else {
+        var p = await Future.forEach(query, (e) async {
+          await REST.syncpelanggan(token, e.id, e.idToko.toString(),
+              e.namaPelanggan, e.noHp, e.aktif);
+          print("PELANGGAN UP ----->   " +
+              e.namaPelanggan.toString() +
+              "------------------------------------------>");
+
+          await DBHelper()
+              .UPDATE(table: 'pelanggan_local', data: synclocal('Y'), id: e.id);
+        });
+
+        // Get.showSnackbar(
+        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
+      }
+
+      //Get.back(closeOverlays: true);
+
+      // return [];
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+  }
+
+  initPelangganToLocal(id_toko) async {
+    List<DataPelanggan> pelanggan_local = await fetchDataPelanggan();
+    //List<DataDetailPenjualan> beban_detail_local = await fetchJenisBeban();
+
+    print('-------------------init pelanggan local---------------------');
+    //Get.dialog(showloading(), barrierDismissible: false);
+    await Future.forEach(pelanggan_local, (e) async {
+      await DBHelper().INSERT(
+          'pelanggan_local',
+          DataPelanggan(
+                  id: e.id,
+                  idToko: e.idToko,
+                  namaPelanggan: e.namaPelanggan,
+                  noHp: e.noHp,
+                  sync: 'Y',
+                  aktif: e.aktif)
+              .toMapForDb());
+    });
+
+    // await Future.forEach(beban_kategori_local, (e) async {
+    //   await DBHelper().INSERT(
+    //       'beban_kategori_local',
+    //       DataJenisBeban(id: e.id, idToko: e.idToko, kategori: e.kategori)
+    //           .toMapForDb());
+    // });
+
+    // if (up != null) {
+    //  print(up.toString());
+    print('init success---------------------------------------------------->');
+    await fetchDataPelangganlocal(id_toko);
+    //await fetchJenisBebanlocal(id_toko);
+    // Get.back(closeOverlays: true);
+    //Get.showSnackbar(toast()
+    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
+    // } else {
+    //   // Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+
+    // if (add == 1) {
+    //
+    // } else {
+    //   Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+  }
+
+  fetchDataPelanggansync(id_toko) async {
+    print('-------------------fetch pelanggan sync---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM pelanggan_local WHERE id_toko = $id_toko ORDER BY ID DESC');
+    List<DataPelanggan> pelanggan = query.isNotEmpty
+        ? query.map((e) => DataPelanggan.fromJson(e)).toList()
+        : [];
+    list_pelanggan_local.value = pelanggan;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return pelanggan;
+  }
+
+  fetchDataPelangganlocal(id_toko) async {
+    print('-------------------fetch pelanggan local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM pelanggan_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataPelanggan> pelanggan = query.isNotEmpty
+        ? query.map((e) => DataPelanggan.fromJson(e)).toList()
+        : [];
+    list_pelanggan_local.value = pelanggan;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return pelanggan;
+  }
+
+  var list_pelanggan_local_status = <DataPelanggan>[].obs;
+
+  fetchstatusPelangganlocal(id_toko) async {
+    print('-------------------fetch pelanggan local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT pelanggan_local.*,penjualan_local.status FROM pelanggan_local LEFT JOIN penjualan_local ON pelanggan_local.id = penjualan_local.id_pelanggan WHERE pelanggan_local.id_toko = $id_toko AND pelanggan_local.aktif = "Y" ORDER BY ID DESC');
+    List<DataPelanggan> pelanggan = query.isNotEmpty
+        ? query.map((e) => DataPelanggan.fromJson(e)).toList()
+        : [];
+    list_pelanggan_local_status.value = pelanggan;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return pelanggan;
+  }
+
+  searchpelangganlocal() async {
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM pelanggan_local WHERE id_toko = $id_toko AND aktif = "Y" AND nama_pelanggan LIKE "%${search.value.text}%" ORDER BY ID DESC');
+    List<DataPelanggan> pelanggan = query.isNotEmpty
+        ? query.map((e) => DataPelanggan.fromJson(e)).toList()
+        : [];
+    list_pelanggan_local.value = pelanggan;
+    // print('fect produk local --->' + produk.toList().toString());
+
+    return pelanggan;
+  }
+
+  statuspelanggan(id) {
+    // var id_pelanggan = list_pelanggan_local.map((e) => e.id).toList();
+    // var status =
+    //     list_pelanggan_local_status.where((e) => e.id == id_pelanggan).toList();
+    //
+    // var ss = status.map((e) => e.status).toList();
+
+    // var xxx = list_pelanggan_local_status
+    //     .map((e) => e)
+    //     .toList()
+    //     .where((element) => element.id == id)
+    //     .toList()
+    //     .map((x) => x.status)
+    //     .toList()
+    //     .contains(3);
+
+    var xxx = list_pelanggan_local_status
+        .map((x) => x)
+        .toList()
+        .where((element) => element.id == id)
+        .map((e) => e.status)
+        .contains(3);
+
+    print(xxx);
+
+    if (xxx == true) {
+      return Container(
+          padding: EdgeInsets.all(6),
+          decoration: BoxDecoration(
+              color: color_template().select,
+              borderRadius: BorderRadius.circular(10)),
+          child: Text(
+            "Hutang",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ));
+    } else {
+      return Container(
+          padding: EdgeInsets.all(6),
+          decoration: BoxDecoration(
+              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+          child: Text("Selesai",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white)));
+    }
+  }
+
+  statuspelangganhapus(id) {
+    // var id_pelanggan = list_pelanggan_local.map((e) => e.id).toList();
+    // var status =
+    //     list_pelanggan_local_status.where((e) => e.id == id_pelanggan).toList();
+    //
+    // var ss = status.map((e) => e.status).toList();
+
+    // var xxx = list_pelanggan_local_status
+    //     .map((e) => e)
+    //     .toList()
+    //     .where((element) => element.id == id)
+    //     .toList()
+    //     .map((x) => x.status)
+    //     .toList()
+    //     .contains(3);
+
+    var xxx = list_pelanggan_local_status
+        .map((x) => x)
+        .toList()
+        .where((element) => element.id == id)
+        .map((e) => e.status)
+        .contains(3);
+
+    print(xxx);
+
+    if (xxx == true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //TODO : chek status hutang
+
   fetchDataPelanggan() async {
     print('-------------------fetch data beban---------------------');
 
@@ -101,14 +343,6 @@ class pelangganController extends GetxController {
         var dataPelanggan = ModelPelanggan.fromJson(pelanggan);
 
         list_pelanggan.value = dataPelanggan.data;
-        totalpage.value = dataPelanggan.meta.pagination.totalPages;
-        totaldata.value = dataPelanggan.meta.pagination.total;
-        perpage.value = dataPelanggan.meta.pagination.perPage;
-        currentpage.value = pelanggan['meta']['pagination']['current_page'];
-        count.value = dataPelanggan.meta.pagination.count;
-        if (totalpage > 1) {
-          nextdata = pelanggan['meta']['pagination']['links']['next'];
-        }
 
         print('--------------------list data beban---------------');
         print(list_pelanggan);
@@ -129,8 +363,52 @@ class pelangganController extends GetxController {
     return [];
   }
 
+  clear() {
+    nama_pelanggan.value.clear();
+    no_hp.value.clear();
+  }
+
+  tambahPelangganlocal() async {
+    print('-------------------tambah pelanggan local---------------------');
+
+    Get.dialog(const showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().INSERT(
+        'pelanggan_local',
+        DataPelanggan(
+                idToko: int.parse(id_toko),
+                namaPelanggan: nama_pelanggan.value.text,
+                noHp: no_hp.value.text,
+                sync: 'N',
+                aktif: 'Y')
+            .toMapForDb());
+
+    if (query != null) {
+      print(query);
+      await fetchDataPelangganlocal(id_toko);
+      await Get.find<kasirController>().fetchDataPelangganlocal(id_toko);
+      await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+      await Get.find<dashboardController>().loadpelanggantotal();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('Sukses', 'Pelanggan berhasil ditambah'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    }
+
+    // if (add == 1) {
+    //
+    // } else {
+    //   Get.back(closeOverlays: true);
+    //   Get.showSnackbar(
+    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    // }
+  }
+
   tambahPelanggan() async {
-    print('-------------------tambah beban---------------------');
+    print('-------------------tambah pelanggan---------------------');
 
     Get.dialog(showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
@@ -159,6 +437,40 @@ class pelangganController extends GetxController {
           toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
     }
     return [];
+  }
+
+  hapuspelangganlocal(int id) async {
+    print('delete pelanggan local---------------------------------------->');
+    Get.dialog(const showloading(), barrierDismissible: false);
+    var select = list_pelanggan_local.where((x) => x.id == id).first;
+    var delete = await DBHelper().UPDATE(
+      id: select.id,
+      table: 'pelanggan_local',
+      data: DataPelanggan(
+              id: select.id,
+              idToko: select.idToko,
+              namaPelanggan: select.namaPelanggan,
+              noHp: select.noHp,
+              sync: 'N',
+              aktif: 'N')
+          .toMapForDb(),
+    );
+
+    // var query = await DBHelper().DELETE('produk_local', id);
+    if (delete == 1) {
+      await fetchDataPelangganlocal(id_toko);
+      await Get.find<kasirController>().fetchDataPelangganlocal(id_toko);
+      await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+      await Get.find<dashboardController>().loadpelanggantotal();
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_success('Sukses', 'Produk berhasil dihapus'));
+      print('deleted ' + id.toString());
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'gagal menghapus produk'));
+    }
   }
 
   hapusPelanggan(String id) async {

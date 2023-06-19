@@ -114,18 +114,26 @@ class laporan_table_beban extends GetView<laporanController> {
                 }),
                 controller.pickdate.value.text.isEmpty
                     ? Container()
-                    : icon_button_custom(
+                    : button_solid_custom(
                         onPressed: () async {
-                          //controller.askPermission();
-                          // var status = await Permission.bluetooth.status;
-                          // if (!status.isGranted) {
-                          //   await Permission.bluetooth.request();
-                          // }
-
                           await controller.laporanBeban();
+                          // Get.dialog(SingleChildScrollView(
+                          //   child: AlertDialog(
+                          //       elevation: 0,
+                          //       backgroundColor: Colors.transparent,
+                          //       content: Center(
+                          //         child: Container(
+                          //             width: context.width_query / 1.3,
+                          //             child: tambah_produk_form()),
+                          //       )),
+                          // ));
                         },
-                        icon: Icons.search,
-                        container_color: color_template().primary),
+                        child: Text(
+                          'Cari laporan',
+                          style: font().header,
+                        ),
+                        width: context.width_query * 0.2,
+                        height: 65),
               ],
             ),
             Obx(() {

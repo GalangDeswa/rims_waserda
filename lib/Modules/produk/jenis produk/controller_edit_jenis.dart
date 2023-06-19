@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:rims_waserda/Modules/produk/jenis%20produk/model_jenisproduk.dart';
 
 import '../../../Services/handler.dart';
+import '../../../db_helper.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
+import '../../kasir/controller_kasir.dart';
+import '../data produk/controller_data_produk.dart';
 
 class editjenisController extends GetxController {
   @override
@@ -34,10 +38,46 @@ class editjenisController extends GetxController {
   var previouspage;
   var perpage = 0.obs;
 
+  jenisEditlocal() async {
+    print('-------------------edit Produk local---------------------');
+
+    Get.dialog(const showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().UPDATE(
+        table: 'produk_jenis_local',
+        data: DataJenis(
+                aktif: 'Y',
+                sync: 'N',
+                idToko: id_toko,
+                namaJenis: nama_jenis.value.text,
+                id: data.id)
+            .toMapForDb(),
+        id: data.id);
+    print('edit local berhasil------------------------------------->');
+    print(query);
+    if (query == 1) {
+      await Get.find<produkController>().fetchjenislocal(id_toko);
+      await Get.find<kasirController>().fetchjenislocal(id_toko);
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_success('sukses', 'Produk berhasil diedit'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal edit data local'));
+    }
+
+    // if (add != null) {
+    //   print(add);
+    //   await Get.find<produkController>().fetchProduk();
+    //   Get.back();
+    // }
+  }
+
   jenisEdit() async {
     print('-------------------edit jenis---------------------');
 
-    Get.dialog(showloading(), barrierDismissible: false);
+    Get.dialog(const showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var jenis = await REST.produkJenisedit(

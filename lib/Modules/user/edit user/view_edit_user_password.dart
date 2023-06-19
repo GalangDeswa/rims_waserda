@@ -36,10 +36,39 @@ class edit_user_password extends GetView<edituserController> {
                     child: SingleChildScrollView(
                       child: Obx(() {
                         return Form(
-                            key: controller.formKey.value,
+                            key: controller.formKeyedituser.value,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
+                                // TextFormField(
+                                //   controller: controller.passwordlama.value,
+                                //   onChanged: ((String pass) {}),
+                                //   decoration: InputDecoration(
+                                //     icon: Icon(Icons.pin_drop),
+                                //     labelText: "Password lama",
+                                //     labelStyle: TextStyle(
+                                //       color: Colors.black87,
+                                //     ),
+                                //     border: OutlineInputBorder(
+                                //         borderRadius:
+                                //             BorderRadius.circular(10)),
+                                //     focusedBorder: OutlineInputBorder(
+                                //         borderRadius:
+                                //             BorderRadius.circular(10)),
+                                //   ),
+                                //   textAlign: TextAlign.center,
+                                //   validator: (value) {
+                                //     if (value!.isEmpty ||
+                                //         value !=
+                                //             controller.password.value.text) {
+                                //       return 'Password tidak sesuai';
+                                //     }
+                                //     return null;
+                                //   },
+                                // ),
+                                // SizedBox(
+                                //   height: 15,
+                                // ),
                                 TextFormField(
                                   //initialValue: controller.data.nama,
                                   controller: controller.password.value,
@@ -60,7 +89,7 @@ class edit_user_password extends GetView<edituserController> {
                                   textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
-                                      return 'Please enter email';
+                                      return 'Masukan password';
                                     }
                                     return null;
                                   },
@@ -88,14 +117,15 @@ class edit_user_password extends GetView<edituserController> {
                                   validator: (value) {
                                     if (value !=
                                         controller.password.value.text) {
-                                      return 'PAssword tidak sesuai';
+                                      return 'Password tidak sesuai';
                                     }
                                     return null;
                                   },
                                 ),
                                 button_solid_custom(
                                     onPressed: () {
-                                      if (controller.formKey.value.currentState!
+                                      if (controller
+                                          .formKeyedituser.value.currentState!
                                           .validate()) {
                                         controller.edituserpassword();
                                       }

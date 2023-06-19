@@ -77,7 +77,7 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
                       onPressed: () {
                         if (controller.formKeypelanggan.value.currentState!
                             .validate()) {
-                          controller.editpelanggan();
+                          controller.editpelangganlocal();
                         }
                       },
                       child: Text(

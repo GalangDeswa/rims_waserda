@@ -86,7 +86,7 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                       onPressed: () {
                         if (controller.formKeypelanggan.value.currentState!
                             .validate()) {
-                          controller.tambahPelanggan();
+                          controller.tambahPelangganlocal();
                         }
                       },
                       child: Text(

@@ -5,15 +5,19 @@ import 'package:get_storage/get_storage.dart';
 import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Modules/Widgets/buttons.dart';
 import 'package:rims_waserda/Modules/Widgets/logout_pop.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
 import '../../Templates/setting.dart';
+import '../../main.dart';
 
 class base_menu extends GetView<base_menuController> {
   base_menu({Key? key}) : super(key: key);
   var key = GlobalKey<ScaffoldState>();
 
+  //TODO : buat ui sync manual, buat trigger sync automatis di login gatinkan sync produk
+  //TODO : chek proses update di tempat lain setelah ada proses yang jalan
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -130,9 +134,49 @@ class base_menu extends GetView<base_menuController> {
                           ),
                         ],
                       )),
-                  ListTile(
-                    title: Text('Setting'),
-                    leading: Icon(Icons.settings),
+                  InkWell(
+                    highlightColor: color_template().select,
+                    splashColor: Colors.orangeAccent,
+                    onTap: () async {
+                      var p = 0.0.obs;
+
+                      Get.dialog(Obx(() {
+                        p.value = p.value + 0.2;
+                        return Center(
+                          child: Container(
+                            width: 250,
+                            height: 250,
+                            // color: Colors.red,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 5.0,
+                              backgroundColor: Colors.white,
+                              color: color_template().primary,
+                              value: p.value,
+                            ),
+                          ),
+                        );
+                      }));
+                      p.value = p.value + 0.2;
+                      print('workmanager ---------------->');
+                      await syncAll(controller.id_toko);
+                      p.value = p.value + 0.2;
+
+                      p.value = p.value + 0.2;
+                      p.value = p.value + 0.2;
+                      // p.value = 1.0;
+                      if (p.value == 1.0) {
+                        print('qeqwijfheaygfeauaeiugfaeufy');
+                        Get.back(closeOverlays: true);
+                        Get.showSnackbar(toast().bottom_snackbar_success(
+                            'Sukses', 'Data berhasil di upload'));
+                      }
+
+                      //todo : hapus app chek auto sync, chek update di tempat lain saat ada proses
+                    },
+                    child: ListTile(
+                      title: Text('Upload data produk'),
+                      leading: Icon(Icons.upload),
+                    ),
                   ),
                   InkWell(
                     highlightColor: color_template().select,

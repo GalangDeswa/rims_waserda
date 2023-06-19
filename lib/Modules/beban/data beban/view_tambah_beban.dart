@@ -106,49 +106,43 @@ class tambah_beban extends GetView<bebanController> {
                                   children: [
                                     Expanded(
                                       child: Container(
-                                        child: GetBuilder<bebanController>(
-                                            builder: (logic) {
-                                          return DropdownButtonFormField2(
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return 'Pilih kategori beban';
-                                              }
-                                              return null;
-                                            },
-                                            decoration: InputDecoration(
-                                              icon: Icon(
-                                                  FontAwesomeIcons.dollarSign),
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
+                                        child: DropdownButtonFormField2(
+                                          validator: (value) {
+                                            if (value == null) {
+                                              return 'Pilih kategori beban';
+                                            }
+                                            return null;
+                                          },
+                                          decoration: InputDecoration(
+                                            icon: Icon(
+                                                FontAwesomeIcons.dollarSign),
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
                                             ),
-                                            dropdownStyleData:
-                                                DropdownStyleData(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        color: Colors.white)),
-                                            isExpanded: true,
-                                            hint: Text('Pilih Kategori'),
-                                            value: logic.jenisbebanval,
-                                            items: logic.jenisbebanlist.value
-                                                .map((item) {
-                                              return DropdownMenuItem(
-                                                child: Text(
-                                                    item.kategori.toString()),
-                                                value: item.id.toString(),
-                                              );
-                                            }).toList(),
-                                            onChanged: (val) {
-                                              logic.jenisbebanval =
-                                                  val!.toString();
-                                              print(logic.jenisbebanval);
-                                              logic.update();
-                                            },
-                                          );
-                                        }),
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color: Colors.white)),
+                                          isExpanded: true,
+                                          hint: Text('Pilih Kategori'),
+                                          value: controller.jenisbebanval,
+                                          items: controller.jenisbebanlistlocal
+                                              .map((item) {
+                                            return DropdownMenuItem(
+                                              child: Text(
+                                                  item.kategori.toString()),
+                                              value: item.id.toString(),
+                                            );
+                                          }).toList(),
+                                          onChanged: (val) {
+                                            controller.jenisbebanval =
+                                                val!.toString();
+                                            print(controller.jenisbebanval);
+                                          },
+                                        ),
                                       ),
                                     ),
                                     Container(
@@ -240,6 +234,7 @@ class tambah_beban extends GetView<bebanController> {
                                                                 .single),
                                                     value: controller.datedata,
                                                     onValueChanged: (dates) {
+                                                      print(dates);
                                                       controller.datedata =
                                                           dates;
                                                       controller.stringdate();
@@ -321,7 +316,7 @@ class tambah_beban extends GetView<bebanController> {
                   onPressed: () {
                     if (controller.formKeybeban.value.currentState!
                         .validate()) {
-                      controller.tambahBeban();
+                      controller.bebanTambahlocal();
                     }
                   },
                   child: Text(

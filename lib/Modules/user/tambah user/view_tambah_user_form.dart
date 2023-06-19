@@ -52,7 +52,7 @@ class tambah_user_form extends GetView<datauserController> {
                           textAlign: TextAlign.center,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter email';
+                              return 'Masukan nama user';
                             }
                             return null;
                           },
@@ -77,7 +77,7 @@ class tambah_user_form extends GetView<datauserController> {
                           textAlign: TextAlign.center,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter email';
+                              return 'Masukan email user';
                             }
                             return null;
                           },
@@ -102,7 +102,7 @@ class tambah_user_form extends GetView<datauserController> {
                           textAlign: TextAlign.center,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter email';
+                              return 'Masukan nomor hp user';
                             }
                             return null;
                           },
@@ -127,7 +127,33 @@ class tambah_user_form extends GetView<datauserController> {
                           textAlign: TextAlign.center,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter email';
+                              return 'Masukan password user';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        TextFormField(
+                          controller: controller.konfirmasipassword.value,
+                          onChanged: ((String pass) {}),
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.pin_drop),
+                            labelText: "konfirmasi password",
+                            labelStyle: TextStyle(
+                              color: Colors.black87,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          textAlign: TextAlign.center,
+                          validator: (value) {
+                            if (value!.isEmpty ||
+                                value != controller.password.value.text) {
+                              return 'Password tidak sesuai';
                             }
                             return null;
                           },
@@ -136,9 +162,24 @@ class tambah_user_form extends GetView<datauserController> {
                           height: 15,
                         ),
                         Obx(() {
-                          return DropdownButton2(
+                          return DropdownButtonFormField2(
                             isExpanded: true,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
                             hint: Text('Role'),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Pilih role user';
+                              }
+                              return null;
+                            },
+                            dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white)),
                             value: controller.roleval.value == null
                                 ? null
                                 : controller.role[controller.roleval.value],
@@ -160,7 +201,10 @@ class tambah_user_form extends GetView<datauserController> {
                         ),
                         button_solid_custom(
                             onPressed: () {
-                              controller.tambahuser();
+                              if (controller.formKey.value.currentState!
+                                  .validate()) {
+                                controller.tambahuser();
+                              }
                             },
                             child: Text(
                               'tambah user',

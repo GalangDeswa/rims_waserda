@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/kasir/view_kasir_keypad.dart';
 
 import '../../Templates/setting.dart';
@@ -23,7 +24,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
                   borderRadius: border_radius().header_border,
                   color: color_template().primary,
@@ -38,7 +39,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
               Expanded(
                 child: Container(
                   //color: Colors.red,
-                  padding: EdgeInsets.symmetric(horizontal: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -61,7 +62,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                     .fold(
                                         0,
                                         (previous, current) =>
-                                            previous + current)
+                                            previous + current!)
                                     .toString(),
                                 style: font().reguler),
                           ],
@@ -85,22 +86,30 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                           ],
                         );
                       }),
-                      Row(
-                        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text('Diskon :', style: font().reguler)),
-                          Text(
-                              controller.displayDiskon().toStringAsFixed(0) +
-                                  '%',
-                              style: font().reguler),
-                          IconButton(
-                              onPressed: () {
-                                controller.editDiskonKasir(controller);
-                              },
-                              icon: Icon(Icons.edit)),
-                        ],
-                      ),
+                      Obx(() {
+                        return Row(
+                          //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                child: Text('Diskon :', style: font().reguler)),
+                            Text(
+                                controller.displaydiskon.toStringAsFixed(0) +
+                                    '%',
+                                style: font().reguler),
+                            Text(
+                                "(Rp. " +
+                                    controller.jumlahdiskonkasir
+                                        .toStringAsFixed(0) +
+                                    ")",
+                                style: font().reguler),
+                            IconButton(
+                                onPressed: () {
+                                  controller.editDiskonKasir(controller);
+                                },
+                                icon: const Icon(Icons.edit)),
+                          ],
+                        );
+                      }),
                     ],
                   ),
                 ),
@@ -108,7 +117,8 @@ class detail_penjualan_kasir extends GetView<kasirController> {
               Obx(() {
                 return Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: border_radius().header_border,
@@ -133,41 +143,45 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                       ],
                     ));
               }),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               button_solid_custom(
                   onPressed: () async {
-                    var x = await controller.tambahKeranjang();
-                    if (x != null) {
-                      Get.dialog(
-                          Stack(
-                            children: [
-                              Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: context.width_query / 10,
-                                      vertical: context.height_query / 10),
-                                  child: kasir_keypad()),
-                              Positioned(
-                                top: context.height_query / 14,
-                                left: context.width_query / 12,
-                                child: Material(
-                                  borderRadius: BorderRadius.circular(30),
-                                  color: color_template().tritadery,
-                                  child: IconButton(
-                                      onPressed: () {
-                                        Get.back();
-                                      },
-                                      icon: Icon(
-                                        FontAwesomeIcons.close,
-                                        color: Colors.white,
-                                      )),
-                                ),
-                              )
-                            ],
-                          ),
-                          barrierDismissible: false);
-                    }
+                    controller.cache.value.isEmpty
+                        ? Get.showSnackbar(toast().bottom_snackbar_error(
+                            'Gagal', 'Pilih item terlebih dahulu'))
+                        : Get.dialog(
+                            Stack(
+                              children: [
+                                Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: context.width_query / 10,
+                                        vertical: context.height_query / 10),
+                                    child: const kasir_keypad()),
+                                Positioned(
+                                  top: context.height_query / 14,
+                                  left: context.width_query / 12,
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: color_template().tritadery,
+                                    child: IconButton(
+                                        onPressed: () {
+                                          //TODO : chek kalkulasi harga di crud penjualan
+                                          print('qweqweqweqweqweqew');
+                                          controller.deletekeranjanglocal(
+                                              'keranjang_local');
+                                          Get.back();
+                                        },
+                                        icon: const Icon(
+                                          FontAwesomeIcons.close,
+                                          color: Colors.white,
+                                        )),
+                                  ),
+                                )
+                              ],
+                            ),
+                            barrierDismissible: false);
 
                     print('--------------pop-------------');
                   },

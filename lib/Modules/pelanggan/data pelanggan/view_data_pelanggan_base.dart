@@ -14,6 +14,7 @@ class pelanggan extends GetView<pelangganController> {
     return SafeArea(
       // minimum: EdgeInsets.all(5),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: color_template().primary.withOpacity(0.2),
         // appBar: appbar_custom(
         //     height: 50,

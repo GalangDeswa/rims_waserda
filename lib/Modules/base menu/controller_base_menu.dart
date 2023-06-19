@@ -28,6 +28,7 @@ class base_menuController extends GetxController {
   }
 
   var token = ''.obs;
+  var id_toko = GetStorage().read('id_toko');
 
   List<Widget> views = const [
     dashboard_v2(),
@@ -47,7 +48,7 @@ class base_menuController extends GetxController {
   var namauser = ''.obs;
   var namatoko = ''.obs;
 
-  int getlayout() {
+  getlayout() {
     if (Get.find<kasirController>().layout.value == true) {
       var truex = layoutIndex.value = 0;
       return truex;

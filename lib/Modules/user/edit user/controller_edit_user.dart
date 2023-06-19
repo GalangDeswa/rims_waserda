@@ -4,7 +4,7 @@ import 'package:get_storage/get_storage.dart';
 
 import '../../../Services/handler.dart';
 import '../../Widgets/loading.dart';
-import '../data user/controller_data_user.dart';
+import '../../Widgets/toast.dart';
 
 class edituserController extends GetxController {
   @override
@@ -38,14 +38,14 @@ class edituserController extends GetxController {
 
   //var xxx = Get.arguments;
   var namastring = ''.obs;
-
+  var passwordlama = TextEditingController().obs;
   var password = TextEditingController().obs;
   var confirmpassword = TextEditingController().obs;
   var nama = TextEditingController().obs;
   var alamat = TextEditingController().obs;
   var hp = TextEditingController().obs;
   var email = TextEditingController().obs;
-  var formKey = GlobalKey<FormState>().obs;
+  var formKeyedituser = GlobalKey<FormState>().obs;
 
   List role = ['Pilih Role', 'Kasir', 'Admin'].obs;
 
@@ -69,56 +69,17 @@ class edituserController extends GetxController {
         //get.back close overlay otomatis close dan back page sebelumnya?
         Get.back(closeOverlays: true);
 
-        Get.snackbar(
-          "Berhasil",
-          "Data user diedit",
-          icon: Icon(Icons.check_box, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blueAccent,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_success('Sukses', 'User behasil diedit'));
       } else {
         Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data user gagal,user error",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Gagal', 'User gagal diedit'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,koneksi tidak ada",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Gagal', 'Periksa konensi internet'));
     }
   }
 
@@ -136,56 +97,17 @@ class edituserController extends GetxController {
         //get.back close overlay otomatis close dan back page sebelumnya?
         Get.back(closeOverlays: true);
 
-        Get.snackbar(
-          "Berhasil",
-          "Password di Ubah",
-          icon: Icon(Icons.check_box, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.blueAccent,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(toast()
+            .bottom_snackbar_success('Sukses', 'Password berhasil diganti'));
       } else {
         Get.back(closeOverlays: true);
-        Get.snackbar(
-          "Error",
-          "Data user gagal,user error",
-          icon: Icon(Icons.error, color: Colors.white),
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          borderRadius: 20,
-          margin: EdgeInsets.all(15),
-          colorText: Colors.white,
-          duration: Duration(seconds: 4),
-          isDismissible: true,
-          dismissDirection: DismissDirection.horizontal,
-          forwardAnimationCurve: Curves.elasticInOut,
-          reverseAnimationCurve: Curves.easeOut,
-        );
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Gagal', 'Password gagal diganti'));
       }
     } else {
       Get.back(closeOverlays: true);
-      Get.snackbar(
-        "Error",
-        "Data user gagal,koneksi tidak ada",
-        icon: Icon(Icons.error, color: Colors.white),
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        borderRadius: 20,
-        margin: EdgeInsets.all(15),
-        colorText: Colors.white,
-        duration: Duration(seconds: 4),
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
-        forwardAnimationCurve: Curves.elasticInOut,
-        reverseAnimationCurve: Curves.easeOut,
-      );
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Gagal', 'Periksa koneksi internet'));
     }
   }
 }

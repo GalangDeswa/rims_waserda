@@ -1,6 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
@@ -25,7 +24,7 @@ class jenis_beban_table extends GetView<bebanController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -69,20 +68,21 @@ class jenis_beban_table extends GetView<bebanController> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Expanded(
               child: Obx(() {
                 var source =
-                    kategoriBebanTable(controller.jenisbebanlist.value).obs;
+                    kategoriBebanTable(controller.jenisbebanlistlocal).obs;
                 return Container(
                   // height: context.height_query * 0.46,
-                  margin: EdgeInsets.only(top: 12),
+                  margin: const EdgeInsets.only(top: 12),
                   // width: double.infinity,
-                  child: controller.jenisbebanlist.value.isEmpty
-                      ? Container(width: 100, height: 100, child: showloading())
-                      : DataTable2(
+                  child: controller.jenisbebanlistlocal.isEmpty
+                      ? Container(
+                          width: 100, height: 100, child: const showloading())
+                      : PaginatedDataTable2(
                           horizontalMargin: 10,
                           //minWidth: 1000,
                           //minWidth: 10,
@@ -118,96 +118,61 @@ class jenis_beban_table extends GetView<bebanController> {
                               ),
                             ),
                           ],
-                          rows: List.generate(
-                              controller.jenisbebanlist.length,
-                              (index) => DataRow(cells: [
-                                    DataCell(Text(controller
-                                        .jenisbebanlist[index].kategori)),
-                                    DataCell(Row(
-                                      children: [
-                                        Expanded(
-                                          child: IconButton(
-                                              onPressed: () {
-                                                Get.toNamed('/edit_jenis_beban',
-                                                    arguments: controller
-                                                        .jenisbebanlist[index]);
-                                              },
-                                              icon: Icon(
-                                                Icons.edit,
-                                                size: 18,
-                                                color:
-                                                    color_template().secondary,
-                                              )),
-                                        ),
-                                        Expanded(
-                                          child: IconButton(
-                                              onPressed: () {
-                                                popscreen().deletejenisbeban(
-                                                    controller,
-                                                    controller
-                                                        .jenisbebanlist[index]);
-                                              },
-                                              icon: Icon(
-                                                Icons.delete,
-                                                size: 18,
-                                                color:
-                                                    color_template().tritadery,
-                                              )),
-                                        )
-                                      ],
-                                    )),
-                                  ])),
+                          source: source.value,
                           empty: Container(
-                              width: 200, height: 150, child: showloading()),
+                              width: 200,
+                              height: 150,
+                              child: const showloading()),
                         ),
                 );
               }),
             ),
-            Obx(() {
-              return Container(
-                margin: EdgeInsets.only(left: context.width_query / 1.9),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text('Data perbaris :'),
-                    Text(controller.perpagejenis.value.toString()),
-                    controller.currentpagejenis > 1
-                        ? IconButton(
-                            onPressed: () {
-                              controller.backjenis();
-                            },
-                            icon: Icon(FontAwesomeIcons.angleLeft, size: 20))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleLeft,
-                              size: 20,
-                              color: Colors.grey,
-                            )),
-                    Text(controller.currentpagejenis.value.toString() +
-                        ' - ' +
-                        controller.totalpagejenis.value.toString()),
-                    controller.currentpagejenis <
-                            controller.totalpagejenis.value
-                        ? IconButton(
-                            onPressed: () {
-                              controller.nextjenis();
-                            },
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              size: 20,
-                            ))
-                        : IconButton(
-                            onPressed: null,
-                            icon: Icon(
-                              FontAwesomeIcons.angleRight,
-                              color: Colors.grey,
-                              size: 20,
-                            ))
-                  ],
-                ),
-              );
-            })
+            // Obx(() {
+            //   return Container(
+            //     margin: EdgeInsets.only(left: context.width_query / 1.9),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //       children: [
+            //         const Text('Data perbaris :'),
+            //         Text(controller.perpagejenis.value.toString()),
+            //         controller.currentpagejenis > 1
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.backjenis();
+            //                 },
+            //                 icon: const Icon(FontAwesomeIcons.angleLeft,
+            //                     size: 20))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleLeft,
+            //                   size: 20,
+            //                   color: Colors.grey,
+            //                 )),
+            //         Text(controller.currentpagejenis.value.toString() +
+            //             ' - ' +
+            //             controller.totalpagejenis.value.toString()),
+            //         controller.currentpagejenis <
+            //                 controller.totalpagejenis.value
+            //             ? IconButton(
+            //                 onPressed: () {
+            //                   controller.nextjenis();
+            //                 },
+            //                 icon: const Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   size: 20,
+            //                 ))
+            //             : const IconButton(
+            //                 onPressed: null,
+            //                 icon: Icon(
+            //                   FontAwesomeIcons.angleRight,
+            //                   color: Colors.grey,
+            //                   size: 20,
+            //                 ))
+            //       ],
+            //     ),
+            //   );
+            // })
           ],
         ),
       ),
@@ -236,7 +201,7 @@ class kategoriBebanTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].kategori)),
+      DataCell(Text(data[index].kategori!)),
       DataCell(Row(
         children: [
           Expanded(
