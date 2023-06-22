@@ -27,8 +27,9 @@ class header extends StatelessWidget {
     return Container(
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: base_color == null ? color_template().primary : base_color,
-            borderRadius: border_radius().header_border),
+            color: base_color == null ? Colors.white : base_color,
+            borderRadius: border_radius().header_border,
+            border: Border.all(color: color_template().primary)),
         child: iscenter == false
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,21 +40,20 @@ class header extends StatelessWidget {
                       Container(
                           padding: EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: color_template().primary,
                               borderRadius: BorderRadius.circular(10)),
                           child: FaIcon(
                             icon!,
-                            size: 23,
-                            color: icon_color == null
-                                ? color_template().primary
-                                : icon_color,
+                            size: 20,
+                            color:
+                                icon_color == null ? Colors.white : icon_color,
                           )),
                       SizedBox(
                         width: 20,
                       ),
                       Text(
                         title!.toUpperCase(),
-                        style: font().header_big,
+                        style: font().header_big_blue,
                       ),
                     ],
                   ),
@@ -61,9 +61,10 @@ class header extends StatelessWidget {
                       ? Container()
                       : Container(
                           decoration: BoxDecoration(
-                              color: Colors.white, shape: BoxShape.circle),
-                          child: IconButton(
                               color: color_template().primary,
+                              shape: BoxShape.circle),
+                          child: IconButton(
+                              color: Colors.white,
                               onPressed: () {
                                 function!();
                               },
@@ -92,14 +93,14 @@ class header extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10)),
                       child: FaIcon(
                         icon!,
-                        size: 23,
+                        size: 20,
                         color: icon_color == null
                             ? color_template().primary
                             : icon_color,
                       )),
                   Text(
                     title!,
-                    style: font().header_big,
+                    style: font().header_big_blue,
                   ),
                   function == null
                       ? Container()

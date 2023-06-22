@@ -36,8 +36,10 @@ class table_user extends GetView<datauserController> {
                         title: 'Data User',
                         icon: Icons.add_box,
                         icon_funtion: Icons.refresh,
-                        function: () {
-                          controller.onInit();
+                        function: () async {
+                          Get.dialog(showloading(), barrierDismissible: false);
+                          await controller.userdata();
+                          Get.back();
                         },
                       ),
                     ),
@@ -53,7 +55,7 @@ class table_user extends GetView<datauserController> {
                         //     child: tambah_user_form()));
                       },
                       child: Text(
-                        'Tambah user',
+                        'Tambah user'.toUpperCase(),
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -118,8 +120,9 @@ class table_user extends GetView<datauserController> {
                             //minWidth: 1000,
                             //minWidth: 10,
                             //fit: FlexFit.loose,
-                            columnSpacing: 5,
-
+                            renderEmptyRowsInTheEnd: false,
+                            wrapInCard: false,
+                            columnSpacing: 0,
                             headingRowColor: MaterialStateColor.resolveWith(
                                 (states) =>
                                     color_template().primary.withOpacity(0.2)),
@@ -130,38 +133,35 @@ class table_user extends GetView<datauserController> {
                                 style: font().header_black,
                               ),
                             ),
-                            columns: const <DataColumn>[
+                            columns: <DataColumn>[
                               DataColumn(
                                 label: Text(
                                   'Nama',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                  style: font().reguler,
                                 ),
                               ),
                               DataColumn(
                                 label: Text(
                                   'Email',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                  style: font().reguler,
                                 ),
                               ),
                               DataColumn(
                                 label: Text(
                                   'No.HP',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                  style: font().reguler,
                                 ),
                               ),
                               DataColumn(
                                 label: Text(
                                   'Role',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                  style: font().reguler,
                                 ),
                               ),
                               DataColumn(
-                                label: Center(
-                                  child: Text(
-                                    'Aksi',
-                                    style:
-                                        TextStyle(fontStyle: FontStyle.italic),
-                                  ),
+                                label: Text(
+                                  'Aksi',
+                                  style: font().reguler,
                                 ),
                               ),
                             ],
@@ -238,52 +238,51 @@ class userTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].nama)),
-      DataCell(Text(data[index].email)),
-      DataCell(Text(data[index].hp)),
-      DataCell(Text(data[index].role == '1'
-          ? "Kasir"
-          : data[index].role == '2'
-              ? 'Admin'
-              : '-')),
-      DataCell(Center(
-        child: Row(
-          children: [
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    Get.toNamed('/edit_user', arguments: data[index]);
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    size: 18,
-                    color: color_template().secondary,
-                  )),
-            ),
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    Get.toNamed('/edit_user_password', arguments: data[index]);
-                  },
-                  icon: Icon(
-                    Icons.lock,
-                    size: 18,
-                    color: color_template().secondary,
-                  )),
-            ),
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    popscreen().deleteuser(con, data[index]);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    size: 18,
-                    color: color_template().tritadery,
-                  )),
-            )
-          ],
-        ),
+      DataCell(Text(data[index].nama, style: font().reguler)),
+      DataCell(Text(data[index].email, style: font().reguler)),
+      DataCell(Text(data[index].hp, style: font().reguler)),
+      DataCell(Text(
+          data[index].role == '1'
+              ? "Kasir"
+              : data[index].role == '2'
+                  ? 'Admin'
+                  : '-',
+          style: font().reguler)),
+      DataCell(Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Get.toNamed('/edit_user', arguments: data[index]);
+              },
+              icon: Icon(
+                Icons.edit,
+                size: 18,
+                color: color_template().secondary,
+              )),
+          IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                Get.toNamed('/edit_user_password', arguments: data[index]);
+              },
+              icon: Icon(
+                Icons.lock,
+                size: 18,
+                color: color_template().secondary,
+              )),
+          IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                popscreen().deleteuser(con, data[index]);
+              },
+              icon: Icon(
+                Icons.delete,
+                size: 18,
+                color: color_template().tritadery,
+              ))
+        ],
       )),
     ]);
   }

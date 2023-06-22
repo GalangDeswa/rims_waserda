@@ -167,19 +167,19 @@ class list_kasir extends GetView<kasirController> {
                           showSelectedItems: false,
                           showSearchBox: true,
                           itemBuilder: customPopupItemBuilderExample2,
-                          // favoriteItemProps: FavoriteItemProps(
-                          //   showFavoriteItems: true,
-                          //   favoriteItems: (us) {
-                          //     return us
-                          //         .where((e) => e.namaProduk.contains("mie"))
-                          //         .toList();
-                          //   },
-                          // ),
+                          favoriteItemProps: FavoriteItemProps(
+                            // favoriteItemsAlignment: MainAxisAlignment.start,
+                            showFavoriteItems: true,
+                            favoriteItems: (us) {
+                              // controller.getfavorite();
+                              return controller.favorite.value;
+                            },
+                          ),
                         ),
 
                         dropdownDecoratorProps: DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
-                            labelText: "scan barcode/cari nama produk",
+                            labelText: "Cari nama produk/barcode",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             focusedBorder: OutlineInputBorder(
@@ -200,7 +200,10 @@ class list_kasir extends GetView<kasirController> {
                         },
                         //items: controller.produk_list,
                         itemAsString: (DataProduk u) {
-                          return u.namaProduk.toString() +
+                          return u.barcode.toString() +
+                              ' ' +
+                              ' - ' +
+                              u.namaProduk.toString() +
                               "  Rp. " +
                               u.harga.toString();
                         },
@@ -267,6 +270,7 @@ class list_kasir extends GetView<kasirController> {
     bool isSelected,
   ) {
     return Container(
+      // color: Colors.red,
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: !isSelected
           ? null
@@ -275,13 +279,39 @@ class list_kasir extends GetView<kasirController> {
               borderRadius: BorderRadius.circular(5),
               color: Colors.white,
             ),
-      child: ListTile(
-        selected: isSelected,
-        title: Text(item.namaProduk),
-        trailing: Text('Rp.' +
-            ' ' +
-            controller.nominal.format(double.parse(item.harga.toString()))),
-      ),
+      child: item.qty == 0 && item.idJenisStock == 1
+          ? ListTile(
+              selected: isSelected,
+              subtitle: Text(item.namaJenis ?? '-'),
+              title: Row(
+                children: [
+                  Text(
+                    item.namaProduk,
+                    style: TextStyle(decoration: TextDecoration.lineThrough),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    'Stock habis',
+                    style: font().reguler,
+                  )
+                ],
+              ),
+              trailing: Text('Rp.' +
+                  ' ' +
+                  controller.nominal
+                      .format(double.parse(item.harga.toString()))),
+            )
+          : ListTile(
+              selected: isSelected,
+              subtitle: Text(item.namaJenis ?? '-'),
+              title: Text(item.namaProduk),
+              trailing: Text('Rp.' +
+                  ' ' +
+                  controller.nominal
+                      .format(double.parse(item.harga.toString()))),
+            ),
     );
   }
 }
@@ -302,13 +332,14 @@ class ProductTilev2 extends GetView<kasirController> {
         //sortAscending: sort,
         //sortColumnIndex: 0,
         columns: [
-          const DataColumn(label: Text("Nama produk")),
-          const DataColumn(label: Text("harga")),
-          const DataColumn(
+          DataColumn(
               label: Text(
-            "QTY",
+            "Nama produk",
+            style: font().reguler,
           )),
-          const DataColumn(label: Text("Aksi")),
+          DataColumn(label: Text("harga", style: font().reguler)),
+          DataColumn(label: Text("QTY", style: font().reguler)),
+          DataColumn(label: Text("Aksi", style: font().reguler)),
         ],
         rows: List.generate(controller.cache.length, (index) {
           var query = controller.produklistlocal
@@ -332,15 +363,20 @@ class ProductTilev2 extends GetView<kasirController> {
               .first;
           return DataRow(cells: [
             DataCell(
-              Text(controller.cache[index].namaProduk!),
+              Text(controller.cache[index].namaProduk!, style: font().reguler),
             ),
             DataCell(
               controller.cache[index].diskonBarang == 0
-                  ? Text("Rp." +
-                      controller.nominal.format(controller.cache[index].harga))
+                  ? Text(
+                      "Rp." +
+                          controller.nominal.format(
+                            controller.cache[index].harga,
+                          ),
+                      style: font().reguler)
                   : Row(
                       children: [
-                        Text('Rp. ' + controller.nominal.format(hargadiskon)),
+                        Text('Rp. ' + controller.nominal.format(hargadiskon),
+                            style: font().reguler),
                         const SizedBox(
                           width: 10,
                         ),
@@ -348,9 +384,7 @@ class ProductTilev2 extends GetView<kasirController> {
                           padding: const EdgeInsets.all(6),
                           child: Text(
                             display_diskon + '%',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
+                            style: font().reguler_white,
                           ),
                           decoration: BoxDecoration(
                               color: color_template().primary_v2,
@@ -382,7 +416,8 @@ class ProductTilev2 extends GetView<kasirController> {
                       ),
                     ),
                   ),
-                  Text(controller.cache[index].qty.toString()),
+                  Text(controller.cache[index].qty.toString(),
+                      style: font().reguler),
                   controller.cache[index].qty >= pp.qty! &&
                           controller.cache[index].idJenisStock == 1
                       ? Container(

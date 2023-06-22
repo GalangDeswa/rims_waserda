@@ -88,25 +88,36 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                       }),
                       Obx(() {
                         return Row(
-                          //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
                                 child: Text('Diskon :', style: font().reguler)),
-                            Text(
-                                controller.displaydiskon.toStringAsFixed(0) +
-                                    '%',
-                                style: font().reguler),
-                            Text(
-                                "(Rp. " +
-                                    controller.jumlahdiskonkasir
-                                        .toStringAsFixed(0) +
-                                    ")",
-                                style: font().reguler),
-                            IconButton(
-                                onPressed: () {
-                                  controller.editDiskonKasir(controller);
-                                },
-                                icon: const Icon(Icons.edit)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  controller.displaydiskon.toStringAsFixed(0) +
+                                      '%',
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                // Text(
+                                //     "(Rp. " +
+                                //         controller.nominal.format(
+                                //             controller.jumlahdiskonkasir.value) +
+                                //         ")",
+                                //     style: font().reguler),
+                                IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      controller.editDiskonKasir(controller);
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      size: context.height_query / 35,
+                                    )),
+                              ],
+                            )
                           ],
                         );
                       }),

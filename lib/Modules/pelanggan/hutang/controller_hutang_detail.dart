@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 import '../../../db_helper.dart';
 import 'model_hutang_detail.dart';
@@ -12,6 +13,7 @@ class hutang_detailController extends GetxController {
     fetchDataHutangDetaillocal(id_toko, data.id);
   }
 
+  DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
   var data = Get.arguments;
   var id_user = GetStorage().read('id_user');
   var token = GetStorage().read('token');

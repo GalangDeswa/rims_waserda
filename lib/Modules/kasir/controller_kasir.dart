@@ -39,6 +39,9 @@ class kasirController extends GetxController {
     print('kasir init------------------------------------------------->');
     await fetchProduklocal(id_toko);
     await fetchjenislocal(id_toko);
+    await fetchPenjualanDetaillocal(id_toko);
+    await fetchPenjualanDetaillocalduplicate(id_toko);
+    await getfavorite();
     // produkcache.value = await GetStorage().read('produk');
     // await fetchjenis();
     // jeniscache.value = await GetStorage().read('jenis');
@@ -67,8 +70,8 @@ class kasirController extends GetxController {
   var nama_user = GetStorage().read('name');
 
   Future<void> refresh() async {
-    await fetchProduk();
-    await fetchjenis();
+    await fetchProduklocal(id_toko);
+    await fetchjenislocal(id_toko);
   }
 
   final nominal = NumberFormat("#,##0");
@@ -165,6 +168,69 @@ class kasirController extends GetxController {
       );
     }
     return [];
+  }
+
+  var penjualan_list_detail_local = <DataPenjualanDetailV2>[].obs;
+  var duplicate = [].obs;
+
+  fetchPenjualanDetaillocal(id_toko) async {
+    print(
+        '-------------------fetch detail Penjualan local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper()
+        .FETCH('SELECT * FROM penjualan_detail_local ORDER BY ID DESC');
+    List<DataPenjualanDetailV2> penjualan = query.isNotEmpty
+        ? query.map((e) => DataPenjualanDetailV2.fromJson(e)).toList()
+        : [];
+    penjualan_list_detail_local.value = penjualan;
+    print(penjualan);
+    //succ.value = true;
+    return penjualan;
+  }
+
+  var favorite = <DataProduk>[].obs;
+
+  getfavorite() async {
+    List<DataProduk> produk = await fetchProduklocal(id_toko);
+    print('produk--------------------->');
+    print(produk);
+    await fetchPenjualanDetaillocalduplicate(id_toko);
+    var fav = duplicate.value;
+
+    var x = fav.where((element) => element['COUNT(*)'] >= 10).toList();
+    print('xx------------------>');
+    print(x);
+
+    await Future.forEach(x, (element) {
+      final existingIndex = favorite.value
+          .indexWhere((item) => item.namaProduk == element['nama_brg']);
+      if (existingIndex == -1) {
+        print(existingIndex);
+        favorite.add(
+            produk.where((e) => e.namaProduk == element['nama_brg']).first);
+      }
+    });
+
+    print('favorite---------------------------------------->');
+
+    print(favorite);
+
+    return favorite;
+  }
+
+  fetchPenjualanDetaillocalduplicate(id_toko) async {
+    print(
+        '-------------------fetch detail Penjualan duplicatetette---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT penjualan_detail_local.nama_brg,produk_local.nama_produk,COUNT(*) FROM penjualan_detail_local JOIN produk_local on penjualan_detail_local.id_produk = produk_local.id WHERE produk_local.status = 1 GROUP BY penjualan_detail_local.nama_brg HAVING COUNT(*) > 1');
+    // List<DataPenjualanDetailV2> penjualan = query.isNotEmpty
+    //     ? query.map((e) => DataPenjualanDetailV2.fromJson(e)).toList()
+    //     : [];
+    duplicate.value = query;
+    print(duplicate);
+    //succ.value = true;
+    return query;
   }
 
   Future<List<DataProduk>> fetchprodukv2() async {
@@ -1012,6 +1078,7 @@ class kasirController extends GetxController {
         await Get.find<pelangganController>()
             .fetchstatusPelangganlocal(id_toko);
         await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+        await getfavorite();
         await clear();
         cache.refresh();
         Get.back();
@@ -1135,6 +1202,7 @@ class kasirController extends GetxController {
         await Get.find<pelangganController>()
             .fetchstatusPelangganlocal(id_toko);
         await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+        await getfavorite();
         await clear();
         cache.refresh();
         Get.back();
@@ -1263,6 +1331,8 @@ class kasirController extends GetxController {
     if (query != null) {
       print(query);
       await fetchDataPelangganlocal(id_toko);
+      nama_pelanggan.value.clear();
+      nohp.value.clear();
       Get.back();
       Get.back();
       Get.showSnackbar(toast()

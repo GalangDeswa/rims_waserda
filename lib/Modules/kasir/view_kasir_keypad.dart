@@ -382,7 +382,7 @@ class kasir_keypad extends GetView<kasirController> {
               child: Container(
                   padding: EdgeInsets.zero,
                   width: context.width_query / 2,
-                  height: context.height_query / 2,
+                  height: context.height_query / 1.7,
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(30),
                       child: Card(
@@ -418,8 +418,6 @@ class kasir_keypad extends GetView<kasirController> {
                                           controller.nama_pelanggan.value,
                                       onChanged: ((String pass) {}),
                                       decoration: InputDecoration(
-                                        icon:
-                                            const Icon(FontAwesomeIcons.person),
                                         labelText: "Nama pelanggan",
                                         labelStyle: const TextStyle(
                                           color: Colors.black87,
@@ -446,8 +444,6 @@ class kasir_keypad extends GetView<kasirController> {
                                       controller: controller.nohp.value,
                                       onChanged: ((String pass) {}),
                                       decoration: InputDecoration(
-                                        icon:
-                                            const Icon(FontAwesomeIcons.phone),
                                         labelText: "Nomor HP",
                                         labelStyle: const TextStyle(
                                           color: Colors.black87,
@@ -487,7 +483,7 @@ class kasir_keypad extends GetView<kasirController> {
                                           ),
                                         ),
                                         width: double.infinity,
-                                        height: 65)
+                                        height: 60)
                                   ],
                                 )),
                           ),

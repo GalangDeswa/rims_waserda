@@ -102,15 +102,6 @@ class datauserController extends GetxController {
         //listUser.value.clear();
         listUser.value = dataUser.data;
 
-        totalpage.value = dataUser.meta.pagination.totalPages;
-        totaldata.value = dataUser.meta.pagination.total;
-        perpage.value = dataUser.meta.pagination.perPage;
-        currentpage.value = user['meta']['pagination']['current_page'];
-        count.value = dataUser.meta.pagination.count;
-        if (totalpage > 1) {
-          nextdata = user['meta']['pagination']['links']['next'];
-        }
-
         print('--------------------list user---------------');
         print(listUser);
 
@@ -167,6 +158,9 @@ class datauserController extends GetxController {
   List role = ['Pilih Role', 'Kasir', 'Admin'].obs;
 
   var roleval = 0.obs;
+
+  var show = true.obs;
+  var showkon = true.obs;
 
   //var token = GetStorage().read('token');
   //var id_toko = GetStorage().read('id_toko');

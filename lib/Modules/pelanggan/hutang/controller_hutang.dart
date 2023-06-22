@@ -104,7 +104,7 @@ class hutangController extends GetxController {
 
   searchhutanglocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id WHERE hutang_local.id_toko = $id_toko AND nama_pelanggan LIKE "%${search.value.text}%" OR  tgl_hutang LIKE "%${search.value.text}%" ORDER BY ID DESC');
+        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id WHERE hutang_local.id_toko = $id_toko AND nama_pelanggan LIKE "%${search.value.text}%" ORDER BY ID DESC');
     List<DataHutang> hutang = query.isNotEmpty
         ? query.map((e) => DataHutang.fromJson(e)).toList()
         : [];
@@ -514,6 +514,8 @@ class hutangController extends GetxController {
 
   DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
 
+  DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
+
   bayarHutanglocal(int id) async {
     Get.dialog(showloading(), barrierDismissible: false);
     print('-------------------bayar hutang local---------------------');
@@ -629,6 +631,9 @@ class hutangController extends GetxController {
     Get.find<historyController>().fetchPenjualanlocal(id_toko);
     Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
     Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
+
+    bayarhutang.value.clear();
+    jumlahbayarhutang.value = 0;
     Get.back(closeOverlays: true);
     Get.showSnackbar(toast()
         .bottom_snackbar_success('Sukses', 'Pembayaran hutang berhasil'));
@@ -640,10 +645,10 @@ class hutangController extends GetxController {
   bayarhutangpop(int id, hutang) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Bayar hutang',
-          icon: FontAwesomeIcons.dollarSign,
-          icon_color: color_template().primary,
-          base_color: color_template().primary),
+        title: 'Bayar hutang',
+        icon: FontAwesomeIcons.dollarSign,
+        icon_color: color_template().primary,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -656,7 +661,6 @@ class hutangController extends GetxController {
             child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 width: context.width_query / 2.6,
-                height: context.height_query / 2.6,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -671,40 +675,37 @@ class hutangController extends GetxController {
                     ),
                     Text('Masukan jumlah bayar'),
                     SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              inputFormatters: [ThousandsFormatter()],
-                              onChanged: ((String num) {
-                                jumlahbayarhutang.value = int.parse(
-                                    num.toString().replaceAll(',', ''));
-                                print(jumlahbayarhutang.value);
-                              }),
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              textAlign: TextAlign.center,
-                              controller: bayarhutang.value,
-                              style: font().header_black,
-                            ),
-                          ),
-                        ],
+                    TextField(
+                      inputFormatters: [ThousandsFormatter()],
+                      onChanged: ((String num) {
+                        jumlahbayarhutang.value =
+                            int.parse(num.toString().replaceAll(',', ''));
+                        print(jumlahbayarhutang.value);
+                      }),
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
                       ),
+                      textAlign: TextAlign.center,
+                      controller: bayarhutang.value,
+                      style: font().header_black,
                     ),
                     SizedBox(
                       height: 10,
                     ),
                     button_solid_custom(
                         onPressed: () {
-                          bayarHutanglocal(id);
+                          if (bayarhutang.value.text.isEmpty) {
+                            Get.showSnackbar(toast().bottom_snackbar_error(
+                                'Gagal', 'masukan jumlah bayar'));
+                          } else {
+                            bayarHutanglocal(id);
+                          }
                         },
                         child: Text(
                           'Bayar',

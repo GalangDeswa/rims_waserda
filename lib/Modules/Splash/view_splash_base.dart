@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:rims_waserda/Modules/Splash/controller_splash.dart';
 
 import '../../Templates/setting.dart';
@@ -32,19 +31,19 @@ class splash extends GetView<splashController> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Container(
                   width: 450,
-                  height: 450,
-                  child: Lottie.asset('assets/animation/chasier.json'),
+                  height: 350,
+                  child: Image.asset('assets/icons/logo.png'),
                 ),
               ),
               Text(
-                'RIMSWASERDA',
+                'RIMS WASERDA',
                 style: TextStyle(
                     fontSize: 25,
                     color: color_template().primary_dark,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(
-                height: 25,
+                height: 20,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

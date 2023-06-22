@@ -236,7 +236,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                           ),
                           Expanded(
                             child: Container(
-                              // color: Colors.deepPurple,
+                              //color: Colors.deepPurple,
                               child: Row(
                                 // crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment:
@@ -252,9 +252,12 @@ class dashboard_v2 extends GetView<dashboardController> {
                                             contentPadding: EdgeInsets.zero,
                                             title: Text(
                                               'Data toko',
-                                              style: font().reguler,
+                                              style: font().primary_black_20,
                                             ),
-                                            subtitle: Text('Detail data toko'),
+                                            subtitle: Text(
+                                              'Detail data toko',
+                                              //  style: font().primary_black,
+                                            ),
                                           ),
                                           Expanded(
                                             child: Obx(() {
@@ -276,35 +279,17 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
-                                                      title: Text(controller
-                                                          .nominal
-                                                          .format(controller
-                                                              .totalproduk
-                                                              .value)),
-                                                      subtitle:
-                                                          Text('Total produk'),
-                                                    ),
-                                                  ),
-                                                  Card(
-                                                    margin: EdgeInsets.only(
-                                                        bottom: 10),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          border_radius()
-                                                              .icon_border,
-                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
-                                                    ),
-                                                    elevation: elevation()
-                                                        .def_elevation,
-                                                    child: ListTile(
-                                                      title: Text(controller
-                                                          .nominal
-                                                          .format(controller
-                                                              .totalpelanggan
-                                                              .value)),
+                                                      title: Text(
+                                                        controller.nominal
+                                                            .format(controller
+                                                                .totalproduk
+                                                                .value),
+                                                        style: font().reguler,
+                                                      ),
                                                       subtitle: Text(
-                                                          'Total pelanggan'),
+                                                          'Total produk',
+                                                          style:
+                                                              font().reguler),
                                                     ),
                                                   ),
                                                   Card(
@@ -320,13 +305,17 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
-                                                      title: Text('Rp. ' +
+                                                      title: Text(
                                                           controller.nominal
                                                               .format(controller
-                                                                  .totalpendapatan
-                                                                  .value)),
+                                                                  .totalpelanggan
+                                                                  .value),
+                                                          style:
+                                                              font().reguler),
                                                       subtitle: Text(
-                                                          'Total pendapatan'),
+                                                          'Total pelanggan',
+                                                          style:
+                                                              font().reguler),
                                                     ),
                                                   ),
                                                   Card(
@@ -342,13 +331,18 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
-                                                      title: Text(controller
-                                                          .nominal
-                                                          .format(controller
-                                                              .totaltransaksi
-                                                              .value)),
+                                                      title: Text(
+                                                          'Rp. ' +
+                                                              controller.nominal
+                                                                  .format(controller
+                                                                      .totalpendapatan
+                                                                      .value),
+                                                          style:
+                                                              font().reguler),
                                                       subtitle: Text(
-                                                          'Total Transaksi '),
+                                                          'Total pendapatan',
+                                                          style:
+                                                              font().reguler),
                                                     ),
                                                   ),
                                                   Card(
@@ -364,13 +358,44 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
-                                                      title: Text('Rp. ' +
+                                                      title: Text(
                                                           controller.nominal
                                                               .format(controller
-                                                                  .totalhutang
-                                                                  .value)),
+                                                                  .totaltransaksi
+                                                                  .value),
+                                                          style:
+                                                              font().reguler),
                                                       subtitle: Text(
-                                                          'Total hutang yang belum lunas'),
+                                                          'Total Transaksi',
+                                                          style:
+                                                              font().reguler),
+                                                    ),
+                                                  ),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text(
+                                                          'Rp. ' +
+                                                              controller.nominal
+                                                                  .format(controller
+                                                                      .totalhutang
+                                                                      .value),
+                                                          style:
+                                                              font().reguler),
+                                                      subtitle: Text(
+                                                          'Total hutang yang belum lunas',
+                                                          style:
+                                                              font().reguler),
                                                     ),
                                                   ),
                                                 ],
@@ -386,11 +411,13 @@ class dashboard_v2 extends GetView<dashboardController> {
                                       margin: EdgeInsets.only(left: 10),
                                       //color: Colors.green,
                                       child: Column(
+                                        // mainAxisAlignment:
+                                        //     MainAxisAlignment.spaceBetween,
                                         children: [
                                           ListTile(
                                             contentPadding: EdgeInsets.zero,
                                             title: Text('Aplikasi',
-                                                style: font().reguler),
+                                                style: font().primary_black_20),
                                             subtitle: Text('Akses cepat'),
                                           ),
                                           Expanded(
@@ -399,6 +426,11 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                 // height: context.height_query / 3,
                                                 //   color: Colors.red,
                                                 child: dashboard_app_v2()),
+                                          ),
+                                          Expanded(
+                                            child: Container(
+                                                //  color: Colors.orangeAccent,
+                                                child: dashboard_konten_v2()),
                                           )
                                         ],
                                       ),
@@ -408,9 +440,6 @@ class dashboard_v2 extends GetView<dashboardController> {
                               ),
                             ),
                           ),
-                          Container(
-                              //  color: Colors.orangeAccent,
-                              child: dashboard_konten_v2())
                         ],
                       );
                     }),

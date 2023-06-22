@@ -221,7 +221,7 @@ class ProductTilev2 extends GetView<kasirController> {
               mainAxisExtent: context.height_query / 3.2,
               maxCrossAxisExtent: context.width_query / 5.3,
               childAspectRatio: 1 / 1,
-              crossAxisSpacing: 1,
+              crossAxisSpacing: 3,
               mainAxisSpacing: 2),
           itemCount: controller.produklistlocal.length,
           itemBuilder: (BuildContext context, index) {
@@ -237,109 +237,265 @@ class ProductTilev2 extends GetView<kasirController> {
 
             final existingIndex = controller.cache.value.indexWhere(
                 (item) => item.id == controller.produklistlocal[index].id);
-            return GestureDetector(
-              onTap: () {
-                // controller.tambahKeranjang(
-                //     controller.produklistlocal[index].id.toString(),
-                //     0.toString(),
-                //     1.toString());
 
-                controller.tambahKeranjangcache(
-                    controller.produklistlocal[index].id!);
-              },
-              child: Card_custom(
-                border: false,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(20)),
-                            child: controller.produklistlocal[index].image ==
-                                        null ||
-                                    controller.produklistlocal[index].image ==
-                                        '' ||
-                                    controller.produklistlocal[index].image ==
-                                        '-'
-                                ? Image.asset(
-                                    'assets/images/food.png',
-                                    fit: BoxFit.cover,
-                                  )
-                                : Container(
-                                    color: Colors.red,
-                                    width: context.width_query,
-                                    child: Image.memory(
-                                      base64Decode(controller
-                                          .produklistlocal[index].image!),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ))),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      width: context.width_query,
-                      height: context.height_query / 10,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            return controller.produklistlocal[index].qty == 0 &&
+                    controller.produklistlocal[index].idJenisStock == 1
+                ? GestureDetector(
+                    onTap: () {
+                      // controller.tambahKeranjang(
+                      //     controller.produklistlocal[index].id.toString(),
+                      //     0.toString(),
+                      //     1.toString());
+
+                      controller.tambahKeranjangcache(
+                          controller.produklistlocal[index].id!);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Stack(
                         children: [
-                          Expanded(
-                            child: Text(
-                              overflow: TextOverflow.fade,
-                              controller.produklistlocal[index].namaProduk
-                                  .toString(),
-                              style: font().produktitle,
-                            ),
-                          ),
-                          Expanded(
-                            child: controller
-                                        .produklistlocal[index].diskonBarang ==
-                                    0
-                                ? Text(
-                                    'Rp. ' +
-                                        controller.nominal.format(controller
-                                            .produklistlocal[index].harga),
-                                    style: font().produkharga,
-                                  )
-                                : Row(
+                          Card_custom(
+                            border: false,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(20),
+                                            topLeft: Radius.circular(20)),
+                                        child: controller.produklistlocal[index]
+                                                        .image ==
+                                                    null ||
+                                                controller
+                                                        .produklistlocal[index]
+                                                        .image ==
+                                                    '' ||
+                                                controller
+                                                        .produklistlocal[index]
+                                                        .image ==
+                                                    '-'
+                                            ? Image.asset(
+                                                'assets/images/food.png',
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Container(
+                                                color: Colors.red,
+                                                width: context.width_query,
+                                                child: Image.memory(
+                                                  base64Decode(controller
+                                                      .produklistlocal[index]
+                                                      .image!),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ))),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  width: context.width_query,
+                                  height: context.height_query / 8.5,
+                                  decoration: BoxDecoration(
+                                      //  color: Colors.red,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(0),
+                                          topRight: Radius.circular(0),
+                                          bottomLeft: Radius.circular(20),
+                                          bottomRight: Radius.circular(20))),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('Rp. ' +
-                                          controller.nominal
-                                              .format(hargadiskon)),
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(6),
+                                      Expanded(
                                         child: Text(
-                                          display_diskon + '%',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white),
+                                          overflow: TextOverflow.ellipsis,
+                                          controller
+                                              .produklistlocal[index].namaProduk
+                                              .toString(),
+                                          style: font().produktitle,
                                         ),
-                                        decoration: BoxDecoration(
-                                            color: color_template().primary_v2,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
+                                      ),
+                                      Expanded(
+                                        child: controller.produklistlocal[index]
+                                                    .diskonBarang ==
+                                                0
+                                            ? Text(
+                                                'Rp. ' +
+                                                    controller.nominal.format(
+                                                        controller
+                                                            .produklistlocal[
+                                                                index]
+                                                            .harga),
+                                                style: font().produkharga,
+                                              )
+                                            : Row(
+                                                children: [
+                                                  Text('Rp. ' +
+                                                      controller.nominal
+                                                          .format(hargadiskon)),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                    padding:
+                                                        const EdgeInsets.all(6),
+                                                    child: Text(
+                                                      display_diskon + '%',
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                        color: color_template()
+                                                            .primary_v2,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                  )
+                                                ],
+                                              ),
                                       )
                                     ],
                                   ),
-                          )
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: color_template()
+                                    .primary_dark
+                                    .withOpacity(0.5),
+                                borderRadius: border_radius().def_border),
+                            child: Center(
+                                child: Text(
+                              'Stock habis',
+                              style: font().header,
+                            )),
+                          ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
+                  )
+                : GestureDetector(
+                    onTap: () {
+                      // controller.tambahKeranjang(
+                      //     controller.produklistlocal[index].id.toString(),
+                      //     0.toString(),
+                      //     1.toString());
+
+                      controller.tambahKeranjangcache(
+                          controller.produklistlocal[index].id!);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Card_custom(
+                        border: false,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(20),
+                                        topLeft: Radius.circular(20)),
+                                    child: controller.produklistlocal[index]
+                                                    .image ==
+                                                null ||
+                                            controller.produklistlocal[index]
+                                                    .image ==
+                                                '' ||
+                                            controller.produklistlocal[index]
+                                                    .image ==
+                                                '-'
+                                        ? Image.asset(
+                                            'assets/images/food.png',
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Container(
+                                            color: Colors.red,
+                                            width: context.width_query,
+                                            child: Image.memory(
+                                              base64Decode(controller
+                                                  .produklistlocal[index]
+                                                  .image!),
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ))),
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              width: context.width_query,
+                              height: context.height_query / 8.5,
+                              decoration: BoxDecoration(
+                                  //  color: Colors.red,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(0),
+                                      topRight: Radius.circular(0),
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20))),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      overflow: TextOverflow.fade,
+                                      controller
+                                          .produklistlocal[index].namaProduk
+                                          .toString(),
+                                      style: font().produktitle,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: controller.produklistlocal[index]
+                                                .diskonBarang ==
+                                            0
+                                        ? Text(
+                                            'Rp. ' +
+                                                controller.nominal.format(
+                                                    controller
+                                                        .produklistlocal[index]
+                                                        .harga),
+                                            style: font().produkharga,
+                                          )
+                                        : Row(
+                                            children: [
+                                              Text('Rp. ' +
+                                                  controller.nominal
+                                                      .format(hargadiskon)),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(6),
+                                                child: Text(
+                                                  display_diskon + '%',
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    color: color_template()
+                                                        .primary_v2,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              )
+                                            ],
+                                          ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
           }),
     );
   }

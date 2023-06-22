@@ -82,16 +82,15 @@ class hutang_table extends GetView<hutangController> {
                   return Expanded(
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 10),
-                      //width: 200,
+                      height: context.height_query / 15,
                       child: TextFormField(
                         controller: controller.search.value,
                         onChanged: ((String pass) {
                           controller.searchhutanglocal();
                         }),
                         decoration: InputDecoration(
-                          icon: Icon(Icons.add_box),
                           labelText: "Cari hutang",
-                          hintText: 'Tanggal hutang / Nama pelanggan',
+                          hintText: 'Nama pelanggan',
                           labelStyle: TextStyle(
                             color: Colors.black87,
                           ),
@@ -134,8 +133,10 @@ class hutang_table extends GetView<hutangController> {
                       //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
 
                       PaginatedDataTable2(
+                          wrapInCard: false,
+                          columnSpacing: 0,
                           horizontalMargin: 10,
-                          columnSpacing: 5,
+                          renderEmptyRowsInTheEnd: false,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
@@ -143,26 +144,31 @@ class hutang_table extends GetView<hutangController> {
                             DataColumn(
                               label: Text(
                                 'Tanggal hutang',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Nama Pelanggan',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Hutang',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'status',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
                               label: Text(
                                 'Aksi',
+                                style: font().reguler,
                               ),
                             ),
                           ],
@@ -247,12 +253,26 @@ class hutangTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].tglHutang.toString())),
-      DataCell(Text(data[index].namaPelanggan!)),
+      DataCell(Text(
+        con.dateFormatdisplay.format(DateTime.parse(data[index].tglHutang!)),
+        style: font().reguler,
+      )),
+      DataCell(Text(
+        data[index].namaPelanggan!,
+        style: font().reguler,
+      )),
       DataCell(data[index].hutang! <= 0
-          ? Text('Rp. 0')
-          : Text('Rp.' +
-              con.nominal.format(int.parse(data[index].hutang.toString())))),
+          ? Text(
+              'Rp. 0',
+              style: font().reguler,
+            )
+          : Text(
+              'Rp.' +
+                  con.nominal.format(int.parse(
+                    data[index].hutang.toString(),
+                  )),
+              style: font().reguler,
+            )),
       DataCell(data[index].status == 1
           ? Container(
               padding: EdgeInsets.all(6),
@@ -260,8 +280,7 @@ class hutangTable extends DataTableSource {
                   color: Colors.green, borderRadius: BorderRadius.circular(10)),
               child: Text(
                 'Lunas',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: font().reguler_white,
               ))
           : Container(
               padding: EdgeInsets.all(6),
@@ -270,8 +289,7 @@ class hutangTable extends DataTableSource {
                   borderRadius: BorderRadius.circular(10)),
               child: Text(
                 'Hutang',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: font().reguler_white,
               ))),
       DataCell(Row(
         mainAxisSize: MainAxisSize.min,

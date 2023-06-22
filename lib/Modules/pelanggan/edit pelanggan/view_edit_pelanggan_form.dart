@@ -19,21 +19,24 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
         padding: const EdgeInsets.all(15),
         child: Container(
           width: context.width_query / 1,
-          height: context.height_query / 1.3,
+          //height: context.height_query / 1.3,
           child: Form(
               key: controller.formKeypelanggan.value,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   header(
-                    title: 'Edit Pelanggan',
+                    title: 'edit Pelanggan'.toUpperCase(),
                     icon: FontAwesomeIcons.person,
+                    iscenter: false,
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   TextFormField(
                     controller: controller.nama_pelanggan.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(
-                      icon: Icon(FontAwesomeIcons.person),
                       labelText: "Nama pelanggan",
                       labelStyle: TextStyle(
                         color: Colors.black87,
@@ -51,11 +54,13 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
                       return null;
                     },
                   ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   TextFormField(
                     controller: controller.no_hp.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(
-                      icon: Icon(FontAwesomeIcons.phone),
                       labelText: "Nomor HP",
                       labelStyle: TextStyle(
                         color: Colors.black87,
@@ -65,13 +70,16 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    textAlign: TextAlign.center,
+                    textAlign: TextAlign.start,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Masukan nomor hp';
                       }
                       return null;
                     },
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   button_solid_custom(
                       onPressed: () {

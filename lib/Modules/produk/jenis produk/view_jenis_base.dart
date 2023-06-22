@@ -21,6 +21,7 @@ class jenis_produk extends StatelessWidget {
           //       style: font().header,
           //     )),
           body: stack_bg(
+            isfullscreen: true,
             child: Padding(
               padding: const EdgeInsets.all(30),
               child: jenis_table(),

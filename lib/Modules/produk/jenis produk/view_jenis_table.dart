@@ -35,13 +35,13 @@ class jenis_table extends GetView<produkController> {
                         iscenter: false,
                         title: 'Kategori Produk',
                         icon: Icons.add_box,
-                        base_color: color_template().primary,
+
                         icon_funtion: Icons.refresh,
                         //icon_color: color_template().primary,
                         function: () async {
                           Get.dialog(const showloading(),
                               barrierDismissible: false);
-                          await controller.fetchjenis();
+                          await controller.fetchjenislocal(controller.id_toko);
                           Get.back();
                         },
                       ),
@@ -63,7 +63,7 @@ class jenis_table extends GetView<produkController> {
                         // ));
                       },
                       child: Text(
-                        'Tambah Kategori',
+                        'Tambah Kategori'.toUpperCase(),
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -79,15 +79,14 @@ class jenis_table extends GetView<produkController> {
               children: [
                 Expanded(
                   child: Container(
+                    height: context.height_query / 15,
                     margin: const EdgeInsets.symmetric(horizontal: 3),
-                    //width: 200,
                     child: TextFormField(
                       controller: controller.searchjenis.value,
                       onChanged: ((String pass) {
                         controller.searchjenislocal();
                       }),
                       decoration: InputDecoration(
-                        icon: const Icon(Icons.add_box),
                         labelText: "Cari Kategori",
                         labelStyle: const TextStyle(
                           color: Colors.black87,
@@ -129,8 +128,9 @@ class jenis_table extends GetView<produkController> {
                             width: 100, height: 100, child: const showloading())
                         : PaginatedDataTable2(
                             horizontalMargin: 10,
+                            wrapInCard: false,
+                            columnSpacing: 0,
                             renderEmptyRowsInTheEnd: false,
-                            columnSpacing: 5,
                             headingRowColor: MaterialStateColor.resolveWith(
                                 (states) =>
                                     color_template().primary.withOpacity(0.2)),
@@ -140,10 +140,11 @@ class jenis_table extends GetView<produkController> {
                                 style: font().header_black,
                               ),
                             ),
-                            columns: const <DataColumn>[
+                            columns: <DataColumn>[
                               DataColumn(
                                 label: Text(
                                   'Nama kategori',
+                                  style: font().reguler,
                                 ),
                               ),
                               // DataColumn(
@@ -157,6 +158,7 @@ class jenis_table extends GetView<produkController> {
                               DataColumn(
                                 label: Text(
                                   'Aksi',
+                                  style: font().reguler,
                                 ),
                               ),
                             ],
@@ -236,11 +238,16 @@ class jenisprodukTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].namaJenis!)),
-      DataCell(Row(
-        children: [
-          Expanded(
-            child: IconButton(
+      DataCell(Text(
+        data[index].namaJenis!,
+        style: font().reguler,
+      )),
+      DataCell(Container(
+        //color: Colors.red,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
                 onPressed: () {
                   Get.toNamed('/edit_jenis', arguments: data[index]);
                 },
@@ -249,9 +256,7 @@ class jenisprodukTable extends DataTableSource {
                   size: 18,
                   color: color_template().secondary,
                 )),
-          ),
-          Expanded(
-            child: IconButton(
+            IconButton(
                 onPressed: () {
                   popscreen().deletejenis(con, data[index]);
                 },
@@ -259,9 +264,9 @@ class jenisprodukTable extends DataTableSource {
                   Icons.delete,
                   size: 18,
                   color: color_template().tritadery,
-                )),
-          )
-        ],
+                ))
+          ],
+        ),
       )),
     ]);
   }

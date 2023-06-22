@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rims_waserda/Modules/Widgets/popup.dart';
 
 import '../../Modules/Login/view_login_carousel.dart';
 import '../../Templates/setting.dart';
@@ -121,7 +122,6 @@ class login_card extends GetView<loginController> {
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10)),
                           ),
-                          textAlign: TextAlign.center,
                           validator: (value) {
                             if (value!.isEmpty || value.isEmail == false) {
                               return 'Masukan Email';
@@ -155,7 +155,7 @@ class login_card extends GetView<loginController> {
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10)),
                             ),
-                            textAlign: TextAlign.center,
+                            //textAlign: TextAlign.center,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Masukan Password';
@@ -178,7 +178,10 @@ class login_card extends GetView<loginController> {
                                         padding: const EdgeInsets.all(150.0),
                                         child: Column(
                                           children: [
-                                            showloading(),
+                                            Container(
+                                                width: 200,
+                                                height: 200,
+                                                child: showloading()),
                                             SizedBox(
                                               height: 15,
                                             ),
@@ -210,7 +213,7 @@ class login_card extends GetView<loginController> {
                         ),
                         button_border_custom(
                           onPressed: () {
-                            //controller.handleSignIn();
+                            popscreen().lupapassword();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -222,7 +225,7 @@ class login_card extends GetView<loginController> {
                             ],
                           ),
                           height: 50,
-                          width: context.width_query * 0.5,
+                          width: context.width_query,
                         ),
                         SizedBox(
                           height: 30,

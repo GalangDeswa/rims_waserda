@@ -26,84 +26,63 @@ class edit_jenis extends GetView<editjenisController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child: SingleChildScrollView(
+          isfullscreen: true,
+          child: Container(
+            width: context.width_query / 2,
+            child: Card_custom(
+              border: false,
               child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Card_custom(
-                  border: false,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Container(
-                      width: context.width_query / 1,
-                      height: context.height_query / 2.3,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          header(
-                            title: 'edit Jenis Produk',
-                            icon: FontAwesomeIcons.person,
-                            function: () {},
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Expanded(
-                            child: Obx(() {
-                              return Form(
-                                  key: controller.formKeyjenis.value,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      TextFormField(
-                                        controller: controller.nama_jenis.value,
-                                        onChanged: ((String pass) {}),
-                                        decoration: InputDecoration(
-                                          icon: Icon(Icons.add_card),
-                                          labelText: "Nama Jenis",
-                                          labelStyle: TextStyle(
-                                            color: Colors.black87,
-                                          ),
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Masukan kategori produk';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      button_solid_custom(
-                                          onPressed: () {
-                                            if (controller.formKeyjenis.value
-                                                .currentState!
-                                                .validate()) {
-                                              controller.jenisEditlocal();
-                                            }
-                                          },
-                                          child: Text(
-                                            'EDIT KATEGORI',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          width: double.infinity,
-                                          height: 50)
-                                    ],
-                                  ));
-                            }),
-                          )
-                        ],
+                padding: const EdgeInsets.all(15),
+                child: Container(
+                  width: context.width_query / 1,
+                  height: context.height_query / 2.3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      header(
+                        title: 'edit kategori Produk'.toUpperCase(),
+                        icon: FontAwesomeIcons.boxOpen,
+                        iscenter: false,
                       ),
-                    ),
+                      Form(
+                          key: controller.formKeyjenis.value,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              TextFormField(
+                                controller: controller.nama_jenis.value,
+                                onChanged: ((String pass) {}),
+                                decoration: InputDecoration(
+                                  labelText: "Nama Kategori",
+                                  labelStyle: TextStyle(
+                                    color: Colors.black87,
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return 'Masukan kategori produk';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          )),
+                      button_solid_custom(
+                          onPressed: () {
+                            if (controller.formKeyjenis.value.currentState!
+                                .validate()) {
+                              controller.jenisEditlocal();
+                            }
+                          },
+                          child: Text('edit Kategori'.toUpperCase(),
+                              style: font().header),
+                          width: double.infinity,
+                          height: 50),
+                    ],
                   ),
                 ),
               ),

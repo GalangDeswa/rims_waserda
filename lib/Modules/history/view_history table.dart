@@ -28,11 +28,13 @@ class history_table extends GetView<historyController> {
           children: [
             header(
               iscenter: false,
-              title: 'Daftar Riwayat Penjualan',
+              title: 'Riwayat Penjualan',
               icon: Icons.history,
               icon_funtion: Icons.refresh,
-              function: () {
-                controller.fetchPenjualan();
+              function: () async {
+                Get.dialog(showloading());
+                await controller.fetchPenjualanlocal(controller.id_toko);
+                Get.back();
               },
             ),
             const SizedBox(
@@ -45,7 +47,7 @@ class history_table extends GetView<historyController> {
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 3),
-                      //width: 200,
+                      height: context.height_query / 15,
                       child: TextFormField(
                         onTap: () {
                           FocusScope.of(context).requestFocus(new FocusNode());
@@ -309,6 +311,8 @@ class history_table extends GetView<historyController> {
                       ? Container(
                           width: 100, height: 100, child: const showloading())
                       : PaginatedDataTable2(
+                          wrapInCard: false,
+                          columnSpacing: 0,
                           sortAscending: controller.sort.value,
                           sortColumnIndex: controller.ColIndex.value,
                           horizontalMargin: 10,
@@ -316,7 +320,6 @@ class history_table extends GetView<historyController> {
                           //minWidth: 1000,
                           //minWidth: 10,
                           //fit: FlexFit.loose,
-                          columnSpacing: 5,
 
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>

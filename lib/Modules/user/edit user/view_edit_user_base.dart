@@ -22,10 +22,8 @@ class edit_user extends GetView<edituserController> {
           //       style: font().header,
           //     )),
           body: stack_bg(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: edit_user_form(),
-        ),
+        isfullscreen: true,
+        child: SingleChildScrollView(child: edit_user_form()),
       )),
     );
   }

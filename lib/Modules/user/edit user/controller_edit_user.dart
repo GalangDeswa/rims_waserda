@@ -47,6 +47,9 @@ class edituserController extends GetxController {
   var email = TextEditingController().obs;
   var formKeyedituser = GlobalKey<FormState>().obs;
 
+  var show = true.obs;
+  var showkon = true.obs;
+
   List role = ['Pilih Role', 'Kasir', 'Admin'].obs;
 
   var roleval = 0.obs;

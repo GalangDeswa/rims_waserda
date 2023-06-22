@@ -26,6 +26,7 @@ class tambah_jenis extends GetView<produkController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: Container(
             width: context.width_query / 2,
             child: Card_custom(
@@ -52,7 +53,6 @@ class tambah_jenis extends GetView<produkController> {
                                 controller: controller.nama_jenis.value,
                                 onChanged: ((String pass) {}),
                                 decoration: InputDecoration(
-                                  icon: Icon(FontAwesomeIcons.boxOpen),
                                   labelText: "Nama Kategori",
                                   labelStyle: TextStyle(
                                     color: Colors.black87,
@@ -62,7 +62,6 @@ class tambah_jenis extends GetView<produkController> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                 ),
-                                textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Masukan kategori produk';

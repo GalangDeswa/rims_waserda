@@ -53,7 +53,6 @@ class tambah_beban extends GetView<bebanController> {
                                     controller: controller.nama.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: Icon(FontAwesomeIcons.boxOpen),
                                       labelText: "Nama beban",
                                       labelStyle: TextStyle(
                                         color: Colors.black87,
@@ -65,7 +64,6 @@ class tambah_beban extends GetView<bebanController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan nama produk';
@@ -81,7 +79,6 @@ class tambah_beban extends GetView<bebanController> {
                                     controller: controller.keterangan.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: Icon(FontAwesomeIcons.pencil),
                                       labelText: "Deskripsi",
                                       labelStyle: TextStyle(
                                         color: Colors.black87,
@@ -93,7 +90,6 @@ class tambah_beban extends GetView<bebanController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan deskirpsi beban';
@@ -114,8 +110,6 @@ class tambah_beban extends GetView<bebanController> {
                                             return null;
                                           },
                                           decoration: InputDecoration(
-                                            icon: Icon(
-                                                FontAwesomeIcons.dollarSign),
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(15),
@@ -246,7 +240,6 @@ class tambah_beban extends GetView<bebanController> {
                                   controller: controller.tanggal.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
-                                    icon: Icon(FontAwesomeIcons.calendar),
                                     labelText: "Tanggal",
                                     labelStyle: TextStyle(
                                       color: Colors.black87,
@@ -258,7 +251,6 @@ class tambah_beban extends GetView<bebanController> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   ),
-                                  textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Pilih tanggal beban';
@@ -278,7 +270,6 @@ class tambah_beban extends GetView<bebanController> {
                                   print(controller.jumlahbeban.value);
                                 }),
                                 decoration: InputDecoration(
-                                  icon: Icon(Icons.pin_drop),
                                   labelText: "Jumlah",
                                   labelStyle: TextStyle(
                                     color: Colors.black87,
@@ -288,7 +279,6 @@ class tambah_beban extends GetView<bebanController> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                 ),
-                                textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Masukan jumlah beban';

@@ -34,8 +34,8 @@ class beban_table extends GetView<bebanController> {
                       padding: const EdgeInsets.only(right: 50),
                       child: header(
                         iscenter: false,
-                        title: 'Data Beban',
-                        icon: FontAwesomeIcons.dollarSign,
+                        title: 'Data Beban'.toUpperCase(),
+                        icon: FontAwesomeIcons.circleDollarToSlot,
                         icon_funtion: Icons.refresh,
                         function: () async {
                           Get.dialog(Container(
@@ -43,7 +43,7 @@ class beban_table extends GetView<bebanController> {
                             height: 150,
                             child: const showloading(),
                           ));
-                          print(DateTime.now());
+                          await controller.fetchBebanlocal(controller.id_toko);
                           // await controller.fetchDataBeban();
                           // await controller.fetchJenisBeban();
                           Get.back();
@@ -67,7 +67,7 @@ class beban_table extends GetView<bebanController> {
                         // ));
                       },
                       child: Text(
-                        'Tambah beban',
+                        'Tambah beban'.toUpperCase(),
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -84,6 +84,7 @@ class beban_table extends GetView<bebanController> {
                 Obx(() {
                   return Expanded(
                     child: Container(
+                      height: context.height_query / 15,
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       //width: 200,
                       child: TextFormField(
@@ -92,7 +93,6 @@ class beban_table extends GetView<bebanController> {
                           controller.searchbebanlocal();
                         }),
                         decoration: InputDecoration(
-                          icon: const Icon(Icons.add_box),
                           labelText: "cari beban",
                           hintText: 'Nama beban / Tanggal beban',
                           labelStyle: const TextStyle(
@@ -175,19 +175,21 @@ class beban_table extends GetView<bebanController> {
                       //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
 
                       PaginatedDataTable2(
+                          wrapInCard: false,
+                          columnSpacing: 0,
                           sortAscending: controller.sort.value,
                           sortColumnIndex: controller.ColIndex.value,
                           fixedTopRows: 1,
                           horizontalMargin: 10,
                           renderEmptyRowsInTheEnd: false,
-                          columnSpacing: 5,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
                           columns: <DataColumn>[
                             DataColumn(
-                              label: const Text(
+                              label: Text(
                                 'Tanggal',
+                                style: font().reguler,
                               ),
                               onSort: (int columnIndex, bool ascending) {
                                 controller.sort.value = !controller.sort.value;
@@ -196,8 +198,9 @@ class beban_table extends GetView<bebanController> {
                               },
                             ),
                             DataColumn(
-                              label: const Text(
+                              label: Text(
                                 'Nama Beban',
+                                style: font().reguler,
                               ),
                               onSort: (int columnIndex, bool ascending) {
                                 controller.sort.value = !controller.sort.value;
@@ -206,8 +209,9 @@ class beban_table extends GetView<bebanController> {
                               },
                             ),
                             DataColumn(
-                              label: const Text(
+                              label: Text(
                                 'jumlah',
+                                style: font().reguler,
                               ),
                               onSort: (int columnIndex, bool ascending) {
                                 controller.sort.value = !controller.sort.value;
@@ -216,8 +220,9 @@ class beban_table extends GetView<bebanController> {
                               },
                             ),
                             DataColumn(
-                              label: const Text(
+                              label: Text(
                                 'Kategori',
+                                style: font().reguler,
                               ),
                               onSort: (int columnIndex, bool ascending) {
                                 controller.sort.value = !controller.sort.value;
@@ -225,9 +230,10 @@ class beban_table extends GetView<bebanController> {
                                 onSortColum(columnIndex, ascending);
                               },
                             ),
-                            const DataColumn(
+                            DataColumn(
                               label: Text(
                                 'Aksi',
+                                style: font().reguler,
                               ),
                             ),
                           ],
@@ -313,34 +319,41 @@ class bebanTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(con.dateFormat.format(DateTime.parse(data[index].tgl!)))),
-      DataCell(Text(data[index].nama!)),
-      DataCell(Text('Rp. ' + con.nominal.format(data[index].jumlah))),
-      DataCell(Text(data[index].namaKtrBeban.toString())),
+      DataCell(Text(
+        con.dateFormat.format(DateTime.parse(data[index].tgl!)),
+        style: font().reguler,
+      )),
+      DataCell(Text(
+        data[index].nama!,
+        style: font().reguler,
+      )),
+      DataCell(Text('Rp. ' + con.nominal.format(data[index].jumlah),
+          style: font().reguler)),
+      DataCell(Text(
+        data[index].namaKtrBeban.toString(),
+        style: font().reguler,
+      )),
       DataCell(Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  Get.toNamed('/edit_beban', arguments: data[index]);
-                },
-                icon: Icon(
-                  Icons.edit,
-                  size: 18,
-                  color: color_template().secondary,
-                )),
-          ),
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  popscreen().deletebebanv2(con, data[index]);
-                },
-                icon: Icon(
-                  Icons.delete,
-                  size: 18,
-                  color: color_template().tritadery,
-                )),
-          )
+          IconButton(
+              onPressed: () {
+                Get.toNamed('/edit_beban', arguments: data[index]);
+              },
+              icon: Icon(
+                Icons.edit,
+                size: 18,
+                color: color_template().secondary,
+              )),
+          IconButton(
+              onPressed: () {
+                popscreen().deletebebanv2(con, data[index]);
+              },
+              icon: Icon(
+                Icons.delete,
+                size: 18,
+                color: color_template().tritadery,
+              ))
         ],
       )),
     ]);

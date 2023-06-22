@@ -22,11 +22,9 @@ class edit_beban extends GetView<editbebanController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-              child: edit_beban_form(),
-            ),
+            child: edit_beban_form(),
           ),
         ),
       ),

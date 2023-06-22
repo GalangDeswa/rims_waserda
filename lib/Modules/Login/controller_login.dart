@@ -7,7 +7,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:rims_waserda/Modules/Login/model_login.dart';
-import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/history/Controller_history.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
@@ -17,7 +16,6 @@ import 'package:rims_waserda/main.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../Services/api.dart';
-import '../../Templates/setting.dart';
 import '../beban/data beban/controller_beban.dart';
 import '../dashboard/model_toko.dart';
 import '../history/controller_detail_penjualan.dart';
@@ -28,7 +26,10 @@ class loginController extends GetxController {
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
+
     kontensquare.value = await GetStorage().read('konten_square');
+
+    print(kontensquare);
   }
 
   var kontensquare = [].obs;
@@ -103,7 +104,6 @@ class loginController extends GetxController {
 
   loginv2() async {
     // Get.dialog(showloading(), barrierDismissible: false);
-
     var checkconn = await check_conn.check();
     if (checkconn == true) {
       var response = await post(link().POST_login,
@@ -124,6 +124,7 @@ class loginController extends GetxController {
         await GetStorage().write('id_toko', dataUser.idToko);
         await GetStorage().write('token', dataUser.token);
         await GetStorage().write('id_user', dataUser.id);
+        await GetStorage().write('role', dataUser.role);
 
         points.value = points.value + 0.1;
 

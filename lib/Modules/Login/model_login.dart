@@ -24,6 +24,7 @@ class ModelLogin {
     required this.updatedAt,
     required this.token,
     required this.tokenType,
+    required this.role,
   });
 
   bool success;
@@ -39,6 +40,7 @@ class ModelLogin {
   DateTime updatedAt;
   String token;
   String tokenType;
+  int role;
 
   factory ModelLogin.fromJson(Map<String, dynamic> json) => ModelLogin(
         success: json["success"],
@@ -54,6 +56,7 @@ class ModelLogin {
         updatedAt: DateTime.parse(json["updated_at"]),
         token: json["token"],
         tokenType: json["token_type"],
+        role: json["role"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,5 +73,6 @@ class ModelLogin {
         "updated_at": updatedAt.toIso8601String(),
         "token": token,
         "token_type": tokenType,
+        "role": role,
       };
 }

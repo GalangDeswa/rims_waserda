@@ -19,7 +19,7 @@ class base_menuController extends GetxController {
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    namauser.value = GetStorage().read('namec') ?? 'user';
+    namauser.value = GetStorage().read('name') ?? 'user';
     namatoko.value = GetStorage().read('nama_toko') ?? 'toko';
     token.value = await GetStorage().read('token');
     await getlayout();
@@ -29,8 +29,21 @@ class base_menuController extends GetxController {
 
   var token = ''.obs;
   var id_toko = GetStorage().read('id_toko');
+  var id_user = GetStorage().read('id_user');
+  var role = GetStorage().read('role');
 
-  List<Widget> views = const [
+  List<Widget> views_kasir = const [
+    dashboard_v2(),
+    kasirv2(),
+    //produk(),
+    beban(),
+    // data_user(),
+    pelanggan(),
+    history(),
+    laporan(),
+  ];
+
+  List<Widget> views_admin = const [
     dashboard_v2(),
     kasirv2(),
     produk(),
@@ -40,6 +53,7 @@ class base_menuController extends GetxController {
     history(),
     laporan(),
   ];
+
   var selectedIndex = 0.obs;
   var extended = false.obs;
 

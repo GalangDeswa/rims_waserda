@@ -20,7 +20,7 @@ class dashboard_konten_v2 extends GetView<dashboardController> {
         borderRadius: border_radius().def_border,
       ),
       margin: EdgeInsets.only(top: 10),
-      height: context.height_query / 9.5,
+      // height: context.height_query / 19.5,
       width: context.width_query,
       child: Obx(() {
         return CarouselSlider(
@@ -34,8 +34,12 @@ class dashboard_konten_v2 extends GetView<dashboardController> {
             enlargeCenterPage: true,
             enableInfiniteScroll: true,
             autoPlay: true,
-            autoPlayInterval: Duration(seconds: 6),
+            autoPlayInterval: Duration(seconds: 7),
           ),
+          //TODO : chek fetch history berdasar role user
+          // TODO : chek proses sync pas di relese mode
+          // TODO : chek app lagi untuk relese
+
           items: controller.kontenlists.value
               .map((x) => ClipRRect(
                     borderRadius: border_radius().def_border,
@@ -49,7 +53,7 @@ class dashboard_konten_v2 extends GetView<dashboardController> {
                               FontAwesomeIcons.warning,
                               color: color_template().tritadery,
                             )),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                         imageUrl: x['foto']),
                   ))
               .toList(),

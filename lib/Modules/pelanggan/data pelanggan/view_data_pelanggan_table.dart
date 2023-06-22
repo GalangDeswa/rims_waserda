@@ -67,7 +67,7 @@ class pelanggan_table extends GetView<pelangganController> {
                         // ));
                       },
                       child: Text(
-                        'Tambah pelanggan',
+                        'Tambah pelanggan'.toUpperCase(),
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -85,14 +85,13 @@ class pelanggan_table extends GetView<pelangganController> {
                   return Expanded(
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: 10),
-                      //width: 200,
+                      height: context.height_query / 15,
                       child: TextFormField(
                         controller: controller.search.value,
                         onChanged: ((String pass) {
                           controller.searchpelangganlocal();
                         }),
                         decoration: InputDecoration(
-                          icon: Icon(Icons.add_box),
                           labelText: "Cari pelanggan",
                           hintText: 'Nama pelanggan',
                           labelStyle: TextStyle(
@@ -138,8 +137,10 @@ class pelanggan_table extends GetView<pelangganController> {
                       //dan di class source nya di buat konstruktor untuk di lembar var data dari kontroller
 
                       PaginatedDataTable2(
+                          wrapInCard: false,
+                          columnSpacing: 0,
                           horizontalMargin: 10,
-                          columnSpacing: 5,
+                          renderEmptyRowsInTheEnd: false,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
@@ -147,22 +148,17 @@ class pelanggan_table extends GetView<pelangganController> {
                             DataColumn(
                               label: Text(
                                 'Nama Pelanggan',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
-                              label: Text(
-                                'Nomor Hp',
-                              ),
+                              label: Text('Nomor Hp', style: font().reguler),
                             ),
                             DataColumn(
-                              label: Text(
-                                'status',
-                              ),
+                              label: Text('status', style: font().reguler),
                             ),
                             DataColumn(
-                              label: Text(
-                                'Aksi',
-                              ),
+                              label: Text('Aksi', style: font().reguler),
                             ),
                           ],
                           source: source.value,
@@ -246,10 +242,12 @@ class pelangganTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].namaPelanggan!)),
-      DataCell(Text(data[index].noHp!)),
+      DataCell(Text(data[index].namaPelanggan!, style: font().reguler)),
+      DataCell(Text(data[index].noHp!, style: font().reguler)),
       DataCell(
-        con.statuspelanggan(data[index].id),
+        con.statuspelanggan(
+          data[index].id,
+        ),
       ),
       DataCell(Row(
         mainAxisSize: MainAxisSize.min,

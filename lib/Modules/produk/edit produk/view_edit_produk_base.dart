@@ -22,6 +22,7 @@ class edit_produk extends GetView<editprodukController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: SingleChildScrollView(
             child: edit_produk_form(),
           ),

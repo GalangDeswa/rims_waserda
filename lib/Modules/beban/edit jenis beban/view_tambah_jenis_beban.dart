@@ -25,6 +25,7 @@ class tambah_jenis_beban extends GetView<bebanController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: Center(
             child: Container(
               width: context.width_query / 2,
@@ -41,6 +42,7 @@ class tambah_jenis_beban extends GetView<bebanController> {
                         header(
                           title: 'Tambah Kategori Beban',
                           icon: FontAwesomeIcons.dollarSign,
+                          iscenter: false,
                         ),
                         Form(
                             key: controller.formKeyjenisbeban.value,
@@ -48,7 +50,6 @@ class tambah_jenis_beban extends GetView<bebanController> {
                               controller: controller.kategori.value,
                               onChanged: ((String pass) {}),
                               decoration: InputDecoration(
-                                icon: Icon(Icons.add_card),
                                 labelText: "Katergori",
                                 labelStyle: TextStyle(
                                   color: Colors.black87,
@@ -58,7 +59,6 @@ class tambah_jenis_beban extends GetView<bebanController> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
                               ),
-                              textAlign: TextAlign.center,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Masukan kategori beban';

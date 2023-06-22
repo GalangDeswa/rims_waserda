@@ -10,17 +10,17 @@ ModelKonten modelKontenFromJson(String str) =>
 String modelKontenToJson(ModelKonten data) => json.encode(data.toJson());
 
 class ModelKonten {
+  bool success;
+  int statusCode;
+  String messages;
+  List<DataKonten> data;
+
   ModelKonten({
     required this.success,
     required this.statusCode,
     required this.messages,
     required this.data,
   });
-
-  bool success;
-  int statusCode;
-  String messages;
-  List<DataKonten> data;
 
   factory ModelKonten.fromJson(Map<String, dynamic> json) => ModelKonten(
         success: json["success"],
@@ -39,21 +39,24 @@ class ModelKonten {
 }
 
 class DataKonten {
+  int? tipe;
+  String? judul;
+  String? deskripsi;
+  String? link;
+  String? foto;
+  int? id;
+
   DataKonten({
-    required this.tipe,
-    required this.judul,
-    required this.deskripsi,
+    this.id,
+    this.tipe,
+    this.judul,
+    this.deskripsi,
     this.link,
-    required this.foto,
+    this.foto,
   });
 
-  int tipe;
-  String judul;
-  String deskripsi;
-  dynamic link;
-  String foto;
-
   factory DataKonten.fromJson(Map<String, dynamic> json) => DataKonten(
+        id: json["id"],
         tipe: json["tipe"],
         judul: json["judul"],
         deskripsi: json["deskripsi"],
@@ -63,9 +66,25 @@ class DataKonten {
 
   Map<String, dynamic> toJson() => {
         "tipe": tipe,
+        "id": id,
         "judul": judul,
         "deskripsi": deskripsi,
         "link": link,
         "foto": foto,
       };
+
+  Map<String, dynamic> toMapForDb() {
+    var map = <String, dynamic>{};
+    map['id'] = id;
+    map['tipe'] = tipe;
+    map['judul'] = judul;
+    map['deskripsi'] = deskripsi;
+    map['link'] = link;
+    map['foto'] = foto;
+
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
 }

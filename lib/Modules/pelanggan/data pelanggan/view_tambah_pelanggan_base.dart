@@ -22,6 +22,7 @@ class tambah_pelanggan extends GetView<pelangganController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: SingleChildScrollView(
             child: tambah_pelanggan_form(),
           ),

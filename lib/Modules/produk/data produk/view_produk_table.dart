@@ -77,7 +77,7 @@ class produk_table extends GetView<produkController> {
                         // ));
                       },
                       child: Text(
-                        'Tambah produk',
+                        'Tambah produk'.toUpperCase(),
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -94,6 +94,8 @@ class produk_table extends GetView<produkController> {
                 Obx(() {
                   return Expanded(
                     child: Container(
+                      // color: Colors.red,
+                      height: context.height_query / 15,
                       margin: const EdgeInsets.symmetric(horizontal: 3),
                       //width: 200,
                       child: TextFormField(
@@ -102,7 +104,6 @@ class produk_table extends GetView<produkController> {
                           controller.searchproduklocal();
                         }),
                         decoration: InputDecoration(
-                          icon: const Icon(FontAwesomeIcons.searchengin),
                           labelText: "cari produk",
                           hintText: 'Nama produk / Barcode',
                           labelStyle: const TextStyle(
@@ -189,11 +190,12 @@ class produk_table extends GetView<produkController> {
                       ? Container(
                           width: 100, height: 100, child: const showloading())
                       : PaginatedDataTable2(
+                          wrapInCard: false,
+                          columnSpacing: 0,
                           sortAscending: controller.sort.value,
                           sortColumnIndex: controller.ColIndex.value,
                           fixedTopRows: 1,
                           horizontalMargin: 10,
-                          columnSpacing: 5,
                           renderEmptyRowsInTheEnd: false,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
@@ -205,30 +207,10 @@ class produk_table extends GetView<produkController> {
                             ),
                           ),
                           columns: <DataColumn>[
-                            const DataColumn(
-                              label: Text('Barcode'),
-                            ),
                             DataColumn(
-                              onSort: (int columnIndex, bool ascending) {
-                                controller.sort.value = !controller.sort.value;
-                                controller.ColIndex.value = columnIndex;
-                                onSortColum(columnIndex, ascending);
-                              },
-                              label: const Text('Nama Produk'),
-                            ),
-                            DataColumn(
-                                label: const Text(
-                                  'Jenis Produk',
-                                ),
-                                onSort: (int columnIndex, bool ascending) {
-                                  controller.sort.value =
-                                      !controller.sort.value;
-                                  controller.ColIndex.value = columnIndex;
-                                  onSortColum(columnIndex, ascending);
-                                }),
-                            const DataColumn(
                               label: Text(
-                                'Deskripsi',
+                                'Barcode',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
@@ -237,8 +219,37 @@ class produk_table extends GetView<produkController> {
                                 controller.ColIndex.value = columnIndex;
                                 onSortColum(columnIndex, ascending);
                               },
-                              label: const Text(
+                              label: Text(
+                                'Nama Produk',
+                                style: font().reguler,
+                              ),
+                            ),
+                            DataColumn(
+                                label: Text(
+                                  'Jenis Produk',
+                                  style: font().reguler,
+                                ),
+                                onSort: (int columnIndex, bool ascending) {
+                                  controller.sort.value =
+                                      !controller.sort.value;
+                                  controller.ColIndex.value = columnIndex;
+                                  onSortColum(columnIndex, ascending);
+                                }),
+                            DataColumn(
+                              label: Text(
+                                'Deskripsi',
+                                style: font().reguler,
+                              ),
+                            ),
+                            DataColumn(
+                              onSort: (int columnIndex, bool ascending) {
+                                controller.sort.value = !controller.sort.value;
+                                controller.ColIndex.value = columnIndex;
+                                onSortColum(columnIndex, ascending);
+                              },
+                              label: Text(
                                 'Stock',
+                                style: font().reguler,
                               ),
                             ),
                             DataColumn(
@@ -248,8 +259,9 @@ class produk_table extends GetView<produkController> {
                                   controller.ColIndex.value = columnIndex;
                                   onSortColum(columnIndex, ascending);
                                 },
-                                label: const Text(
+                                label: Text(
                                   'Harga',
+                                  style: font().reguler,
                                 )),
 
                             // DataColumn(
@@ -260,9 +272,10 @@ class produk_table extends GetView<produkController> {
                             //     ),
                             //   ),
                             // ),
-                            const DataColumn(
+                            DataColumn(
                               label: Text(
                                 'Aksi',
+                                style: font().reguler,
                               ),
                             ),
                           ],
@@ -349,15 +362,40 @@ class produkTable extends DataTableSource {
         data[index].harga - data[index].diskonBarang! / data[index].harga * 100;
     String display_diskon = data[index].diskonBarang.toString();
     return DataRow(cells: [
-      DataCell(Text(data[index].barcode ?? '-')),
-      DataCell(Text(data[index].namaProduk)),
-      DataCell(Text(data[index].namaJenis ?? '-')),
-      DataCell(Text(data[index].deskripsi ?? '-')),
+      DataCell(Text(
+        data[index].barcode ?? '-',
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].namaProduk,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].namaJenis ?? '-',
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].deskripsi ?? '-',
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(data[index].qty == 0 && data[index].idJenisStock == 2
-          ? Text('Non Stock')
+          ? Text(
+              'Non Stock',
+              style: font().reguler,
+              overflow: TextOverflow.ellipsis,
+            )
           : Row(
               children: [
-                Expanded(child: Text(con.nominal.format(data[index].qty))),
+                Expanded(
+                    child: Text(
+                  con.nominal.format(data[index].qty),
+                  style: font().reguler,
+                  overflow: TextOverflow.ellipsis,
+                )),
                 Padding(
                   padding: EdgeInsets.only(right: context.width_query / 23),
                   child: IconButton(
@@ -379,10 +417,19 @@ class produkTable extends DataTableSource {
               ],
             )),
       DataCell(data[index].diskonBarang == 0
-          ? Text('Rp. ' + con.nominal.format(data[index].harga))
+          ? Text(
+              'Rp. ' + con.nominal.format(data[index].harga),
+              style: font().reguler,
+              overflow: TextOverflow.ellipsis,
+            )
           : Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Rp. ' + con.nominal.format(hargadiskon)),
+                Text(
+                  'Rp. ' + con.nominal.format(hargadiskon),
+                  style: font().reguler,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 const SizedBox(
                   width: 10,
                 ),
@@ -390,8 +437,8 @@ class produkTable extends DataTableSource {
                   padding: const EdgeInsets.all(6),
                   child: Text(
                     display_diskon + '%',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
+                    style: font().reguler_white,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   decoration: BoxDecoration(
                       color: color_template().primary_v2,
@@ -408,6 +455,7 @@ class produkTable extends DataTableSource {
             Padding(
               padding: const EdgeInsets.only(right: 10),
               child: IconButton(
+                  padding: EdgeInsets.zero,
                   onPressed: () {
                     Get.toNamed('/edit_produk', arguments: data[index]);
                   },
@@ -418,6 +466,7 @@ class produkTable extends DataTableSource {
                   )),
             ),
             IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {
                   popscreen().deleteproduklocal(con, data[index]);
                 },

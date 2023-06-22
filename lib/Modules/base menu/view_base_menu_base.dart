@@ -16,8 +16,6 @@ class base_menu extends GetView<base_menuController> {
   base_menu({Key? key}) : super(key: key);
   var key = GlobalKey<ScaffoldState>();
 
-  //TODO : buat ui sync manual, buat trigger sync automatis di login gatinkan sync produk
-  //TODO : chek proses update di tempat lain setelah ada proses yang jalan
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -129,11 +127,14 @@ class base_menu extends GetView<base_menuController> {
                             style: font().primary_dark,
                           ),
                           Text(
-                            controller.namatoko.value,
-                            style: font().primary_dark,
+                            controller.role == 1 ? 'Kasir' : 'Admin',
+                            style: font().reguler,
                           ),
                         ],
                       )),
+                  SizedBox(
+                    height: 10,
+                  ),
                   InkWell(
                     highlightColor: color_template().select,
                     splashColor: Colors.orangeAccent,
@@ -174,7 +175,7 @@ class base_menu extends GetView<base_menuController> {
                       //todo : hapus app chek auto sync, chek update di tempat lain saat ada proses
                     },
                     child: ListTile(
-                      title: Text('Upload data produk'),
+                      title: Text('Upload data kasir'),
                       leading: Icon(Icons.upload),
                     ),
                   ),
@@ -257,9 +258,13 @@ class base_menu extends GetView<base_menuController> {
           body: Row(
             children: <Widget>[
               Obx(() {
-                return Expanded(
-                    child: controller.views
-                        .elementAt(controller.selectedIndex.value));
+                return controller.role == 1
+                    ? Expanded(
+                        child: controller.views_kasir
+                            .elementAt(controller.selectedIndex.value))
+                    : Expanded(
+                        child: controller.views_admin
+                            .elementAt(controller.selectedIndex.value));
               }),
               LayoutBuilder(
                 builder: (context, constraint) {
@@ -269,129 +274,264 @@ class base_menu extends GetView<base_menuController> {
                           BoxConstraints(minHeight: constraint.maxHeight),
                       child: IntrinsicHeight(
                         child: Obx(() {
-                          return NavigationRail(
-                            elevation: 10,
-                            useIndicator: true,
-                            indicatorColor: color_template().primary,
-                            selectedIconTheme:
-                                IconThemeData(color: Colors.white),
-                            selectedLabelTextStyle:
-                                TextStyle(color: color_template().primary_dark),
+                          return controller.role == 1
+                              ? NavigationRail(
+                                  elevation: 10,
+                                  useIndicator: true,
+                                  indicatorColor: color_template().primary,
+                                  selectedIconTheme:
+                                      IconThemeData(color: Colors.white),
+                                  selectedLabelTextStyle: TextStyle(
+                                      color: color_template().primary_dark),
 
-                            minExtendedWidth: context.width_query * 0.2,
-                            extended: controller.extended.value,
-                            minWidth: context.width_query * 0.010,
-                            //backgroundColor: color_template().nav,
-                            leading: Builder(
-                              builder: (context) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Scaffold.of(context).openEndDrawer();
-                                    //controller.openDrawer();
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: 50,
-                                        height: 50,
-                                        margin: EdgeInsets.only(top: 10),
-                                        child: Icon(
-                                          Icons.person,
-                                          color: Colors.white,
+                                  minExtendedWidth: context.width_query * 0.2,
+                                  extended: controller.extended.value,
+                                  minWidth: context.width_query * 0.010,
+                                  //backgroundColor: color_template().nav,
+                                  leading: Builder(
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Scaffold.of(context).openEndDrawer();
+                                          //controller.openDrawer();
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: 50,
+                                              height: 50,
+                                              margin: EdgeInsets.only(top: 10),
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: color_template().primary,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              GetStorage().read('name'),
+                                            ),
+                                          ],
                                         ),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: color_template().primary,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        GetStorage().read('name'),
-                                      ),
-                                    ],
+                                      );
+                                    },
                                   ),
+                                  selectedIndex: controller.selectedIndex.value,
+                                  onDestinationSelected: (value) {
+                                    controller.selectedIndex.value = value;
+
+                                    print(value);
+                                  },
+                                  labelType: NavigationRailLabelType.all,
+
+                                  destinations: [
+                                    NavigationRailDestination(
+                                      icon: Icon(Icons.dashboard),
+                                      selectedIcon: Icon(Icons.dashboard),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Dashboard'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon:
+                                          FaIcon(FontAwesomeIcons.cashRegister),
+                                      selectedIcon:
+                                          FaIcon(FontAwesomeIcons.cashRegister),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('POS'),
+                                      ),
+                                    ),
+                                    // NavigationRailDestination(
+                                    //   icon: Icon(FontAwesomeIcons.box),
+                                    //   selectedIcon: Icon(FontAwesomeIcons.box),
+                                    //   label: Padding(
+                                    //     padding: const EdgeInsets.only(top: 5),
+                                    //     child: Text('Produk'),
+                                    //   ),
+                                    // ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.dollarSign),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.dollarSign),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Beban'),
+                                      ),
+                                    ),
+                                    // NavigationRailDestination(
+                                    //   icon: FaIcon(FontAwesomeIcons.userPlus),
+                                    //   selectedIcon: FaIcon(FontAwesomeIcons.userPlus),
+                                    //   label: Padding(
+                                    //     padding: const EdgeInsets.only(top: 5),
+                                    //     child: Text('User'),
+                                    //   ),
+                                    // ),
+                                    NavigationRailDestination(
+                                      icon:
+                                          FaIcon(FontAwesomeIcons.peopleGroup),
+                                      selectedIcon:
+                                          FaIcon(FontAwesomeIcons.peopleGroup),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Pelanggan'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.history),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.history),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Penjualan'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.receipt),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.receipt),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Laporan'),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : NavigationRail(
+                                  elevation: 10,
+                                  useIndicator: true,
+                                  indicatorColor: color_template().primary,
+                                  selectedIconTheme:
+                                      IconThemeData(color: Colors.white),
+                                  selectedLabelTextStyle: TextStyle(
+                                      color: color_template().primary_dark),
+
+                                  minExtendedWidth: context.width_query * 0.2,
+                                  extended: controller.extended.value,
+                                  minWidth: context.width_query * 0.010,
+                                  //backgroundColor: color_template().nav,
+                                  leading: Builder(
+                                    builder: (context) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Scaffold.of(context).openEndDrawer();
+                                          //controller.openDrawer();
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: 50,
+                                              height: 50,
+                                              margin: EdgeInsets.only(top: 10),
+                                              child: Icon(
+                                                Icons.person,
+                                                color: Colors.white,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: color_template().primary,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              GetStorage().read('name'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  selectedIndex: controller.selectedIndex.value,
+                                  onDestinationSelected: (value) {
+                                    controller.selectedIndex.value = value;
+
+                                    print(value);
+                                  },
+                                  labelType: NavigationRailLabelType.all,
+
+                                  destinations: [
+                                    NavigationRailDestination(
+                                      icon: Icon(Icons.dashboard),
+                                      selectedIcon: Icon(Icons.dashboard),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Dashboard'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon:
+                                          FaIcon(FontAwesomeIcons.cashRegister),
+                                      selectedIcon:
+                                          FaIcon(FontAwesomeIcons.cashRegister),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('POS'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.box),
+                                      selectedIcon: Icon(FontAwesomeIcons.box),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Produk'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.dollarSign),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.dollarSign),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Beban'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: FaIcon(FontAwesomeIcons.userPlus),
+                                      selectedIcon:
+                                          FaIcon(FontAwesomeIcons.userPlus),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('User'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon:
+                                          FaIcon(FontAwesomeIcons.peopleGroup),
+                                      selectedIcon:
+                                          FaIcon(FontAwesomeIcons.peopleGroup),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Pelanggan'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.history),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.history),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Penjualan'),
+                                      ),
+                                    ),
+                                    NavigationRailDestination(
+                                      icon: Icon(FontAwesomeIcons.receipt),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.receipt),
+                                      label: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text('Laporan'),
+                                      ),
+                                    ),
+                                  ],
                                 );
-                              },
-                            ),
-                            selectedIndex: controller.selectedIndex.value,
-                            onDestinationSelected: (value) {
-                              controller.selectedIndex.value = value;
-
-                              print(value);
-                            },
-                            labelType: NavigationRailLabelType.all,
-
-                            destinations: [
-                              NavigationRailDestination(
-                                icon: Icon(Icons.dashboard),
-                                selectedIcon: Icon(Icons.dashboard),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Dashboard'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: FaIcon(FontAwesomeIcons.cashRegister),
-                                selectedIcon:
-                                    FaIcon(FontAwesomeIcons.cashRegister),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('POS'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(FontAwesomeIcons.box),
-                                selectedIcon: Icon(FontAwesomeIcons.box),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Produk'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(FontAwesomeIcons.dollarSign),
-                                selectedIcon: Icon(FontAwesomeIcons.dollarSign),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Beban'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: FaIcon(FontAwesomeIcons.userPlus),
-                                selectedIcon: FaIcon(FontAwesomeIcons.userPlus),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('User'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: FaIcon(FontAwesomeIcons.peopleGroup),
-                                selectedIcon:
-                                    FaIcon(FontAwesomeIcons.peopleGroup),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Pelanggan'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(FontAwesomeIcons.history),
-                                selectedIcon: Icon(FontAwesomeIcons.history),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('History'),
-                                ),
-                              ),
-                              NavigationRailDestination(
-                                icon: Icon(FontAwesomeIcons.receipt),
-                                selectedIcon: Icon(FontAwesomeIcons.receipt),
-                                label: Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text('Laporan'),
-                                ),
-                              ),
-                            ],
-                          );
                         }),
                       ),
                     ),

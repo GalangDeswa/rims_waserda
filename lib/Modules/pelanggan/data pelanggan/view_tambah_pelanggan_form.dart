@@ -26,8 +26,9 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   header(
-                    title: 'Tambah Pelanggan',
-                    icon: FontAwesomeIcons.dollarSign,
+                    title: 'Tambah Pelanggan'.toUpperCase(),
+                    icon: FontAwesomeIcons.person,
+                    iscenter: false,
                   ),
                   SizedBox(
                     height: 15,
@@ -36,7 +37,6 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                     controller: controller.nama_pelanggan.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(
-                      icon: Icon(FontAwesomeIcons.person),
                       labelText: "Nama pelanggan",
                       labelStyle: TextStyle(
                         color: Colors.black87,
@@ -61,7 +61,6 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                     controller: controller.no_hp.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(
-                      icon: Icon(FontAwesomeIcons.phone),
                       labelText: "Nomor HP",
                       labelStyle: TextStyle(
                         color: Colors.black87,

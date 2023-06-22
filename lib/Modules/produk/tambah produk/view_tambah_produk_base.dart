@@ -22,6 +22,7 @@ class tambah_produk extends GetView<tambah_produkController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: SingleChildScrollView(child: tambah_produk_form()),
         ),
       ),

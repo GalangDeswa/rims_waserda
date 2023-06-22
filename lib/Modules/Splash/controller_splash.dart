@@ -68,7 +68,7 @@ class splashController extends GetxController {
       print('konten masih ada ---------------------');
     } else {
       print('konten tidak ada--------------------------');
-      await fetchKontenSquare();
+       await fetchKontenSquare();
     }
   }
 

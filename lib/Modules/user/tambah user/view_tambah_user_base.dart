@@ -23,6 +23,7 @@ class tambah_user extends GetView<datauserController> {
           //       style: font().header,
           //     )),
           body: stack_bg(
+              isfullscreen: true,
               child: SingleChildScrollView(child: tambah_user_form()))),
     );
   }

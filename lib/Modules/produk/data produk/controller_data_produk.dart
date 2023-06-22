@@ -204,7 +204,7 @@ class produkController extends GetxController {
 
   searchjenislocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT * FROM produk_jenis_local WHERE id_toko = $id_toko AND nama_jenis LIKE "%${searchjenis.value.text}%" ORDER BY ID DESC');
+        'SELECT * FROM produk_jenis_local WHERE id_toko = $id_toko AND aktif = "Y" AND nama_jenis LIKE "%${searchjenis.value.text}%" ORDER BY ID DESC');
     List<DataJenis> jenis = query.isNotEmpty
         ? query.map((e) => DataJenis.fromJson(e)).toList()
         : [];
@@ -1223,10 +1223,10 @@ class produkController extends GetxController {
   addqty(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Tambah Stock',
-          icon: Icons.add,
-          icon_color: color_template().primary,
-          base_color: color_template().primary),
+        title: 'Tambah Stock',
+        icon: Icons.add,
+        icon_color: color_template().primary,
+      ),
       contentPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -1249,7 +1249,7 @@ class produkController extends GetxController {
                     ),
                     const Text('Masukan jumlah yang akan di tambah'),
                     const SizedBox(
-                      height: 10,
+                      height: 15,
                     ),
                     Expanded(
                       child: Row(
@@ -1270,6 +1270,9 @@ class produkController extends GetxController {
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(
+                      height: 15,
                     ),
                     button_solid_custom(
                         onPressed: () {

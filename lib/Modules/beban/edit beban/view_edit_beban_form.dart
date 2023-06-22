@@ -51,8 +51,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                     controller: controller.nama.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon:
-                                          const Icon(FontAwesomeIcons.boxOpen),
                                       labelText: "Nama beban",
                                       labelStyle: const TextStyle(
                                         color: Colors.black87,
@@ -64,7 +62,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan nama produk';
@@ -80,7 +77,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                     controller: controller.keterangan.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: const Icon(FontAwesomeIcons.pencil),
                                       labelText: "Deskripsi",
                                       labelStyle: const TextStyle(
                                         color: Colors.black87,
@@ -92,7 +88,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan deskirpsi beban';
@@ -251,7 +246,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                   controller: controller.tanggal.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
-                                    icon: const Icon(FontAwesomeIcons.calendar),
                                     labelText: "Tanggal",
                                     labelStyle: const TextStyle(
                                       color: Colors.black87,
@@ -263,7 +257,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   ),
-                                  textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Pilih tanggal beban';
@@ -283,7 +276,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                   print(controller.jumlahbeban.value);
                                 }),
                                 decoration: InputDecoration(
-                                  icon: const Icon(Icons.pin_drop),
                                   labelText: "Jumlah",
                                   labelStyle: const TextStyle(
                                     color: Colors.black87,
@@ -293,7 +285,6 @@ class edit_beban_form extends GetView<editbebanController> {
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                 ),
-                                textAlign: TextAlign.center,
                                 validator: (value) {
                                   if (value!.isEmpty) {
                                     return 'Masukan jumlah beban';
@@ -303,13 +294,6 @@ class edit_beban_form extends GetView<editbebanController> {
                               ),
                             ],
                           )),
-                          Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              child: VerticalDivider(
-                                color: color_template().primary,
-                                thickness: 1,
-                              )),
                         ],
                       ),
                     ));

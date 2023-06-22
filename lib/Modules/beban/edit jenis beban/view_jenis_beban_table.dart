@@ -37,7 +37,9 @@ class jenis_beban_table extends GetView<bebanController> {
                         icon: Icons.add_box,
                         icon_funtion: Icons.refresh,
                         function: () {
-                          controller.onInit();
+                          Get.dialog(showloading());
+                          controller.fetchJenisBebanlocal(controller.id_toko);
+                          Get.back();
 
                           print('-----snack------');
                         },
@@ -60,7 +62,7 @@ class jenis_beban_table extends GetView<bebanController> {
                         // ));
                       },
                       child: Text(
-                        'Tambah kategori beban',
+                        'Tambah kategori beban'.toUpperCase(),
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
@@ -87,17 +89,18 @@ class jenis_beban_table extends GetView<bebanController> {
                           //minWidth: 1000,
                           //minWidth: 10,
                           //fit: FlexFit.loose,
-                          columnSpacing: 5,
 
+                          wrapInCard: false,
+                          columnSpacing: 0,
                           headingRowColor: MaterialStateColor.resolveWith(
                               (states) =>
                                   color_template().primary.withOpacity(0.2)),
 
-                          columns: const <DataColumn>[
+                          columns: <DataColumn>[
                             DataColumn(
                               label: Text(
                                 'Kategori Beban',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                                style: font().reguler,
                               ),
                             ),
 
@@ -110,11 +113,9 @@ class jenis_beban_table extends GetView<bebanController> {
                             //   ),
                             // ),
                             DataColumn(
-                              label: Center(
-                                child: Text(
-                                  'Aksi',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
+                              label: Text(
+                                'Aksi',
+                                style: font().reguler,
                               ),
                             ),
                           ],
@@ -201,11 +202,14 @@ class kategoriBebanTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].kategori!)),
-      DataCell(Row(
-        children: [
-          Expanded(
-            child: IconButton(
+      DataCell(Text(data[index].kategori!, style: font().reguler)),
+      DataCell(Container(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {
                   Get.toNamed('/edit_jenis_beban', arguments: data[index]);
                 },
@@ -214,9 +218,8 @@ class kategoriBebanTable extends DataTableSource {
                   size: 18,
                   color: color_template().secondary,
                 )),
-          ),
-          Expanded(
-            child: IconButton(
+            IconButton(
+                padding: EdgeInsets.zero,
                 onPressed: () {
                   popscreen().deletejenisbeban(con, data[index]);
                 },
@@ -224,9 +227,9 @@ class kategoriBebanTable extends DataTableSource {
                   Icons.delete,
                   size: 18,
                   color: color_template().tritadery,
-                )),
-          )
-        ],
+                ))
+          ],
+        ),
       )),
     ]);
   }

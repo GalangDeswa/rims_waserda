@@ -31,7 +31,7 @@ class edit_produk_form extends GetView<editprodukController> {
             children: [
               const header(
                 title: 'Edit Produk',
-                icon: FontAwesomeIcons.boxOpen,
+                icon: FontAwesomeIcons.pencil,
                 iscenter: false,
               ),
               const SizedBox(
@@ -55,8 +55,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                     controller: controller.nama_produk.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon:
-                                          const Icon(FontAwesomeIcons.boxOpen),
                                       labelText: "Nama produk",
                                       labelStyle: const TextStyle(
                                         color: Colors.black87,
@@ -68,7 +66,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan nama produk';
@@ -84,7 +81,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                     controller: controller.desc.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
-                                      icon: const Icon(FontAwesomeIcons.pencil),
                                       labelText: "Deskripsi",
                                       labelStyle: const TextStyle(
                                         color: Colors.black87,
@@ -96,7 +92,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan deskirpsi produk';
@@ -107,8 +102,87 @@ class edit_produk_form extends GetView<editprodukController> {
                                 ),
                                 Row(
                                   children: [
-                                    Container(
-                                      width: 200,
+                                    Expanded(
+                                      child: Container(
+                                        child: CheckboxListTile(
+                                          subtitle: const Text("opsional"),
+                                          title: const Text("Barcode?"),
+
+                                          checkColor: Colors.white,
+                                          //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                          value: controller.checkbarcode.value,
+                                          onChanged: (bool? value) {
+                                            controller.checkbarcode.value =
+                                                value!;
+                                            if (controller.checkbarcode.value ==
+                                                false) {
+                                              controller.barcode.value.text =
+                                                  '-';
+                                            }
+                                            print(
+                                                controller.checkbarcode.value);
+                                            // controller.check == true;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    controller.checkbarcode.value == false
+                                        ? Container()
+                                        : Expanded(
+                                            child: Container(
+                                              //margin: EdgeInsets.only(bottom: 10),
+                                              // width: context.width_query / 2.2,
+                                              // height: 100,
+                                              child: TextFormField(
+                                                controller:
+                                                    controller.barcode.value,
+                                                onChanged: ((String pass) {}),
+                                                decoration: InputDecoration(
+                                                  labelText: "Barcode",
+                                                  labelStyle: const TextStyle(
+                                                    color: Colors.black87,
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                ),
+                                                validator: (value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Masukan barcode';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 10),
+                              child: VerticalDivider(
+                                color: color_template().primary,
+                                thickness: 1,
+                              )),
+                          Expanded(
+                              child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      //width: 200,
                                       child: CheckboxListTile(
                                         subtitle: const Text("opsional"),
                                         title: const Text("Foto produk?"),
@@ -129,270 +203,240 @@ class edit_produk_form extends GetView<editprodukController> {
                                         },
                                       ),
                                     ),
-                                    controller.checkfoto.value == false
-                                        ? Container()
-                                        : controller.pikedImagePath.value != ''
-                                            ? Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Container(
-                                                    width: 100,
-                                                    height: 100,
-                                                    child: Image.file(
-                                                      File(controller
-                                                          .pickedImageFile!
-                                                          .path),
-                                                      width: 100,
-                                                      height: 100,
-                                                    ),
+                                  ),
+                                  controller.checkfoto.value == false
+                                      ? Container()
+                                      : controller.pikedImagePath.value != ''
+                                          ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  width: 60,
+                                                  height: 60,
+                                                  child: Image.file(
+                                                    File(controller
+                                                        .pickedImageFile!.path),
+                                                    width: 60,
+                                                    height: 60,
                                                   ),
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 10, right: 5),
-                                                    padding:
-                                                        const EdgeInsets.all(3),
-                                                    decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: color_template()
-                                                          .primary,
-                                                    ),
-                                                    child: IconButton(
-                                                      splashColor:
-                                                          Colors.orange,
-                                                      focusColor: Colors.orange,
-                                                      onPressed: () async {
-                                                        DeviceInfoPlugin
-                                                            deviceInfo =
-                                                            DeviceInfoPlugin();
-                                                        AndroidDeviceInfo
-                                                            androidInfo =
-                                                            await deviceInfo
-                                                                .androidInfo;
-                                                        if (androidInfo.version
-                                                                .sdkInt >=
-                                                            33) {
-                                                          var status =
-                                                              await Permission
-                                                                  .camera
-                                                                  .status;
-                                                          if (!status
-                                                              .isGranted) {
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      left: 10, right: 5),
+                                                  padding:
+                                                      const EdgeInsets.all(3),
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: color_template()
+                                                        .primary,
+                                                  ),
+                                                  child: IconButton(
+                                                    splashColor: Colors.orange,
+                                                    focusColor: Colors.orange,
+                                                    onPressed: () async {
+                                                      DeviceInfoPlugin
+                                                          deviceInfo =
+                                                          DeviceInfoPlugin();
+                                                      AndroidDeviceInfo
+                                                          androidInfo =
+                                                          await deviceInfo
+                                                              .androidInfo;
+                                                      if (androidInfo
+                                                              .version.sdkInt >=
+                                                          33) {
+                                                        var status =
                                                             await Permission
-                                                                .camera
-                                                                .request();
-                                                          }
-                                                        } else {
-                                                          var status =
-                                                              await Permission
-                                                                  .camera
-                                                                  .status;
-                                                          if (!status
-                                                              .isGranted) {
-                                                            await Permission
-                                                                .camera
-                                                                .request();
-                                                          }
+                                                                .camera.status;
+                                                        if (!status.isGranted) {
+                                                          await Permission
+                                                              .camera
+                                                              .request();
                                                         }
+                                                      } else {
+                                                        var status =
+                                                            await Permission
+                                                                .camera.status;
+                                                        if (!status.isGranted) {
+                                                          await Permission
+                                                              .camera
+                                                              .request();
+                                                        }
+                                                      }
 
-                                                        controller
-                                                            .pilihsourcefoto();
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.add,
-                                                        color: Colors.white,
-                                                      ),
+                                                      controller
+                                                          .pilihsourcefoto();
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
                                                     ),
                                                   ),
-                                                ],
-                                              )
-                                            : controller.data.image != '-'
-                                                ? Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        width: 100,
-                                                        height: 100,
-                                                        child: Image.memory(
-                                                            base64Decode(
-                                                                controller.data
-                                                                    .image)),
+                                                ),
+                                              ],
+                                            )
+                                          : controller.data.image != '-'
+                                              ? Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      width: 60,
+                                                      height: 60,
+                                                      child: Image.memory(
+                                                          base64Decode(
+                                                              controller
+                                                                  .data.image)),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 10,
+                                                              right: 5),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: color_template()
+                                                            .primary,
                                                       ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                                .only(
-                                                            left: 10, right: 5),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(3),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color:
-                                                              color_template()
-                                                                  .primary,
-                                                        ),
-                                                        child: IconButton(
-                                                          splashColor:
-                                                              Colors.orange,
-                                                          focusColor:
-                                                              Colors.orange,
-                                                          onPressed: () async {
-                                                            DeviceInfoPlugin
-                                                                deviceInfo =
-                                                                DeviceInfoPlugin();
-                                                            AndroidDeviceInfo
-                                                                androidInfo =
-                                                                await deviceInfo
-                                                                    .androidInfo;
-                                                            if (androidInfo
-                                                                    .version
-                                                                    .sdkInt >=
-                                                                33) {
-                                                              var status =
-                                                                  await Permission
-                                                                      .camera
-                                                                      .status;
-                                                              if (!status
-                                                                  .isGranted) {
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Colors.orange,
+                                                        focusColor:
+                                                            Colors.orange,
+                                                        onPressed: () async {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt >=
+                                                              33) {
+                                                            var status =
                                                                 await Permission
                                                                     .camera
-                                                                    .request();
-                                                              }
-                                                            } else {
-                                                              var status =
-                                                                  await Permission
-                                                                      .camera
-                                                                      .status;
-                                                              if (!status
-                                                                  .isGranted) {
-                                                                await Permission
-                                                                    .camera
-                                                                    .request();
-                                                              }
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
                                                             }
+                                                          } else {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          }
 
-                                                            controller
-                                                                .pilihsourcefoto();
-                                                          },
-                                                          icon: const Icon(
-                                                            Icons.add,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
-                                                : Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        width: 100,
-                                                        height: 100,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(10),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          color:
-                                                              color_template()
-                                                                  .primary,
-                                                        ),
-                                                        child: const Icon(
-                                                          FontAwesomeIcons
-                                                              .image,
+                                                          controller
+                                                              .pilihsourcefoto();
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.add,
                                                           color: Colors.white,
-                                                          size: 50,
                                                         ),
                                                       ),
-                                                      Container(
-                                                        margin: const EdgeInsets
-                                                                .only(
-                                                            left: 10, right: 5),
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(3),
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color:
-                                                              color_template()
-                                                                  .primary,
-                                                        ),
-                                                        child: IconButton(
-                                                          splashColor:
-                                                              Colors.orange,
-                                                          focusColor:
-                                                              Colors.orange,
-                                                          onPressed: () async {
-                                                            DeviceInfoPlugin
-                                                                deviceInfo =
-                                                                DeviceInfoPlugin();
-                                                            AndroidDeviceInfo
-                                                                androidInfo =
-                                                                await deviceInfo
-                                                                    .androidInfo;
-                                                            if (androidInfo
-                                                                    .version
-                                                                    .sdkInt >=
-                                                                33) {
-                                                              var status =
-                                                                  await Permission
-                                                                      .camera
-                                                                      .status;
-                                                              if (!status
-                                                                  .isGranted) {
+                                                    ),
+                                                  ],
+                                                )
+                                              : Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                      width: 60,
+                                                      height: 60,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: color_template()
+                                                            .primary,
+                                                      ),
+                                                      child: const Icon(
+                                                        FontAwesomeIcons.image,
+                                                        color: Colors.white,
+                                                        size: 50,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 10,
+                                                              right: 5),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: color_template()
+                                                            .primary,
+                                                      ),
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Colors.orange,
+                                                        focusColor:
+                                                            Colors.orange,
+                                                        onPressed: () async {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt >=
+                                                              33) {
+                                                            var status =
                                                                 await Permission
                                                                     .camera
-                                                                    .request();
-                                                              }
-                                                            } else {
-                                                              var status =
-                                                                  await Permission
-                                                                      .camera
-                                                                      .status;
-                                                              if (!status
-                                                                  .isGranted) {
-                                                                await Permission
-                                                                    .camera
-                                                                    .request();
-                                                              }
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
                                                             }
+                                                          } else {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          }
 
-                                                            controller
-                                                                .pilihsourcefoto();
-                                                          },
-                                                          icon: const Icon(
-                                                            Icons.add,
-                                                            color: Colors.white,
-                                                          ),
+                                                          controller
+                                                              .pilihsourcefoto();
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              child: VerticalDivider(
-                                color: color_template().primary,
-                                thickness: 1,
-                              )),
-                          Expanded(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
+                                                    ),
+                                                  ],
+                                                ),
+                                ],
+                              ),
                               // Row(
                               //   children: [
                               //     Expanded(
@@ -520,7 +564,7 @@ class edit_produk_form extends GetView<editprodukController> {
                               //     //                           BorderRadius
                               //     //                               .circular(10)),
                               //     //             ),
-                              //     //             textAlign: TextAlign.center,
+                              //     //
                               //     //             validator: (value) {
                               //     //               if (value!.isEmpty) {
                               //     //                 return 'Masukan stock barang';
@@ -536,72 +580,6 @@ class edit_produk_form extends GetView<editprodukController> {
                               //     //       ),
                               //   ],
                               // ),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(bottom: 10),
-                                      child: CheckboxListTile(
-                                        subtitle: const Text("opsional"),
-                                        title: const Text("Barcode?"),
-
-                                        checkColor: Colors.white,
-                                        //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                        value: controller.checkbarcode.value,
-                                        onChanged: (bool? value) {
-                                          controller.checkbarcode.value =
-                                              value!;
-                                          if (controller.checkbarcode.value ==
-                                              false) {
-                                            controller.barcode.value.text = '-';
-                                          }
-                                          print(controller.checkbarcode.value);
-                                          // controller.check == true;
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  controller.checkbarcode.value == false
-                                      ? Container()
-                                      : Expanded(
-                                          child: Container(
-                                            //margin: EdgeInsets.only(bottom: 10),
-                                            // width: context.width_query / 2.2,
-                                            // height: 100,
-                                            child: TextFormField(
-                                              controller:
-                                                  controller.barcode.value,
-                                              onChanged: ((String pass) {}),
-                                              decoration: InputDecoration(
-                                                icon: const Icon(
-                                                    FontAwesomeIcons.barcode),
-                                                labelText: "Barcode",
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.black87,
-                                                ),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                              ),
-                                              textAlign: TextAlign.center,
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return 'Masukan barcode';
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                ],
-                              ))
                             ],
                           )),
                           Container(
@@ -638,7 +616,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   ),
-                                  textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Masukan harga modal';
@@ -658,8 +635,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                     print(controller.jumlahharga.value);
                                   }),
                                   decoration: InputDecoration(
-                                    icon:
-                                        const Icon(FontAwesomeIcons.moneyBill),
                                     labelText: "Harga jual",
                                     labelStyle: const TextStyle(
                                       color: Colors.black87,
@@ -671,7 +646,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   ),
-                                  textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Masukan harga jual';
@@ -683,24 +657,27 @@ class edit_produk_form extends GetView<editprodukController> {
                               Expanded(
                                 child: Row(
                                   children: [
-                                    Container(
-                                      width: 200,
-                                      child: CheckboxListTile(
-                                        title: const Text("Diskon produk?"),
-                                        subtitle: const Text('opsional'),
-                                        checkColor: Colors.white,
-                                        //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                        value: controller.check.value,
-                                        onChanged: (bool? value) {
-                                          controller.check.value = value!;
-                                          if (controller.check.value == false) {
-                                            controller
-                                                .diskon_barang.value.text = '0';
-                                            controller.jumlahdiskon.value = 0;
-                                          }
-                                          print(controller.check.value);
-                                          // controller.check == true;
-                                        },
+                                    Expanded(
+                                      child: Container(
+                                        // width: 200,
+                                        child: CheckboxListTile(
+                                          title: const Text("Diskon produk?"),
+                                          subtitle: const Text('opsional'),
+                                          checkColor: Colors.white,
+                                          //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                          value: controller.check.value,
+                                          onChanged: (bool? value) {
+                                            controller.check.value = value!;
+                                            if (controller.check.value ==
+                                                false) {
+                                              controller.diskon_barang.value
+                                                  .text = '0';
+                                              controller.jumlahdiskon.value = 0;
+                                            }
+                                            print(controller.check.value);
+                                            // controller.check == true;
+                                          },
+                                        ),
                                       ),
                                     ),
                                     controller.check.value == false
@@ -721,8 +698,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                                 print(controller.jumlahdiskon);
                                               }),
                                               decoration: InputDecoration(
-                                                icon: const Icon(
-                                                    FontAwesomeIcons.percent),
                                                 suffix: Text(
                                                   '%',
                                                   style: TextStyle(
@@ -743,7 +718,6 @@ class edit_produk_form extends GetView<editprodukController> {
                                                             BorderRadius
                                                                 .circular(10)),
                                               ),
-                                              textAlign: TextAlign.center,
                                               validator: (value) {
                                                 if (value!.isEmpty) {
                                                   return 'Masukan potongan diskon';

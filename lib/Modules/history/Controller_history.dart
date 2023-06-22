@@ -281,7 +281,7 @@ class historyController extends GetxController {
 
   fetchPenjualanlocal(id_toko) async {
     print('-------------------fetch Penjualan local---------------------');
-    //succ.value = false;
+    succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko ORDER BY ID DESC');
     List<DataPenjualan> penjualan = query.isNotEmpty
@@ -289,7 +289,7 @@ class historyController extends GetxController {
         : [];
     penjualan_list_local.value = penjualan;
     // print('fect produk local --->' + produk.toList().toString());
-    //succ.value = true;
+    succ.value = true;
     return penjualan;
   }
 

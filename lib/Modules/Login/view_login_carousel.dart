@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +33,13 @@ class login_carousel extends GetView<loginController> {
             ),
             items: controller.kontensquare
                 .map((x) => ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                            width: 50, height: 50, child: showloading()),
-                        imageUrl: x['foto'],
-                      ),
-                    ))
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                          width: 50, height: 50, child: showloading()),
+                      fit: BoxFit.cover,
+                      imageUrl: x['foto'],
+                    )))
                 .toList(),
           );
         }),

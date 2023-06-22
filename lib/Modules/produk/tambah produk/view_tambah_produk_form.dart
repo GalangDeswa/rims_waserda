@@ -68,7 +68,6 @@ class tambah_produk_form extends GetView<produkController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan nama produk';
@@ -95,7 +94,6 @@ class tambah_produk_form extends GetView<produkController> {
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
-                                    textAlign: TextAlign.center,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Masukan deskirpsi produk';
@@ -510,7 +508,6 @@ class tambah_produk_form extends GetView<produkController> {
                                                             BorderRadius
                                                                 .circular(10)),
                                               ),
-                                              textAlign: TextAlign.center,
                                               validator: (value) {
                                                 if (value!.isEmpty) {
                                                   return 'Masukan stock barang';
@@ -696,7 +693,6 @@ class tambah_produk_form extends GetView<produkController> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   ),
-                                  textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Masukan harga modal';
@@ -727,7 +723,6 @@ class tambah_produk_form extends GetView<produkController> {
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                   ),
-                                  textAlign: TextAlign.center,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Masukan harga jual';
@@ -799,7 +794,6 @@ class tambah_produk_form extends GetView<produkController> {
                                                             BorderRadius
                                                                 .circular(10)),
                                               ),
-                                              textAlign: TextAlign.center,
                                               validator: (value) {
                                                 if (value!.isEmpty) {
                                                   return 'Masukan potongan diskon';

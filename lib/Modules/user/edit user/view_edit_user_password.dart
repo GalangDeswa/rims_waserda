@@ -16,140 +16,126 @@ class edit_user_password extends GetView<edituserController> {
     return Scaffold(
         //backgroundColor: color_template().primary.withOpacity(0.2),
         body: stack_bg(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
+      isfullscreen: true,
+      child: SingleChildScrollView(
           child: Card_custom(
-            border: false,
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                children: [
-                  header(
-                    title: 'Edit Password',
-                    icon: FontAwesomeIcons.person,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Obx(() {
-                        return Form(
-                            key: controller.formKeyedituser.value,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                // TextFormField(
-                                //   controller: controller.passwordlama.value,
-                                //   onChanged: ((String pass) {}),
-                                //   decoration: InputDecoration(
-                                //     icon: Icon(Icons.pin_drop),
-                                //     labelText: "Password lama",
-                                //     labelStyle: TextStyle(
-                                //       color: Colors.black87,
-                                //     ),
-                                //     border: OutlineInputBorder(
-                                //         borderRadius:
-                                //             BorderRadius.circular(10)),
-                                //     focusedBorder: OutlineInputBorder(
-                                //         borderRadius:
-                                //             BorderRadius.circular(10)),
-                                //   ),
-                                //   textAlign: TextAlign.center,
-                                //   validator: (value) {
-                                //     if (value!.isEmpty ||
-                                //         value !=
-                                //             controller.password.value.text) {
-                                //       return 'Password tidak sesuai';
-                                //     }
-                                //     return null;
-                                //   },
-                                // ),
-                                // SizedBox(
-                                //   height: 15,
-                                // ),
-                                TextFormField(
-                                  //initialValue: controller.data.nama,
-                                  controller: controller.password.value,
-                                  onChanged: ((String pass) {}),
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.add_card),
-                                    labelText: 'Password',
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Masukan password';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(
-                                  height: 15,
-                                ),
-                                TextFormField(
-                                  controller: controller.confirmpassword.value,
-                                  onChanged: ((String pass) {}),
-                                  decoration: InputDecoration(
-                                    icon: Icon(Icons.person),
-                                    labelText: "Konfirmasi password",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  validator: (value) {
-                                    if (value !=
-                                        controller.password.value.text) {
-                                      return 'Password tidak sesuai';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                button_solid_custom(
-                                    onPressed: () {
-                                      if (controller
-                                          .formKeyedituser.value.currentState!
-                                          .validate()) {
-                                        controller.edituserpassword();
-                                      }
-                                      // controller.tambahuser();
-                                    },
-                                    child: Text(
-                                      'Edit Password',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    width: double.infinity,
-                                    height: 50)
-                              ],
-                            ));
-                      }),
-                    ),
-                  )
-                ],
+        border: false,
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              header(
+                title: 'edit password'.toUpperCase(),
+                icon: FontAwesomeIcons.lock,
+                iscenter: false,
               ),
-            ),
+              SizedBox(
+                height: 25,
+              ),
+              Obx(() {
+                return Form(
+                    key: controller.formKeyedituser.value,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          // width: context.width_query / 2.2,
+                          // height: 100,
+                          child: TextFormField(
+                            obscureText: controller.show.value,
+                            controller: controller.password.value,
+                            onChanged: ((String pass) {}),
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: controller.show == false
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                                onPressed: () {
+                                  controller.show.value =
+                                      !controller.show.value;
+                                  print(controller.show.value);
+                                },
+                              ),
+                              labelText: "Password",
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Masukan password';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          //  width: context.width_query / 3.3,
+                          child: TextFormField(
+                            obscureText: controller.showkon.value,
+                            controller: controller.confirmpassword.value,
+                            onChanged: ((String pass) {}),
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: controller.showkon == false
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                                onPressed: () {
+                                  controller.showkon.value =
+                                      !controller.showkon.value;
+                                  print(controller.showkon.value);
+                                },
+                              ),
+                              labelText: "konfirmasi password",
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty ||
+                                  value != controller.password.value.text) {
+                                return 'Password tidak sesuai';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                    ));
+              }),
+              SizedBox(
+                height: 25,
+              ),
+              button_solid_custom(
+                  onPressed: () {
+                    if (controller.formKeyedituser.value.currentState!
+                        .validate()) {
+                      controller.edituserpassword();
+                    }
+                  },
+                  child: Text(
+                    'edit password'.toUpperCase(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  width: double.infinity,
+                  height: 60)
+            ],
           ),
         ),
-      ),
+      )),
     ));
   }
 }

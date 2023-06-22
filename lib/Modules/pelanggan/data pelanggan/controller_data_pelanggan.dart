@@ -285,16 +285,17 @@ class pelangganController extends GetxController {
               borderRadius: BorderRadius.circular(10)),
           child: Text(
             "Hutang",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: font().reguler_white,
           ));
     } else {
       return Container(
           padding: EdgeInsets.all(6),
           decoration: BoxDecoration(
               color: Colors.green, borderRadius: BorderRadius.circular(10)),
-          child: Text("Selesai",
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.white)));
+          child: Text(
+            "Selesai",
+            style: font().reguler_white,
+          ));
     }
   }
 

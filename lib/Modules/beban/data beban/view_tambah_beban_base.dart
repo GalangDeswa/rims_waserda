@@ -22,6 +22,7 @@ class tambah_beban_base extends GetView<bebanController> {
         //       style: font().header,
         //     )),
         body: stack_bg(
+          isfullscreen: true,
           child: SingleChildScrollView(
             child: tambah_beban(),
           ),

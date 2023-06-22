@@ -33,13 +33,14 @@ class kasir_detail extends GetView<kasirController> {
                 ),
                 child: Center(
                   child: Text(
-                    'Keranjang',
+                    'Keranjang'.toUpperCase(),
                     style: font().header,
                   ),
                 ),
               ),
               Expanded(
                 child: Container(
+                    //color: Colors.green,
                     padding: EdgeInsets.symmetric(horizontal: 0),
                     child: Obx(() {
                       return ListView.builder(
@@ -72,16 +73,18 @@ class kasir_detail extends GetView<kasirController> {
                                           children: [
                                             Expanded(
                                               child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
                                                 children: [
                                                   Expanded(
-                                                    child: Text(controller
-                                                        .cache[index]
-                                                        .namaProduk!),
+                                                    child: Text(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      controller.cache[index]
+                                                          .namaProduk!,
+                                                      style: font().reguler,
+                                                    ),
                                                   ),
                                                   // IconButton(
                                                   //     onPressed: () {},
@@ -92,6 +95,7 @@ class kasir_detail extends GetView<kasirController> {
                                                   //           35,
                                                   //     )),
                                                   IconButton(
+                                                      padding: EdgeInsets.zero,
                                                       onPressed: () {
                                                         controller
                                                             .deleteitemcache(
@@ -127,19 +131,34 @@ class kasir_detail extends GetView<kasirController> {
                                                                 .cache[index]
                                                                 .diskonBarang ==
                                                             0
-                                                        ? Text('Rp.' +
-                                                            controller.nominal
-                                                                .format(controller
-                                                                    .cache[
-                                                                        index]
-                                                                    .harga))
+                                                        ? Text(
+                                                            'Rp.' +
+                                                                controller
+                                                                    .nominal
+                                                                    .format(controller
+                                                                        .cache[
+                                                                            index]
+                                                                        .harga),
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style:
+                                                                font().reguler,
+                                                          )
                                                         : Row(
                                                             children: [
-                                                              Text('Rp. ' +
-                                                                  controller
-                                                                      .nominal
-                                                                      .format(
-                                                                          hargadiskon)),
+                                                              Text(
+                                                                'Rp. ' +
+                                                                    controller
+                                                                        .nominal
+                                                                        .format(
+                                                                            hargadiskon),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style: font()
+                                                                    .reguler,
+                                                              ),
                                                               const SizedBox(
                                                                 width: 10,
                                                               ),
@@ -150,6 +169,9 @@ class kasir_detail extends GetView<kasirController> {
                                                                 child: Text(
                                                                   display_diskon +
                                                                       '%',
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
                                                                   style: const TextStyle(
                                                                       fontWeight:
                                                                           FontWeight
@@ -267,56 +289,79 @@ class kasir_detail extends GetView<kasirController> {
               ),
               Obx(() {
                 return Container(
+                  //margin: EdgeInsets.only(top: 40),
+                  height: context.height_query / 6.5,
+                  // color: Colors.red,
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   // decoration: BoxDecoration(
                   //     color: color_template().primary,
                   //     borderRadius: border_radius().header_border),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Obx(() {
-                        return Row(
+                  child: Center(
+                    child: Column(
+                      //  mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Obx(() {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Subtotal :',
+                                  style: font().reguler,
+                                ),
+                              ),
+                              Text(
+                                controller.subtotal.value == ''
+                                    ? '0'
+                                    : controller.cache.isEmpty
+                                        ? '0'
+                                        : 'Rp.' +
+                                            controller.nominal.format(
+                                                controller.subtotal.value),
+                                style: font().reguler,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          );
+                        }),
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Subtotal :', style: font().reguler),
-                            Text(
-                              controller.subtotal.value == ''
-                                  ? '0'
-                                  : controller.cache.isEmpty
-                                      ? '0'
-                                      : 'Rp.' +
-                                          controller.nominal.format(
-                                              controller.subtotal.value),
-                              style: font().reguler,
-                            ),
+                            Expanded(
+                                child: Text('Diskon :', style: font().reguler)),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  controller.displaydiskon.toStringAsFixed(0) +
+                                      '%',
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                // Text(
+                                //     "(Rp. " +
+                                //         controller.nominal.format(
+                                //             controller.jumlahdiskonkasir.value) +
+                                //         ")",
+                                //     style: font().reguler),
+                                IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      controller.editDiskonKasir(controller);
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      size: context.height_query / 35,
+                                    )),
+                              ],
+                            )
                           ],
-                        );
-                      }),
-                      Row(
-                        //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                              child: Text('Diskon :', style: font().reguler)),
-                          Text(
-                              controller.displaydiskon.toStringAsFixed(0) + '%',
-                              style: font().reguler),
-                          Text(
-                              "(Rp. " +
-                                  controller.jumlahdiskonkasir
-                                      .toStringAsFixed(0) +
-                                  ")",
-                              style: font().reguler),
-                          IconButton(
-                              onPressed: () {
-                                controller.editDiskonKasir(controller);
-                              },
-                              icon: const Icon(Icons.edit)),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }),
@@ -395,7 +440,7 @@ class kasir_detail extends GetView<kasirController> {
                     print('--------------pop-------------');
                   },
                   child: Text(
-                    'Bayar',
+                    'Bayar'.toUpperCase(),
                     style: font().header,
                   ),
                   width: double.infinity,

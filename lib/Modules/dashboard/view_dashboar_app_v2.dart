@@ -30,17 +30,29 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 placeholderBuilder: (context) => showloading(),
               ),
               label: 'POS'),
-          dashboard_app_card_v2(
-              function: () {
-                controller.selectedIndex(2);
-              },
-              color: color_template().primary,
-              icon: SvgPicture.asset(
-                'assets/icons/produk.svg',
-                height: context.width_query / 25,
-                placeholderBuilder: (context) => showloading(),
-              ),
-              label: 'Produk'),
+          controller.role == 1
+              ? dashboard_app_card_v2(
+                  function: () {
+                    controller.selectedIndex(2);
+                  },
+                  color: color_template().primary,
+                  icon: SvgPicture.asset(
+                    'assets/icons/money.svg',
+                    height: context.width_query / 25,
+                    placeholderBuilder: (context) => showloading(),
+                  ),
+                  label: 'Beban')
+              : dashboard_app_card_v2(
+                  function: () {
+                    controller.selectedIndex(2);
+                  },
+                  color: color_template().primary,
+                  icon: SvgPicture.asset(
+                    'assets/icons/produk.svg',
+                    height: context.width_query / 25,
+                    placeholderBuilder: (context) => showloading(),
+                  ),
+                  label: 'Produk'),
           // dashboard_app_card_v2(
           //     function: () {
           //       controller.selectedIndex(3);
@@ -63,28 +75,52 @@ class dashboard_app_v2 extends GetView<base_menuController> {
           //       placeholderBuilder: (context) => showloading(),
           //     ),
           //     label: 'Tambah user'),
-          dashboard_app_card_v2(
-              function: () {
-                controller.selectedIndex(5);
-              },
-              color: color_template().primary,
-              icon: SvgPicture.asset(
-                'assets/icons/history.svg',
-                height: context.width_query / 25,
-                placeholderBuilder: (context) => showloading(),
-              ),
-              label: 'History'),
-          dashboard_app_card_v2(
-              function: () {
-                controller.selectedIndex(6);
-              },
-              color: color_template().primary,
-              icon: SvgPicture.asset(
-                'assets/icons/laporan.svg',
-                height: context.width_query / 25,
-                placeholderBuilder: (context) => showloading(),
-              ),
-              label: 'Laporan'),
+          controller.role == 1
+              ? dashboard_app_card_v2(
+                  function: () {
+                    controller.selectedIndex(4);
+                  },
+                  color: color_template().primary,
+                  icon: SvgPicture.asset(
+                    'assets/icons/history.svg',
+                    height: context.width_query / 25,
+                    placeholderBuilder: (context) => showloading(),
+                  ),
+                  label: 'Penjualan')
+              : dashboard_app_card_v2(
+                  function: () {
+                    controller.selectedIndex(6);
+                  },
+                  color: color_template().primary,
+                  icon: SvgPicture.asset(
+                    'assets/icons/history.svg',
+                    height: context.width_query / 25,
+                    placeholderBuilder: (context) => showloading(),
+                  ),
+                  label: 'Penjualan'),
+          controller.role == 1
+              ? dashboard_app_card_v2(
+                  function: () {
+                    controller.selectedIndex(5);
+                  },
+                  color: color_template().primary,
+                  icon: SvgPicture.asset(
+                    'assets/icons/laporan.svg',
+                    height: context.width_query / 25,
+                    placeholderBuilder: (context) => showloading(),
+                  ),
+                  label: 'Laporan')
+              : dashboard_app_card_v2(
+                  function: () {
+                    controller.selectedIndex(7);
+                  },
+                  color: color_template().primary,
+                  icon: SvgPicture.asset(
+                    'assets/icons/laporan.svg',
+                    height: context.width_query / 25,
+                    placeholderBuilder: (context) => showloading(),
+                  ),
+                  label: 'Laporan'),
         ],
       ),
     );

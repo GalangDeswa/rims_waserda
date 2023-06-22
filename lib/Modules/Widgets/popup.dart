@@ -31,10 +31,10 @@ class popscreen {
     Get.dialog(AlertDialog(
       titlePadding: EdgeInsets.all(10),
       title: header(
-          title: 'Hapus Pelanggan',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        title: 'Hapus Pelanggan',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -84,11 +84,11 @@ class popscreen {
   reversalpenjualan(historyController controller, DataPenjualan arg) {
     Get.dialog(AlertDialog(
       title: header(
-          iscenter: true,
-          title: 'Batalkan Transaksi',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        iscenter: true,
+        title: 'Batalkan Transaksi',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -98,6 +98,7 @@ class popscreen {
       content: Builder(
         builder: (context) {
           return Container(
+              margin: EdgeInsets.all(10),
               width: context.width_query / 2.6,
               height: context.height_query / 2.6,
               child: Column(
@@ -115,7 +116,7 @@ class popscreen {
                         'Batalkan',
                         style: font().primary_white,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10),
                   button_border_custom(
                       onPressed: () {
@@ -125,7 +126,7 @@ class popscreen {
                         'Batal',
                         style: font().primary,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10)
                 ],
               ));
@@ -141,10 +142,10 @@ class popscreen {
         builder: (_) {
           return AlertDialog(
             title: header(
-                title: 'Hapus Beban',
-                icon: Icons.warning,
-                icon_color: color_template().tritadery,
-                base_color: color_template().tritadery),
+              title: 'Hapus Beban',
+              icon: Icons.warning,
+              icon_color: color_template().tritadery,
+            ),
             contentPadding: EdgeInsets.all(10),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -195,10 +196,10 @@ class popscreen {
   deletebebanv2(bebanController controller, DataBeban arg) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Hapus Beban',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        title: 'Hapus Beban',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -208,6 +209,7 @@ class popscreen {
       content: Builder(
         builder: (context) {
           return Container(
+              margin: EdgeInsets.all(10),
               width: context.width_query / 2.6,
               height: context.height_query / 2.6,
               child: Column(
@@ -216,6 +218,9 @@ class popscreen {
                   Text(
                     "Hapus beban " + arg.nama! + '?',
                     style: font().header_black,
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   button_solid_custom(
                       onPressed: () {
@@ -226,7 +231,7 @@ class popscreen {
                         'Hapus',
                         style: font().primary_white,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10),
                   button_border_custom(
                       onPressed: () {
@@ -236,7 +241,7 @@ class popscreen {
                         'Batal',
                         style: font().primary,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10)
                 ],
               ));
@@ -252,10 +257,10 @@ class popscreen {
         builder: (_) {
           return AlertDialog(
             title: header(
-                title: 'Hapus keranjang',
-                icon: Icons.warning,
-                icon_color: color_template().tritadery,
-                base_color: color_template().tritadery),
+              title: 'Hapus keranjang',
+              icon: Icons.warning,
+              icon_color: color_template().tritadery,
+            ),
             contentPadding: EdgeInsets.all(10),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -306,10 +311,10 @@ class popscreen {
   deletejenisbeban(bebanController controller, DataJenisBeban arg) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Hapus Kategori',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        title: 'Hapus Kategori',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -319,6 +324,7 @@ class popscreen {
       content: Builder(
         builder: (context) {
           return Container(
+              margin: EdgeInsets.all(10),
               width: context.width_query / 2.6,
               height: context.height_query / 2.6,
               child: Column(
@@ -336,7 +342,7 @@ class popscreen {
                         'Hapus',
                         style: font().primary_white,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10),
                   button_border_custom(
                       onPressed: () {
@@ -346,7 +352,7 @@ class popscreen {
                         'Batal',
                         style: font().primary,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10)
                 ],
               ));
@@ -358,10 +364,10 @@ class popscreen {
   void deletejenis(produkController controller, DataJenis arg) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Hapus Data',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        title: 'Hapus Data',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -371,6 +377,7 @@ class popscreen {
       content: Builder(
         builder: (context) {
           return Container(
+              margin: EdgeInsets.all(10),
               width: context.width_query / 2.6,
               height: context.height_query / 2.6,
               child: Column(
@@ -388,7 +395,7 @@ class popscreen {
                         'Hapus',
                         style: font().primary_white,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10),
                   button_border_custom(
                       onPressed: () {
@@ -398,7 +405,7 @@ class popscreen {
                         'Batal',
                         style: font().primary,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10)
                 ],
               ));
@@ -410,10 +417,10 @@ class popscreen {
   deleteprodukv2(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Hapus Data',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        title: 'Hapus Data',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -462,10 +469,10 @@ class popscreen {
   deleteproduklocal(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Hapus Data',
-          icon: Icons.warning,
-          icon_color: color_template().tritadery,
-          base_color: color_template().tritadery),
+        title: 'Hapus Data',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -475,14 +482,20 @@ class popscreen {
       content: Builder(
         builder: (context) {
           return Container(
+              margin: EdgeInsets.all(10),
               width: context.width_query / 2.6,
               height: context.height_query / 2.6,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(
-                    "Hapus produk " + arg.namaProduk + '?',
-                    style: font().header_black,
+                  Center(
+                    child: Text(
+                      "Hapus produk " + arg.namaProduk + ' ?',
+                      style: font().header_black,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   button_solid_custom(
                       onPressed: () {
@@ -492,7 +505,7 @@ class popscreen {
                         'Hapus',
                         style: font().primary_white,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
                       height: context.height_query / 10),
                   button_border_custom(
                       onPressed: () {
@@ -502,7 +515,51 @@ class popscreen {
                         'Batal',
                         style: font().primary,
                       ),
-                      width: context.width_query / 4,
+                      width: context.width_query,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
+  }
+
+  lupapassword() {
+    Get.dialog(AlertDialog(
+      title: header(
+        title: 'Lupa Password',
+        icon: Icons.warning,
+        icon_color: color_template().tritadery,
+      ),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              margin: EdgeInsets.all(10),
+              // color: Colors.red,
+              width: context.width_query / 2.6,
+              height: context.height_query / 5.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Hubungi admin untuk mereset password anda",
+                    style: font().header_black,
+                  ),
+                  button_solid_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Kembali',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query,
                       height: context.height_query / 10)
                 ],
               ));
@@ -518,10 +575,10 @@ class popscreen {
         builder: (_) {
           return AlertDialog(
             title: header(
-                title: 'Hapus Data',
-                icon: Icons.warning,
-                icon_color: color_template().tritadery,
-                base_color: color_template().tritadery),
+              title: 'Hapus Data',
+              icon: Icons.warning,
+              icon_color: color_template().tritadery,
+            ),
             contentPadding: EdgeInsets.all(10),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -1654,7 +1711,12 @@ class popscreen {
   void deleteuser(datauserController controller, DataUser arg) {
     Get.dialog(
       AlertDialog(
-        title: Text('Hapus data'),
+        title: header(
+          title: 'Hapus Data User',
+          icon: Icons.warning,
+          icon_color: color_template().tritadery,
+        ),
+        contentPadding: EdgeInsets.all(10),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(12.0),
@@ -1663,32 +1725,42 @@ class popscreen {
         content: Builder(
           builder: (context) {
             return Container(
-                width: context.width_query / 2,
-                height: context.height_query / 2,
-                child: Card(
-                  child: Column(
-                    children: [
-                      Text("Hapus data ?" + arg.nama),
-                      button_solid_custom(
-                          onPressed: () {
-                            controller.deleteuser(arg.id.toString());
-                          },
-                          child: Text(
-                            'Hapus',
-                            style: font().primary_white,
-                          ),
-                          width: context.width_query / 2,
-                          height: context.height_query / 7),
-                      button_border_custom(
-                          onPressed: () {},
-                          child: Text(
-                            'Batal',
-                            style: font().primary,
-                          ),
-                          height: context.height_query / 7,
-                          width: context.width_query / 2)
-                    ],
-                  ),
+                margin: EdgeInsets.all(10),
+                width: context.width_query / 2.6,
+                height: context.height_query / 2.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Center(
+                      child: Text(
+                        "Hapus " + arg.nama + ' ?',
+                        style: font().header_black,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    button_solid_custom(
+                        onPressed: () {
+                          controller.deleteuser(arg.id.toString());
+                        },
+                        child: Text(
+                          'Hapus',
+                          style: font().primary_white,
+                        ),
+                        width: context.width_query,
+                        height: context.height_query / 10),
+                    button_border_custom(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          'Batal',
+                          style: font().primary,
+                        ),
+                        width: context.width_query,
+                        height: context.height_query / 10)
+                  ],
                 ));
           },
         ),
