@@ -128,10 +128,12 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                           .pendapatanhariini
                                                           .value),
                                               style: font().header_big_black,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                             subtitle: Text(
                                               'Pendapatan hari ini',
-                                              style: font().header_black,
+                                              style:
+                                                  font().header_black_nonbold,
                                             ),
                                           ),
                                         )
@@ -175,10 +177,12 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                       controller
                                                           .bebanhariini.value),
                                               style: font().header_big_black,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                             subtitle: Text(
                                               'Beban hari ini',
-                                              style: font().header_black,
+                                              style:
+                                                  font().header_black_nonbold,
                                             ),
                                           ),
                                         )
@@ -220,10 +224,12 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                   controller
                                                       .transaksihariini.value),
                                               style: font().header_big_black,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                             subtitle: Text(
                                               'Transaksi hari ini',
-                                              style: font().header_black,
+                                              style:
+                                                  font().header_black_nonbold,
                                             ),
                                           ),
                                         )
@@ -394,6 +400,32 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                               font().reguler),
                                                       subtitle: Text(
                                                           'Total hutang yang belum lunas',
+                                                          style:
+                                                              font().reguler),
+                                                    ),
+                                                  ),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text(
+                                                          controller.nominal
+                                                              .format(controller
+                                                                  .totalreversal
+                                                                  .value),
+                                                          style:
+                                                              font().reguler),
+                                                      subtitle: Text(
+                                                          'Total transaksi batal',
                                                           style:
                                                               font().reguler),
                                                     ),

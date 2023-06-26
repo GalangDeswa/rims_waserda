@@ -460,7 +460,7 @@ class bebanController extends GetxController {
     }
   }
 
-  var succ = false.obs;
+  var succ = true.obs;
 
   initBebanToLocal(id_toko) async {
     //login -> sync -> init
@@ -639,7 +639,7 @@ class bebanController extends GetxController {
 
   fetchJenisBebanlocal(id_toko) async {
     print('-------------------fetch jenis beban local---------------------');
-    //succ.value = false;
+    succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT * FROM beban_kategori_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
     List<DataJenisBeban> beban_kategori = query.isNotEmpty
@@ -647,7 +647,7 @@ class bebanController extends GetxController {
         : [];
     jenisbebanlistlocal.value = beban_kategori;
     // print('fect produk local --->' + produk.toList().toString());
-    //succ.value = true;
+    succ.value = true;
     return beban_kategori;
   }
 

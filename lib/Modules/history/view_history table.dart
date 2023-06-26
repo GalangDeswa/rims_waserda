@@ -33,7 +33,10 @@ class history_table extends GetView<historyController> {
               icon_funtion: Icons.refresh,
               function: () async {
                 Get.dialog(showloading());
-                await controller.fetchPenjualanlocal(controller.id_toko);
+                await controller.fetchPenjualanlocal(
+                    id_toko: controller.id_toko,
+                    id_user: controller.id_user,
+                    role: controller.role);
                 Get.back();
               },
             ),
@@ -91,7 +94,6 @@ class history_table extends GetView<historyController> {
                           controller.searchpenjualanlocal();
                         }),
                         decoration: InputDecoration(
-                          icon: const Icon(Icons.add_box),
                           labelText: "Cari tanggal penjualan",
                           labelStyle: const TextStyle(
                             color: Colors.black87,
@@ -217,8 +219,10 @@ class history_table extends GetView<historyController> {
                               controller.valstatus = '0';
                               controller.search.value.clear();
                               controller.datedata.clear();
-                              await controller
-                                  .fetchPenjualanlocal(controller.id_toko);
+                              await controller.fetchPenjualanlocal(
+                                  id_toko: controller.id_toko,
+                                  id_user: controller.id_user,
+                                  role: controller.role);
                             },
                             icon: Icon(
                               Icons.cancel,
@@ -507,22 +511,49 @@ class penjualanTable extends DataTableSource {
   DataRow getRow(int index) {
     return DataRow(cells: [
       DataCell(Text(
-          con.dateFormat.format(DateTime.parse(data[index].tglPenjualan!)))),
-      DataCell(Text(data[index].namaUser!)),
-      DataCell(Text(data[index].namaPelanggan!)),
-      DataCell(Text(data[index].totalItem.toString())),
-      DataCell(Text('Rp. ' + con.nominal.format(data[index].subTotal))),
-      DataCell(Text('Rp. ' + con.nominal.format(data[index].total))),
-      DataCell(Text('Rp. ' + con.nominal.format(data[index].bayar))),
+        con.dateFormat.format(DateTime.parse(data[index].tglPenjualan!)),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].namaUser!,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].namaPelanggan!,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].totalItem.toString(),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        'Rp. ' + con.nominal.format(data[index].subTotal),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        'Rp. ' + con.nominal.format(data[index].total),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        'Rp. ' + con.nominal.format(data[index].bayar),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(data[index].status == 1
           ? Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                   color: Colors.green, borderRadius: BorderRadius.circular(10)),
-              child: const Text(
+              child: Text(
                 'Selesai',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                style: font().reguler_white,
+                overflow: TextOverflow.ellipsis,
               ),
             )
           : data[index].status == 2
@@ -531,9 +562,11 @@ class penjualanTable extends DataTableSource {
                   decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(10)),
-                  child: const Text('Selesai',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    'Selesai',
+                    style: font().reguler_white,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 )
               : data[index].status == 3
                   ? Container(
@@ -541,10 +574,11 @@ class penjualanTable extends DataTableSource {
                       decoration: BoxDecoration(
                           color: Colors.orange,
                           borderRadius: BorderRadius.circular(10)),
-                      child: const Text('Hutang',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
+                      child: Text(
+                        'Hutang',
+                        style: font().reguler_white,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     )
                   : data[index].status == 4
                       ? Container(
@@ -552,12 +586,17 @@ class penjualanTable extends DataTableSource {
                           decoration: BoxDecoration(
                               color: color_template().tritadery,
                               borderRadius: BorderRadius.circular(10)),
-                          child: const Text('Reversal',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                          child: Text(
+                            'Reversal',
+                            style: font().reguler_white,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         )
-                      : const Text('-')),
+                      : Text(
+                          '-',
+                          style: font().reguler,
+                          overflow: TextOverflow.ellipsis,
+                        )),
       DataCell(Row(
         children: [
           Expanded(
@@ -580,17 +619,19 @@ class penjualanTable extends DataTableSource {
                   size: 18,
                 )),
           ),
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  popscreen().reversalpenjualan(con, data[index]);
-                },
-                icon: Icon(
-                  Icons.cancel,
-                  size: 18,
-                  color: color_template().tritadery,
-                )),
-          )
+          data[index].status == 4
+              ? Container()
+              : Expanded(
+                  child: IconButton(
+                      onPressed: () {
+                        popscreen().reversalpenjualan(con, data[index]);
+                      },
+                      icon: Icon(
+                        Icons.cancel,
+                        size: 18,
+                        color: color_template().tritadery,
+                      )),
+                )
         ],
       )),
     ]);

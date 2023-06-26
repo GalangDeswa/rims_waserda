@@ -73,15 +73,18 @@ class jenis_beban_table extends GetView<bebanController> {
             const SizedBox(
               height: 10,
             ),
+
+            //TODO : sync auto di relase mode gabisa
+            //TODO : chek sisa hutang di dashboard
             Expanded(
               child: Obx(() {
                 var source =
                     kategoriBebanTable(controller.jenisbebanlistlocal).obs;
                 return Container(
                   // height: context.height_query * 0.46,
-                  margin: const EdgeInsets.only(top: 12),
+                  margin: const EdgeInsets.only(top: 10),
                   // width: double.infinity,
-                  child: controller.jenisbebanlistlocal.isEmpty
+                  child: controller.succ == false
                       ? Container(
                           width: 100, height: 100, child: const showloading())
                       : PaginatedDataTable2(
@@ -89,7 +92,7 @@ class jenis_beban_table extends GetView<bebanController> {
                           //minWidth: 1000,
                           //minWidth: 10,
                           //fit: FlexFit.loose,
-
+                          renderEmptyRowsInTheEnd: false,
                           wrapInCard: false,
                           columnSpacing: 0,
                           headingRowColor: MaterialStateColor.resolveWith(
@@ -120,10 +123,12 @@ class jenis_beban_table extends GetView<bebanController> {
                             ),
                           ],
                           source: source.value,
-                          empty: Container(
-                              width: 200,
-                              height: 150,
-                              child: const showloading()),
+                          empty: Center(
+                            child: Text(
+                              "Data Kosong",
+                              style: font().header_black,
+                            ),
+                          ),
                         ),
                 );
               }),
@@ -202,7 +207,11 @@ class kategoriBebanTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].kategori!, style: font().reguler)),
+      DataCell(Text(
+        data[index].kategori!,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(Container(
         child: Row(
           mainAxisSize: MainAxisSize.min,

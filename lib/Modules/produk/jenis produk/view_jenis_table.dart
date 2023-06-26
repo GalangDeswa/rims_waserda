@@ -123,7 +123,7 @@ class jenis_table extends GetView<produkController> {
                     // height: context.height_query * 0.46,
                     margin: const EdgeInsets.only(top: 10),
                     // width: double.infinity,
-                    child: controller.jenislistlocal.isEmpty
+                    child: controller.succ == false
                         ? Container(
                             width: 100, height: 100, child: const showloading())
                         : PaginatedDataTable2(
@@ -241,6 +241,7 @@ class jenisprodukTable extends DataTableSource {
       DataCell(Text(
         data[index].namaJenis!,
         style: font().reguler,
+        overflow: TextOverflow.ellipsis,
       )),
       DataCell(Container(
         //color: Colors.red,

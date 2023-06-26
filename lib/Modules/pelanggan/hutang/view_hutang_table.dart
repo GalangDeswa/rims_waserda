@@ -126,7 +126,7 @@ class hutang_table extends GetView<hutangController> {
                   // height: context.height_query / 2.5,
                   margin: EdgeInsets.only(top: 12),
                   // width: double.infinity,
-                  child: controller.list_hutanglocal.value.isEmpty
+                  child: controller.succ == false
                       ? Container(width: 100, height: 100, child: showloading())
                       :
                       //untuk paginated table yg pakek data source harus buat var lg di dalam obx
@@ -256,15 +256,18 @@ class hutangTable extends DataTableSource {
       DataCell(Text(
         con.dateFormatdisplay.format(DateTime.parse(data[index].tglHutang!)),
         style: font().reguler,
+        overflow: TextOverflow.ellipsis,
       )),
       DataCell(Text(
         data[index].namaPelanggan!,
         style: font().reguler,
+        overflow: TextOverflow.ellipsis,
       )),
       DataCell(data[index].hutang! <= 0
           ? Text(
               'Rp. 0',
               style: font().reguler,
+              overflow: TextOverflow.ellipsis,
             )
           : Text(
               'Rp.' +
@@ -272,6 +275,7 @@ class hutangTable extends DataTableSource {
                     data[index].hutang.toString(),
                   )),
               style: font().reguler,
+              overflow: TextOverflow.ellipsis,
             )),
       DataCell(data[index].status == 1
           ? Container(
@@ -281,55 +285,70 @@ class hutangTable extends DataTableSource {
               child: Text(
                 'Lunas',
                 style: font().reguler_white,
+                overflow: TextOverflow.ellipsis,
               ))
-          : Container(
-              padding: EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Text(
-                'Hutang',
-                style: font().reguler_white,
-              ))),
-      DataCell(Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          IconButton(
-              onPressed: () {
-                Get.dialog(
-                    arguments: data[index],
-                    AlertDialog(content: hutang_detail()));
-              },
-              icon: Icon(
-                Icons.list,
-                size: 18,
-                color: color_template().secondary,
-              )),
-          IconButton(
-              onPressed: () {
-                con.bayarhutangpop(
-                    data[index].id!, data[index].hutang.toString());
-              },
-              icon: Icon(
-                FontAwesomeIcons.dollarSign,
-                size: 18,
-                color: color_template().secondary,
-              )),
-          // IconButton(
-          //     onPressed: () {
-          //       // popscreen().deletepelanggan(
-          //       //     controller,
-          //       //     controller
-          //       //         .list_pelanggan[index]);
-          //     },
-          //     icon: Icon(
-          //       Icons.delete,
-          //       size: 18,
-          //       color: color_template().tritadery,
-          //     ))
-        ],
-      )),
+          : data[index].status == 2
+              ? Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    'Hutang',
+                    style: font().reguler_white,
+                    overflow: TextOverflow.ellipsis,
+                  ))
+              : Container(
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                      color: color_template().tritadery,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    'Batal',
+                    style: font().reguler_white,
+                    overflow: TextOverflow.ellipsis,
+                  ))),
+      DataCell(data[index].status == 3
+          ? Container()
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Get.dialog(
+                          arguments: data[index],
+                          AlertDialog(content: hutang_detail()));
+                    },
+                    icon: Icon(
+                      Icons.list,
+                      size: 18,
+                      color: color_template().secondary,
+                    )),
+                IconButton(
+                    onPressed: () {
+                      con.bayarhutangpop(
+                          data[index].id!, data[index].hutang.toString());
+                    },
+                    icon: Icon(
+                      FontAwesomeIcons.dollarSign,
+                      size: 18,
+                      color: color_template().secondary,
+                    )),
+                // IconButton(
+                //     onPressed: () {
+                //       // popscreen().deletepelanggan(
+                //       //     controller,
+                //       //     controller
+                //       //         .list_pelanggan[index]);
+                //     },
+                //     icon: Icon(
+                //       Icons.delete,
+                //       size: 18,
+                //       color: color_template().tritadery,
+                //     ))
+              ],
+            )),
     ]);
   }
 }

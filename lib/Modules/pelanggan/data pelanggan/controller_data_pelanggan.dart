@@ -97,6 +97,7 @@ class pelangganController extends GetxController {
   }
 
   var list_pelanggan_local = <DataPelanggan>[].obs;
+  var succ = true.obs;
 
   Map<String, dynamic> synclocal(data) {
     var map = <String, dynamic>{};
@@ -212,7 +213,7 @@ class pelangganController extends GetxController {
 
   fetchDataPelangganlocal(id_toko) async {
     print('-------------------fetch pelanggan local---------------------');
-    //succ.value = false;
+    succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT * FROM pelanggan_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
     List<DataPelanggan> pelanggan = query.isNotEmpty
@@ -220,7 +221,7 @@ class pelangganController extends GetxController {
         : [];
     list_pelanggan_local.value = pelanggan;
     // print('fect produk local --->' + produk.toList().toString());
-    //succ.value = true;
+    succ.value = true;
     return pelanggan;
   }
 

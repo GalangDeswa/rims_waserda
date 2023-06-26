@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -61,6 +62,7 @@ syncAll(id_toko) async {
   }
 }
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     //await GetStorage.init();
@@ -71,11 +73,18 @@ void callbackDispatcher() {
     var id_user = await storage.read('id_user');
     var id_toko = await storage.read('id_toko');
     var token = await storage.read('token');
+    FlutterLocalNotificationsPlugin flip = FlutterLocalNotificationsPlugin();
+    var android = AndroidInitializationSettings('logo');
+    //var IOS = new IOSInitializationSettings();
+    // initialise settings for both Android and iOS device.
+    var settings = InitializationSettings(android: android);
+    flip.initialize(settings);
 
     switch (task) {
       case syncManual:
         try {
           await syncAll(id_toko);
+          showNotificationWithDefaultSound(flip);
         } catch (e) {
           Get.showSnackbar(
               toast().bottom_snackbar_error('error', 'error sync'));
@@ -86,6 +95,7 @@ void callbackDispatcher() {
       case syncAuto:
         try {
           await syncAll(id_toko);
+          showNotificationWithDefaultSound(flip);
         } catch (e) {
           Get.showSnackbar(
               toast().bottom_snackbar_error('error', 'error sync'));
@@ -94,6 +104,18 @@ void callbackDispatcher() {
     }
     return Future.value(true);
   });
+}
+
+Future showNotificationWithDefaultSound(flip) async {
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'id_1', 'sync_auto',
+      importance: Importance.max, priority: Priority.high);
+  var platformChannelSpecifics = new NotificationDetails(
+    android: androidPlatformChannelSpecifics,
+  );
+  await flip.show(0, 'Rims Waserda - backup data rutin',
+      'Data berhasil di backup', platformChannelSpecifics,
+      payload: 'Default_Sound');
 }
 
 Future<void> requestNotificationPermissions() async {

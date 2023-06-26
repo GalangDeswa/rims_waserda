@@ -18,7 +18,7 @@ class hutang_detailController extends GetxController {
   var id_user = GetStorage().read('id_user');
   var token = GetStorage().read('token');
   var id_toko = GetStorage().read('id_toko');
-
+  final nominal = NumberFormat("#,##0");
   var list_hutang_detaillocal = <DataHutangDetail>[].obs;
 
   Map<String, dynamic> synclocal(data) {

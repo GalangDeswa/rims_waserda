@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 
 import '../../Modules/Login/view_login_carousel.dart';
 import '../../Templates/setting.dart';
@@ -169,37 +170,49 @@ class login_card extends GetView<loginController> {
                           child: button_solid_custom(
                               width: context.width_query * 0.5,
                               height: 50,
-                              onPressed: () {
+                              onPressed: () async {
                                 if (controller.loginKey.value.currentState!
                                     .validate()) {
                                   Get.dialog(Obx(() {
                                     return Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(150.0),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                                width: 200,
-                                                height: 200,
-                                                child: showloading()),
-                                            SizedBox(
-                                              height: 15,
+                                      child: Stack(
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              width: 400,
+                                              height: 400,
+                                              child: showloading(),
                                             ),
-                                            Container(
-                                              width: 200,
-                                              child: LinearProgressIndicator(
-                                                value: controller.points.value,
+                                          ),
+                                          Center(
+                                            child: Container(
+                                              width: 250,
+                                              height: 250,
+                                              // color: Colors.red,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 15.0,
                                                 backgroundColor: Colors.white,
                                                 color: color_template().primary,
-                                                minHeight: 5,
+                                                value: controller.points.value,
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   }));
-                                  controller.loginv2();
+
+                                  try {
+                                    await controller.loginv2();
+                                  } catch (error) {
+                                    print(
+                                        'ekgyhkyfjtyfkbckauerv----------------------------------------------------------------');
+                                    print(error);
+                                    Get.back();
+                                    Get.showSnackbar(toast()
+                                        .bottom_snackbar_error('Error',
+                                            'Terjadi kesalahan mohon coba lagi'));
+                                  }
                                 }
 
                                 //Get.toNamed('/base_menu');

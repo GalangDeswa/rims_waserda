@@ -413,7 +413,7 @@ class produkController extends GetxController {
 
   fetchjenislocal(id_toko) async {
     print('-------------------fetch jenis local---------------------');
-
+    succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT * FROM produK_jenis_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
     List<DataJenis> jenis = query.isNotEmpty
@@ -421,7 +421,7 @@ class produkController extends GetxController {
         : [];
     jenislistlocal.value = jenis;
     print(jenislistlocal.map((element) => element.namaJenis));
-
+    succ.value = true;
     return jenis;
   }
 
@@ -589,6 +589,8 @@ class produkController extends GetxController {
     //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
     // }
   }
+
+  //TODO : problem auto id di host vs di local
 
   initProdukToLocal(id_toko) async {
     //login -> sync -> init
@@ -1210,6 +1212,7 @@ class produkController extends GetxController {
       print('----------------- QTY local----------------->');
       await fetchProduklocal(id_toko);
       await Get.find<kasirController>().fetchProduklocal(id_toko);
+      qtyadd.value.clear();
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast()
           .bottom_snackbar_success('Berhasil', 'Stock berhasil ditambah'));

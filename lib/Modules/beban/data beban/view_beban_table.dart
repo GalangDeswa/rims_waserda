@@ -322,16 +322,22 @@ class bebanTable extends DataTableSource {
       DataCell(Text(
         con.dateFormat.format(DateTime.parse(data[index].tgl!)),
         style: font().reguler,
+        overflow: TextOverflow.ellipsis,
       )),
       DataCell(Text(
         data[index].nama!,
         style: font().reguler,
+        overflow: TextOverflow.ellipsis,
       )),
-      DataCell(Text('Rp. ' + con.nominal.format(data[index].jumlah),
-          style: font().reguler)),
+      DataCell(Text(
+        'Rp. ' + con.nominal.format(data[index].jumlah),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(Text(
         data[index].namaKtrBeban.toString(),
         style: font().reguler,
+        overflow: TextOverflow.ellipsis,
       )),
       DataCell(Row(
         mainAxisAlignment: MainAxisAlignment.start,

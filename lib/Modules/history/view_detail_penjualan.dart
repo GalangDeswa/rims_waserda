@@ -19,7 +19,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -27,7 +27,6 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                 margin: const EdgeInsets.symmetric(vertical: 5),
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                    color: Colors.white,
                     borderRadius: border_radius().header_border,
                     border: Border.all(color: color_template().primary)),
                 width: context.width_query,
@@ -68,7 +67,8 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                       style: font().reguler,
                     )),
                     Text(
-                      controller.data.tglPenjualan,
+                      controller.dateFormatdisplay
+                          .format(DateTime.parse(controller.data.tglPenjualan)),
                       style: font().reguler,
                     ),
                   ],
@@ -125,66 +125,65 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   ),
                 ),
               ),
-              Expanded(
-                child: Container(
-                  width: context.width_query,
-                  // height: context.height_query / 4,
-                  child: Obx(() {
-                    return DataTable2(
-                        headingRowHeight: 15,
-                        columns: <DataColumn>[
-                          DataColumn(
-                            label: Text(
-                              'Produk',
-                              style: font().reguler,
-                            ),
+              Container(
+                width: context.width_query,
+                height: context.height_query / 3.5,
+                child: Obx(() {
+                  return DataTable2(
+                      columns: <DataColumn>[
+                        DataColumn(
+                          label: Text(
+                            'Produk',
+                            style: font().reguler,
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Qty',
-                              style: font().reguler,
-                            ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Qty',
+                            style: font().reguler,
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Harga',
-                              style: font().reguler,
-                            ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Harga',
+                            style: font().reguler,
                           ),
-                          DataColumn(
-                            label: Text(
-                              'Diskon',
-                              style: font().reguler,
-                            ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Diskon',
+                            style: font().reguler,
                           ),
-                        ],
-                        rows: List.generate(
-                            controller.isilocal.length,
-                            (index) => DataRow(cells: <DataCell>[
-                                  DataCell(Text(
-                                    controller.isilocal[index].namaBrg!,
-                                    style: font().reguler,
-                                    overflow: TextOverflow.ellipsis,
-                                  )),
-                                  DataCell(Text(controller.isilocal[index].qty
-                                      .toString())),
-                                  DataCell(Text(
-                                    'Rp.' +
-                                        controller.nominal.format(double.parse(
-                                            controller.isilocal[index].hargaBrg
-                                                .toString())),
-                                    style: font().reguler,
-                                  )),
-                                  DataCell(Text(
-                                    'Rp.' +
-                                        controller.nominal.format(double.parse(
-                                            controller.isilocal[index].diskonBrg
-                                                .toString())),
-                                    style: font().reguler,
-                                  )),
-                                ])));
-                  }),
-                ),
+                        ),
+                      ],
+                      rows: List.generate(
+                          controller.isilocal.length,
+                          (index) => DataRow(cells: <DataCell>[
+                                DataCell(Text(
+                                  controller.isilocal[index].namaBrg!,
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                                DataCell(Text(
+                                    controller.isilocal[index].qty.toString())),
+                                DataCell(Text(
+                                  'Rp.' +
+                                      controller.nominal.format(double.parse(
+                                          controller.isilocal[index].hargaBrg
+                                              .toString())),
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                                DataCell(Text(
+                                  'Rp.' +
+                                      controller.nominal.format(double.parse(
+                                          controller.isilocal[index].diskonBrg
+                                              .toString())),
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                              ])));
+                }),
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 5),

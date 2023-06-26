@@ -36,7 +36,7 @@ class dashboard_konten_v2 extends GetView<dashboardController> {
             autoPlay: true,
             autoPlayInterval: Duration(seconds: 7),
           ),
-          //TODO : chek fetch history berdasar role user
+
           // TODO : chek proses sync pas di relese mode
           // TODO : chek app lagi untuk relese
 

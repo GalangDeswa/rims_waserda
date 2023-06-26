@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Modules/Widgets/buttons.dart';
+import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/Widgets/logout_pop.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
 import '../../Templates/setting.dart';
-import '../../main.dart';
 
 class base_menu extends GetView<base_menuController> {
   base_menu({Key? key}) : super(key: key);
@@ -144,38 +144,48 @@ class base_menu extends GetView<base_menuController> {
                       Get.dialog(Obx(() {
                         p.value = p.value + 0.2;
                         return Center(
-                          child: Container(
-                            width: 250,
-                            height: 250,
-                            // color: Colors.red,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 5.0,
-                              backgroundColor: Colors.white,
-                              color: color_template().primary,
-                              value: p.value,
-                            ),
+                          child: Stack(
+                            children: [
+                              Center(
+                                child: Container(
+                                  width: 400,
+                                  height: 400,
+                                  child: showloading(),
+                                ),
+                              ),
+                              Center(
+                                child: Container(
+                                  width: 250,
+                                  height: 250,
+                                  // color: Colors.red,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 15.0,
+                                    backgroundColor: Colors.white,
+                                    color: color_template().primary,
+                                    value: controller.point_loading.value,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }));
                       p.value = p.value + 0.2;
                       print('workmanager ---------------->');
-                      await syncAll(controller.id_toko);
+                      await controller.syncAll(controller.id_toko);
                       p.value = p.value + 0.2;
-
                       p.value = p.value + 0.2;
                       p.value = p.value + 0.2;
                       // p.value = 1.0;
-                      if (p.value == 1.0) {
+                      if (controller.point_loading == 1.0) {
                         print('qeqwijfheaygfeauaeiugfaeufy');
                         Get.back(closeOverlays: true);
                         Get.showSnackbar(toast().bottom_snackbar_success(
                             'Sukses', 'Data berhasil di upload'));
                       }
-
-                      //todo : hapus app chek auto sync, chek update di tempat lain saat ada proses
                     },
                     child: ListTile(
-                      title: Text('Upload data kasir'),
+                      title: Text('Backup data kasir'),
                       leading: Icon(Icons.upload),
                     ),
                   ),

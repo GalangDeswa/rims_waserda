@@ -2,13 +2,13 @@ import 'dart:convert';
 
 import 'package:custom_radio_grouped_button/custom_radio_grouped_button.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
-import '../Widgets/loading.dart';
 
 class kasir_produk extends GetView<kasirController> {
   const kasir_produk({Key? key}) : super(key: key);
@@ -180,7 +180,8 @@ class kasir_produk extends GetView<kasirController> {
               // color: Colors.red,
               child: Obx(
                 () {
-                  return controller.succ.value != false
+                  return controller.succ.value != false &&
+                          controller.produklistlocal.isNotEmpty
                       ? Container(
                           width: context.width_query,
                           // height: context.height_query * 0.70,
@@ -194,10 +195,11 @@ class kasir_produk extends GetView<kasirController> {
                           //color: color_template().primary.withOpacity(0.2),
                           //color: Colors.red,
                           child: Container(
-                            width: 30,
-                            height: 30,
-                            child: showloading(),
-                          ));
+                              child: Icon(
+                            FontAwesomeIcons.cartShopping,
+                            color: color_template().primary,
+                            size: 100,
+                          )));
                 },
               )),
         )
@@ -277,10 +279,9 @@ class ProductTilev2 extends GetView<kasirController> {
                                                     '-'
                                             ? Image.asset(
                                                 'assets/images/food.png',
-                                                fit: BoxFit.cover,
+                                                fit: BoxFit.contain,
                                               )
                                             : Container(
-                                                color: Colors.red,
                                                 width: context.width_query,
                                                 child: Image.memory(
                                                   base64Decode(controller
@@ -414,13 +415,12 @@ class ProductTilev2 extends GetView<kasirController> {
                                             fit: BoxFit.cover,
                                           )
                                         : Container(
-                                            color: Colors.red,
                                             width: context.width_query,
                                             child: Image.memory(
                                               base64Decode(controller
                                                   .produklistlocal[index]
                                                   .image!),
-                                              fit: BoxFit.fill,
+                                              fit: BoxFit.contain,
                                             ),
                                           ))),
                             Container(

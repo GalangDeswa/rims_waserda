@@ -68,6 +68,7 @@ class kasirController extends GetxController {
   var produkcache = <DataProduk>[].obs;
   var jeniscache = <DataJenis>[].obs;
   var nama_user = GetStorage().read('name');
+  var role = GetStorage().read('role');
 
   Future<void> refresh() async {
     await fetchProduklocal(id_toko);
@@ -1009,7 +1010,7 @@ class kasirController extends GetxController {
 
       if (query != null) {
         print('insert detail penjualan---------------------->');
-        var detailpenjualan = Future.forEach(cache, (e) async {
+        var detailpenjualan = await Future.forEach(cache, (e) async {
           var dd = e.harga! * e.diskonBarang! / 100;
           await DBHelper().INSERT(
               'penjualan_detail_local',
@@ -1037,7 +1038,7 @@ class kasirController extends GetxController {
         // kurang qty ----------------------------------------------------->
         List<DataProduk> qty =
             await Get.find<produkController>().fetchProduklocal(id_toko);
-        Future.forEach(cache, (e) async {
+        await Future.forEach(cache, (e) async {
           var kurangqty = qty.where((x) => x.id == e.id).first;
           if (kurangqty.idJenisStock == 1) {
             await DBHelper().UPDATE(
@@ -1065,9 +1066,9 @@ class kasirController extends GetxController {
           }
         });
 
-        await Get.find<produkController>().fetchProduklocal(id_toko);
         await fetchProduklocal(id_toko);
-        await Get.find<historyController>().fetchPenjualanlocal(id_toko);
+        await Get.find<historyController>().fetchPenjualanlocal(
+            id_toko: id_toko, id_user: id_user, role: role);
         await Get.find<dashboardController>().loadhutangtotal();
         await Get.find<dashboardController>().loadpelanggantotal();
         await Get.find<dashboardController>().loadpendapatanhariini();
@@ -1078,6 +1079,7 @@ class kasirController extends GetxController {
         await Get.find<pelangganController>()
             .fetchstatusPelangganlocal(id_toko);
         await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
+        await Get.find<produkController>().fetchProduklocal(id_toko);
         await getfavorite();
         await clear();
         cache.refresh();
@@ -1133,7 +1135,7 @@ class kasirController extends GetxController {
 
       if (query != null) {
         print('insert detail penjualan---------------------->');
-        var detailpenjualan = Future.forEach(cache, (e) async {
+        var detailpenjualan = await Future.forEach(cache, (e) async {
           var dd = e.harga! * e.diskonBarang! / 100;
           await DBHelper().INSERT(
               'penjualan_detail_local',
@@ -1161,7 +1163,7 @@ class kasirController extends GetxController {
         // kurang qty ----------------------------------------------------->
         List<DataProduk> qty =
             await Get.find<produkController>().fetchProduklocal(id_toko);
-        Future.forEach(cache, (e) async {
+        await Future.forEach(cache, (e) async {
           var kurangqty = qty.where((x) => x.id == e.id).first;
           if (kurangqty.idJenisStock == 1) {
             await DBHelper().UPDATE(
@@ -1191,7 +1193,8 @@ class kasirController extends GetxController {
 
         await Get.find<produkController>().fetchProduklocal(id_toko);
         await fetchProduklocal(id_toko);
-        await Get.find<historyController>().fetchPenjualanlocal(id_toko);
+        await Get.find<historyController>().fetchPenjualanlocal(
+            id_toko: id_toko, id_user: id_user, role: role);
         await Get.find<dashboardController>().loadhutangtotal();
         await Get.find<dashboardController>().loadpelanggantotal();
         await Get.find<dashboardController>().loadpendapatanhariini();

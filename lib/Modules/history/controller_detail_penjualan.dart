@@ -37,6 +37,8 @@ class detailpenjualanController extends GetxController {
     return map;
   }
 
+  DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
+
   syncPenjualanDetail(id_toko) async {
     print(
         '-----------------SYNC PENJUALAN DETAIL LOCAL TO HOST-------------------');

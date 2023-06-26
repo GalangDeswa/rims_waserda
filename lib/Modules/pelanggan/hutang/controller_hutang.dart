@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
+import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
 import 'package:rims_waserda/Modules/history/Controller_history.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 import 'package:rims_waserda/Modules/pelanggan/hutang/model_hutang_detail.dart';
@@ -29,6 +30,8 @@ class hutangController extends GetxController {
     fetchDataHutanglocal(id_toko);
     fetchDataHutangDetaillocal(id_toko);
   }
+
+  var role = GetStorage().read('role');
 
   var search = TextEditingController().obs;
 
@@ -112,6 +115,8 @@ class hutangController extends GetxController {
     // print('fect produk local --->' + produk.toList().toString());
     return hutang;
   }
+
+  var succ = true.obs;
 
   syncHutang(id_toko) async {
     print('-----------------SYNC HUTANG LOCAL TO HOST-------------------');
@@ -278,7 +283,7 @@ class hutangController extends GetxController {
 
   fetchDataHutanglocal(id_toko) async {
     print('-------------------fetch hutang local---------------------');
-    //  succ.value = false;
+    succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id WHERE hutang_local.id_toko = $id_toko AND hutang_local.aktif = "Y" ORDER BY ID DESC');
     List<DataHutang> hutang = query.isNotEmpty
@@ -286,7 +291,7 @@ class hutangController extends GetxController {
         : [];
     list_hutanglocal.value = hutang;
     // print('fect produk local --->' + produk.toList().toString());
-    //  succ.value = true;
+    succ.value = true;
     return hutang;
   }
 
@@ -560,8 +565,10 @@ class hutangController extends GetxController {
 
     await fetchDataHutangDetaillocal(id_toko);
     await fetchDataHutanglocal(id_toko);
+    await Get.find<dashboardController>().loadhutangtotal();
     var con = Get.find<historyController>();
-    await con.fetchPenjualanlocal(id_toko);
+    await con.fetchPenjualanlocal(
+        id_toko: id_toko, id_user: id_user, role: role);
     Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
     Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
     var selectv2 = list_hutang_detaillocal.where((e) => e.idHutang == id).first;
@@ -594,7 +601,7 @@ class hutangController extends GetxController {
                   sync: 'N',
                   aktif: 'Y',
                   namaPelanggan: ssv2.namaPelanggan,
-                  hutang: ssv2.hutang,
+                  hutang: 0,
                   id: ssv2.id,
                   status: 1)
               .toMapForDb(),
@@ -628,10 +635,14 @@ class hutangController extends GetxController {
 
     print('bayar hutang  local berhasil------------------------------------->');
     await fetchDataHutanglocal(id_toko);
-    Get.find<historyController>().fetchPenjualanlocal(id_toko);
+    await fetchDataHutangDetaillocal(id_toko);
+    Get.find<historyController>()
+        .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
     Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
     Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
-
+    await Get.find<dashboardController>().loadhutangtotal();
+    await Get.find<dashboardController>().loadpendapatantotal();
+    await Get.find<dashboardController>().loadpendapatanhariini();
     bayarhutang.value.clear();
     jumlahbayarhutang.value = 0;
     Get.back(closeOverlays: true);

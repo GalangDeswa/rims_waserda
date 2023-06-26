@@ -49,6 +49,7 @@ class font {
       TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white);
   var header_black =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black);
+  var header_black_nonbold = TextStyle(fontSize: 18, color: Colors.black);
 
   var table_header = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   var reguler = TextStyle(

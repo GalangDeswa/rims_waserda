@@ -130,7 +130,7 @@ class pelanggan_table extends GetView<pelangganController> {
                   // height: context.height_query / 2.5,
                   margin: EdgeInsets.only(top: 12),
                   // width: double.infinity,
-                  child: controller.list_pelanggan_local.value.isEmpty
+                  child: controller.succ == false
                       ? Container(width: 100, height: 100, child: showloading())
                       :
                       //untuk paginated table yg pakek data source harus buat var lg di dalam obx
@@ -242,8 +242,16 @@ class pelangganTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].namaPelanggan!, style: font().reguler)),
-      DataCell(Text(data[index].noHp!, style: font().reguler)),
+      DataCell(Text(
+        data[index].namaPelanggan!,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].noHp!,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(
         con.statuspelanggan(
           data[index].id,

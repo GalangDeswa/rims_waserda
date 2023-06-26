@@ -58,6 +58,7 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                     height: 15,
                   ),
                   TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: controller.no_hp.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(

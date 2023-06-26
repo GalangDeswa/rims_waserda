@@ -26,6 +26,7 @@ class dashboardController extends GetxController {
     await loadpendapatantotal();
     await loadtransaksitotal();
     await loadhutangtotal();
+    await loadtotalreversal();
 
     await loadpendapatanhariini();
     await loadbebanhariini();
@@ -137,6 +138,7 @@ class dashboardController extends GetxController {
   var totalpendapatan = 0.obs;
   var totaltransaksi = 0.obs;
   var totalhutang = 0.obs;
+  var totalreversal = 0.obs;
 
   var pendapatanhariini = 0.obs;
   var bebanhariini = 0.obs;
@@ -146,6 +148,15 @@ class dashboardController extends GetxController {
   DateFormat dateFormat = DateFormat("dd");
 
   DateFormat dateFormatdashboard = DateFormat('EEEE, d MMMM  yyyy');
+
+  loadtotalreversal() async {
+    print('load transaksi hari ini------------------------------>');
+
+    List<DataPenjualan> reversal =
+        await historyController().fetchPenjualanlocaldashboardreversal(id_toko);
+
+    return totalreversal.value = reversal.length;
+  }
 
   loadpendapatanhariini() async {
     print('load pendapatan hari ini------------------------------>');

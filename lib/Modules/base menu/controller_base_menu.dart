@@ -8,10 +8,16 @@ import 'package:rims_waserda/Modules/user/data%20user/view_data_user_base.dart';
 
 import '../../Services/handler.dart';
 import '../Widgets/toast.dart';
+import '../beban/data beban/controller_beban.dart';
+import '../history/Controller_history.dart';
+import '../history/controller_detail_penjualan.dart';
 import '../history/view_history_base.dart';
 import '../kasir/controller_kasir.dart';
 import '../kasir/view_kasir_basev2.dart';
 import '../laporan/view_laporan_base.dart';
+import '../pelanggan/data pelanggan/controller_data_pelanggan.dart';
+import '../pelanggan/hutang/controller_hutang.dart';
+import '../produk/data produk/controller_data_produk.dart';
 import '../produk/data produk/view_produk_base.dart';
 
 class base_menuController extends GetxController {
@@ -31,6 +37,52 @@ class base_menuController extends GetxController {
   var id_toko = GetStorage().read('id_toko');
   var id_user = GetStorage().read('id_user');
   var role = GetStorage().read('role');
+  var point_loading = 0.0.obs;
+  syncAll(id_toko) async {
+    try {
+      print("id toko---------------------------->");
+      print(id_toko);
+
+      print("sync produk jenis---------------------------->");
+      await produkController().syncProdukJenis(id_toko);
+      point_loading.value = 0.1;
+
+      print("sync produk---------------------------->");
+      await produkController().syncProduk(id_toko);
+      point_loading.value = 0.2;
+
+      print("sync beban jenis--------------------------->");
+      await bebanController().syncBebanKategori(id_toko);
+      point_loading.value = 0.3;
+
+      print("sync beban---------------------------->");
+      await bebanController().syncBeban(id_toko);
+      point_loading.value = 0.5;
+
+      print("sync pelanggan---------------------------->");
+      await pelangganController().syncPelanggan(id_toko);
+      point_loading.value = 0.6;
+
+      print("sync hutang---------------------------->");
+      await hutangController().syncHutang(id_toko);
+      point_loading.value = 0.7;
+
+      print("sync hutang detail---------------------------->");
+      await hutangController().syncHutangDetail(id_toko);
+      point_loading.value = 0.8;
+
+      print("sync penjualan---------------------------->");
+      await historyController().syncPenjualan(id_toko);
+      point_loading.value = 0.9;
+
+      print("sync penjualan detail---------------------------->");
+      await detailpenjualanController().syncPenjualanDetail(id_toko);
+      point_loading.value = 1.0;
+    } catch (e) {
+      print(e);
+      Get.showSnackbar(toast().bottom_snackbar_error('error', 'error sync'));
+    }
+  }
 
   List<Widget> views_kasir = const [
     dashboard_v2(),

@@ -238,16 +238,30 @@ class userTable extends DataTableSource {
   @override
   DataRow getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(data[index].nama, style: font().reguler)),
-      DataCell(Text(data[index].email, style: font().reguler)),
-      DataCell(Text(data[index].hp, style: font().reguler)),
       DataCell(Text(
-          data[index].role == '1'
-              ? "Kasir"
-              : data[index].role == '2'
-                  ? 'Admin'
-                  : '-',
-          style: font().reguler)),
+        data[index].nama,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].email,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].hp,
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
+      DataCell(Text(
+        data[index].role == '1'
+            ? "Kasir"
+            : data[index].role == '2'
+                ? 'Admin'
+                : '-',
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,

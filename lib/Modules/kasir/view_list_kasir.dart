@@ -1,6 +1,7 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
@@ -253,7 +254,7 @@ class list_kasir extends GetView<kasirController> {
                           //color: color_template().primary.withOpacity(0.2),
                           //color: Colors.red,
                           child: Icon(
-                            Icons.add_shopping_cart,
+                            FontAwesomeIcons.cartShopping,
                             color: color_template().primary,
                             size: 100,
                           ));

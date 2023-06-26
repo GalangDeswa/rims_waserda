@@ -10,12 +10,12 @@ class hutang_detail extends GetView<hutang_detailController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: context.width_query / 1.5,
+      //width: context.width_query / 2,
       height: context.height_query / 2,
       child: Column(
         children: [
           Container(
-            width: context.width_query / 1.5,
+            width: context.width_query / 1,
             height: context.height_query / 2,
             child: Obx(() {
               return DataTable2(
@@ -59,11 +59,14 @@ class hutang_detail extends GetView<hutang_detailController> {
                                   DateTime.parse(controller
                                       .list_hutang_detaillocal[i].tglHutang!)),
                               style: font().reguler,
+                              overflow: TextOverflow.ellipsis,
                             )),
                             DataCell(Text(
-                              controller.list_hutang_detaillocal[i].bayar
-                                  .toString(),
+                              'Rp. ' +
+                                  controller.nominal.format(controller
+                                      .list_hutang_detaillocal[i].bayar),
                               style: font().reguler,
+                              overflow: TextOverflow.ellipsis,
                             )),
                             DataCell(controller
                                         .list_hutang_detaillocal[i].tglBayar ==
@@ -71,6 +74,7 @@ class hutang_detail extends GetView<hutang_detailController> {
                                 ? Text(
                                     '-',
                                     style: font().reguler,
+                                    overflow: TextOverflow.ellipsis,
                                   )
                                 : Text(
                                     controller.dateFormatdisplay.format(
@@ -78,11 +82,14 @@ class hutang_detail extends GetView<hutang_detailController> {
                                             .list_hutang_detaillocal[i]
                                             .tglBayar!)),
                                     style: font().reguler,
+                                    overflow: TextOverflow.ellipsis,
                                   )),
                             DataCell(Text(
-                              controller.list_hutang_detaillocal[i].sisa
-                                  .toString(),
+                              'Rp. ' +
+                                  controller.nominal.format(controller
+                                      .list_hutang_detaillocal[i].sisa),
                               style: font().reguler,
+                              overflow: TextOverflow.ellipsis,
                             )),
                             DataCell(controller
                                         .list_hutang_detaillocal[i].tglLunas ==
@@ -90,6 +97,7 @@ class hutang_detail extends GetView<hutang_detailController> {
                                 ? Text(
                                     '-',
                                     style: font().reguler,
+                                    overflow: TextOverflow.ellipsis,
                                   )
                                 : Text(
                                     controller.dateFormatdisplay.format(
@@ -97,6 +105,7 @@ class hutang_detail extends GetView<hutang_detailController> {
                                             .list_hutang_detaillocal[i]
                                             .tglLunas!)),
                                     style: font().reguler,
+                                    overflow: TextOverflow.ellipsis,
                                   )),
                           ])));
             }),

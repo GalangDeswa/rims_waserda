@@ -397,7 +397,7 @@ class produkTable extends DataTableSource {
                   overflow: TextOverflow.ellipsis,
                 )),
                 Padding(
-                  padding: EdgeInsets.only(right: context.width_query / 23),
+                  padding: const EdgeInsets.only(right: 10),
                   child: IconButton(
                       onPressed: () {
                         con.addqty(con, data[index]);
@@ -425,16 +425,18 @@ class produkTable extends DataTableSource {
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  'Rp. ' + con.nominal.format(hargadiskon),
-                  style: font().reguler,
-                  overflow: TextOverflow.ellipsis,
+                Expanded(
+                  child: Text(
+                    'Rp. ' + con.nominal.format(hargadiskon),
+                    style: font().reguler,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 Container(
-                  padding: const EdgeInsets.all(6),
+                  padding: const EdgeInsets.all(5),
                   child: Text(
                     display_diskon + '%',
                     style: font().reguler_white,
