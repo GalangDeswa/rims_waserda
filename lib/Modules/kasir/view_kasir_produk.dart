@@ -143,7 +143,7 @@ class kasir_produk extends GetView<kasirController> {
                                 .toList(),
                         buttonValues: ['0'] +
                             controller.jenislistlocal.value
-                                .map((element) => element.id.toString())
+                                .map((element) => element.idLocal.toString())
                                 .toList(),
                         buttonTextStyle: ButtonTextStyle(
                             selectedColor: Colors.white,
@@ -250,7 +250,7 @@ class ProductTilev2 extends GetView<kasirController> {
                       //     1.toString());
 
                       controller.tambahKeranjangcache(
-                          controller.produklistlocal[index].id!);
+                          controller.produklistlocal[index].idLocal!);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -387,7 +387,7 @@ class ProductTilev2 extends GetView<kasirController> {
                       //     1.toString());
 
                       controller.tambahKeranjangcache(
-                          controller.produklistlocal[index].id!);
+                          controller.produklistlocal[index].idLocal!);
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),

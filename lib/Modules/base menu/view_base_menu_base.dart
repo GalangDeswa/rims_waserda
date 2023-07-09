@@ -88,6 +88,7 @@ class base_menu extends GetView<base_menuController> {
           drawerEnableOpenDragGesture: false,
           endDrawer: Obx(() {
             return Drawer(
+              backgroundColor: Colors.white,
               child: ListView(
                 shrinkWrap: true,
                 padding: EdgeInsets.only(bottom: 10),
@@ -172,13 +173,21 @@ class base_menu extends GetView<base_menuController> {
                       }));
                       p.value = p.value + 0.2;
                       print('workmanager ---------------->');
-                      await controller.syncAll(controller.id_toko);
+                      try {
+                        await controller.syncAll(controller.id_toko);
+                      } catch (e) {
+                        Get.back();
+                        Get.showSnackbar(toast()
+                            .bottom_snackbar_error('Error', e.toString()));
+                      }
+
                       p.value = p.value + 0.2;
                       p.value = p.value + 0.2;
                       p.value = p.value + 0.2;
                       // p.value = 1.0;
                       if (controller.point_loading == 1.0) {
-                        print('qeqwijfheaygfeauaeiugfaeufy');
+                        print(
+                            'loading sync manual complete------------------>');
                         Get.back(closeOverlays: true);
                         Get.showSnackbar(toast().bottom_snackbar_success(
                             'Sukses', 'Data berhasil di upload'));
@@ -200,6 +209,15 @@ class base_menu extends GetView<base_menuController> {
                       leading: Icon(Icons.logout),
                     ),
                   ),
+                  Container(
+                    width: context.width_query,
+                    color: Colors.black,
+                    height: 0.3,
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Row(
@@ -219,7 +237,7 @@ class base_menu extends GetView<base_menuController> {
                               fontSize: 12,
                               color: Colors.black,
                             ),
-                            selectedBorderColor: color_template().primary,
+                            //  selectedBorderColor: color_template().primary,
                             // unselectedBorderColor: color_template().select,
                             borderRadius: BorderRadius.circular(12),
                             spacing: 15,
@@ -288,6 +306,7 @@ class base_menu extends GetView<base_menuController> {
                               ? NavigationRail(
                                   elevation: 10,
                                   useIndicator: true,
+
                                   indicatorColor: color_template().primary,
                                   selectedIconTheme:
                                       IconThemeData(color: Colors.white),
@@ -342,7 +361,8 @@ class base_menu extends GetView<base_menuController> {
                                   destinations: [
                                     NavigationRailDestination(
                                       icon: Icon(Icons.dashboard),
-                                      selectedIcon: Icon(Icons.dashboard),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.dashcube),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Dashboard'),
@@ -352,7 +372,7 @@ class base_menu extends GetView<base_menuController> {
                                       icon:
                                           FaIcon(FontAwesomeIcons.cashRegister),
                                       selectedIcon:
-                                          FaIcon(FontAwesomeIcons.cashRegister),
+                                          FaIcon(FontAwesomeIcons.cartShopping),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('POS'),
@@ -368,8 +388,8 @@ class base_menu extends GetView<base_menuController> {
                                     // ),
                                     NavigationRailDestination(
                                       icon: Icon(FontAwesomeIcons.dollarSign),
-                                      selectedIcon:
-                                          Icon(FontAwesomeIcons.dollarSign),
+                                      selectedIcon: Icon(
+                                          FontAwesomeIcons.circleDollarToSlot),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Beban'),
@@ -387,16 +407,16 @@ class base_menu extends GetView<base_menuController> {
                                       icon:
                                           FaIcon(FontAwesomeIcons.peopleGroup),
                                       selectedIcon:
-                                          FaIcon(FontAwesomeIcons.peopleGroup),
+                                          FaIcon(FontAwesomeIcons.peopleLine),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Pelanggan'),
                                       ),
                                     ),
                                     NavigationRailDestination(
-                                      icon: Icon(FontAwesomeIcons.history),
+                                      icon: Icon(FontAwesomeIcons.moneyBill),
                                       selectedIcon:
-                                          Icon(FontAwesomeIcons.history),
+                                          Icon(FontAwesomeIcons.moneyBills),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Penjualan'),
@@ -405,7 +425,7 @@ class base_menu extends GetView<base_menuController> {
                                     NavigationRailDestination(
                                       icon: Icon(FontAwesomeIcons.receipt),
                                       selectedIcon:
-                                          Icon(FontAwesomeIcons.receipt),
+                                          Icon(FontAwesomeIcons.chartSimple),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Laporan'),
@@ -416,6 +436,7 @@ class base_menu extends GetView<base_menuController> {
                               : NavigationRail(
                                   elevation: 10,
                                   useIndicator: true,
+
                                   indicatorColor: color_template().primary,
                                   selectedIconTheme:
                                       IconThemeData(color: Colors.white),
@@ -470,7 +491,8 @@ class base_menu extends GetView<base_menuController> {
                                   destinations: [
                                     NavigationRailDestination(
                                       icon: Icon(Icons.dashboard),
-                                      selectedIcon: Icon(Icons.dashboard),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.dashcube),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Dashboard'),
@@ -480,7 +502,7 @@ class base_menu extends GetView<base_menuController> {
                                       icon:
                                           FaIcon(FontAwesomeIcons.cashRegister),
                                       selectedIcon:
-                                          FaIcon(FontAwesomeIcons.cashRegister),
+                                          FaIcon(FontAwesomeIcons.cartShopping),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('POS'),
@@ -488,7 +510,8 @@ class base_menu extends GetView<base_menuController> {
                                     ),
                                     NavigationRailDestination(
                                       icon: Icon(FontAwesomeIcons.box),
-                                      selectedIcon: Icon(FontAwesomeIcons.box),
+                                      selectedIcon:
+                                          Icon(FontAwesomeIcons.boxOpen),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Produk'),
@@ -496,8 +519,8 @@ class base_menu extends GetView<base_menuController> {
                                     ),
                                     NavigationRailDestination(
                                       icon: Icon(FontAwesomeIcons.dollarSign),
-                                      selectedIcon:
-                                          Icon(FontAwesomeIcons.dollarSign),
+                                      selectedIcon: Icon(
+                                          FontAwesomeIcons.circleDollarToSlot),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Beban'),
@@ -506,7 +529,7 @@ class base_menu extends GetView<base_menuController> {
                                     NavigationRailDestination(
                                       icon: FaIcon(FontAwesomeIcons.userPlus),
                                       selectedIcon:
-                                          FaIcon(FontAwesomeIcons.userPlus),
+                                          FaIcon(FontAwesomeIcons.userGear),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('User'),
@@ -516,16 +539,16 @@ class base_menu extends GetView<base_menuController> {
                                       icon:
                                           FaIcon(FontAwesomeIcons.peopleGroup),
                                       selectedIcon:
-                                          FaIcon(FontAwesomeIcons.peopleGroup),
+                                          FaIcon(FontAwesomeIcons.peopleLine),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Pelanggan'),
                                       ),
                                     ),
                                     NavigationRailDestination(
-                                      icon: Icon(FontAwesomeIcons.history),
+                                      icon: Icon(FontAwesomeIcons.moneyBill),
                                       selectedIcon:
-                                          Icon(FontAwesomeIcons.history),
+                                          Icon(FontAwesomeIcons.moneyBills),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Penjualan'),
@@ -534,7 +557,7 @@ class base_menu extends GetView<base_menuController> {
                                     NavigationRailDestination(
                                       icon: Icon(FontAwesomeIcons.receipt),
                                       selectedIcon:
-                                          Icon(FontAwesomeIcons.receipt),
+                                          Icon(FontAwesomeIcons.chartSimple),
                                       label: Padding(
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text('Laporan'),

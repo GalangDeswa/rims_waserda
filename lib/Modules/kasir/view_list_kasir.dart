@@ -165,11 +165,30 @@ class list_kasir extends GetView<kasirController> {
                         //asyncItems: (qwe) => api.getproduct(),
                         //  compareFn: (i, s) => i.isEqual(s),
                         popupProps: PopupProps.menu(
+                          listViewProps: ListViewProps(shrinkWrap: true),
+                          scrollbarProps: ScrollbarProps(
+                            thumbColor: color_template().select,
+                            radius: Radius.circular(10),
+                            interactive: true,
+                          ),
+                          searchFieldProps: TextFieldProps(
+                            style: font().reguler,
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                icon: Icon(FontAwesomeIcons.magnifyingGlass),
+                                hintText: "Nama produk / Nomor barcode"),
+                          ),
+                          fit: FlexFit.loose,
+                          constraints: BoxConstraints(
+                              minHeight: context.height_query / 1.5),
                           showSelectedItems: false,
                           showSearchBox: true,
                           itemBuilder: customPopupItemBuilderExample2,
                           favoriteItemProps: FavoriteItemProps(
-                            // favoriteItemsAlignment: MainAxisAlignment.start,
+                            favoriteItemsAlignment: MainAxisAlignment.start,
                             showFavoriteItems: true,
                             favoriteItems: (us) {
                               // controller.getfavorite();
@@ -191,7 +210,7 @@ class list_kasir extends GetView<kasirController> {
                         items: controller.produklistlocal.value,
 
                         onChanged: (value) {
-                          controller.tambahKeranjangcache(value!.id!);
+                          controller.tambahKeranjangcache(value!.idLocal);
                           // controller.isikeranjang(value!.kodeProduk.toString());
                           // controller.getkeranjang();
                           //  controller.totalkeranjang();
@@ -270,48 +289,113 @@ class list_kasir extends GetView<kasirController> {
     DataProduk item,
     bool isSelected,
   ) {
+    var persen = item.diskonBarang;
+
+    // var persen = (double.parse(controller.cache[index].harga) -
+    //         controller.cache[index].diskonBarang!) /
+    //     double.parse(controller.cache[index].harga) *
+    //     100;
+
+    var hargadiskon = item.harga! - (item.harga! * item.diskonBarang! / 100);
+
+    String display_diskon = persen!.toStringAsFixed(0);
+
     return Container(
       // color: Colors.red,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: !isSelected
-          ? null
-          : BoxDecoration(
-              border: Border.all(color: Theme.of(context).primaryColor),
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.white,
-            ),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
+
       child: item.qty == 0 && item.idJenisStock == 1
-          ? ListTile(
-              selected: isSelected,
-              subtitle: Text(item.namaJenis ?? '-'),
-              title: Row(
-                children: [
-                  Text(
-                    item.namaProduk,
-                    style: TextStyle(decoration: TextDecoration.lineThrough),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Text(
-                    'Stock habis',
-                    style: font().reguler,
-                  )
-                ],
+          ? Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 0.2, color: Colors.black),
+                ),
               ),
-              trailing: Text('Rp.' +
-                  ' ' +
-                  controller.nominal
-                      .format(double.parse(item.harga.toString()))),
+              child: ListTile(
+                selected: isSelected,
+                subtitle: item.idJenisStock == 1
+                    ? Text('Stock : ' + item.qty.toString())
+                    : Text('Non stock'),
+                title: Row(
+                  children: [
+                    Text(
+                      item.namaProduk,
+                      style: TextStyle(decoration: TextDecoration.lineThrough),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      'Stock habis',
+                      style: font().reguler,
+                    )
+                  ],
+                ),
+                trailing: item.diskonBarang == 0
+                    ? Text('Rp.' +
+                        ' ' +
+                        controller.nominal
+                            .format(double.parse(item.harga.toString())))
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Rp.' +
+                              ' ' +
+                              controller.nominal.format(
+                                  double.parse(hargadiskon.toString()))),
+                          SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Text(
+                              display_diskon + '%',
+                              style: font().reguler_white,
+                            ),
+                          )
+                        ],
+                      ),
+              ),
             )
-          : ListTile(
-              selected: isSelected,
-              subtitle: Text(item.namaJenis ?? '-'),
-              title: Text(item.namaProduk),
-              trailing: Text('Rp.' +
-                  ' ' +
-                  controller.nominal
-                      .format(double.parse(item.harga.toString()))),
+          : Container(
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(width: 0.2, color: Colors.black),
+                ),
+              ),
+              child: ListTile(
+                selected: isSelected,
+                subtitle: item.idJenisStock == 1
+                    ? Text('Stock : ' + item.qty.toString())
+                    : Text('Non stock'),
+                title: Text(item.namaProduk),
+                trailing: item.diskonBarang == 0
+                    ? Text('Rp.' +
+                        ' ' +
+                        controller.nominal
+                            .format(double.parse(item.harga.toString())))
+                    : Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Rp.' +
+                              ' ' +
+                              controller.nominal.format(
+                                  double.parse(hargadiskon.toString()))),
+                          SizedBox(width: 10),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Text(
+                              display_diskon + '%',
+                              style: font().reguler_white,
+                            ),
+                          )
+                        ],
+                      ),
+              ),
             ),
     );
   }
@@ -408,7 +492,7 @@ class ProductTilev2 extends GetView<kasirController> {
                     child: InkWell(
                       onTap: () {
                         controller.deleteqty(
-                            index, controller.cache[index].id!);
+                            index, controller.cache[index].idLocal!);
                       },
                       child: Icon(
                         Icons.remove,
@@ -460,17 +544,8 @@ class ProductTilev2 extends GetView<kasirController> {
                 children: [
                   IconButton(
                       onPressed: () {
-                        Get.toNamed('/edit_produk',
-                            arguments: controller.produklistlocal[index]);
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        size: 18,
-                        color: color_template().secondary,
-                      )),
-                  IconButton(
-                      onPressed: () {
-                        controller.deleteitemcache(controller.cache[index].id!);
+                        controller
+                            .deleteitemcache(controller.cache[index].idLocal!);
                       },
                       icon: Icon(
                         size: context.height_query / 35,

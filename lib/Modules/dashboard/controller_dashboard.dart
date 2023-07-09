@@ -73,64 +73,6 @@ class dashboardController extends GetxController {
 
   var listkonten = [].obs;
 
-  // loadkonten() {
-  //   //tanpa logout error
-  //   //dengan di ganti jd list biasa bukan list<konten> bisa?
-  //   print('---------------------load konten--------------');
-  //   listkonten.value = GetStorage().read('konten');
-  //   print(listkonten);
-  // }
-
-  // loadkontenv2() async {
-  //   //Get.dialog(loading(), barrierDismissible: false);
-  //   var checkconn = await check_conn.check();
-  //   if (checkconn == true) {
-  //     var toko = await REST.loadToko(token, id_toko);
-  //     if (toko != null) {
-  //       var dataKonten = ModelToko.fromJson(toko);
-  //       dataKonten.data.forEach((element) {
-  //         listkonten.value = element.konten;
-  //       });
-  //       print('---------------load konten v2-------------');
-  //       print(listkonten);
-  //     } else {
-  //       //Get.back(closeOverlays: true);
-  //       Get.snackbar(
-  //         "Error",
-  //         "Data toko gagal,toko tidak terserdia",
-  //         icon: Icon(Icons.error, color: Colors.white),
-  //         snackPosition: SnackPosition.BOTTOM,
-  //         backgroundColor: Colors.red,
-  //         borderRadius: 20,
-  //         margin: EdgeInsets.all(15),
-  //         colorText: Colors.white,
-  //         duration: Duration(seconds: 4),
-  //         isDismissible: true,
-  //         dismissDirection: DismissDirection.horizontal,
-  //         forwardAnimationCurve: Curves.elasticInOut,
-  //         reverseAnimationCurve: Curves.easeOut,
-  //       );
-  //     }
-  //   } else {
-  //     // Get.back(closeOverlays: true);
-  //     Get.snackbar(
-  //       "Error",
-  //       "Data toko gagal,periksa koneksi",
-  //       icon: Icon(Icons.error, color: Colors.white),
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       borderRadius: 20,
-  //       margin: EdgeInsets.all(15),
-  //       colorText: Colors.white,
-  //       duration: Duration(seconds: 4),
-  //       isDismissible: true,
-  //       dismissDirection: DismissDirection.horizontal,
-  //       forwardAnimationCurve: Curves.elasticInOut,
-  //       reverseAnimationCurve: Curves.easeOut,
-  //     );
-  //   }
-  // }
-
   var kontenlists = [].obs;
 
   var totalproduk = 0.obs;
@@ -143,6 +85,7 @@ class dashboardController extends GetxController {
   var pendapatanhariini = 0.obs;
   var bebanhariini = 0.obs;
   var transaksihariini = 0.obs;
+  var hutanghariini = 0.obs;
 
   final nominal = NumberFormat("#,##0");
   DateFormat dateFormat = DateFormat("dd");
@@ -150,7 +93,7 @@ class dashboardController extends GetxController {
   DateFormat dateFormatdashboard = DateFormat('EEEE, d MMMM  yyyy');
 
   loadtotalreversal() async {
-    print('load transaksi hari ini------------------------------>');
+    print('load reversal total------------------------------>');
 
     List<DataPenjualan> reversal =
         await historyController().fetchPenjualanlocaldashboardreversal(id_toko);
@@ -192,9 +135,26 @@ class dashboardController extends GetxController {
     print('sum beban hari ini----------------------------->');
     print(sumB);
 
+    List<DataHutang> h = await hutangController().fetchDataHutanglocal(id_toko);
+    var filterH = h
+        .map((e) => e)
+        .toList()
+        .where((element) =>
+            element.tglHutang!.substring(8, 10) ==
+            dateFormat.format(DateTime.now()))
+        .toList();
+
+    var sumH = filterH
+        .map((e) => e.hutang)
+        .fold(0, (previous, current) => previous + current!);
+
+    print('sum hutang hari ini----------------------------->');
+    print(sumH);
+    hutanghariini.value = sumH;
+
     // dateFormat.format(DateTime.parse(element!)
 
-    return pendapatanhariini.value = sumP - sumB;
+    return pendapatanhariini.value = sumP - sumB - sumH;
   }
 
   loadbebanhariini() async {
@@ -222,8 +182,8 @@ class dashboardController extends GetxController {
   loadtransaksihariini() async {
     print('load transaksi hari ini------------------------------>');
 
-    List<DataPenjualan> b =
-        await historyController().fetchPenjualanlocaldashboard(id_toko);
+    List<DataPenjualan> b = await historyController()
+        .fetchPenjualanlocaldashboardtransaksi(id_toko);
     var filterB = b
         .map((e) => e)
         .toList()
@@ -269,15 +229,24 @@ class dashboardController extends GetxController {
         .map((e) => e.jumlah)
         .fold(0, (previous, current) => previous + current!);
 
-    var sumsum = sumP - sumB;
+    List<DataHutang> h = await hutangController().fetchDataHutanglocal(id_toko);
+
+    var sumH = h
+        .map((e) => e.hutang)
+        .fold(0, (previous, current) => previous + current!);
+
+    print('sum hutang total----------------------------->');
+    print(sumH);
+
+    var sumsum = sumP - sumB - sumH;
 
     return totalpendapatan.value = sumsum;
   }
 
   loadtransaksitotal() async {
     print('load total transaksi------------------------------>');
-    List<DataPenjualan> p =
-        await historyController().fetchPenjualanlocaldashboard(id_toko);
+    List<DataPenjualan> p = await historyController()
+        .fetchPenjualanlocaldashboardtransaksi(id_toko);
     return totaltransaksi.value = p.length;
   }
 

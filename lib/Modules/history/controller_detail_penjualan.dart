@@ -10,11 +10,11 @@ import 'model_detail_penjualan_v2.dart';
 
 class detailpenjualanController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchPenjualanDetaillocal(id_toko);
-    detailPenjualanById(data.id, id_toko);
+    await fetchPenjualanDetaillocal(id_toko);
+    await detailPenjualanById(data.idLocal, id_toko);
   }
 
   var data = Get.arguments;
@@ -64,7 +64,7 @@ class detailpenjualanController extends GetxController {
               idtoko: id_toko.toString(),
               aktif: e.aktif,
               total: e.total,
-              id: e.id,
+              id: e.idLocal,
               qty: e.qty,
               tgl: e.tgl,
               id_kategori: e.idKategori,
@@ -82,7 +82,9 @@ class detailpenjualanController extends GetxController {
               "------------------------------------------>");
 
           await DBHelper().UPDATE(
-              table: 'penjualan_detail_local', data: synclocal('Y'), id: e.id);
+              table: 'penjualan_detail_local',
+              data: synclocal('Y'),
+              id: e.idLocal);
         });
 
         // Get.showSnackbar(
@@ -112,7 +114,7 @@ class detailpenjualanController extends GetxController {
       await DBHelper().INSERT(
           'penjualan_detail_local',
           DataPenjualanDetailV2(
-                  id: e.id,
+                  idLocal: e.idLocal,
                   idUser: e.idUser,
                   diskonKasir: e.diskonKasir,
                   qty: e.qty,
@@ -199,7 +201,7 @@ class detailpenjualanController extends GetxController {
         '-------------------fetch detail penjulan by id local---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT * FROM penjualan_detail_local WHERE id_penjualan = $id ORDER BY ID DESC');
+        'SELECT * FROM penjualan_detail_local WHERE id_penjualan = "$id" ORDER BY ID DESC');
     List<DataPenjualanDetailV2> penjualan = query.isNotEmpty
         ? query.map((e) => DataPenjualanDetailV2.fromJson(e)).toList()
         : [];

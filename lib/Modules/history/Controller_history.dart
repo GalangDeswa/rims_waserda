@@ -175,7 +175,7 @@ class historyController extends GetxController {
               token: token,
               id_hutang: e.idHutang,
               bayar: e.bayar,
-              id: e.id,
+              id: e.idLocal,
               id_pelanggan: e.idPelanggan,
               status: e.status,
               total: e.total,
@@ -193,8 +193,8 @@ class historyController extends GetxController {
               e.metodeBayar.toString() +
               "------------------------------------------>");
 
-          await DBHelper()
-              .UPDATE(table: 'penjualan_local', data: synclocal('Y'), id: e.id);
+          await DBHelper().UPDATE(
+              table: 'penjualan_local', data: synclocal('Y'), id: e.idLocal);
         });
 
         // Get.showSnackbar(
@@ -213,7 +213,6 @@ class historyController extends GetxController {
 
   initPenjualanToLocal(id_toko) async {
     List<DataPenjualan> penjualan_local = await fetchPenjualan();
-    //List<DataDetailPenjualan> beban_detail_local = await fetchJenisBeban();
 
     print('-------------------init penjualan local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
@@ -221,7 +220,7 @@ class historyController extends GetxController {
       await DBHelper().INSERT(
           'penjualan_local',
           DataPenjualan(
-                  id: e.id,
+                  idLocal: e.idLocal,
                   status: e.status,
                   bayar: e.bayar,
                   diskonTotal: e.diskonTotal,
@@ -237,6 +236,8 @@ class historyController extends GetxController {
                   total: e.total,
                   totalItem: e.totalItem,
                   sync: 'Y',
+                  idHutang: e.idHutang,
+                  idPelanggan: e.idPelanggan,
                   aktif: e.aktif)
               .toMapForDb());
     });
@@ -250,7 +251,8 @@ class historyController extends GetxController {
 
     // if (up != null) {
     //  print(up.toString());
-    print('init success---------------------------------------------------->');
+    print(
+        'init penjualan success---------------------------------------------------->');
     //await fetchPenjualanlocal(id_toko:id_toko,id_user: id_user,role: role);
     //await fetchJenisBebanlocal(id_toko);
     // Get.back(closeOverlays: true);
@@ -293,7 +295,7 @@ class historyController extends GetxController {
     succ.value = false;
     if (role == 1) {
       List<Map<String, Object?>> query = await DBHelper().FETCH(
-          'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.id_user = $id_user ORDER BY ID DESC');
+          'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_Local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.id_user = $id_user ORDER BY ID DESC');
       List<DataPenjualan> penjualan = query.isNotEmpty
           ? query.map((e) => DataPenjualan.fromJson(e)).toList()
           : [];
@@ -303,7 +305,7 @@ class historyController extends GetxController {
       return penjualan;
     } else {
       List<Map<String, Object?>> query = await DBHelper().FETCH(
-          'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko ORDER BY ID DESC');
+          'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko ORDER BY ID DESC');
       List<DataPenjualan> penjualan = query.isNotEmpty
           ? query.map((e) => DataPenjualan.fromJson(e)).toList()
           : [];
@@ -318,7 +320,21 @@ class historyController extends GetxController {
     print('-------------------fetch Penjualan local---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status != 4 ORDER BY ID DESC');
+        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status != 4 AND penjualan_local.status != 3 ORDER BY ID DESC');
+    List<DataPenjualan> penjualan = query.isNotEmpty
+        ? query.map((e) => DataPenjualan.fromJson(e)).toList()
+        : [];
+    penjualan_list_local.value = penjualan;
+    // print('fect produk local --->' + produk.toList().toString());
+    //succ.value = true;
+    return penjualan;
+  }
+
+  fetchPenjualanlocaldashboardtransaksi(id_toko) async {
+    print('-------------------fetch Penjualan local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status != 4 ORDER BY ID DESC');
     List<DataPenjualan> penjualan = query.isNotEmpty
         ? query.map((e) => DataPenjualan.fromJson(e)).toList()
         : [];
@@ -332,7 +348,7 @@ class historyController extends GetxController {
     print('-------------------fetch Penjualan local---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status = 4 ORDER BY ID DESC');
+        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status = 4 ORDER BY ID DESC');
     List<DataPenjualan> penjualan = query.isNotEmpty
         ? query.map((e) => DataPenjualan.fromJson(e)).toList()
         : [];
@@ -355,15 +371,6 @@ class historyController extends GetxController {
         var dataPenjualan = ModelPenjualan.fromJson(penjualan);
 
         penjualan_list.value = dataPenjualan.data;
-
-        // totalpage.value = dataPenjualan.meta.pagination.totalPages;
-        // totaldata.value = dataPenjualan.meta.pagination.total;
-        // perpage.value = dataPenjualan.meta.pagination.perPage;
-        // currentpage.value = penjualan['meta']['pagination']['current_page'];
-        // count.value = dataPenjualan.meta.pagination.count;
-        // if (totalpage > 1) {
-        //   nextdata = penjualan['meta']['pagination']['links']['next'];
-        // }
 
         //update();
         print('--------------------list penjualan---------------');
@@ -439,20 +446,23 @@ class historyController extends GetxController {
     return map;
   }
 
-  reversalPenjualanlocal(id) async {
+  //TODO : CHECK HUTANG TGL DETAIL CHECK LAPORAN HUTANG LUNAS TINAK NAMBAH PEMASUKAN
+
+  reversalPenjualanlocal(String id_local) async {
     print('-------------------reversal Penjualan local---------------------');
 
     Get.dialog(showloading(), barrierDismissible: false);
 
-    var select = penjualan_list_local.where((e) => e.id == id).first;
+    var select = penjualan_list_local.where((e) => e.idLocal == id_local).first;
 
-    if (select.idHutang == 0) {
+    if (select.idHutang == 0 || select.idHutang == '0') {
       var query = await DBHelper().UPDATE(
           table: 'penjualan_local',
           data: DataPenjualan(
                   aktif: 'N',
                   status: 4,
                   id: select.id,
+                  idLocal: select.idLocal,
                   idUser: select.idUser,
                   sync: 'N',
                   totalItem: select.totalItem,
@@ -470,7 +480,7 @@ class historyController extends GetxController {
                   namaPelanggan: select.namaPelanggan,
                   subTotal: select.subTotal)
               .toMapForDb(),
-          id: select.id);
+          id: select.idLocal);
       print(
           'edit reversal local berhasil------------------------------------->');
       print(query);
@@ -481,17 +491,18 @@ class historyController extends GetxController {
         List<DataProduk> selectproduk =
             await Get.find<produkController>().fetchProduklocal(id_toko);
 
-        var detail = selectdetail.where((e) => e.idPenjualan == id).toList();
+        var detail =
+            selectdetail.where((e) => e.idPenjualan == id_local).toList();
         print('detai---------------------------------->' + detail.toString());
 
         await Future.forEach(detail, (element) async {
           if (element.idJenisStock == 1) {
             var produk =
-                selectproduk.where((e) => e.id == element.idProduk).first;
+                selectproduk.where((e) => e.idLocal == element.idProduk).first;
             await DBHelper().UPDATE(
                 table: 'produk_local',
                 data: reversal_qty(produk.qty! + element.qty!),
-                id: produk.id);
+                id: produk.idLocal);
             print('update qty --------------------------------->' +
                 produk.namaProduk);
           }
@@ -525,6 +536,7 @@ class historyController extends GetxController {
                   aktif: 'N',
                   status: 4,
                   id: select.id,
+                  idLocal: select.idLocal,
                   idUser: select.idUser,
                   sync: 'N',
                   totalItem: select.totalItem,
@@ -542,7 +554,7 @@ class historyController extends GetxController {
                   namaPelanggan: select.namaPelanggan,
                   subTotal: select.subTotal)
               .toMapForDb(),
-          id: select.id);
+          id: select.idLocal);
       print('edit local berhasil------------------------------------->');
       print(query);
       if (query == 1) {
@@ -553,26 +565,27 @@ class historyController extends GetxController {
         List<DataHutang> selecthutang =
             await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
         var hutang = selecthutang
-            .where((element) => element.id == select.idHutang)
+            .where((element) => element.idLocal == select.idHutang)
             .first;
 
-        var detail = selectdetail.where((e) => e.idPenjualan == id).toList();
+        var detail =
+            selectdetail.where((e) => e.idPenjualan == id_local).toList();
 
         await Future.forEach(detail, (element) async {
           if (element.idJenisStock == 1) {
             var produk =
-                selectproduk.where((e) => e.id == element.idProduk).first;
+                selectproduk.where((e) => e.idLocal == element.idProduk).first;
             await DBHelper().UPDATE(
                 table: 'produk_local',
                 data: reversal_qty(produk.qty! + element.qty!),
-                id: produk.id);
+                id: produk.idLocal);
             print('update qty --------------------------------->' +
                 produk.namaProduk);
           }
         });
 
         var queryhutang = await DBHelper().UPDATE(
-            table: 'hutang_local', data: reversal_hutang(), id: hutang.id);
+            table: 'hutang_local', data: reversal_hutang(), id: hutang.idLocal);
 
         await fetchPenjualanlocal(
             id_toko: id_toko, id_user: id_user, role: role);

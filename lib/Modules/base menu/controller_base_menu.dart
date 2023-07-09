@@ -38,6 +38,7 @@ class base_menuController extends GetxController {
   var id_user = GetStorage().read('id_user');
   var role = GetStorage().read('role');
   var point_loading = 0.0.obs;
+
   syncAll(id_toko) async {
     try {
       print("id toko---------------------------->");
@@ -79,8 +80,9 @@ class base_menuController extends GetxController {
       await detailpenjualanController().syncPenjualanDetail(id_toko);
       point_loading.value = 1.0;
     } catch (e) {
+      Get.back();
       print(e);
-      Get.showSnackbar(toast().bottom_snackbar_error('error', 'error sync'));
+      Get.showSnackbar(toast().bottom_snackbar_error('error', e.toString()));
     }
   }
 

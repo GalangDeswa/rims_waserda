@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
@@ -128,7 +129,7 @@ class tambah_beban extends GetView<bebanController> {
                                             return DropdownMenuItem(
                                               child: Text(
                                                   item.kategori.toString()),
-                                              value: item.id.toString(),
+                                              value: item.idLocal.toString(),
                                             );
                                           }).toList(),
                                           onChanged: (val) {
@@ -303,10 +304,16 @@ class tambah_beban extends GetView<bebanController> {
                 height: 25,
               ),
               button_solid_custom(
-                  onPressed: () {
+                  onPressed: () async {
                     if (controller.formKeybeban.value.currentState!
                         .validate()) {
-                      controller.bebanTambahlocal();
+                      try {
+                        await controller.bebanTambahlocal();
+                      } catch (e) {
+                        Get.back();
+                        Get.showSnackbar(toast()
+                            .bottom_snackbar_error('Error', e.toString()));
+                      }
                     }
                   },
                   child: Text(

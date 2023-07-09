@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
@@ -378,7 +379,7 @@ class tambah_produk_form extends GetView<produkController> {
                                           return DropdownMenuItem(
                                             child:
                                                 Text(item.namaJenis.toString()),
-                                            value: item.id.toString(),
+                                            value: item.idLocal.toString(),
                                           );
                                         }).toList(),
                                         onChanged: (val) {
@@ -651,6 +652,24 @@ class tambah_produk_form extends GetView<produkController> {
                                                     ),
                                                   ),
                                                 ),
+                                                Container(
+                                                  margin:
+                                                      EdgeInsets.only(left: 10),
+                                                  decoration: BoxDecoration(
+                                                      color: color_template()
+                                                          .primary,
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border),
+                                                  child: IconButton(
+                                                    onPressed: () {
+                                                      controller.scan();
+                                                    },
+                                                    icon: Icon(FontAwesomeIcons
+                                                        .camera),
+                                                    color: Colors.white,
+                                                  ),
+                                                )
                                               ],
                                             );
                                           }),
@@ -818,7 +837,13 @@ class tambah_produk_form extends GetView<produkController> {
                   onPressed: () {
                     if (controller.formKeyproduk.value.currentState!
                         .validate()) {
-                      controller.ProdukTambahlocal();
+                      try {
+                        controller.ProdukTambahlocal();
+                      } catch (e) {
+                        Get.back();
+                        Get.showSnackbar(toast()
+                            .bottom_snackbar_error('Error', e.toString()));
+                      }
                     }
                   },
                   child: Text(

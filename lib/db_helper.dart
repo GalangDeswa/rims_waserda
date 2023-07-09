@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -93,36 +95,62 @@ class DBHelper {
 //-------------------------------------------------------------------------------------------
 
   FETCH(String query) async {
-    var dbClient = await db;
-    var queryDB = await dbClient!.rawQuery(query);
-    return queryDB;
+    try {
+      var dbClient = await db;
+      var queryDB = await dbClient!.rawQuery(query);
+      return queryDB;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 
   INSERT(String table, dynamic data) async {
-    var dbClient = await db;
-    var query = await dbClient!.insert(table, data);
-    return query;
+    try {
+      var dbClient = await db;
+      var query = await dbClient!.insert(table, data);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 
   UPDATE(
       {required String table,
       required dynamic data,
       required dynamic id}) async {
-    var dbClient = await db;
-    var query =
-        await dbClient!.update(table, data, where: 'id = ?', whereArgs: [id]);
-    return query;
+    try {
+      var dbClient = await db;
+      var query = await dbClient!
+          .update(table, data, where: 'id_local = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 
   DELETE(String table, int id) async {
-    var dbClient = await db;
-    var query = await dbClient!.delete(table, where: 'id = ?', whereArgs: [id]);
-    return query;
+    try {
+      var dbClient = await db;
+      var query =
+          await dbClient!.delete(table, where: 'id_local = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 
   DELETEALL(String table) async {
-    var dbClient = await db;
-    var query = await dbClient!.delete(table);
-    return query;
+    try {
+      var dbClient = await db;
+      var query = await dbClient!.delete(table);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 }

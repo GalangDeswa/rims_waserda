@@ -394,6 +394,33 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                           'Rp. ' +
                                                               controller.nominal
                                                                   .format(controller
+                                                                      .hutanghariini
+                                                                      .value),
+                                                          style:
+                                                              font().reguler),
+                                                      subtitle: Text(
+                                                          'Hutang hari ini',
+                                                          style:
+                                                              font().reguler),
+                                                    ),
+                                                  ),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      title: Text(
+                                                          'Rp. ' +
+                                                              controller.nominal
+                                                                  .format(controller
                                                                       .totalhutang
                                                                       .value),
                                                           style:

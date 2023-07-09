@@ -15,6 +15,7 @@ class ModelDetailPenjualanV2 {
   int? statusCode;
   String? messages;
   List<DataPenjualanDetailV2>? data;
+
   // Meta? meta;
 
   ModelDetailPenjualanV2({
@@ -50,8 +51,9 @@ class ModelDetailPenjualanV2 {
 
 class DataPenjualanDetailV2 {
   int? id;
-  int? idPenjualan;
-  int? idProduk;
+  String? idLocal;
+  String? idPenjualan;
+  String? idProduk;
   int? idKategori;
   int? idJenisStock;
   String? namaBrg;
@@ -68,6 +70,7 @@ class DataPenjualanDetailV2 {
 
   DataPenjualanDetailV2({
     this.idPenjualan,
+    this.idLocal,
     this.id,
     this.idProduk,
     this.idKategori,
@@ -88,6 +91,7 @@ class DataPenjualanDetailV2 {
   factory DataPenjualanDetailV2.fromJson(Map<String, dynamic> json) =>
       DataPenjualanDetailV2(
         id: json["id"],
+        idLocal: json["id_local"],
         idPenjualan: json["id_penjualan"],
         idProduk: json["id_produk"],
         idKategori: json["id_kategori"],
@@ -107,6 +111,7 @@ class DataPenjualanDetailV2 {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_penjualan": idPenjualan,
         "id_produk": idProduk,
         "id_kategori": idKategori,
@@ -127,6 +132,7 @@ class DataPenjualanDetailV2 {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_penjualan'] = idPenjualan;
     map['id_produk'] = idProduk;
     map['id_kategori'] = idKategori;

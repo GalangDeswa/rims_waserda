@@ -10,7 +10,7 @@ class hutang_detailController extends GetxController {
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    fetchDataHutangDetaillocal(id_toko, data.id);
+    fetchDataHutangDetaillocal(id_toko, data.idLocal);
   }
 
   DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
@@ -33,7 +33,7 @@ class hutang_detailController extends GetxController {
     print('-------------------fetch hutang detail local---------------------');
     //  succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT * FROM hutang_detail_local WHERE id_toko = $id_toko AND aktif = "Y" AND id_hutang =$id_hutang  ORDER BY ID DESC');
+        'SELECT * FROM hutang_detail_local WHERE id_toko = $id_toko AND aktif = "Y" AND id_hutang ="$id_hutang"  ORDER BY ID DESC');
     List<DataHutangDetail> hutang = query.isNotEmpty
         ? query.map((e) => DataHutangDetail.fromJson(e)).toList()
         : [];

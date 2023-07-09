@@ -1,6 +1,8 @@
 class server {
-  final String host = 'http://192.168.100.33/rimspos-standar/api-pos/';
+  final String host = 'https://rims.co.id/rimspos-standar/api-pos/';
 }
+
+//TODO : FINALISASI UI/TEST
 
 class link {
   //login----------------------------------------------------------------------
@@ -16,6 +18,9 @@ class link {
   //produk----------------------------------------------------------------------
   final Uri POST_produklocaltodb =
       Uri.parse(server().host + 'produk/sync_produk');
+
+  final Uri POST_checkidporduk =
+      Uri.parse(server().host + 'produk/check_id_produk');
 
   final Uri POST_produkall = Uri.parse(server().host + 'produk/data/allproduk');
   final Uri POST_produkjenis = Uri.parse(server().host + 'produk/jenis/data');

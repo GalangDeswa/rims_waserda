@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/controller_beban.dart';
 
 import '../../../Templates/setting.dart';
@@ -302,10 +303,17 @@ class edit_beban_form extends GetView<editbebanController> {
                 height: 25,
               ),
               button_solid_custom(
-                  onPressed: () {
+                  onPressed: () async {
                     if (controller.formKeybeban.value.currentState!
                         .validate()) {
-                      controller.editBebanLocal();
+                      try {
+                        await controller.editBebanLocal();
+                      } catch (e) {
+                        Get.back();
+                        Get.showSnackbar(toast()
+                            .bottom_snackbar_error('error', e.toString()));
+                      }
+
                       //controller.jjj();
                     }
                   },

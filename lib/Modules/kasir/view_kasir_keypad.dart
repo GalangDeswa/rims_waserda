@@ -169,7 +169,7 @@ class kasir_keypad extends GetView<kasirController> {
                                           },
                                           onChanged: (data) {
                                             controller.id_pelanggan.value =
-                                                data!.id.toString();
+                                                data!.idLocal.toString();
                                             print(
                                                 'id pelanggan--------------------');
                                             print(controller.id_pelanggan);

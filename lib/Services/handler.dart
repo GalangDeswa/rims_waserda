@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:rims_waserda/Services/api.dart';
 
+import '../Modules/Widgets/toast.dart';
 import '../Modules/produk/data produk/model_produk.dart';
 
 class check_conn {
@@ -92,25 +93,31 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> userData(String token, idtoko) async {
-    var response = await http.post(link().POST_userdata,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'USER DATA network handler----------------------------------------->');
-      var data = json.decode(response.body);
-      //var data = response.body;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'USER DATA network handler----------------------------------------->');
-      print('gagal USER DATA');
-      print(response.statusCode);
-      print(response.body);
+    try {
+      var response = await http.post(link().POST_userdata,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'USER DATA network handler----------------------------------------->');
+        var data = json.decode(response.body);
+        //var data = response.body;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'USER DATA network handler----------------------------------------->');
+        print('gagal USER DATA');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error('Error tambah user');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -148,30 +155,36 @@ class REST extends GetConnect {
 
   static Future<dynamic> userEdit(
       String token, idtoko, id, iduser, nama, email, hp) async {
-    var response = await http.post(link().POST_useredit,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'id': id.toString(),
-          'id_user': iduser.toString(),
-          'nama': nama,
-          'email': email,
-          'hp': hp,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'USER EDIT network handler----------------------------------------->');
-      var data = json.decode(response.body);
-      //var data = response.body;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'USER EDIT network handler----------------------------------------->');
-      print('gagal USER EDIT');
-      print(response.statusCode);
-      print(response.body);
+    try {
+      var response = await http.post(link().POST_useredit,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'id': id.toString(),
+            'id_user': iduser.toString(),
+            'nama': nama,
+            'email': email,
+            'hp': hp,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'USER EDIT network handler----------------------------------------->');
+        var data = json.decode(response.body);
+        //var data = response.body;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'USER EDIT network handler----------------------------------------->');
+        print('gagal USER EDIT');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error('Error tambah user');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -182,28 +195,34 @@ class REST extends GetConnect {
     iduser,
     password,
   ) async {
-    var response = await http.post(link().POST_usereditpassword,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'id': id.toString(),
-          'id_user': iduser.toString(),
-          'password': password,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'USER EDIT network handler----------------------------------------->');
-      var data = json.decode(response.body);
-      //var data = response.body;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'USER EDIT network handler----------------------------------------->');
-      print('gagal USER EDIT');
-      print(response.statusCode);
-      print(response.body);
+    try {
+      var response = await http.post(link().POST_usereditpassword,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'id': id.toString(),
+            'id_user': iduser.toString(),
+            'password': password,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'USER EDIT network handler----------------------------------------->');
+        var data = json.decode(response.body);
+        //var data = response.body;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'USER EDIT network handler----------------------------------------->');
+        print('gagal USER EDIT');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error('Error edit password');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -267,6 +286,7 @@ class REST extends GetConnect {
 
   static Future<dynamic> produkAllv2(String token, idtoko) async {
     //Get.dialog(showloading());
+
     var response = await http.post(link().POST_produkall,
         body: ({
           'token': token,
@@ -294,6 +314,8 @@ class REST extends GetConnect {
       print('gagal PRODUKALL');
       print(response.statusCode);
       print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Fetch produk all gagal');
     }
   }
 
@@ -318,6 +340,37 @@ class REST extends GetConnect {
       print(
           'PRODUKALLnetwork handler----------------------------------------->');
       print('gagal PRODUKALL');
+      print(response.statusCode);
+      print(response.body);
+    }
+  }
+
+  static Future<dynamic> checkIdProduk({required String token}) async {
+    //Get.dialog(showloading());
+    var response = await http.post(link().POST_checkidporduk,
+        body: ({
+          'token': token,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'CHECK ID PRODUK network handler----------------------------------------->');
+
+      var data = await json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      // var l = [];
+      //data = l;
+      //print(l.length);
+      print(data);
+      print(response.statusCode);
+      //Get.back(closeOverlays: true);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      // print(data['message']);
+      print(
+          'CHECK ID PRODUK handler----------------------------------------->');
+      print('gagal CHECK ID PRODUK');
       print(response.statusCode);
       print(response.body);
     }
@@ -404,7 +457,7 @@ class REST extends GetConnect {
     return data;
   }
 
-  static Future<dynamic> produkLocalToDb({
+  static Future<dynamic> syncproduk({
     required String token,
     id,
     barcode,
@@ -426,50 +479,49 @@ class REST extends GetConnect {
     //updated_at,
     // deleted_at
   }) async {
-    var response = http.MultipartRequest("POST", link().POST_produklocaltodb);
+    try {
+      var response = http.MultipartRequest("POST", link().POST_produklocaltodb);
+      response.fields['token'] = token;
+      response.fields['image'] = image ?? '-';
+      response.fields['id_local'] = id.toString();
+      response.fields['barcode'] = barcode ?? '-';
+      response.fields['id_toko'] = id_toko.toString();
+      response.fields['id_user'] = id_user.toString();
+      response.fields['id_jenis'] = id_jenis.toString();
+      response.fields['id_kategori'] = id_kategori.toString();
+      response.fields['id_jenis_stock'] = id_jenis_stock.toString();
+      response.fields['nama_produk'] = nama_produk;
+      response.fields['deskripsi'] = deskripsi;
+      response.fields['qty'] = qty.toString();
+      response.fields['harga'] = harga.toString();
+      response.fields['harga_modal'] = harga_modal.toString();
+      response.fields['diskon_barang'] = diskon_barang.toString();
+      response.fields['status'] = status.toString();
+      //response.fields['aktif'] = aktif.toString();
+      // response.fields['created_at'] = created_at.toString();
+      // response.fields['updated_at'] = updated_at.toString();
+      // response.fields['deleted_at'] = deleted_at.toString();
 
-    // if (image != null) {
-    //   var pic = await http.MultipartFile.fromPath("image", image.path);
-    //   //add multipart to request
-    //   response.files.add(pic);
-    //   //imageUploadRequest.files.add(foto);
-    // }
+      //response.fields['diskon_barang'] = diskon_barang;
 
-    response.fields['token'] = token;
-    response.fields['image'] = image ?? '-';
-    response.fields['id'] = id.toString();
-    response.fields['barcode'] = barcode ?? '-';
-    response.fields['id_toko'] = id_toko.toString();
-    response.fields['id_user'] = id_user.toString();
-    response.fields['id_jenis'] = id_jenis.toString();
-    response.fields['id_kategori'] = id_kategori.toString();
-    response.fields['id_jenis_stock'] = id_jenis_stock.toString();
-    response.fields['nama_produk'] = nama_produk;
-    response.fields['deskripsi'] = deskripsi;
-    response.fields['qty'] = qty.toString();
-    response.fields['harga'] = harga.toString();
-    response.fields['harga_modal'] = harga_modal.toString();
-    response.fields['diskon_barang'] = diskon_barang.toString();
-    response.fields['status'] = status.toString();
-    //response.fields['aktif'] = aktif.toString();
-    // response.fields['created_at'] = created_at.toString();
-    // response.fields['updated_at'] = updated_at.toString();
-    // response.fields['deleted_at'] = deleted_at.toString();
+      final streamedResponse = await response.send();
+      final datarespon = await http.Response.fromStream(streamedResponse);
+      if (datarespon.statusCode != 200) {
+        print(
+            'SYNC PRODUK handelr gagal-------------------------------------------');
+        print(datarespon.statusCode);
+        print(datarespon.body);
+        return Future.error(
+            datarespon.statusCode.toString() + ' - ' + 'Sync produk gagal');
+      }
+      var data = json.decode(datarespon.body);
 
-    //response.fields['diskon_barang'] = diskon_barang;
-
-    final streamedResponse = await response.send();
-    final datarespon = await http.Response.fromStream(streamedResponse);
-    if (datarespon.statusCode != 200) {
-      print('SYNC PRODUK handelr-------------------------------------------');
-      print(datarespon.statusCode);
-      print(datarespon.body);
-      return null;
+      print(data);
+      return data;
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
-    var data = json.decode(datarespon.body);
-
-    print(data);
-    return data;
   }
 
   static Future<dynamic> produkEdit(
@@ -551,30 +603,36 @@ class REST extends GetConnect {
 
   static Future<dynamic> syncProdukJenis(
       {required String token, idtoko, namajenis, aktif, id}) async {
-    var response = await http.post(link().POST_syncprodukjenis,
-        body: ({
-          'token': token,
-          'id': id.toString(),
-          'id_toko': idtoko.toString(),
-          'nama_jenis': namajenis,
-          'aktif': aktif,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC PRODUK JENIS network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_syncprodukjenis,
+          body: ({
+            'token': token,
+            'id_local': id.toString(),
+            'id_toko': idtoko.toString(),
+            'nama_jenis': namajenis,
+            'aktif': aktif,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC PRODUK JENIS network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'SYNC PRODUK JENIS network handler----------------------------------------->');
-      print('gagal SYNC PRODUK JENIS');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'SYNC PRODUK JENIS network handler----------------------------------------->');
+        print('gagal SYNC PRODUK JENIS');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync produk jenis gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -734,90 +792,110 @@ class REST extends GetConnect {
       tgl,
       jumlah,
       aktif}) async {
-    var response = await http.post(link().POST_syncbeban,
-        body: ({
-          'token': token,
-          'id_toko': idtoko.toString(),
-          'id': id.toString(),
-          'id_user': iduser.toString(),
-          'id_ktr_beban': idkatbeban.toString(),
-          'nama': nama,
-          'keterangan': keterangan,
-          'tgl': tgl.toString(),
-          'jumlah': jumlah.toString(),
-          'aktif': aktif,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC BEBAN network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_syncbeban,
+          body: ({
+            'token': token,
+            'id_toko': idtoko.toString(),
+            'id_local': id.toString(),
+            'id_user': iduser.toString(),
+            'id_ktr_beban': idkatbeban.toString(),
+            'nama': nama,
+            'keterangan': keterangan,
+            'tgl': tgl.toString(),
+            'jumlah': jumlah.toString(),
+            'aktif': aktif,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC BEBAN network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'SYNC BEBAN network handler----------------------------------------->');
-      print('gagal SYNC BEBAN');
-      print(response.statusCode);
-      print(response.body);
-      return false;
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'SYNC BEBAN network handler----------------------------------------->');
+        print('gagal SYNC BEBAN');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync beban gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> syncbebanJenis(
       String token, id, idtoko, kategori, aktif) async {
-    var response = await http.post(link().POST_syncbebankategori,
-        body: ({
-          'token': token,
-          'id_toko': idtoko.toString(),
-          'id': id.toString(),
-          'kategori': kategori,
-          'aktif': aktif,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC KATEGORI BEBAN network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_syncbebankategori,
+          body: ({
+            'token': token,
+            'id_toko': idtoko.toString(),
+            'id_local': id.toString(),
+            'kategori': kategori,
+            'aktif': aktif,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC KATEGORI BEBAN network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'SYNC KATEGORI BEBAN network handler----------------------------------------->');
-      print('gagal SYNC KATEGORI BEBAN');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'SYNC KATEGORI BEBAN network handler----------------------------------------->');
+        print('gagal SYNC KATEGORI BEBAN');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync beban jenis gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> bebanKategori(String token, idtoko) async {
-    var response = await http.post(link().POST_bebankategori,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'BEBAN KATEGORI network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_bebankategori,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'BEBAN KATEGORI network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'BEBAN KATEGORI network handler----------------------------------------->');
-      print('gagal BEBAN KATEGORI');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'BEBAN KATEGORI network handler----------------------------------------->');
+        print('gagal BEBAN KATEGORI');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + 'Error beban kategori');
+      }
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -907,28 +985,34 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> bebanData(String token, idtoko, search) async {
-    var response = await http.post(link().POST_bebadata,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'search': search,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'BEBAN DATA network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_bebadata,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'search': search,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'BEBAN DATA network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'BEBAN DATA network handler----------------------------------------->');
-      print('gagal BEBAN DATA');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'BEBAN DATA network handler----------------------------------------->');
+        print('gagal BEBAN DATA');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error('error beban data');
+      }
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1235,46 +1319,51 @@ class REST extends GetConnect {
     metode_bayar,
     status,
   }) async {
-    var response = await http.post(link().POST_syncpenjualan,
-        body: ({
-          'token': token,
-          'id': id.toString(),
-          'id_user': iduser.toString(),
-          'id_toko': idtoko.toString(),
-          'aktif': aktif,
-          'id_pelanggan': id_pelanggan.toString(),
-          'meja': meja,
-          'id_hutang': id_hutang.toString(),
-          'total_item': total_item.toString(),
-          'diskon_total': diskon_total.toString(),
-          'sub_total': sub_total.toString(),
-          'total': total.toString(),
-          'bayar': bayar.toString(),
-          'kembalian': kembalian.toString(),
-          'tgl_penjualan': tgl_penjualan,
-          'metode_bayar': metode_bayar.toString(),
-          'status': status.toString(),
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC PENJUALAN network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_syncpenjualan,
+          body: ({
+            'token': token,
+            'id_local': id.toString(),
+            'id_user': iduser.toString(),
+            'id_toko': idtoko.toString(),
+            'aktif': aktif,
+            'id_pelanggan': id_pelanggan.toString(),
+            'meja': meja,
+            'id_hutang': id_hutang.toString(),
+            'total_item': total_item.toString(),
+            'diskon_total': diskon_total.toString(),
+            'sub_total': sub_total.toString(),
+            'total': total.toString(),
+            'bayar': bayar.toString(),
+            'kembalian': kembalian.toString(),
+            'tgl_penjualan': tgl_penjualan,
+            'metode_bayar': metode_bayar.toString(),
+            'status': status.toString(),
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC PENJUALAN network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'SYNC PENJUALAN network handler----------------------------------------->');
-      print('GAGAL SYNC PENJUALAN');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'SYNC PENJUALAN network handler----------------------------------------->');
+        print('GAGAL SYNC PENJUALAN');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync penjualan gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
-
-  //TODO: chek link untuk sync , crud sync
 
   static Future<dynamic> syncpenjualandetail({
     required String token,
@@ -1295,70 +1384,84 @@ class REST extends GetConnect {
     total,
     tgl,
   }) async {
-    var response = await http.post(link().POST_syncpenjualandetail,
-        body: ({
-          'token': token,
-          'id': id.toString(),
-          'id_user': iduser.toString(),
-          'id_toko': idtoko.toString(),
-          'aktif': aktif,
-          'id_penjualan': id_penjualan.toString(),
-          'id_produk': id_produk.toString(),
-          'id_kategori': id_kategori.toString(),
-          'id_jenis_stock': id_jenis_stock.toString(),
-          'nama_brg': nama_brg,
-          'harga_modal': harga_modal.toString(),
-          'harga_brg': harga_brg.toString(),
-          'qty': qty.toString(),
-          'diskon_brg': diskon_brg.toString(),
-          'diskon_kasir': diskon_kasir.toString(),
-          'total': total.toString(),
-          'tgl': tgl,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC PENJUALAN network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_syncpenjualandetail,
+          body: ({
+            'token': token,
+            'id_local': id.toString(),
+            'id_user': iduser.toString(),
+            'id_toko': idtoko.toString(),
+            'aktif': aktif,
+            'id_penjualan': id_penjualan.toString(),
+            'id_produk': id_produk.toString(),
+            'id_kategori': id_kategori.toString(),
+            'id_jenis_stock': id_jenis_stock.toString(),
+            'nama_brg': nama_brg,
+            'harga_modal': harga_modal.toString(),
+            'harga_brg': harga_brg.toString(),
+            'qty': qty.toString(),
+            'diskon_brg': diskon_brg.toString(),
+            'diskon_kasir': diskon_kasir.toString(),
+            'total': total.toString(),
+            'tgl': tgl,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC PENJUALAN network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'SYNC PENJUALAN network handler----------------------------------------->');
-      print('GAGAL SYNC PENJUALAN');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'SYNC PENJUALAN network handler----------------------------------------->');
+        print('GAGAL SYNC PENJUALAN');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(response.statusCode.toString() +
+            ' - ' +
+            'Sync penjualan detail gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> penjualanData(
       String token, iduser, idtoko, search) async {
-    var response = await http.post(link().POST_penjualadata,
-        body: ({
-          'token': token,
-          'id_user': iduser.toString(),
-          'id_toko': idtoko,
-          'search': search,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'DATA PENJUALAN network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_penjualadata,
+          body: ({
+            'token': token,
+            'id_user': iduser.toString(),
+            'id_toko': idtoko,
+            'search': search,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'DATA PENJUALAN network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'DATA PENJUALAN network handler----------------------------------------->');
-      print('GAGAL DATA PENJUALAN');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'DATA PENJUALAN network handler----------------------------------------->');
+        print('GAGAL DATA PENJUALAN');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error('error fetch penjualan');
+      }
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1468,208 +1571,247 @@ class REST extends GetConnect {
 
   static Future<dynamic> laporanUmum(String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await http.post(link().POST_laporanumum,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'date1': date1,
-          'date2': date2,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'DATA LAPORAN UMUM network handler----------------------------------------->');
-      //  final filename = 'qwe';
-      var data = response;
-      return data;
+    try {
+      var response = await http.post(link().POST_laporanumum,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'date1': date1,
+            'date2': date2,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'DATA LAPORAN UMUM network handler----------------------------------------->');
+        //  final filename = 'qwe';
+        var data = response;
+        return data;
 
-      // var request = await HttpClient().getUrl(link().POST_laporanumum);
-      //  var response = await request.close();
-      // var bytes = await consolidateHttpClientResponseBytes(response);
+        // var request = await HttpClient().getUrl(link().POST_laporanumum);
+        //  var response = await request.close();
+        // var bytes = await consolidateHttpClientResponseBytes(response);
 
-      // Directory tempDir = await getTemporaryDirectory();
-      // String tempPath = tempDir.path;
-      // File file = File('$tempPath/$filename.pdf');
-      // print('$tempPath/$filename');
-      // await file.writeAsBytes(response.bodyBytes);
-      // return file;
+        // Directory tempDir = await getTemporaryDirectory();
+        // String tempPath = tempDir.path;
+        // File file = File('$tempPath/$filename.pdf');
+        // print('$tempPath/$filename');
+        // await file.writeAsBytes(response.bodyBytes);
+        // return file;
 
-      //await file.writeAsBytes(bytes, flush: true);
-      //completer.complete(file);
-      // createFileOfPdfUrl().then((f) {
-      //   remotePDFpath.value = f.path;
-      // });
+        //await file.writeAsBytes(bytes, flush: true);
+        //completer.complete(file);
+        // createFileOfPdfUrl().then((f) {
+        //   remotePDFpath.value = f.path;
+        // });
 
-      // File data = response.body;
-      // var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      //print(data);
-      print(response.statusCode);
-      // return completer.future;
-      //return (data);
-    } else {
-      print(
-          'DATA LAPORAN UMUM network handler----------------------------------------->');
-      print('GAGAL DATA LAPORAN UMUM');
-      print(response.statusCode);
-      print(response.body);
+        // File data = response.body;
+        // var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        //print(data);
+        print(response.statusCode);
+        // return completer.future;
+        //return (data);
+      } else {
+        print(
+            'DATA LAPORAN UMUM network handler----------------------------------------->');
+        print('GAGAL DATA LAPORAN UMUM');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(response.statusCode.toString() +
+            ' - ' +
+            'fetch laporan umum gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> laporanPenjualan(
       String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await http.post(link().POST_laporanpenjualan,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'date1': date1,
-          'date2': date2,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'DATA LAPORAN PENJUALAN network handler----------------------------------------->');
-      //  final filename = 'qwe';
-      var data = response;
-      return data;
+    try {
+      var response = await http.post(link().POST_laporanpenjualan,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'date1': date1,
+            'date2': date2,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'DATA LAPORAN PENJUALAN network handler----------------------------------------->');
+        //  final filename = 'qwe';
+        var data = response;
+        return data;
 
-      // var request = await HttpClient().getUrl(link().POST_laporanumum);
-      //  var response = await request.close();
-      // var bytes = await consolidateHttpClientResponseBytes(response);
+        // var request = await HttpClient().getUrl(link().POST_laporanumum);
+        //  var response = await request.close();
+        // var bytes = await consolidateHttpClientResponseBytes(response);
 
-      // Directory tempDir = await getTemporaryDirectory();
-      // String tempPath = tempDir.path;
-      // File file = File('$tempPath/$filename.pdf');
-      // print('$tempPath/$filename');
-      // await file.writeAsBytes(response.bodyBytes);
-      // return file;
+        // Directory tempDir = await getTemporaryDirectory();
+        // String tempPath = tempDir.path;
+        // File file = File('$tempPath/$filename.pdf');
+        // print('$tempPath/$filename');
+        // await file.writeAsBytes(response.bodyBytes);
+        // return file;
 
-      //await file.writeAsBytes(bytes, flush: true);
-      //completer.complete(file);
-      // createFileOfPdfUrl().then((f) {
-      //   remotePDFpath.value = f.path;
-      // });
+        //await file.writeAsBytes(bytes, flush: true);
+        //completer.complete(file);
+        // createFileOfPdfUrl().then((f) {
+        //   remotePDFpath.value = f.path;
+        // });
 
-      // File data = response.body;
-      // var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      //print(data);
-      print(response.statusCode);
-      // return completer.future;
-      //return (data);
-    } else {
-      print(
-          'DATA LAPORAN PENJUALAN network handler----------------------------------------->');
-      print('GAGAL DATA LAPORAN UMUM');
-      print(response.statusCode);
-      print(response.body);
+        // File data = response.body;
+        // var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        //print(data);
+        print(response.statusCode);
+        // return completer.future;
+        //return (data);
+      } else {
+        print(
+            'DATA LAPORAN PENJUALAN network handler----------------------------------------->');
+        print('GAGAL DATA LAPORAN UMUM');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync produk jenis gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> laporanBeban(
       String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await http.post(link().POST_laporanbeban,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'date1': date1,
-          'date2': date2,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'DATA LAPORAN BEBAN network handler----------------------------------------->');
-      //  final filename = 'qwe';
-      var data = response;
-      return data;
+    try {
+      var response = await http.post(link().POST_laporanbeban,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'date1': date1,
+            'date2': date2,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'DATA LAPORAN BEBAN network handler----------------------------------------->');
+        //  final filename = 'qwe';
+        var data = response;
+        return data;
 
-      // var request = await HttpClient().getUrl(link().POST_laporanumum);
-      //  var response = await request.close();
-      // var bytes = await consolidateHttpClientResponseBytes(response);
+        // var request = await HttpClient().getUrl(link().POST_laporanumum);
+        //  var response = await request.close();
+        // var bytes = await consolidateHttpClientResponseBytes(response);
 
-      // Directory tempDir = await getTemporaryDirectory();
-      // String tempPath = tempDir.path;
-      // File file = File('$tempPath/$filename.pdf');
-      // print('$tempPath/$filename');
-      // await file.writeAsBytes(response.bodyBytes);
-      // return file;
+        // Directory tempDir = await getTemporaryDirectory();
+        // String tempPath = tempDir.path;
+        // File file = File('$tempPath/$filename.pdf');
+        // print('$tempPath/$filename');
+        // await file.writeAsBytes(response.bodyBytes);
+        // return file;
 
-      //await file.writeAsBytes(bytes, flush: true);
-      //completer.complete(file);
-      // createFileOfPdfUrl().then((f) {
-      //   remotePDFpath.value = f.path;
-      // });
+        //await file.writeAsBytes(bytes, flush: true);
+        //completer.complete(file);
+        // createFileOfPdfUrl().then((f) {
+        //   remotePDFpath.value = f.path;
+        // });
 
-      // File data = response.body;
-      // var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      //print(data);
-      print(response.statusCode);
-      // return completer.future;
-      //return (data);
-    } else {
-      print(
-          'DATA LAPORAN BEBAN network handler----------------------------------------->');
-      print('GAGAL DATA LAPORAN BEBAN');
-      print(response.statusCode);
-      print(response.body);
+        // File data = response.body;
+        // var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        //print(data);
+        print(response.statusCode);
+        // return completer.future;
+        //return (data);
+      } else {
+        print(
+            'DATA LAPORAN BEBAN network handler----------------------------------------->');
+        print('GAGAL DATA LAPORAN BEBAN');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(response.statusCode.toString() +
+            ' - ' +
+            'fetch laporan beban gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> laporanReversal(
       String token, idtoko, date1, date2) async {
     //Completer<File> completer = Completer();
-    var response = await http.post(link().POST_laporanreversal,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'date1': date1,
-          'date2': date2,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'DATA LAPORAN REVERSAL network handler----------------------------------------->');
-      //  final filename = 'qwe';
-      var data = response;
-      return data;
-    } else {
-      print(
-          'DATA LAPORAN REVERSAL network handler----------------------------------------->');
-      print('GAGAL DATA LAPORAN REVERSAL');
-      print(response.statusCode);
-      print(response.body);
+
+    try {
+      var response = await http.post(link().POST_laporanreversal,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'date1': date1,
+            'date2': date2,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'DATA LAPORAN REVERSAL network handler----------------------------------------->');
+        //  final filename = 'qwe';
+        var data = response;
+        return data;
+      } else {
+        print(
+            'DATA LAPORAN REVERSAL network handler----------------------------------------->');
+        print('GAGAL DATA LAPORAN REVERSAL');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(response.statusCode.toString() +
+            ' - ' +
+            'fetch laporan reversal gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> syncpelanggan(
       String token, id, id_toko, nama_pelanggan, no_hp, aktif) async {
-    var response = await http.post(link().POST_syncpelanggan,
-        body: ({
-          'token': token,
-          'id_toko': id_toko.toString(),
-          'id': id.toString(),
-          'nama_pelanggan': nama_pelanggan,
-          'no_hp': no_hp,
-          'aktif': aktif,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_syncpelanggan,
+          body: ({
+            'token': token,
+            'id_toko': id_toko.toString(),
+            'id_local': id.toString(),
+            'nama_pelanggan': nama_pelanggan,
+            'no_hp': no_hp,
+            'aktif': aktif,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
-      print('GAGAL SYNC PELANGGAN TAMBAH');
-      print(response.statusCode);
-      print(response.body);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
+        print('GAGAL SYNC PELANGGAN TAMBAH');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync pelanggan gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1782,75 +1924,92 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> kontenSquare() async {
-    var response = await http.get(link().GET_kontensquare);
+    try {
+      var response = await http.get(link().GET_kontensquare);
 
-    if (response.statusCode == 200) {
-      print(
-          'KONTEN SQUARE network handler----------------------------------------->');
+      if (response.statusCode == 200) {
+        print(
+            'KONTEN SQUARE network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      var data = json.decode(response.body);
-      print(
-          'KONTEN SQUARE network handler----------------------------------------->');
-      print('GAGAL DATA KONTEN SQUARE');
-      print(response.statusCode);
-      print(response.body);
-      return (data);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        var data = json.decode(response.body);
+        print(
+            'KONTEN SQUARE network handler----------------------------------------->');
+        print('GAGAL DATA KONTEN SQUARE');
+        print(response.statusCode);
+        print(response.body);
+        return (data);
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> kontenBanner() async {
-    var response = await http.get(link().GET_kontenbanner);
+    try {
+      var response = await http.get(link().GET_kontenbanner);
 
-    if (response.statusCode == 200) {
-      print(
-          'KONTEN BANNER network handler----------------------------------------->');
+      if (response.statusCode == 200) {
+        print(
+            'KONTEN BANNER network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      var data = json.decode(response.body);
-      print(
-          'KONTEN BANNER network handler----------------------------------------->');
-      print('GAGAL DATA KONTEN BANNER');
-      print(response.statusCode);
-      print(response.body);
-      return (data);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        var data = json.decode(response.body);
+        print(
+            'KONTEN BANNER network handler----------------------------------------->');
+        print('GAGAL DATA KONTEN BANNER');
+        print(response.statusCode);
+        print(response.body);
+        return (data);
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
   static Future<dynamic> logout(String token) async {
-    var response = await http.post(link().POST_logout,
-        body: ({
-          'token': token,
-        }));
-    if (response.statusCode == 200) {
-      print('LOGOUT network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_logout,
+          body: ({
+            'token': token,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'LOGOUT network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return (data);
-    } else {
-      var data = json.decode(response.body);
-      print('LOGOUT network handler----------------------------------------->');
-      print('GAGAL DATA PELANGGAN EDIT');
-      print(response.statusCode);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return (data);
+      } else {
+        var data = json.decode(response.body);
+        print(
+            'LOGOUT network handler----------------------------------------->');
+        print('GAGAL DATA PELANGGAN EDIT');
+        print(response.statusCode);
 
-      print(response.body);
-      return data;
+        print(response.body);
+        return data;
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1863,36 +2022,42 @@ class REST extends GetConnect {
       hutang,
       tgl_hutang,
       status}) async {
-    var response = await http.post(link().POST_synchutang,
-        body: ({
-          'token': token,
-          'id_toko': id_toko.toString(),
-          'id': id.toString(),
-          'aktif': aktif,
-          'id_pelanggan': id_pelanggan.toString(),
-          'hutang': hutang.toString(),
-          'tgl_hutang': tgl_hutang.toString(),
-          'status': status.toString(),
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC HUTANG  network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_synchutang,
+          body: ({
+            'token': token,
+            'id_toko': id_toko.toString(),
+            'id_local': id.toString(),
+            'aktif': aktif,
+            'id_pelanggan': id_pelanggan.toString(),
+            'hutang': hutang.toString(),
+            'tgl_hutang': tgl_hutang.toString(),
+            'status': status.toString(),
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC HUTANG  network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return data;
-    } else {
-      var data = json.decode(response.body);
-      print(
-          'SYNC HUTANG network handler----------------------------------------->');
-      print('GAGAL SYNC HUTANG');
-      print(response.statusCode);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return data;
+      } else {
+        var data = json.decode(response.body);
+        print(
+            'SYNC HUTANG network handler----------------------------------------->');
+        print('GAGAL SYNC HUTANG');
+        print(response.statusCode);
 
-      print(response.body);
-      return data;
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Sync hutang gagal');
+      }
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1907,41 +2072,50 @@ class REST extends GetConnect {
     sisa,
     tgl_hutang,
     tgl_bayar,
-    tgl_lunas,
+    String? tgl_lunas,
   }) async {
-    var response = await http.post(link().POST_synchutangdetail,
-        body: ({
-          'token': token,
-          'id_toko': id_toko.toString(),
-          'id': id.toString(),
-          'aktif': aktif,
-          'id_pelanggan': id_pelanggan.toString(),
-          'id_hutang': id_hutang.toString(),
-          'tgl_hutang': tgl_hutang,
-          'bayar': bayar.toString(),
-          'sisa': sisa.toString(),
-          'tgl_bayar': tgl_bayar,
-          'tgl_lunas': tgl_lunas ?? '-',
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'SYNC HUTANG DETAIL  network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_synchutangdetail,
+          body: ({
+            'token': token,
+            'id_toko': id_toko.toString(),
+            'id_local': id.toString(),
+            'aktif': aktif,
+            'id_pelanggan': id_pelanggan.toString(),
+            'id_hutang': id_hutang.toString(),
+            'tgl_hutang': tgl_hutang,
+            'bayar': bayar.toString(),
+            'sisa': sisa.toString(),
+            'tgl_bayar': tgl_bayar,
+            'tgl_lunas': tgl_lunas ?? '-',
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'SYNC HUTANG DETAIL  network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return data;
-    } else {
-      var data = json.decode(response.body);
-      print(
-          'SYNC HUTANG DETAIL network handler----------------------------------------->');
-      print('GAGAL SYNC HUTANG DETAIL');
-      print(response.statusCode);
+        var data = json.decode(response.body);
 
-      print(response.body);
-      return data;
+        print(data);
+        print(response.statusCode);
+        return data;
+      } else {
+        var data = json.decode(response.body);
+        print(
+            'SYNC HUTANG DETAIL network handler----------------------------------------->');
+        print('GAGAL SYNC HUTANG DETAIL');
+        print(response.statusCode);
+
+        print(response.body);
+        return Future.error(response.statusCode.toString() +
+            ' - ' +
+            'Sync hutang detail gagal');
+      }
+    } catch (e) {
+      print(
+          "<------------------------------------error----------------------------------->");
+      print(e);
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1949,29 +2123,35 @@ class REST extends GetConnect {
     required String token,
     required String id_toko,
   }) async {
-    var response = await http.post(link().POST_hutangall,
-        body: ({
-          'token': token,
-          'id_toko': id_toko,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'HUTANG ALL network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_hutangall,
+          body: ({
+            'token': token,
+            'id_toko': id_toko,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'HUTANG ALL network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      print(data);
-      print(response.statusCode);
-      return data;
-    } else {
-      var data = json.decode(response.body);
-      print('HUTANG network handler----------------------------------------->');
-      print('GAGAL DATA HUTANG ALL');
-      print(response.statusCode);
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        print(data);
+        print(response.statusCode);
+        return data;
+      } else {
+        var data = json.decode(response.body);
+        print(
+            'HUTANG network handler----------------------------------------->');
+        print('GAGAL DATA HUTANG ALL');
+        print(response.statusCode);
 
-      print(response.body);
-      return data;
+        print(response.body);
+        return Future.error('error fetch hutang');
+      }
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 

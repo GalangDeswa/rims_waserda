@@ -26,13 +26,13 @@ class detail_penjualan_kasir extends GetView<kasirController> {
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
-                  borderRadius: border_radius().header_border,
-                  color: color_template().primary,
-                ),
+                    borderRadius: border_radius().header_border,
+                    color: Colors.white,
+                    border: Border.all(color: color_template().primary)),
                 child: Center(
                   child: Text(
                     'Detail Penjualan',
-                    style: font().header,
+                    style: font().header_blue,
                   ),
                 ),
               ),
@@ -197,7 +197,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                     print('--------------pop-------------');
                   },
                   child: Text(
-                    'Bayar',
+                    'Bayar'.toUpperCase(),
                     style: font().header,
                   ),
                   width: double.infinity,

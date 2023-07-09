@@ -47,9 +47,10 @@ class ModelHutangDetail {
 
 class DataHutangDetail {
   int? id;
-  int? idHutang;
+  String? idLocal;
+  String? idHutang;
   int? idToko;
-  int? idPelanggan;
+  String? idPelanggan;
   int? bayar;
   int? sisa;
   String? tglHutang;
@@ -60,6 +61,7 @@ class DataHutangDetail {
 
   DataHutangDetail({
     this.id,
+    this.idLocal,
     this.idHutang,
     this.idToko,
     this.idPelanggan,
@@ -75,6 +77,7 @@ class DataHutangDetail {
   factory DataHutangDetail.fromJson(Map<String, dynamic> json) =>
       DataHutangDetail(
         id: json["id"],
+        idLocal: json["id_local"],
         idHutang: json["id_hutang"],
         idToko: json["id_toko"],
         idPelanggan: json["id_pelanggan"],
@@ -89,6 +92,7 @@ class DataHutangDetail {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_hutang": idHutang,
         "id_toko": idToko,
         "id_pelanggan": idPelanggan,
@@ -104,6 +108,7 @@ class DataHutangDetail {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['id_pelanggan'] = idPelanggan;
     map['id_hutang'] = idHutang;

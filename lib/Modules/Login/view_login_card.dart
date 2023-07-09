@@ -27,7 +27,7 @@ class login_card extends GetView<loginController> {
           padding: EdgeInsets.all(5),
           child: Center(
             child: Text(
-              'RIMSWASERDA',
+              'RIMS WASERDA',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
@@ -65,7 +65,7 @@ class login_card extends GetView<loginController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Promo RIMS',
+                        'Produk RIMS',
                         style: font().primary_bold,
                       ),
                       login_carousel(),
@@ -206,7 +206,7 @@ class login_card extends GetView<loginController> {
                                     await controller.loginv2();
                                   } catch (error) {
                                     print(
-                                        'ekgyhkyfjtyfkbckauerv----------------------------------------------------------------');
+                                        'error login----------------------------------------------------------------');
                                     print(error);
                                     Get.back();
                                     Get.showSnackbar(toast()
@@ -303,12 +303,17 @@ class login_card extends GetView<loginController> {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 15),
+          decoration: BoxDecoration(
+              color: color_template().primary,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white, width: 1)),
+          padding: EdgeInsets.all(5),
+          margin: EdgeInsets.symmetric(vertical: 10),
           child: Text('Powered with ❤ by RIMS',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Colors.black)),
+                  fontSize: 12,
+                  color: Colors.white)),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
@@ -34,7 +35,7 @@ class table_user extends GetView<datauserController> {
                       child: header(
                         iscenter: false,
                         title: 'Data User',
-                        icon: Icons.add_box,
+                        icon: FontAwesomeIcons.userGear,
                         icon_funtion: Icons.refresh,
                         function: () async {
                           Get.dialog(showloading(), barrierDismissible: false);

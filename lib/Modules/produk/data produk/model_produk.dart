@@ -46,6 +46,7 @@ class ModelProduk {
 class DataProduk {
   DataProduk({
     this.id,
+    required this.idLocal,
     this.barcode,
     required this.idToko,
     this.idUser,
@@ -68,10 +69,11 @@ class DataProduk {
   });
 
   int? id;
+  String idLocal;
   String? barcode;
   int idToko;
   int? idUser;
-  int idJenis;
+  String idJenis;
   String? namaJenis;
   int? idKategori;
   int idJenisStock;
@@ -90,6 +92,7 @@ class DataProduk {
 
   factory DataProduk.fromJson(Map<String, dynamic> json) => DataProduk(
         id: json["id"],
+        idLocal: json["id_local"],
         barcode: json["barcode"] ?? '-',
         idToko: json["id_toko"],
         idUser: json["id_user"],
@@ -113,6 +116,7 @@ class DataProduk {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": id,
         "barcode": barcode,
         "id_toko": idToko,
         "id_user": idUser,
@@ -137,6 +141,7 @@ class DataProduk {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_user'] = idUser;
     map['barcode'] = barcode ?? '-';
     map['id_toko'] = idToko;

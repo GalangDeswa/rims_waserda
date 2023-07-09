@@ -270,7 +270,7 @@ class editprodukController extends GetxController {
 
   jjj() {
     var x = jenislistlocal
-            .firstWhereOrNull((e) => e.id == int.parse(jenisvalue.value))
+            .firstWhereOrNull((e) => e.idLocal == int.parse(jenisvalue.value))
             ?.namaJenis ??
         '-';
     return x;
@@ -288,11 +288,12 @@ class editprodukController extends GetxController {
         table: 'produk_local',
         data: DataProduk(
                 id: data.id,
+                idLocal: data.idLocal,
                 status: data.status,
                 idKategori: data.idKategori,
                 idJenisStock: int.parse(jenisstokval.value),
                 idToko: int.parse(id_toko),
-                idJenis: int.parse(jenisvalue.value),
+                idJenis: data.idJenis,
                 idUser: id_user,
                 qty: data.qty,
                 deskripsi: desc.value.text,
@@ -307,10 +308,10 @@ class editprodukController extends GetxController {
                 //     .first
                 //     .namaJenis
                 //     .toString(),
-                namaJenis: jjj(),
+                namaJenis: data.namaJenis,
                 sync: 'N')
             .toMapForDb(),
-        id: data.id);
+        id: data.idLocal);
     print('edit local berhasil------------------------------------->');
     print(query);
     if (query == 1) {
@@ -341,10 +342,10 @@ class editprodukController extends GetxController {
     var db = DatabaseHelper.instance;
 
     var add = await db.updateProdukv2(DataProduk(
-      id: data.id,
+      idLocal: data.id,
       idJenisStock: int.parse(jenisstokval.value),
       idToko: int.parse(id_toko),
-      idJenis: int.parse(jenisvalue.value),
+      idJenis: jenisvalue.value,
       idUser: id_user,
       deskripsi: desc.value.text,
       diskonBarang: int.parse(jumlahdiskon.value.toInt().toString()),

@@ -46,7 +46,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Kasir :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       controller.data.namaUser,
@@ -54,6 +54,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -64,7 +69,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Tanggal transaksi :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       controller.dateFormatdisplay
@@ -73,6 +78,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -83,7 +93,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Nomor meja :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       controller.data.meja.toString(),
@@ -91,6 +101,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -101,7 +116,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Total item :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       controller.data.totalItem.toString(),
@@ -127,9 +142,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
               ),
               Container(
                 width: context.width_query,
-                height: context.height_query / 3.5,
+                height: context.height_query / 4.5,
                 child: Obx(() {
                   return DataTable2(
+                      headingRowHeight: 30,
+                      dataRowHeight: 30,
                       columns: <DataColumn>[
                         DataColumn(
                           label: Text(
@@ -206,9 +223,10 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Expanded(
+                    Expanded(
                         child: Text(
                       'Subtotal :',
+                      style: font().reguler_bold,
                     )),
                     Text(
                       'Rp.' +
@@ -218,14 +236,18 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   ],
                 ),
               ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
                 child: Row(
                   children: [
-                    const Expanded(
-                        child: Text(
-                      'Diskon total :',
-                    )),
+                    Expanded(
+                        child:
+                            Text('Diskon total :', style: font().reguler_bold)),
                     Text(
                       'Rp.' +
                           controller.nominal
@@ -234,6 +256,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -244,7 +271,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Total :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       'Rp.' + controller.nominal.format(controller.data.total),
@@ -252,6 +279,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -262,7 +294,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Bayar :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       'Rp.' + controller.nominal.format(controller.data.bayar),
@@ -270,6 +302,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -280,7 +317,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Metode Bayar :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       controller.data.metodeBayar == 1
@@ -295,6 +332,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   ],
                 ),
               ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
+              ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
                 child: Row(
@@ -304,7 +346,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Kembali :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       'Rp.' +
@@ -313,6 +355,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     ),
                   ],
                 ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
@@ -323,7 +370,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                     Expanded(
                         child: Text(
                       'Status :',
-                      style: font().reguler,
+                      style: font().reguler_bold,
                     )),
                     Text(
                       controller.data.status == 1

@@ -110,7 +110,7 @@ class Toko {
     this.logo,
     required this.status,
     required this.tglAktif,
-    required this.createdAt,
+    this.createdAt,
     this.updatedAt,
     this.deletedAt,
   });
@@ -125,7 +125,7 @@ class Toko {
   dynamic logo;
   String status;
   DateTime tglAktif;
-  DateTime createdAt;
+  DateTime? createdAt;
   dynamic updatedAt;
   dynamic deletedAt;
 
@@ -140,9 +140,9 @@ class Toko {
         logo: json["logo"],
         status: json["status"],
         tglAktif: DateTime.parse(json["tgl_aktif"]),
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"],
-        deletedAt: json["deleted_at"],
+        //createdAt: DateTime.parse(json["created_at"]),
+        //updatedAt: json["updated_at"],
+        // deletedAt: json["deleted_at"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -156,9 +156,9 @@ class Toko {
         "logo": logo,
         "status": status,
         "tgl_aktif": tglAktif.toIso8601String(),
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt,
-        "deleted_at": deletedAt,
+        //  "created_at": createdAt.toIso8601String(),
+        //"updated_at": updatedAt,
+        //"deleted_at": deletedAt,
       };
 }
 

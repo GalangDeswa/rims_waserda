@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -224,7 +225,7 @@ class kasirController extends GetxController {
         '-------------------fetch detail Penjualan duplicatetette---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT penjualan_detail_local.nama_brg,produk_local.nama_produk,COUNT(*) FROM penjualan_detail_local JOIN produk_local on penjualan_detail_local.id_produk = produk_local.id WHERE produk_local.status = 1 GROUP BY penjualan_detail_local.nama_brg HAVING COUNT(*) > 1');
+        'SELECT penjualan_detail_local.nama_brg,produk_local.nama_produk,COUNT(*) FROM penjualan_detail_local JOIN produk_local on penjualan_detail_local.id_produk = produk_local.id_local WHERE produk_local.status = 1 GROUP BY penjualan_detail_local.nama_brg HAVING COUNT(*) > 1');
     // List<DataPenjualanDetailV2> penjualan = query.isNotEmpty
     //     ? query.map((e) => DataPenjualanDetailV2.fromJson(e)).toList()
     //     : [];
@@ -365,7 +366,7 @@ class kasirController extends GetxController {
     print('-------------------fetch Produk local---------------------');
     succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 AND id_jenis = $id_jenis ORDER BY ID DESC');
+        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 AND id_jenis = "$id_jenis" ORDER BY ID DESC');
     List<DataProduk> produk = query.isNotEmpty
         ? query.map((e) => DataProduk.fromJson(e)).toList()
         : [];
@@ -511,7 +512,7 @@ class kasirController extends GetxController {
     return sum;
   }
 
-  deleteqty(int index, int idproduk) async {
+  deleteqty(int index, String idproduklocal) async {
     max.value = false;
     var qty = cache.value[index].qty;
     var del = qty - 1;
@@ -520,7 +521,7 @@ class kasirController extends GetxController {
     await totalval();
     await hitungbesardiskonkasir();
     if (sum < 1) {
-      cache.value.removeWhere((element) => element.id == idproduk);
+      cache.value.removeWhere((element) => element.idLocal == idproduklocal);
       print('qty cache deldete ------------------------------------------');
       cache.refresh();
     } else {
@@ -529,9 +530,9 @@ class kasirController extends GetxController {
     }
   }
 
-  deleteitemcache(int idproduk) {
+  deleteitemcache(String idproduklocal) {
     max.value = false;
-    cache.value.removeWhere((element) => element.id == idproduk);
+    cache.value.removeWhere((element) => element.idLocal == idproduklocal);
     subtotalval();
     totalval();
     cache.refresh();
@@ -645,13 +646,14 @@ class kasirController extends GetxController {
     ));
   }
 
-  tambahKeranjangcache(int idproduk) async {
+  tambahKeranjangcache(String idproduklocal) async {
     print('-------------------Tambah keranjang cache---------------------');
     // keranjangcache.value = await GetStorage().read('keranjang');
-    var query =
-        produklistlocal.value.where((element) => element.id == idproduk);
+    var query = produklistlocal.value
+        .where((element) => element.idLocal == idproduklocal);
 
-    final existingIndex = cache.value.indexWhere((item) => item.id == idproduk);
+    final existingIndex =
+        cache.value.indexWhere((item) => item.idLocal == idproduklocal);
 
     if (query.map((e) => e.qty).first == 0 &&
         query.map((e) => e.idJenisStock).first == 1) {
@@ -661,7 +663,8 @@ class kasirController extends GetxController {
       if (existingIndex == -1) {
         cache.add(
           DataKeranjangCache(
-              id: query.map((e) => e.id!).first,
+              idLocal: query.map((e) => e.idLocal).first,
+              id: query.map((e) => e.id).first,
               idToko: query.map((e) => e.idToko).first,
               idUser: query.map((e) => e.idUser!).first,
               idJenis: query.map((e) => e.idJenis).first,
@@ -682,8 +685,9 @@ class kasirController extends GetxController {
               updatedAt: query.map((e) => e.updatedAt).first.toString()),
         );
       } else {
-        var pp =
-            produklistlocal.where((e) => e.id == cache[existingIndex].id).first;
+        var pp = produklistlocal
+            .where((e) => e.idLocal == cache[existingIndex].idLocal)
+            .first;
         // var xx = controller.cache.where((e) => e.id == p.id).first;
         if (cache[existingIndex].qty >= pp.qty! &&
             cache[existingIndex].idJenisStock == 1) {
@@ -706,7 +710,7 @@ class kasirController extends GetxController {
     // }).toList());
     print('diskon barang -------------------------->');
     print(cache.value.map((e) {
-      return [e.namaProduk, e.diskonBarang];
+      return [e.idLocal, e.namaProduk, e.diskonBarang];
     }).toList());
 
     subtotalval();
@@ -969,6 +973,17 @@ class kasirController extends GetxController {
   // }
   DateFormat dateFormat = DateFormat("dd-MM-yyyy HH:mm:ss");
 
+  String stringGenerator(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+
+    var uniqueId = base64UrlEncode(values);
+    print(uniqueId);
+    return uniqueId;
+  }
+
+  //TODO: CHECK PENJUALAN,  CHECK DASHBOARD DATA, CHECK LAPORAN
+
   pembayaranlocal(id_toko) async {
     print('-------------------pembayaran local local---------------------');
 
@@ -978,12 +993,15 @@ class kasirController extends GetxController {
         .map((e) => e)
         .fold(0, (total, x) => (x.harga! * x.diskonBarang! / 100).toInt());
 
+    var id_localgenerator = stringGenerator(10);
+
     if (groupindex.value != 3) {
       print('pembayaran local------------------------------------->');
       var query = await DBHelper().INSERT(
           'penjualan_local',
           DataPenjualan(
                   aktif: 'Y',
+                  idLocal: id_localgenerator,
                   sync: 'N',
                   idUser: id_user,
                   idToko: int.parse(id_toko),
@@ -1015,13 +1033,14 @@ class kasirController extends GetxController {
           await DBHelper().INSERT(
               'penjualan_detail_local',
               DataPenjualanDetailV2(
+                      idLocal: stringGenerator(10),
                       aktif: 'Y',
                       sync: 'N',
                       idUser: id_user,
-                      idPenjualan: query,
+                      idPenjualan: id_localgenerator,
                       idJenisStock: e.idJenisStock,
                       idKategori: e.idKategori,
-                      idProduk: e.id,
+                      idProduk: e.idLocal,
                       namaBrg: e.namaProduk,
                       hargaBrg: e.harga,
                       diskonBrg: dd.toInt(),
@@ -1036,10 +1055,11 @@ class kasirController extends GetxController {
         });
 
         // kurang qty ----------------------------------------------------->
+        //TODO:CHEK KURANG QTY-------------------------------------------------------------
         List<DataProduk> qty =
             await Get.find<produkController>().fetchProduklocal(id_toko);
         await Future.forEach(cache, (e) async {
-          var kurangqty = qty.where((x) => x.id == e.id).first;
+          var kurangqty = qty.where((x) => x.idLocal == e.idLocal).first;
           if (kurangqty.idJenisStock == 1) {
             await DBHelper().UPDATE(
                 table: 'produk_local',
@@ -1052,6 +1072,7 @@ class kasirController extends GetxController {
                         deskripsi: kurangqty.deskripsi,
                         idJenis: kurangqty.idJenis,
                         id: kurangqty.id,
+                        idLocal: kurangqty.idLocal,
                         status: kurangqty.status,
                         sync: 'N',
                         idUser: kurangqty.idUser,
@@ -1062,7 +1083,7 @@ class kasirController extends GetxController {
                         barcode: kurangqty.barcode,
                         qty: kurangqty.qty! - e.qty)
                     .toMapForDb(),
-                id: kurangqty.id);
+                id: kurangqty.idLocal);
           }
         });
 
@@ -1094,26 +1115,29 @@ class kasirController extends GetxController {
             toast().bottom_snackbar_error('error', 'Pembayaran gagal'));
       }
     } else {
+      var id_hutang_generator = stringGenerator(10);
       print('hutang local-------------------------------->');
       var hutang = await DBHelper().INSERT(
           'hutang_local',
           DataHutang(
+            idLocal: id_hutang_generator,
             idToko: int.parse(id_toko),
-            idPelanggan: int.parse(id_pelanggan.value),
+            idPelanggan: id_pelanggan.value,
             tglHutang: DateTime.now().toString(),
             sync: 'N',
             aktif: 'Y',
             hutang: total.value.toInt(),
             status: 2,
           ).toMapForDb());
-
+      var id_penjualan_generator2 = stringGenerator(10);
       var query = await DBHelper().INSERT(
           'penjualan_local',
           DataPenjualan(
+                  idLocal: id_penjualan_generator2,
                   aktif: 'Y',
                   sync: 'N',
-                  idPelanggan: int.parse(id_pelanggan.value),
-                  idHutang: hutang,
+                  idPelanggan: id_pelanggan.value,
+                  idHutang: id_hutang_generator,
                   idUser: id_user,
                   idToko: int.parse(id_toko),
                   total: total.value.toInt(),
@@ -1140,13 +1164,14 @@ class kasirController extends GetxController {
           await DBHelper().INSERT(
               'penjualan_detail_local',
               DataPenjualanDetailV2(
+                      idLocal: stringGenerator(10),
                       aktif: 'Y',
                       sync: 'N',
                       idUser: id_user,
-                      idPenjualan: query,
+                      idPenjualan: id_penjualan_generator2,
                       idJenisStock: e.idJenisStock,
                       idKategori: e.idKategori,
-                      idProduk: e.id,
+                      idProduk: e.idLocal,
                       namaBrg: e.namaProduk,
                       hargaBrg: e.harga,
                       diskonBrg: dd.toInt(),
@@ -1164,7 +1189,7 @@ class kasirController extends GetxController {
         List<DataProduk> qty =
             await Get.find<produkController>().fetchProduklocal(id_toko);
         await Future.forEach(cache, (e) async {
-          var kurangqty = qty.where((x) => x.id == e.id).first;
+          var kurangqty = qty.where((x) => x.idLocal == e.idLocal).first;
           if (kurangqty.idJenisStock == 1) {
             await DBHelper().UPDATE(
                 table: 'produk_local',
@@ -1177,6 +1202,7 @@ class kasirController extends GetxController {
                         deskripsi: kurangqty.deskripsi,
                         idJenis: kurangqty.idJenis,
                         id: kurangqty.id,
+                        idLocal: kurangqty.idLocal,
                         status: kurangqty.status,
                         sync: 'N',
                         idUser: kurangqty.idUser,
@@ -1187,7 +1213,7 @@ class kasirController extends GetxController {
                         barcode: kurangqty.barcode,
                         qty: kurangqty.qty! - e.qty)
                     .toMapForDb(),
-                id: kurangqty.id);
+                id: kurangqty.idLocal);
           }
         });
 
@@ -1324,6 +1350,7 @@ class kasirController extends GetxController {
     var query = await DBHelper().INSERT(
         'pelanggan_local',
         DataPelanggan(
+                idLocal: stringGenerator(10),
                 idToko: int.parse(id_toko),
                 namaPelanggan: nama_pelanggan.value.text,
                 noHp: nohp.value.text,
@@ -1381,7 +1408,11 @@ class kasirController extends GetxController {
           '#ff6666', 'cancel', true, ScanMode.QR);
       Get.snackbar('result', scaned_qr_code);
       barcodetext.value.text = scaned_qr_code;
-    } on PlatformException {}
+    } on PlatformException catch (e) {
+      print(e);
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 
   // Barcode? result;

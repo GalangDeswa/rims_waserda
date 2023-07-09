@@ -47,12 +47,13 @@ class editjenisController extends GetxController {
         table: 'produk_jenis_local',
         data: DataJenis(
                 aktif: 'Y',
+                idLocal: data.idLocal,
                 sync: 'N',
                 idToko: id_toko,
                 namaJenis: nama_jenis.value.text,
                 id: data.id)
             .toMapForDb(),
-        id: data.id);
+        id: data.idLocal);
     print('edit local berhasil------------------------------------->');
     print(query);
     if (query == 1) {

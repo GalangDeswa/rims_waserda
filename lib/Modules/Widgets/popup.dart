@@ -55,7 +55,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.hapuspelangganlocal(arg.id!);
+                        controller.hapuspelangganlocal(arg.idLocal!);
                         //controller.deleteproduk(arg.id.toString());
                       },
                       child: Text(
@@ -110,7 +110,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.reversalPenjualanlocal(arg.id!);
+                        controller.reversalPenjualanlocal(arg.idLocal!);
                       },
                       child: Text(
                         'Batalkan',
@@ -224,7 +224,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.deletebebanlocal(arg.id!);
+                        controller.deletebebanlocal(arg.idLocal!);
                         //controller.deleteproduk(arg.id.toString());
                       },
                       child: Text(
@@ -336,7 +336,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.deletejenisbebanlocal(arg.id!);
+                        controller.deletejenisbebanlocal(arg.idLocal!);
                       },
                       child: Text(
                         'Hapus',
@@ -389,7 +389,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.deletejenislocal(arg.id!);
+                        controller.deletejenislocal(arg.idLocal!);
                       },
                       child: Text(
                         'Hapus',
@@ -499,7 +499,7 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () {
-                        controller.deleteproduklocal(arg.id!);
+                        controller.deleteproduklocal(arg.idLocal);
                       },
                       child: Text(
                         'Hapus',

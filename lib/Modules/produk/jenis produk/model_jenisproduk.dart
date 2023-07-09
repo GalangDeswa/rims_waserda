@@ -45,6 +45,7 @@ class ModelJenis {
 class DataJenis {
   DataJenis({
     this.id,
+    this.idLocal,
     this.idToko,
     this.namaJenis,
     this.sync,
@@ -52,6 +53,7 @@ class DataJenis {
   });
 
   int? id;
+  String? idLocal;
   String? idToko;
   String? namaJenis;
   String? sync;
@@ -66,6 +68,7 @@ class DataJenis {
 
   factory DataJenis.fromJson(Map<String, dynamic> json) => DataJenis(
         id: json["id"],
+        idLocal: json["id_local"],
         idToko: json["id_toko"].toString(),
         namaJenis: json["nama_jenis"],
         sync: json["sync"],
@@ -74,6 +77,7 @@ class DataJenis {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_toko": idToko,
         "nama_jenis": namaJenis,
         "sync": sync,
@@ -83,6 +87,7 @@ class DataJenis {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['nama_jenis'] = namaJenis;
     map['sync'] = sync;

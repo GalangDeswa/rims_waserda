@@ -22,6 +22,7 @@ class ModelPenjualan {
   int statusCode;
   String messages;
   List<DataPenjualan> data;
+
   //Meta meta;
 
   factory ModelPenjualan.fromJson(Map<String, dynamic> json) => ModelPenjualan(
@@ -45,6 +46,7 @@ class ModelPenjualan {
 class DataPenjualan {
   DataPenjualan({
     this.id,
+    this.idLocal,
     this.meja,
     this.idToko,
     this.idUser,
@@ -66,10 +68,11 @@ class DataPenjualan {
   });
 
   int? id;
+  String? idLocal;
   String? meja;
   int? idToko;
   int? idUser;
-  int? idPelanggan;
+  String? idPelanggan;
   String? namaPelanggan;
   String? namaUser;
   int? totalItem;
@@ -83,16 +86,17 @@ class DataPenjualan {
   int? status;
   String? sync;
   String aktif;
-  int? idHutang;
+  String? idHutang;
 
   // List<DetailItem>? detailItem;
 
   factory DataPenjualan.fromJson(Map<String, dynamic> json) => DataPenjualan(
         id: json["id"],
+        idLocal: json["id_local"],
         meja: json["meja"] ?? '0',
         idToko: json["id_toko"],
         idUser: json["id_user"],
-        idPelanggan: json["id_pelanggan"] ?? 0,
+        idPelanggan: json["id_pelanggan"] ?? '0',
         namaPelanggan: json["nama_pelanggan"] ?? '-',
         namaUser: json["nama_user"],
         totalItem: json["total_item"],
@@ -106,13 +110,14 @@ class DataPenjualan {
         status: json["status"],
         sync: json["sync"],
         aktif: json["aktif"],
-        idHutang: json["id_hutang"] ?? 0,
+        idHutang: json["id_hutang"] ?? '0',
         // detailItem: List<DetailItem>.from(
         //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "meja": meja,
         "id_toko": idToko,
         "id_user": idUser,
@@ -137,10 +142,11 @@ class DataPenjualan {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_user'] = idUser;
     map['meja'] = meja;
     map['id_toko'] = idToko;
-    map['id_pelanggan'] = idPelanggan ?? 0;
+    map['id_pelanggan'] = idPelanggan ?? '0';
     map['nama_pelanggan'] = namaPelanggan ?? '-';
     map['nama_user'] = namaUser;
     map['total_item'] = totalItem;
@@ -154,7 +160,7 @@ class DataPenjualan {
     map['sync'] = sync;
     map['status'] = status;
     map['aktif'] = aktif;
-    map['id_hutang'] = idHutang;
+    map['id_hutang'] = idHutang ?? '0';
 
     return map;
   }

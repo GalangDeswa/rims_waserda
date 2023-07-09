@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 
 import '../../../Templates/setting.dart';
@@ -83,10 +84,16 @@ class tambah_pelanggan_form extends GetView<pelangganController> {
                     height: 15,
                   ),
                   button_solid_custom(
-                      onPressed: () {
+                      onPressed: () async {
                         if (controller.formKeypelanggan.value.currentState!
                             .validate()) {
-                          controller.tambahPelangganlocal();
+                          try {
+                            await controller.tambahPelangganlocal();
+                          } catch (e) {
+                            Get.back(closeOverlays: true);
+                            Get.showSnackbar(toast()
+                                .bottom_snackbar_error('Error', e.toString()));
+                          }
                         }
                       },
                       child: Text(

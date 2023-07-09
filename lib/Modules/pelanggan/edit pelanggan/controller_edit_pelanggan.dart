@@ -40,13 +40,14 @@ class editpelangganController extends GetxController {
         table: 'pelanggan_local',
         data: DataPelanggan(
                 id: data.id,
+                idLocal: data.idLocal,
                 idToko: int.parse(id_toko),
                 namaPelanggan: nama_pelanggan.value.text,
                 noHp: no_hp.value.text,
                 sync: 'N',
                 aktif: 'Y')
             .toMapForDb(),
-        id: data.id);
+        id: data.idLocal);
     print('edit local berhasil------------------------------------->');
     print(query);
     if (query == 1) {

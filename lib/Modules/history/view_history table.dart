@@ -2,6 +2,7 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
@@ -29,7 +30,7 @@ class history_table extends GetView<historyController> {
             header(
               iscenter: false,
               title: 'Riwayat Penjualan',
-              icon: Icons.history,
+              icon: FontAwesomeIcons.moneyBills,
               icon_funtion: Icons.refresh,
               function: () async {
                 Get.dialog(showloading());
@@ -37,6 +38,7 @@ class history_table extends GetView<historyController> {
                     id_toko: controller.id_toko,
                     id_user: controller.id_user,
                     role: controller.role);
+                // await controller.initPenjualanToLocal(controller.id_toko);
                 Get.back();
               },
             ),
@@ -504,8 +506,6 @@ class penjualanTable extends DataTableSource {
 
   @override
   int get selectedRowCount => 0;
-
-  //TODO: chek data dashboard, chek penurangan stock pos
 
   @override
   DataRow getRow(int index) {

@@ -1,5 +1,6 @@
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/laporan/Controller_laporan.dart';
@@ -8,6 +9,8 @@ import 'package:rims_waserda/Modules/laporan/view_pdf.dart';
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
 import '../Widgets/header.dart';
+import '../Widgets/loading.dart';
+import '../Widgets/toast.dart';
 
 class laporan_table_beban extends GetView<laporanController> {
   const laporan_table_beban({Key? key}) : super(key: key);
@@ -23,7 +26,7 @@ class laporan_table_beban extends GetView<laporanController> {
           children: [
             header(
               title: 'Laporan Beban',
-              icon: Icons.history,
+              icon: FontAwesomeIcons.chartSimple,
               iscenter: false,
             ),
             SizedBox(
@@ -116,17 +119,43 @@ class laporan_table_beban extends GetView<laporanController> {
                     ? Container()
                     : button_solid_custom(
                         onPressed: () async {
-                          await controller.laporanBeban();
-                          // Get.dialog(SingleChildScrollView(
-                          //   child: AlertDialog(
-                          //       elevation: 0,
-                          //       backgroundColor: Colors.transparent,
-                          //       content: Center(
-                          //         child: Container(
-                          //             width: context.width_query / 1.3,
-                          //             child: tambah_produk_form()),
-                          //       )),
-                          // ));
+                          try {
+                            Get.dialog(Obx(() {
+                              return Center(
+                                child: Stack(
+                                  children: [
+                                    Center(
+                                      child: Container(
+                                        width: 400,
+                                        height: 400,
+                                        child: showloading(),
+                                      ),
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        width: 250,
+                                        height: 250,
+                                        // color: Colors.red,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 15.0,
+                                          backgroundColor: Colors.white,
+                                          color: color_template().primary,
+                                          value: controller.points.value,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }));
+
+                            await controller.laporanBeban();
+                          } catch (e) {
+                            Get.back(closeOverlays: true);
+                            Get.showSnackbar(toast().bottom_snackbar_error(
+                                'Error',
+                                "gagal membuat laporan mohon coba lagi"));
+                          }
                         },
                         child: Text(
                           'Cari laporan',

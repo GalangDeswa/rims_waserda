@@ -46,6 +46,7 @@ class ModelBeban {
 class DataBeban {
   DataBeban({
     this.id,
+    this.idLocal,
     this.idToko,
     this.idUser,
     this.nama,
@@ -59,19 +60,21 @@ class DataBeban {
   });
 
   int? id;
+  String? idLocal;
   int? idToko;
   int? idUser;
   String? nama;
   String? keterangan;
   String? tgl;
   int? jumlah;
-  int? idKtrBeban;
+  String? idKtrBeban;
   String? namaKtrBeban;
   String? sync;
   String aktif;
 
   factory DataBeban.fromJson(Map<String, dynamic> json) => DataBeban(
         id: json["id"],
+        idLocal: json["id_local"],
         idToko: json["id_toko"],
         idUser: json["id_user"],
         nama: json["nama"],
@@ -86,6 +89,7 @@ class DataBeban {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_toko": idToko,
         "id_user": idUser,
         "nama": nama,
@@ -101,6 +105,7 @@ class DataBeban {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['id_user'] = idUser;
     map['nama'] = nama;

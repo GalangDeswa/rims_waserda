@@ -325,16 +325,19 @@ class hutangTable extends DataTableSource {
                       size: 18,
                       color: color_template().secondary,
                     )),
-                IconButton(
-                    onPressed: () {
-                      con.bayarhutangpop(
-                          data[index].id!, data[index].hutang.toString());
-                    },
-                    icon: Icon(
-                      FontAwesomeIcons.dollarSign,
-                      size: 18,
-                      color: color_template().secondary,
-                    )),
+
+                data[index].hutang == 0
+                    ? Container()
+                    : IconButton(
+                        onPressed: () {
+                          con.bayarhutangpop(data[index].idLocal!,
+                              data[index].hutang.toString());
+                        },
+                        icon: Icon(
+                          FontAwesomeIcons.dollarSign,
+                          size: 18,
+                          color: color_template().secondary,
+                        )),
                 // IconButton(
                 //     onPressed: () {
                 //       // popscreen().deletepelanggan(

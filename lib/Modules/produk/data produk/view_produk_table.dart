@@ -39,8 +39,9 @@ class produk_table extends GetView<produkController> {
                         icon_funtion: Icons.refresh,
                         function: () async {
                           //  Get.dialog(showloading(), barrierDismissible: false);
-
+                          // print(controller.getRandString(10));
                           controller.fetchProduklocal(controller.id_toko);
+                          // controller.checkidproduk();
 
                           // Get.back();
                           // Get.dialog(showloading(), barrierDismissible: false);

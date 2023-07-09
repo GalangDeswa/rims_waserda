@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -24,11 +25,11 @@ import 'model_hutang.dart';
 
 class hutangController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchDataHutanglocal(id_toko);
-    fetchDataHutangDetaillocal(id_toko);
+    await fetchDataHutanglocal(id_toko);
+    await fetchDataHutangDetaillocal(id_toko);
   }
 
   var role = GetStorage().read('role');
@@ -138,7 +139,7 @@ class hutangController extends GetxController {
               token: token,
               id_toko: e.idToko.toString(),
               aktif: e.aktif!,
-              id: e.id,
+              id: e.idLocal,
               status: e.status,
               hutang: e.hutang.toString(),
               id_pelanggan: e.idPelanggan.toString(),
@@ -147,8 +148,8 @@ class hutangController extends GetxController {
               e.hutang.toString() +
               "------------------------------------------>");
 
-          await DBHelper()
-              .UPDATE(table: 'hutang_local', data: synclocal('Y'), id: e.id);
+          await DBHelper().UPDATE(
+              table: 'hutang_local', data: synclocal('Y'), id: e.idLocal);
         });
 
         // Get.showSnackbar(
@@ -163,6 +164,15 @@ class hutangController extends GetxController {
       Get.showSnackbar(
           toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
     }
+  }
+
+  String stringGenerator(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+
+    var uniqueId = base64UrlEncode(values);
+    print(uniqueId);
+    return uniqueId;
   }
 
   syncHutangDetail(id_toko) async {
@@ -190,7 +200,7 @@ class hutangController extends GetxController {
               aktif: e.aktif!,
               tgl_hutang: e.tglHutang,
               id_pelanggan: e.idPelanggan.toString(),
-              id: e.id,
+              id: e.idLocal,
               bayar: e.bayar.toString(),
               sisa: e.sisa.toString(),
               id_hutang: e.idHutang.toString(),
@@ -202,16 +212,11 @@ class hutangController extends GetxController {
               "------------------------------------------>");
 
           await DBHelper().UPDATE(
-              table: 'hutang_detail_local', data: synclocal('Y'), id: e.id);
+              table: 'hutang_detail_local',
+              data: synclocal('Y'),
+              id: e.idLocal);
         });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
       }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
@@ -236,7 +241,7 @@ class hutangController extends GetxController {
                   namaPelanggan: e.namaPelanggan,
                   idToko: e.idToko,
                   status: e.status,
-                  id: e.id,
+                  idLocal: e.idLocal,
                   hutang: e.hutang,
                   idPelanggan: e.idPelanggan,
                   tglHutang: e.tglHutang)
@@ -285,7 +290,7 @@ class hutangController extends GetxController {
     print('-------------------fetch hutang local---------------------');
     succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id WHERE hutang_local.id_toko = $id_toko AND hutang_local.aktif = "Y" ORDER BY ID DESC');
+        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id_local WHERE hutang_local.id_toko = $id_toko AND hutang_local.aktif = "Y" ORDER BY ID DESC');
     List<DataHutang> hutang = query.isNotEmpty
         ? query.map((e) => DataHutang.fromJson(e)).toList()
         : [];
@@ -345,7 +350,7 @@ class hutangController extends GetxController {
                   sync: 'Y',
                   tglHutang: e.tglHutang,
                   idPelanggan: e.idPelanggan,
-                  id: e.id,
+                  idLocal: e.idLocal,
                   idToko: e.idToko,
                   bayar: e.bayar,
                   idHutang: e.idHutang)
@@ -444,43 +449,6 @@ class hutangController extends GetxController {
     return [];
   }
 
-  // bayarHutanglocal(id) async {
-  //   print('-------------------tambah Produk local---------------------');
-  //
-  //   Get.dialog(const showloading(), barrierDismissible: false);
-  //
-  //   var select = list_hutanglocal.where((e) => e.id == id).first;
-  //
-  //   var query = await DBHelper().INSERT(
-  //       'hutang_detail_local',
-  //       DataHutangDetail(
-  //         idToko: id_toko,
-  //         idHutang: id,
-  //         bayar: jumlahbayarhutang.value,idPelanggan:select.idPelanggan,tglHutang: select.tglHutang,sync: 'N',aktif: 'Y',tglBayar: DateTime.now().toString(),sisa: select.hutang! - jumlahbayarhutang.value,tglLunas:
-  //       ).toMapForDb());
-  //
-  //   if (query != null) {
-  //     print(query);
-  //
-  //     await fetchDataHutanglocal(id_toko);
-  //     Get.back(closeOverlays: true);
-  //     Get.showSnackbar(toast()
-  //         .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-  //   } else {
-  //     Get.back(closeOverlays: true);
-  //     Get.showSnackbar(
-  //         toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-  //   }
-  //
-  //   // if (add == 1) {
-  //   //
-  //   // } else {
-  //   //   Get.back(closeOverlays: true);
-  //   //   Get.showSnackbar(
-  //   //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-  //   // }
-  // }
-
   bayarHutang(String id) async {
     Get.dialog(showloading(), barrierDismissible: false);
     print('-------------------fetch data hutang---------------------');
@@ -521,24 +489,35 @@ class hutangController extends GetxController {
 
   DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
 
-  bayarHutanglocal(int id) async {
+  //TODO : CHECK BAYAR HTUANG
+
+  bayarHutanglocal(String id_local) async {
     Get.dialog(showloading(), barrierDismissible: false);
     print('-------------------bayar hutang local---------------------');
-    //var select = list_hutang_detaillocal.where((e) => e.idHutang == id).first;
-    var ss = list_hutanglocal.where((e) => e.id == id).first;
+
+    var ss = list_hutanglocal.where((e) => e.idLocal == id_local).first;
     print('jumlah hutang--------------------------------------.>');
     print(ss.hutang);
     var sisa = ss.hutang! - jumlahbayarhutang.value;
+    var con1 = Get.find<historyController>();
+    await con1.fetchPenjualanlocal(
+        id_toko: id_toko, id_user: id_user, role: role);
+
+    var pp1 =
+        con1.penjualan_list_local.where((e) => e.idHutang == id_local).first;
+
+    var sisabayar = pp1.bayar! + jumlahbayarhutang.value;
 
     var hutang = await DBHelper().INSERT(
         'hutang_detail_local',
         DataHutangDetail(
                 aktif: 'Y',
                 sync: 'N',
+                idLocal: stringGenerator(10),
                 tglHutang: ss.tglHutang,
                 idPelanggan: ss.idPelanggan,
                 idToko: ss.idToko,
-                idHutang: ss.id,
+                idHutang: ss.idLocal,
                 bayar: jumlahbayarhutang.value,
                 tglBayar: DateTime.now().toString(),
                 sisa: sisa,
@@ -556,9 +535,36 @@ class hutangController extends GetxController {
                 namaPelanggan: ss.namaPelanggan,
                 hutang: sisa,
                 id: ss.id,
+                idLocal: ss.idLocal,
                 status: 2)
             .toMapForDb(),
-        id: ss.id);
+        id: ss.idLocal);
+
+    await DBHelper().UPDATE(
+        table: 'penjualan_local',
+        data: DataPenjualan(
+                aktif: 'Y',
+                status: pp1.status,
+                id: pp1.id,
+                idLocal: pp1.idLocal,
+                namaPelanggan: pp1.namaPelanggan,
+                sync: 'N',
+                idPelanggan: pp1.idPelanggan,
+                idToko: pp1.idToko,
+                bayar: sisabayar,
+                idHutang: pp1.idHutang,
+                total: pp1.total,
+                meja: pp1.meja,
+                diskonTotal: pp1.diskonTotal,
+                kembalian: pp1.kembalian,
+                metodeBayar: pp1.metodeBayar,
+                namaUser: pp1.namaUser,
+                subTotal: pp1.subTotal,
+                tglPenjualan: pp1.tglPenjualan,
+                totalItem: pp1.totalItem,
+                idUser: pp1.idUser)
+            .toMapForDb(),
+        id: pp1.idLocal);
 
     print('sisa------------------------------------>');
     print(sisa);
@@ -571,22 +577,25 @@ class hutangController extends GetxController {
         id_toko: id_toko, id_user: id_user, role: role);
     Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
     Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
-    var selectv2 = list_hutang_detaillocal.where((e) => e.idHutang == id).first;
-    var ssv2 = list_hutanglocal.where((e) => e.id == id).first;
+    var selectv2 =
+        list_hutang_detaillocal.where((e) => e.idHutang == id_local).first;
+    var ssv2 = list_hutanglocal.where((e) => e.idLocal == id_local).first;
 
-    var pp = con.penjualan_list_local.where((e) => e.idHutang == ssv2.id).first;
+    var pp =
+        con.penjualan_list_local.where((e) => e.idHutang == ssv2.idLocal).first;
     if (selectv2.sisa! <= 0) {
       await DBHelper().UPDATE(
           table: 'hutang_detail_local',
-          id: selectv2.id,
+          id: selectv2.idLocal,
           data: DataHutangDetail(
             id: selectv2.id,
+            idLocal: selectv2.idLocal,
             aktif: 'Y',
             sync: 'N',
             tglHutang: ssv2.tglHutang,
             idPelanggan: ssv2.idPelanggan,
             idToko: ssv2.idToko,
-            idHutang: ssv2.id,
+            idHutang: ssv2.idLocal,
             bayar: jumlahbayarhutang.value,
             tglBayar: DateTime.now().toString(),
             sisa: 0,
@@ -603,9 +612,10 @@ class hutangController extends GetxController {
                   namaPelanggan: ssv2.namaPelanggan,
                   hutang: 0,
                   id: ssv2.id,
+                  idLocal: ssv2.idLocal,
                   status: 1)
               .toMapForDb(),
-          id: ssv2.id);
+          id: ssv2.idLocal);
 
       var penjualan = await DBHelper().UPDATE(
           table: 'penjualan_local',
@@ -613,11 +623,12 @@ class hutangController extends GetxController {
                   aktif: 'Y',
                   status: 1,
                   id: pp.id,
+                  idLocal: pp.idLocal,
                   namaPelanggan: pp.namaPelanggan,
                   sync: 'N',
                   idPelanggan: pp.idPelanggan,
                   idToko: pp.idToko,
-                  bayar: pp.bayar,
+                  bayar: pp.total,
                   idHutang: pp.idHutang,
                   total: pp.total,
                   meja: pp.meja,
@@ -630,7 +641,7 @@ class hutangController extends GetxController {
                   totalItem: pp.totalItem,
                   idUser: pp.idUser)
               .toMapForDb(),
-          id: pp.id);
+          id: pp.idLocal);
     }
 
     print('bayar hutang  local berhasil------------------------------------->');
@@ -653,7 +664,7 @@ class hutangController extends GetxController {
   var jumlahbayarhutang = 0.obs;
   final nominal = NumberFormat("#,##0");
 
-  bayarhutangpop(int id, hutang) {
+  bayarhutangpop(String id_local, hutang) {
     Get.dialog(AlertDialog(
       title: header(
         title: 'Bayar hutang',
@@ -715,7 +726,7 @@ class hutangController extends GetxController {
                             Get.showSnackbar(toast().bottom_snackbar_error(
                                 'Gagal', 'masukan jumlah bayar'));
                           } else {
-                            bayarHutanglocal(id);
+                            bayarHutanglocal(id_local);
                           }
                         },
                         child: Text(

@@ -91,9 +91,12 @@ class hutang_detail extends GetView<hutang_detailController> {
                               style: font().reguler,
                               overflow: TextOverflow.ellipsis,
                             )),
-                            DataCell(controller
-                                        .list_hutang_detaillocal[i].tglLunas ==
-                                    null
+                            DataCell(controller.list_hutang_detaillocal[i]
+                                            .tglLunas ==
+                                        null ||
+                                    controller.list_hutang_detaillocal[i]
+                                            .tglLunas ==
+                                        '-'
                                 ? Text(
                                     '-',
                                     style: font().reguler,

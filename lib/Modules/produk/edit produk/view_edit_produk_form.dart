@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/produk/edit%20produk/controller_edit_produk.dart';
 
 import '../../../Templates/setting.dart';
@@ -739,10 +740,18 @@ class edit_produk_form extends GetView<editprodukController> {
                 height: 25,
               ),
               button_solid_custom(
-                  onPressed: () {
+                  onPressed: () async {
                     if (controller.formKeyprodukedit.value.currentState!
                         .validate()) {
-                      controller.ProdukEditlocal();
+                      try {
+                        await controller.ProdukEditlocal();
+                      } catch (e) {
+                        Get.back();
+                        print('eerorrrr');
+                        print(e);
+                        Get.showSnackbar(toast()
+                            .bottom_snackbar_error('Error', e.toString()));
+                      }
                     }
                   },
                   child: Text(

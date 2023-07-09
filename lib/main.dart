@@ -85,6 +85,7 @@ void callbackDispatcher() {
         try {
           await syncAll(id_toko);
           showNotificationWithDefaultSound(flip);
+          return Future.value(true);
         } catch (e) {
           Get.showSnackbar(
               toast().bottom_snackbar_error('error', 'error sync'));
@@ -96,6 +97,7 @@ void callbackDispatcher() {
         try {
           await syncAll(id_toko);
           showNotificationWithDefaultSound(flip);
+          return Future.value(true);
         } catch (e) {
           Get.showSnackbar(
               toast().bottom_snackbar_error('error', 'error sync'));

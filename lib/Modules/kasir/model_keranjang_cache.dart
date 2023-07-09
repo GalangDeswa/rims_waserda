@@ -55,6 +55,7 @@ class ModelKeranjangCache {
 class DataKeranjangCache {
   DataKeranjangCache({
     this.id,
+    this.idLocal,
     this.idToko,
     this.idUser,
     this.idJenis,
@@ -77,10 +78,11 @@ class DataKeranjangCache {
   });
 
   int? id;
+  String? idLocal;
   int? idProduk;
   int? idToko;
   int? idUser;
-  int? idJenis;
+  String? idJenis;
   int? idJenisStock;
   String? namaJenis;
   int? idKategori;
@@ -100,6 +102,7 @@ class DataKeranjangCache {
   factory DataKeranjangCache.fromJson(Map<String, dynamic> json) =>
       DataKeranjangCache(
         id: json["id"],
+        idLocal: json["id_local"],
         idProduk: json["id_produk"],
         idToko: json["id_toko"],
         idUser: json["id_user"],
@@ -123,6 +126,7 @@ class DataKeranjangCache {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_produk": idProduk,
         "id_toko": idToko,
         "id_user": idUser,

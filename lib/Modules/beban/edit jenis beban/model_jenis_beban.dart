@@ -46,9 +46,15 @@ class ModelJenisBeban {
 
 class DataJenisBeban {
   DataJenisBeban(
-      {this.id, this.idToko, this.kategori, this.sync, required this.aktif});
+      {this.id,
+      this.idToko,
+      this.kategori,
+      this.sync,
+      this.idLocal,
+      required this.aktif});
 
   int? id;
+  String? idLocal;
   int? idToko;
   String? kategori;
   String? sync;
@@ -56,6 +62,7 @@ class DataJenisBeban {
 
   factory DataJenisBeban.fromJson(Map<String, dynamic> json) => DataJenisBeban(
         id: json["id"],
+        idLocal: json["id_local"],
         idToko: json["id_toko"],
         kategori: json["kategori"],
         sync: json["sync"],
@@ -64,6 +71,7 @@ class DataJenisBeban {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_toko": idToko,
         "kategori": kategori,
         "aktif": aktif,
@@ -73,6 +81,7 @@ class DataJenisBeban {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['kategori'] = kategori;
     map['sync'] = sync;

@@ -45,6 +45,7 @@ class ModelPelanggan {
 class DataPelanggan {
   DataPelanggan({
     this.id,
+    this.idLocal,
     this.idToko,
     this.namaPelanggan,
     this.noHp,
@@ -55,6 +56,7 @@ class DataPelanggan {
   });
 
   int? id;
+  String? idLocal;
   int? idToko;
   String? namaPelanggan;
   String? noHp;
@@ -66,6 +68,7 @@ class DataPelanggan {
 
   factory DataPelanggan.fromJson(Map<String, dynamic> json) => DataPelanggan(
         id: json["id"],
+        idLocal: json["id_local"],
         idToko: json["id_toko"],
         namaPelanggan: json["nama_pelanggan"],
         noHp: json["no_hp"],
@@ -76,6 +79,7 @@ class DataPelanggan {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_toko": idToko,
         "nama_pelanggan": namaPelanggan,
         "no_hp": noHp,
@@ -87,6 +91,7 @@ class DataPelanggan {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['nama_pelanggan'] = namaPelanggan;
     map['no_hp'] = noHp;

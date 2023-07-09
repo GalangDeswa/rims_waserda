@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -216,52 +218,48 @@ class produkController extends GetxController {
   fetchProduk() async {
     print('-------------------fetchProduk---------------------');
     //succ.value = false;
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var produk = await REST.produkAllv2(token, id_toko);
-      if (produk != null) {
-        print('-------------------dataproduk---------------');
-        //   succ.value = true;
 
-        var dataProduk = ModelProduk.fromJson(produk);
-        // if (produk['success'] == false) {
-        //   succ.value = false;
-        //   print('faslese');
-        //   print(produk['messages']);
-        //   // produklist.value = [];
-        // } else {
-        //   succ.value = true;
-        // }
-        //produklist.value = dataProduk.data;
+    try {
+      var checkconn = await check_conn.check();
+      if (checkconn == true) {
+        var produk = await REST.produkAllv2(token, id_toko);
+        if (produk != null) {
+          print('-------------------dataproduk---------------');
+          //   succ.value = true;
 
-        produklistlocal.value = dataProduk.data;
+          var dataProduk = ModelProduk.fromJson(produk);
+          // if (produk['success'] == false) {
+          //   succ.value = false;
+          //   print('faslese');
+          //   print(produk['messages']);
+          //   // produklist.value = [];
+          // } else {
+          //   succ.value = true;
+          // }
+          //produklist.value = dataProduk.data;
 
-        // totalpage.value = dataProduk.meta.pagination.totalPages;
-        // totaldata.value = dataProduk.meta.pagination.total;
-        // perpage.value = dataProduk.meta.pagination.perPage;
-        // currentpage.value = produk['meta']['pagination']['current_page'];
-        // count.value = dataProduk.meta.pagination.count;
-        // if (totalpage > 1) {
-        //   nextdata = produk['meta']['pagination']['links']['next'];
-        //   previouspage = produk['meta']['pagination']['links']['previous'];
-        // }
+          produklistlocal.value = dataProduk.data;
 
-        print('--------------------list produk---------------');
-        print(produklistlocal);
+          print('--------------------list produk---------------');
+          print(produklistlocal);
 
-        //   Get.back(closeOverlays: true);
-
-        return produklistlocal;
+          return produklistlocal;
+        } else {
+          Get.back(closeOverlays: true);
+          Get.showSnackbar(toast()
+              .bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+          return Future.error('fetch produk gagal');
+        }
       } else {
         Get.back(closeOverlays: true);
         Get.showSnackbar(
             toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
       }
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+    } catch (e) {
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
+
     // return [];
   }
 
@@ -529,7 +527,26 @@ class produkController extends GetxController {
     print(x);
   }
 
-  //TODO : chek hasil diskon barang proper di local db,coba di carik pas masukin ke detail penjulaan bukan di tbl produk
+  checkidproduk(token) async {
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var data = await REST.checkIdProduk(token: token);
+      if (data == 0) {
+        await GetStorage().write('id_produk', 0);
+        return 0;
+      } else {
+        print(
+            'check produk id------------------------------------------------->');
+        print(data['id']);
+        await GetStorage().write('id_produk', data['id']);
+        return [data['id']];
+      }
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+    }
+  }
 
   ProdukTambahlocal() async {
     print('-------------------tambah Produk local---------------------');
@@ -539,10 +556,11 @@ class produkController extends GetxController {
     var query = await DBHelper().INSERT(
         'produk_local',
         DataProduk(
+                idLocal: stringGenerator(10),
                 idKategori: 1,
                 idToko: int.parse(id_toko),
                 idUser: id_user,
-                idJenis: int.parse(jenisvalue!),
+                idJenis: jenisvalue!,
                 idJenisStock: int.parse(jenisstokval!),
                 namaProduk: nama_produk.value.text,
                 deskripsi: desc.value.text,
@@ -558,7 +576,7 @@ class produkController extends GetxController {
                 status: 1,
                 sync: 'N',
                 namaJenis: jenislistlocal
-                    .where((e) => e.id == int.parse(jenisvalue!))
+                    .where((e) => e.idLocal == jenisvalue!)
                     .first
                     .namaJenis
                     .toString())
@@ -580,85 +598,99 @@ class produkController extends GetxController {
       Get.showSnackbar(
           toast().bottom_snackbar_error('error', 'gagal tambah data local'));
     }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
   }
-
-  //TODO : problem auto id di host vs di local
 
   initProdukToLocal(id_toko) async {
     //login -> sync -> init
 
-    List<DataProduk> produk_local = await fetchProduk();
-    List<DataJenis> produk_local_jenis = await fetchjenis();
+    try {
+      List<DataProduk> produk_local = await fetchProduk();
+      List<DataJenis> produk_local_jenis = await fetchjenis();
 
-    print('-------------------init Produk local---------------------');
+      print('-------------------init Produk local---------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    await Future.forEach(produk_local, (e) async {
-      await DBHelper().INSERT(
-          'produk_local',
-          DataProduk(
-                  id: e.id,
-                  idKategori: e.idKategori,
-                  idToko: e.idToko,
-                  idUser: e.idUser,
-                  idJenis: e.idJenis,
-                  idJenisStock: e.idJenisStock,
-                  namaProduk: e.namaProduk,
-                  deskripsi: e.deskripsi,
-                  qty: e.qty,
-                  harga: e.harga,
-                  hargaModal: e.hargaModal,
-                  diskonBarang: e.diskonBarang,
-                  barcode: e.barcode,
-                  image: e.image,
-                  //  createdAt: DateTime.now().toString(),
-                  status: e.status,
-                  sync: 'Y',
-                  namaJenis: e.namaJenis)
-              .toMapForDb());
-    });
+      //Get.dialog(showloading(), barrierDismissible: false);
+      await Future.forEach(produk_local, (e) async {
+        await DBHelper().INSERT(
+            'produk_local',
+            DataProduk(
+                    idLocal: e.idLocal,
+                    // id: e.id,
+                    idKategori: e.idKategori,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    idJenis: e.idJenis,
+                    idJenisStock: e.idJenisStock,
+                    namaProduk: e.namaProduk,
+                    deskripsi: e.deskripsi,
+                    qty: e.qty,
+                    harga: e.harga,
+                    hargaModal: e.hargaModal,
+                    diskonBarang: e.diskonBarang,
+                    barcode: e.barcode,
+                    image: e.image,
+                    //  createdAt: DateTime.now().toString(),
+                    status: e.status,
+                    sync: 'Y',
+                    namaJenis: e.namaJenis)
+                .toMapForDb());
+      });
 
-    await Future.forEach(produk_local_jenis, (e) async {
-      await DBHelper().INSERT(
-          'produk_jenis_local',
-          DataJenis(
-                  aktif: 'Y',
-                  id: e.id,
-                  idToko: e.idToko,
-                  sync: 'Y',
-                  namaJenis: e.namaJenis)
-              .toMapForDb());
-    });
+      await Future.forEach(produk_local_jenis, (e) async {
+        await DBHelper().INSERT(
+            'produk_jenis_local',
+            DataJenis(
+                    aktif: e.aktif,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    sync: 'Y',
+                    namaJenis: e.namaJenis)
+                .toMapForDb());
+      });
 
-    // if (up != null) {
-    //  print(up.toString());
-    print('init success---------------------------------------------------->');
-    await fetchProduklocal(id_toko);
-    await fetchjenislocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
+      // if (up != null) {
+      //  print(up.toString());
+      print(
+          'init success---------------------------------------------------->');
+      await fetchProduklocal(id_toko);
+      await fetchjenislocal(id_toko);
+    } catch (e) {
+      print(e);
+      Get.back();
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'error init produk local'));
+    }
+  }
 
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
+  // String idGenerator() {
+  //   final now = DateTime.now();
+  //   var generator = now.microsecondsSinceEpoch.toString();
+  //   print(generator);
+  //   return generator;
+  // }
+
+  String stringGenerator(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+
+    var uniqueId = base64UrlEncode(values);
+    print(uniqueId);
+    return uniqueId;
+  }
+
+  var qrcode = ''.obs;
+  String scaned_qr_code = '';
+
+  Future<void> scan() async {
+    try {
+      scaned_qr_code = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'cancel', true, ScanMode.BARCODE);
+      barcode.value.text = scaned_qr_code;
+    } on PlatformException catch (e) {
+      print(e);
+      Get.back();
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
   }
 
   syncProduk(id_toko) async {
@@ -679,10 +711,10 @@ class produkController extends GetxController {
         //     toast().bottom_snackbar_success('Sukses', 'semua produk sync'));
       } else {
         await Future.forEach(query, (e) async {
-          await REST.produkLocalToDb(
+          await REST.syncproduk(
             token: token,
             image: e.image,
-            id: e.id,
+            id: e.idLocal,
             barcode: e.barcode,
             harga: e.harga,
             diskon_barang: e.diskonBarang,
@@ -696,38 +728,15 @@ class produkController extends GetxController {
             nama_produk: e.namaProduk,
             qty: e.qty,
             status: e.status,
-
-            //  updated_at: e.updatedAt,
-            //    image: e.image
           );
           print("PRODUK UP ------>    " +
               e.namaProduk +
               "------------------------------------------>");
 
-          await DBHelper()
-              .UPDATE(table: 'produk_local', data: synclocal('Y'), id: e.id);
-
-          //
-          // produklistlocal.refresh();
-          // var q = produklistlocal.value.where((z) => z.id == e.id).toList();
-          // q.forEach((lll) {
-          //   print('updated : sync = ' +
-          //       lll.namaProduk +
-          //       ' : ' +
-          //       lll.sync! +
-          //       '-------------------------------------------->');
-          // });
-
-          //seperate update method needed
+          await DBHelper().UPDATE(
+              table: 'produk_local', data: synclocal('Y'), id: e.idLocal);
         });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
       }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
@@ -755,7 +764,7 @@ class produkController extends GetxController {
         await Future.forEach(query, (e) async {
           await REST.syncProdukJenis(
               token: token,
-              id: e.id.toString(),
+              id: e.idLocal,
               aktif: e.aktif,
               idtoko: e.idToko.toString(),
               namajenis: e.namaJenis);
@@ -764,7 +773,7 @@ class produkController extends GetxController {
               "------------------------------------------>");
 
           await DBHelper().UPDATE(
-              table: 'produk_jenis_local', data: synclocal('Y'), id: e.id);
+              table: 'produk_jenis_local', data: synclocal('Y'), id: e.idLocal);
         });
 
         // Get.showSnackbar(
@@ -810,7 +819,7 @@ class produkController extends GetxController {
         //     toast().bottom_snackbar_success('Sukses', 'semua produk sync'));
       } else {
         await Future.forEach(query, (e) async {
-          await REST.produkLocalToDb(
+          await REST.syncproduk(
             token: token,
             id: e.id,
             barcode: e.barcode,
@@ -878,39 +887,6 @@ class produkController extends GetxController {
     return map;
   }
 
-  ProdukTambahlocalv2() async {
-    print('-------------------tambah Produk local---------------------');
-
-    Get.dialog(const showloading(), barrierDismissible: false);
-    var db = DatabaseHelper.instance;
-
-    var add = await db.addProdukv2(DataProduk(
-      //id: 69,
-      idKategori: 1,
-      idToko: int.parse(id_toko),
-      idUser: id_user,
-      idJenis: int.parse(jenisvalue!),
-      idJenisStock: int.parse(jenisstokval!),
-      namaProduk: nama_produk.value.text,
-      deskripsi: desc.value.text,
-      qty: jenisstokval == '1' ? int.parse(qty.value.text) : 0,
-      harga: int.parse(jumlahharga.value.toString()),
-      hargaModal: int.parse(jumlahhargamodal.value.toString()),
-      diskonBarang: int.parse(jumlahdiskon.value.toInt().toString()),
-      barcode: barcode.value.text.toString(),
-    ));
-    print(add);
-    await fetchProduklocalv2();
-    Get.back(closeOverlays: true);
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-  }
-
   deleteproduk(String id) async {
     Get.dialog(const showloading(), barrierDismissible: false);
     var checkconn = await check_conn.check();
@@ -937,15 +913,16 @@ class produkController extends GetxController {
     }
   }
 
-  deleteproduklocal(int id) async {
+  deleteproduklocal(String id_local) async {
     print('delete produk local---------------------------------------->');
     Get.dialog(const showloading(), barrierDismissible: false);
-    var select = produklistlocal.where((x) => x.id == id).first;
+    var select = produklistlocal.where((x) => x.idLocal == id_local).first;
     var delete = await DBHelper().UPDATE(
-      id: select.id,
+      id: select.idLocal,
       table: 'produk_local',
       data: DataProduk(
               id: select.id,
+              idLocal: select.idLocal,
               status: 3,
               idKategori: select.idKategori,
               idJenisStock: select.idJenisStock,
@@ -972,7 +949,7 @@ class produkController extends GetxController {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
           toast().bottom_snackbar_success('Sukses', 'Produk berhasil dihapus'));
-      print('deleted ' + id.toString());
+      print('deleted ' + id_local.toString());
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
@@ -993,6 +970,7 @@ class produkController extends GetxController {
         'produk_jenis_local',
         DataJenis(
                 aktif: 'Y',
+                idLocal: stringGenerator(10),
                 sync: 'N',
                 idToko: id_toko,
                 namaJenis: nama_jenis.value.text)
@@ -1002,9 +980,10 @@ class produkController extends GetxController {
       print(query);
       print('id user------------>');
       print(id_user);
-      jenisvalue = query.toString();
-      await fetchjenislocal(id_toko);
 
+      List<DataJenis> jenis = await fetchjenislocal(id_toko);
+      var select = jenis.where((element) => element.id == query).first;
+      jenisvalue = select.idLocal.toString();
       // await fetchProduklocal(id_toko);
       //  jenislistlocal.refresh();
       await Get.find<kasirController>().fetchjenislocal(id_toko);
@@ -1085,19 +1064,20 @@ class produkController extends GetxController {
     return [];
   }
 
-  deletejenislocal(int id) async {
+  deletejenislocal(String id_local) async {
     print('delete produk local---------------------------------------->');
     Get.dialog(const showloading(), barrierDismissible: false);
-    var select = jenislistlocal.where((x) => x.id == id).first;
+    var select = jenislistlocal.where((x) => x.idLocal == id_local).first;
     var delete = await DBHelper().UPDATE(
-      id: select.id,
+      id: select.idLocal,
       table: 'produk_jenis_local',
       data: DataJenis(
               aktif: 'N',
               sync: 'N',
               namaJenis: select.namaJenis,
               idToko: select.idToko,
-              id: select.id)
+              id: select.id,
+              idLocal: select.idLocal)
           .toMapForDb(),
     );
 
@@ -1108,7 +1088,7 @@ class produkController extends GetxController {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
           toast().bottom_snackbar_success('Sukses', 'Berhasil dihapus'));
-      print('deleted ' + id.toString());
+      print('deleted ' + id_local.toString());
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
@@ -1191,20 +1171,20 @@ class produkController extends GetxController {
 
   //TODO : background task WORKMANAGER sync produk
 
-  editqtylocal(int id) async {
+  editqtylocal(String id_local) async {
     print('-------------------tambah qty local---------------------');
 
     Get.dialog(const showloading(), barrierDismissible: false);
 
     await fetchProduklocal(id_toko);
-    var query = produklistlocal.where((e) => e.id == id).first;
+    var query = produklistlocal.where((e) => e.idLocal == id_local).first;
     print(query.namaProduk);
     var sum = query.qty! + int.parse(qtyadd.value.text);
 
     var updateqty = await DBHelper().UPDATE(
       table: 'produk_local',
       data: qtylocal(sum),
-      id: id,
+      id: id_local,
     );
     print(updateqty);
 
@@ -1279,7 +1259,7 @@ class produkController extends GetxController {
                     ),
                     button_solid_custom(
                         onPressed: () {
-                          editqtylocal(arg.id!);
+                          editqtylocal(arg.idLocal);
                         },
                         child: Text(
                           'Tambah Stock',
@@ -1315,7 +1295,7 @@ class produkController extends GetxController {
           title: 'Foto Produk',
           icon: Icons.image,
           icon_color: color_template().primary,
-          base_color: color_template().primary),
+          base_color: Colors.white),
       contentPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(

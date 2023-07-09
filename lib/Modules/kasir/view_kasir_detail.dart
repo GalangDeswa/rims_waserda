@@ -28,13 +28,13 @@ class kasir_detail extends GetView<kasirController> {
                 margin: EdgeInsets.only(bottom: 10),
                 padding: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  borderRadius: border_radius().header_border,
-                  color: color_template().primary,
-                ),
+                    borderRadius: border_radius().header_border,
+                    color: Colors.white,
+                    border: Border.all(color: color_template().primary)),
                 child: Center(
                   child: Text(
                     'Keranjang'.toUpperCase(),
-                    style: font().header,
+                    style: font().header_blue,
                   ),
                 ),
               ),
@@ -102,7 +102,7 @@ class kasir_detail extends GetView<kasirController> {
                                                                 controller
                                                                     .cache[
                                                                         index]
-                                                                    .id!);
+                                                                    .idLocal!);
                                                       },
                                                       icon: Icon(
                                                         size: context
@@ -203,7 +203,7 @@ class kasir_detail extends GetView<kasirController> {
                                                             index,
                                                             controller
                                                                 .cache[index]
-                                                                .id!);
+                                                                .idLocal!);
                                                       },
                                                       child: Icon(
                                                         Icons.remove,

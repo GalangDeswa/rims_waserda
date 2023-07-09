@@ -14,6 +14,7 @@ class ModelHutang {
   int statusCode;
   String messages;
   List<DataHutang> data;
+
   //Meta meta;
 
   ModelHutang({
@@ -44,7 +45,8 @@ class ModelHutang {
 
 class DataHutang {
   int? id;
-  int? idPelanggan;
+  String? idLocal;
+  String? idPelanggan;
   String? namaPelanggan;
   int? idToko;
   int? hutang;
@@ -55,6 +57,7 @@ class DataHutang {
 
   DataHutang(
       {this.id,
+      this.idLocal,
       this.idPelanggan,
       this.namaPelanggan,
       this.idToko,
@@ -66,6 +69,7 @@ class DataHutang {
 
   factory DataHutang.fromJson(Map<String, dynamic> json) => DataHutang(
         id: json["id"],
+        idLocal: json["id_local"],
         idPelanggan: json["id_pelanggan"],
         namaPelanggan: json["nama_pelanggan"],
         idToko: json["id_toko"],
@@ -78,6 +82,7 @@ class DataHutang {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "id_pelanggan": idPelanggan,
         "nama_pelanggan": namaPelanggan,
         "id_toko": idToko,
@@ -91,6 +96,7 @@ class DataHutang {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['id_pelanggan'] = idPelanggan;
     // map['nama_pelanggan'] = namaPelanggan;

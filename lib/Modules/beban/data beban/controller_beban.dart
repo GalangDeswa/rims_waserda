@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -216,17 +217,18 @@ class bebanController extends GetxController {
     }
   }
 
-  deletebebanlocal(int id) async {
+  deletebebanlocal(String id_local) async {
     print('delete beban local---------------------------------------->');
     Get.dialog(const showloading(), barrierDismissible: false);
-    var select = databebanlistlocal.where((x) => x.id == id).first;
+    var select = databebanlistlocal.where((x) => x.idLocal == id_local).first;
     var delete = await DBHelper().UPDATE(
-      id: select.id,
+      id: select.idLocal,
       table: 'beban_local',
       data: DataBeban(
               aktif: 'N',
               sync: 'N',
               id: select.id,
+              idLocal: select.idLocal,
               idToko: select.idToko,
               jumlah: select.jumlah,
               tgl: select.tgl,
@@ -247,7 +249,7 @@ class bebanController extends GetxController {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
           toast().bottom_snackbar_success('Sukses', 'Beban berhasil dihapus'));
-      print('deleted ' + id.toString());
+      print('deleted ' + id_local.toString());
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast()
@@ -284,18 +286,19 @@ class bebanController extends GetxController {
     return [];
   }
 
-  deletejenisbebanlocal(int id) async {
+  deletejenisbebanlocal(String id_local) async {
     print('delete jenis beban local---------------------------------------->');
     Get.dialog(showloading(), barrierDismissible: false);
-    var select = jenisbebanlistlocal.where((x) => x.id == id).first;
+    var select = jenisbebanlistlocal.where((x) => x.idLocal == id_local).first;
     var delete = await DBHelper().UPDATE(
-      id: select.id,
+      id: select.idLocal,
       table: 'beban_kategori_local',
       data: DataJenisBeban(
               aktif: 'N',
               sync: 'N',
               idToko: select.idToko,
               id: select.id,
+              idLocal: select.idLocal,
               kategori: select.kategori)
           .toMapForDb(),
     );
@@ -306,7 +309,7 @@ class bebanController extends GetxController {
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast().bottom_snackbar_success(
           'Sukses', 'Kategori beban berhasil dihapus'));
-      print('deleted ' + id.toString());
+      print('deleted ' + id_local.toString());
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast()
@@ -377,7 +380,7 @@ class bebanController extends GetxController {
         await Future.forEach(query, (e) async {
           var x = await REST.syncbeban(
             token: token,
-            id: e.id,
+            id: e.idLocal,
             idtoko: e.idToko.toString(),
             idkatbeban: e.idKtrBeban.toString(),
             iduser: e.idUser.toString(),
@@ -398,8 +401,8 @@ class bebanController extends GetxController {
             return;
           } else {
             print('beban local sync = y------------------------>');
-            await DBHelper()
-                .UPDATE(table: 'beban_local', data: synclocal('Y'), id: e.id);
+            await DBHelper().UPDATE(
+                table: 'beban_local', data: synclocal('Y'), id: e.idLocal);
           }
         });
 
@@ -436,13 +439,15 @@ class bebanController extends GetxController {
       } else {
         await Future.forEach(query, (e) async {
           var sync = await REST.syncbebanJenis(
-              token, e.id, e.idToko.toString(), e.kategori, e.aktif);
+              token, e.idLocal, e.idToko.toString(), e.kategori, e.aktif);
           print("BEBAN KATEGORI UP ------>    " +
               e.kategori! +
               "------------------------------------------>");
           if (sync != null) {
             await DBHelper().UPDATE(
-                table: 'beban_kategori_local', data: synclocal('Y'), id: e.id);
+                table: 'beban_kategori_local',
+                data: synclocal('Y'),
+                id: e.idLocal);
           }
         });
 
@@ -474,7 +479,7 @@ class bebanController extends GetxController {
       await DBHelper().INSERT(
           'beban_local',
           DataBeban(
-                  id: e.id,
+                  idLocal: e.idLocal,
                   idToko: e.idToko,
                   idUser: e.idUser,
                   nama: e.nama,
@@ -493,7 +498,7 @@ class bebanController extends GetxController {
           'beban_kategori_local',
           DataJenisBeban(
                   aktif: e.aktif,
-                  id: e.id,
+                  idLocal: e.idLocal,
                   idToko: e.idToko,
                   kategori: e.kategori,
                   sync: 'Y')
@@ -505,22 +510,6 @@ class bebanController extends GetxController {
     print('init success---------------------------------------------------->');
     await fetchBebanlocal(id_toko);
     await fetchJenisBebanlocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
   }
 
   var databebanlistlocal = <DataBeban>[].obs;
@@ -570,6 +559,15 @@ class bebanController extends GetxController {
     return beban;
   }
 
+  String stringGenerator(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+
+    var uniqueId = base64UrlEncode(values);
+    print(uniqueId);
+    return uniqueId;
+  }
+
   //DateFormat dateFormat = DateFormat("dd-MM-yyyy");
 
   bebanTambahlocal() async {
@@ -580,12 +578,13 @@ class bebanController extends GetxController {
     var query = await DBHelper().INSERT(
         'beban_local',
         DataBeban(
+                idLocal: stringGenerator(10),
                 aktif: 'Y',
                 sync: 'N',
                 idToko: int.parse(id_toko),
-                idKtrBeban: int.parse(jenisbebanval!),
+                idKtrBeban: jenisbebanval!,
                 namaKtrBeban: jenisbebanlistlocal
-                    .where((e) => e.id == int.parse(jenisbebanval!))
+                    .where((e) => e.idLocal == jenisbebanval)
                     .first
                     .kategori
                     .toString(),
@@ -812,6 +811,7 @@ class bebanController extends GetxController {
     var query = await DBHelper().INSERT(
         'beban_kategori_local',
         DataJenisBeban(
+                idLocal: stringGenerator(10),
                 aktif: 'Y',
                 idToko: int.parse(id_toko),
                 kategori: kategori.value.text,
@@ -820,8 +820,9 @@ class bebanController extends GetxController {
 
     if (query != null) {
       print(query);
-      jenisbebanval = query.toString();
-      await fetchJenisBebanlocal(id_toko);
+      List<DataJenisBeban> jenis = await fetchJenisBebanlocal(id_toko);
+      var select = jenis.where((element) => element.id == query).first;
+      jenisbebanval = select.idLocal.toString();
       await fetchBebanlocal(id_toko);
 
       Get.back();
@@ -905,9 +906,10 @@ class editjenisbebanController extends GetxController {
                 sync: 'N',
                 kategori: kategori.value.text,
                 idToko: int.parse(id_toko),
-                id: data.id)
+                id: data.id,
+                idLocal: data.idLocal)
             .toMapForDb(),
-        id: data.id);
+        id: data.idLocal);
     print(
         'edit jenis beban local berhasil------------------------------------->');
     print(query);
@@ -987,7 +989,7 @@ class editbebanController extends GetxController {
 
   jjj() {
     var x = jenisbebanlistlocal
-            .firstWhereOrNull((e) => e.id == int.parse(jenisbebanval.value))
+            .firstWhereOrNull((e) => e.idLocal == jenisbebanval.value)
             ?.kategori ??
         '-';
     print(x);
@@ -1086,14 +1088,15 @@ class editbebanController extends GetxController {
                 namaKtrBeban: jjj(),
                 sync: 'N',
                 id: data.id,
+                idLocal: data.idLocal,
                 idToko: int.parse(id_toko),
-                idKtrBeban: int.parse(jenisbebanval.value),
+                idKtrBeban: jenisbebanval.value,
                 nama: nama.value.text,
                 keterangan: keterangan.value.text,
                 tgl: datedata.first.toString(),
                 jumlah: jumlahbeban.value.toInt())
             .toMapForDb(),
-        id: data.id);
+        id: data.idLocal);
     print('edit beban local berhasil------------------------------------->');
     print(query);
     if (query == 1) {

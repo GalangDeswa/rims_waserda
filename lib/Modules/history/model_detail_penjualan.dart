@@ -47,6 +47,7 @@ class ModelDetailPenjualan {
 class DataDetailPenjualan {
   DataDetailPenjualan({
     this.id,
+    this.idLocal,
     this.meja,
     this.idToko,
     this.idUser,
@@ -64,6 +65,7 @@ class DataDetailPenjualan {
   });
 
   int? id;
+  String? idLocal;
   int? meja;
   int? idToko;
   int? idUser;
@@ -83,6 +85,7 @@ class DataDetailPenjualan {
   factory DataDetailPenjualan.fromJson(Map<String, dynamic> json) =>
       DataDetailPenjualan(
         id: json["id"],
+        idLocal: json["id_local"],
         meja: json["meja"],
         idToko: json["id_toko"],
         idUser: json["id_user"],
@@ -102,6 +105,7 @@ class DataDetailPenjualan {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "id_local": idLocal,
         "meja": meja,
         "id_toko": idToko,
         "id_user": idUser,

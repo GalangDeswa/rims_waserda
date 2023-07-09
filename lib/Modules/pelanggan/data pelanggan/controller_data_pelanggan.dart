@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,11 +20,11 @@ import 'model_data_pelanggan.dart';
 
 class pelangganController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchDataPelangganlocal(id_toko);
-    fetchstatusPelangganlocal(id_toko);
+    await fetchDataPelangganlocal(id_toko);
+    await fetchstatusPelangganlocal(id_toko);
   }
 
   List<Widget> table = [
@@ -124,7 +125,7 @@ class pelangganController extends GetxController {
         print(' all data sync -------------------------------->');
       } else {
         var p = await Future.forEach(query, (e) async {
-          await REST.syncpelanggan(token, e.id, e.idToko.toString(),
+          await REST.syncpelanggan(token, e.idLocal, e.idToko.toString(),
               e.namaPelanggan, e.noHp, e.aktif);
           print("PELANGGAN UP ----->   " +
               e.namaPelanggan.toString() +
@@ -158,6 +159,7 @@ class pelangganController extends GetxController {
       await DBHelper().INSERT(
           'pelanggan_local',
           DataPelanggan(
+                  idLocal: e.idLocal,
                   id: e.id,
                   idToko: e.idToko,
                   namaPelanggan: e.namaPelanggan,
@@ -231,7 +233,7 @@ class pelangganController extends GetxController {
     print('-------------------fetch pelanggan local---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT pelanggan_local.*,penjualan_local.status FROM pelanggan_local LEFT JOIN penjualan_local ON pelanggan_local.id = penjualan_local.id_pelanggan WHERE pelanggan_local.id_toko = $id_toko AND pelanggan_local.aktif = "Y" ORDER BY ID DESC');
+        'SELECT pelanggan_local.*,penjualan_local.status FROM pelanggan_local LEFT JOIN penjualan_local ON pelanggan_local.id_Local = penjualan_local.id_pelanggan WHERE pelanggan_local.id_toko = $id_toko AND pelanggan_local.aktif = "Y" ORDER BY ID DESC');
     List<DataPelanggan> pelanggan = query.isNotEmpty
         ? query.map((e) => DataPelanggan.fromJson(e)).toList()
         : [];
@@ -370,6 +372,15 @@ class pelangganController extends GetxController {
     no_hp.value.clear();
   }
 
+  String stringGenerator(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+
+    var uniqueId = base64UrlEncode(values);
+    print(uniqueId);
+    return uniqueId;
+  }
+
   tambahPelangganlocal() async {
     print('-------------------tambah pelanggan local---------------------');
 
@@ -378,6 +389,7 @@ class pelangganController extends GetxController {
     var query = await DBHelper().INSERT(
         'pelanggan_local',
         DataPelanggan(
+                idLocal: stringGenerator(10),
                 idToko: int.parse(id_toko),
                 namaPelanggan: nama_pelanggan.value.text,
                 noHp: no_hp.value.text,
@@ -391,6 +403,8 @@ class pelangganController extends GetxController {
       await Get.find<kasirController>().fetchDataPelangganlocal(id_toko);
       await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
       await Get.find<dashboardController>().loadpelanggantotal();
+      nama_pelanggan.value.clear();
+      no_hp.value.clear();
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast()
           .bottom_snackbar_success('Sukses', 'Pelanggan berhasil ditambah'));
@@ -441,15 +455,16 @@ class pelangganController extends GetxController {
     return [];
   }
 
-  hapuspelangganlocal(int id) async {
+  hapuspelangganlocal(String id_local) async {
     print('delete pelanggan local---------------------------------------->');
     Get.dialog(const showloading(), barrierDismissible: false);
-    var select = list_pelanggan_local.where((x) => x.id == id).first;
+    var select = list_pelanggan_local.where((x) => x.idLocal == id_local).first;
     var delete = await DBHelper().UPDATE(
-      id: select.id,
+      id: select.idLocal,
       table: 'pelanggan_local',
       data: DataPelanggan(
               id: select.id,
+              idLocal: select.idLocal,
               idToko: select.idToko,
               namaPelanggan: select.namaPelanggan,
               noHp: select.noHp,
@@ -467,7 +482,7 @@ class pelangganController extends GetxController {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
           toast().bottom_snackbar_success('Sukses', 'Produk berhasil dihapus'));
-      print('deleted ' + id.toString());
+      print('deleted ' + id_local.toString());
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(

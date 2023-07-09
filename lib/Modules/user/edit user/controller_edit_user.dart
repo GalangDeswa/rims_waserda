@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import '../../../Services/handler.dart';
 import '../../Widgets/loading.dart';
 import '../../Widgets/toast.dart';
+import '../data user/controller_data_user.dart';
 
 class edituserController extends GetxController {
   @override
@@ -70,6 +71,7 @@ class edituserController extends GetxController {
       if (user != null) {
         print(user);
         //get.back close overlay otomatis close dan back page sebelumnya?
+        await Get.find<datauserController>().userdata();
         Get.back(closeOverlays: true);
 
         Get.showSnackbar(
@@ -97,7 +99,7 @@ class edituserController extends GetxController {
           token, id_toko, data.id, id_user, password.value.text);
       if (user != null) {
         print(user);
-        //get.back close overlay otomatis close dan back page sebelumnya?
+        await Get.find<datauserController>().userdata();
         Get.back(closeOverlays: true);
 
         Get.showSnackbar(toast()

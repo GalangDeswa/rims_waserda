@@ -35,7 +35,7 @@ class pelanggan_table extends GetView<pelangganController> {
                       child: header(
                         iscenter: false,
                         title: 'Data Pelanggan',
-                        icon: FontAwesomeIcons.peopleGroup,
+                        icon: FontAwesomeIcons.peopleLine,
                         icon_funtion: Icons.refresh,
                         function: () async {
                           Get.dialog(Container(
