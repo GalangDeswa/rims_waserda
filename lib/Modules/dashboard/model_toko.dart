@@ -122,7 +122,7 @@ class Toko {
   String alamat;
   dynamic nohp;
   String email;
-  dynamic logo;
+  String? logo;
   String status;
   DateTime tglAktif;
   DateTime? createdAt;
@@ -137,7 +137,7 @@ class Toko {
         alamat: json["alamat"],
         nohp: json["nohp"],
         email: json["email"],
-        logo: json["logo"],
+        logo: json["logo"] ?? '-',
         status: json["status"],
         tglAktif: DateTime.parse(json["tgl_aktif"]),
         //createdAt: DateTime.parse(json["created_at"]),

@@ -52,9 +52,9 @@ class dashboardController extends GetxController {
     alamat_toko.value = await GetStorage().read('alamat_toko');
     jenis_toko.value = await GetStorage().read('jenis_toko');
     email_toko.value = await GetStorage().read('email_toko');
-    pendapatan.value = await GetStorage().read('pendapatan');
-    beban.value = await GetStorage().read('beban');
-    logo.value = await GetStorage().read('logo_toko');
+    // pendapatan.value = await GetStorage().read('pendapatan');
+    // beban.value = await GetStorage().read('beban');
+    logo.value = await GetStorage().read('logo_toko') ?? '-';
     kontenlists.value = await GetStorage().read('konten_banner');
   }
 

@@ -13,6 +13,8 @@ import 'package:rims_waserda/Modules/produk/jenis%20produk/binding_edit_jenis.da
 import 'package:rims_waserda/Modules/produk/jenis%20produk/view_edit_jenis.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/view_tambah_jenis.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_password.dart';
+import 'package:rims_waserda/Modules/user/toko/binding_tokov2.dart';
+import 'package:rims_waserda/Modules/user/toko/view_edit_tokov2_base.dart';
 
 import '../Modules/Login/binding_login.dart';
 import '../Modules/Login/view_login_base.dart';
@@ -138,4 +140,8 @@ final List<GetPage<dynamic>> route = [
       binding: editpelangganBinding()),
   GetPage(
       name: "/hutang", page: () => hutang_table(), binding: hutangBinding()),
+  GetPage(
+      name: "/edit_tokov2",
+      page: () => edit_tokov2(),
+      binding: tokov2Binding()),
 ];

@@ -92,6 +92,54 @@ class REST extends GetConnect {
     }
   }
 
+  static Future<dynamic> editToko(
+      {required String token,
+      id,
+      nama_toko,
+      jenisusaha,
+      alamat,
+      nohp,
+      email,
+      logo}) async {
+    // try{
+    //
+    // }catch(e){
+    //   Get.back();
+    //   Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    // }
+
+    var response = await http.post(link().POST_edittoko,
+        body: ({
+          'token': token,
+          'id': id,
+          'nama_toko': nama_toko,
+          'jenisusaha': jenisusaha,
+          'alamat': alamat,
+          'nohp': nohp,
+          'email': email,
+          'logo': logo ?? '-',
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'EDIT TOKO network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'EDIT TOKO network handler----------------------------------------->');
+      print('gagal EDIT TOKO');
+      print(response.statusCode);
+      print(response.body);
+      return data;
+    }
+  }
+
   static Future<dynamic> userData(String token, idtoko) async {
     try {
       var response = await http.post(link().POST_userdata,
@@ -189,12 +237,7 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> userEditPassword(
-    String token,
-    idtoko,
-    id,
-    iduser,
-    password,
-  ) async {
+      String token, idtoko, id, iduser, password, passwordlama) async {
     try {
       var response = await http.post(link().POST_usereditpassword,
           body: ({
@@ -203,6 +246,7 @@ class REST extends GetConnect {
             'id': id.toString(),
             'id_user': iduser.toString(),
             'password': password,
+            'old_password': passwordlama,
           }));
       if (response.statusCode == 200) {
         print(
@@ -211,14 +255,15 @@ class REST extends GetConnect {
         //var data = response.body;
         print(data);
         print(response.statusCode);
-        return (data);
+        return data;
       } else {
+        var data = json.decode(response.body);
         print(
             'USER EDIT network handler----------------------------------------->');
-        print('gagal USER EDIT');
+        print('gagal USER EDIT password');
         print(response.statusCode);
         print(response.body);
-        return Future.error('Error edit password');
+        return data;
       }
     } catch (e) {
       Get.back();

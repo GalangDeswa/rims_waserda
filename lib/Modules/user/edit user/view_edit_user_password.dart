@@ -45,6 +45,42 @@ class edit_user_password extends GetView<edituserController> {
                           // height: 100,
                           child: TextFormField(
                             obscureText: controller.show.value,
+                            controller: controller.passwordlama.value,
+                            onChanged: ((String pass) {}),
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: controller.show == false
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                                onPressed: () {
+                                  controller.show.value =
+                                      !controller.show.value;
+                                  print(controller.show.value);
+                                },
+                              ),
+                              labelText: "Password lama",
+                              labelStyle: TextStyle(
+                                color: Colors.black87,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Masukan password';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          // width: context.width_query / 2.2,
+                          // height: 100,
+                          child: TextFormField(
+                            obscureText: controller.show.value,
                             controller: controller.password.value,
                             onChanged: ((String pass) {}),
                             decoration: InputDecoration(
@@ -58,7 +94,7 @@ class edit_user_password extends GetView<edituserController> {
                                   print(controller.show.value);
                                 },
                               ),
-                              labelText: "Password",
+                              labelText: "Password baru",
                               labelStyle: TextStyle(
                                 color: Colors.black87,
                               ),
@@ -93,7 +129,7 @@ class edit_user_password extends GetView<edituserController> {
                                   print(controller.showkon.value);
                                 },
                               ),
-                              labelText: "konfirmasi password",
+                              labelText: "konfirmasi password baru",
                               labelStyle: TextStyle(
                                 color: Colors.black87,
                               ),

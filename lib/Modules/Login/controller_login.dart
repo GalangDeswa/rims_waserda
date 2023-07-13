@@ -95,10 +95,12 @@ class loginController extends GetxController {
   final loginKey = GlobalKey<FormState>().obs;
   var showpass = true.obs;
   var nama_toko;
+  var id_local_toko;
   var alamat_toko;
   var jenis_toko;
   var email_toko;
   var logo_toko;
+  var nohp;
 
   var listkonten = <Konten>[];
 
@@ -165,12 +167,14 @@ class loginController extends GetxController {
             alamat_toko = dataToko.data[0].toko.alamat;
             email_toko = dataToko.data[0].toko.email;
             logo_toko = dataToko.data[0].toko.logo;
+            nohp = dataToko.data[0].toko.nohp;
 
             await GetStorage().write('nama_toko', nama_toko);
             await GetStorage().write('jenis_toko', jenis_toko);
             await GetStorage().write('alamat_toko', alamat_toko);
             await GetStorage().write('email_toko', email_toko);
             await GetStorage().write('logo_toko', logo_toko);
+            await GetStorage().write('no_hp', nohp);
             print(dataToko.data[0].toko.namaToko);
             print(logo_toko);
             print('-------------------konten---------------');
@@ -257,12 +261,6 @@ class loginController extends GetxController {
                   toast().bottom_snackbar_error('Error', 'Error init databse'));
             }
           }
-
-          //TODO : check api untuk id_local
-          //TODO : CRUD ULANG UNTUK ID_LOCAL
-
-          // await checkidproduk(dataUser.token);
-          //var checkid = GetStorage().read('id_produk');
 
           points.value = points.value + 0.1;
 

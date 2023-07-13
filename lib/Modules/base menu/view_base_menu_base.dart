@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -106,20 +108,20 @@ class base_menu extends GetView<base_menuController> {
                           )),
                       child: Column(
                         children: [
-                          Container(
-                            width: 70,
-                            height: 70,
-                            margin: EdgeInsets.only(top: 10),
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 50,
-                            ),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: color_template().primary,
-                            ),
-                          ),
+                          controller.logo.value == '-'
+                              ? CircleAvatar(
+                                  backgroundImage: AssetImage(
+                                      'assets/images/login_toko.png'),
+                                  radius: 40,
+                                )
+                              : CircleAvatar(
+                                  backgroundImage: MemoryImage(
+                                    base64Decode(controller.logo.value),
+                                    // fit: BoxFit.cover,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                  radius: 40,
+                                ),
                           SizedBox(
                             height: 10,
                           ),
@@ -196,6 +198,18 @@ class base_menu extends GetView<base_menuController> {
                     child: ListTile(
                       title: Text('Backup data kasir'),
                       leading: Icon(Icons.upload),
+                    ),
+                  ),
+                  InkWell(
+                    highlightColor: color_template().select,
+                    splashColor: Colors.orangeAccent,
+                    onTap: () {
+                      Get.toNamed('/edit_tokov2');
+                      //controller.stringGenerator(10);
+                    },
+                    child: ListTile(
+                      title: Text('Edit toko'),
+                      leading: Icon(Icons.settings),
                     ),
                   ),
                   InkWell(

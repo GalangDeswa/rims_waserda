@@ -137,7 +137,7 @@ void main() async {
   await GetStorage.init();
   await DBHelper().db;
   await requestNotificationPermissions();
-  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
   //await DBHelper().initDb();
@@ -155,8 +155,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue,
           colorScheme: ThemeData().colorScheme.copyWith(
-                primary: color_template().select,
-              )),
+            primary: color_template().select,
+          )),
       getPages: route,
       initialRoute: '/splash',
       //initialBinding: splashBinding(),

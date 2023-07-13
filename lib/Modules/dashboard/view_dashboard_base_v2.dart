@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -55,6 +57,31 @@ class dashboard_v2 extends GetView<dashboardController> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              controller.logo.value == '-'
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            'assets/images/login_toko.png'),
+                                        radius: 40,
+                                      ),
+                                    )
+                                  : Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
+                                      child: CircleAvatar(
+                                        backgroundImage: MemoryImage(
+                                          base64Decode(controller.logo.value),
+                                          // fit: BoxFit.cover,
+                                        ),
+                                        backgroundColor: Colors.white,
+                                        radius: 40,
+                                      ),
+                                    ),
+                              SizedBox(
+                                width: 15,
+                              ),
                               Expanded(
                                 child: ListTile(
                                   contentPadding: EdgeInsets.zero,
@@ -78,12 +105,6 @@ class dashboard_v2 extends GetView<dashboardController> {
                                   style: font().header,
                                 ),
                               ),
-                              CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.white,
-                                child:
-                                    Image.asset('assets/images/login_toko.png'),
-                              )
                             ],
                           ),
 
@@ -481,10 +502,15 @@ class dashboard_v2 extends GetView<dashboardController> {
                                           ),
                                           Expanded(
                                             child: Container(
+                                                // color: Colors.red,
                                                 width: context.width_query,
                                                 // height: context.height_query / 3,
                                                 //   color: Colors.red,
-                                                child: dashboard_app_v2()),
+                                                child: Column(
+                                                  children: [
+                                                    dashboard_app_v2(),
+                                                  ],
+                                                )),
                                           ),
                                           Expanded(
                                             child: Container(

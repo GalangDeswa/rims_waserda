@@ -106,40 +106,44 @@ class tambah_produk_form extends GetView<produkController> {
                                 Expanded(
                                   child: Row(
                                     children: [
-                                      Container(
-                                        // color: Colors.red,
-                                        width: 100,
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              //color: Colors.green,
-                                              width: 80,
-                                              child: ListTile(
-                                                title: Text('Foto produk'),
-                                                subtitle: Text('opsional'),
+                                      Expanded(
+                                        child: Container(
+                                          // color: Colors.red,
+                                          // width: 100,
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  //color: Colors.green,
+                                                  // width: 80,
+                                                  child: ListTile(
+                                                    title: Text('Foto produk'),
+                                                    subtitle: Text('opsional'),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            Expanded(
-                                              child: Checkbox(
-                                                value:
-                                                    controller.checkfoto.value,
-                                                onChanged: (bool? value) {
-                                                  controller.checkfoto.value =
-                                                      value!;
-                                                  if (controller
-                                                          .checkfoto.value ==
-                                                      false) {
-                                                    controller.pikedImagePath
-                                                        .value = '';
-                                                    controller.image64 = null;
-                                                  }
-                                                  print(controller
-                                                      .checkfoto.value);
-                                                  // controller.check == true;
-                                                },
-                                              ),
-                                            )
-                                          ],
+                                              Expanded(
+                                                child: Checkbox(
+                                                  value: controller
+                                                      .checkfoto.value,
+                                                  onChanged: (bool? value) {
+                                                    controller.checkfoto.value =
+                                                        value!;
+                                                    if (controller
+                                                            .checkfoto.value ==
+                                                        false) {
+                                                      controller.pikedImagePath
+                                                          .value = '';
+                                                      controller.image64 = null;
+                                                    }
+                                                    print(controller
+                                                        .checkfoto.value);
+                                                    // controller.check == true;
+                                                  },
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                       controller.checkfoto.value == false
@@ -527,39 +531,45 @@ class tambah_produk_form extends GetView<produkController> {
                               Expanded(
                                   child: Row(
                                 children: [
-                                  Container(
-                                    // color: Colors.red,
-                                    width: 100,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          //color: Colors.green,
-                                          width: 80,
-                                          child: ListTile(
-                                            title: Text('Barcode'),
-                                            subtitle: Text('opsional'),
+                                  Expanded(
+                                    child: Container(
+                                      //color: Colors.red,
+                                      //width: 100,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              // color: Colors.green,
+                                              // width: 80,
+                                              child: ListTile(
+                                                title: Text('Barcode'),
+                                                subtitle: Text('opsional'),
+                                                visualDensity:
+                                                    VisualDensity.compact,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Checkbox(
-                                            value:
-                                                controller.checkbarcode.value,
-                                            onChanged: (bool? value) {
-                                              controller.checkbarcode.value =
-                                                  value!;
-                                              if (controller
-                                                      .checkbarcode.value ==
-                                                  false) {
-                                                controller.barcode.value.text =
-                                                    '-';
-                                              }
-                                              print(controller
-                                                  .checkbarcode.value);
-                                              // controller.check == true;
-                                            },
-                                          ),
-                                        )
-                                      ],
+                                          Expanded(
+                                            child: Checkbox(
+                                              value:
+                                                  controller.checkbarcode.value,
+                                              onChanged: (bool? value) {
+                                                controller.checkbarcode.value =
+                                                    value!;
+                                                if (controller
+                                                        .checkbarcode.value ==
+                                                    false) {
+                                                  controller
+                                                      .barcode.value.text = '-';
+                                                }
+                                                print(controller
+                                                    .checkbarcode.value);
+                                                // controller.check == true;
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   controller.checkbarcode == false
@@ -568,54 +578,8 @@ class tambah_produk_form extends GetView<produkController> {
                                           child: Obx(() {
                                             return Row(
                                               children: [
-                                                // Transform.rotate(
-                                                //   angle: -math.pi / 2.0,
-                                                //   child: Container(
-                                                //     margin: EdgeInsets.only(
-                                                //         left: 10),
-                                                //     color: Colors.red,
-                                                //     width: 50,
-                                                //     height: 50,
-                                                //     child: MobileScanner(
-                                                //       // scanWindow: Rect.fromCenter(
-                                                //       //   center:
-                                                //       //       MediaQuery.of(context).size.center(Offset.zero),
-                                                //       //   width: 500,
-                                                //       //   height: 500,
-                                                //       // ),
-                                                //       controller:
-                                                //           MobileScannerController(
-                                                //         detectionSpeed:
-                                                //             DetectionSpeed
-                                                //                 .normal,
-                                                //         torchEnabled: true,
-                                                //         detectionTimeoutMs:
-                                                //             1000,
-                                                //         facing:
-                                                //             CameraFacing.front,
-                                                //       ),
-                                                //       // scanWindow: scanWindow,
-                                                //       onDetect:
-                                                //           (capture) async {
-                                                //         print(
-                                                //             '-------------------------start----print scan-------------------------------------->');
-                                                //         var bar = capture
-                                                //             .barcodes
-                                                //             .map((e) => e
-                                                //                 .rawValue
-                                                //                 .toString())
-                                                //             .first;
-                                                //         print(bar);
-                                                //         controller.barcode.value
-                                                //             .text = bar;
-                                                //       },
-                                                //     ),
-                                                //   ),
-                                                // ),
                                                 Expanded(
                                                   child: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 10),
                                                     // width: context.width_query / 2.2,
                                                     // height: 100,
                                                     child: TextFormField(
@@ -654,7 +618,7 @@ class tambah_produk_form extends GetView<produkController> {
                                                 ),
                                                 Container(
                                                   margin:
-                                                      EdgeInsets.only(left: 10),
+                                                      EdgeInsets.only(left: 5),
                                                   decoration: BoxDecoration(
                                                       color: color_template()
                                                           .primary,
@@ -752,30 +716,34 @@ class tambah_produk_form extends GetView<produkController> {
                               ),
                               Row(
                                 children: [
-                                  Container(
-                                    // color: Colors.red,
-                                    width: 100,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          //color: Colors.green,
-                                          width: 80,
-                                          child: ListTile(
-                                            title: Text('Diskon'),
-                                            subtitle: Text('opsional'),
+                                  Expanded(
+                                    child: Container(
+                                      // color: Colors.red,
+                                      //  width: 100,
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              //color: Colors.green,
+                                              //  width: 80,
+                                              child: ListTile(
+                                                title: Text('Diskon'),
+                                                subtitle: Text('opsional'),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: Checkbox(
-                                            value: controller.check.value,
-                                            onChanged: (bool? value) {
-                                              controller.check.value = value!;
-                                              print(controller.check.value);
-                                              // controller.check == true;
-                                            },
-                                          ),
-                                        )
-                                      ],
+                                          Expanded(
+                                            child: Checkbox(
+                                              value: controller.check.value,
+                                              onChanged: (bool? value) {
+                                                controller.check.value = value!;
+                                                print(controller.check.value);
+                                                // controller.check == true;
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   controller.check == false

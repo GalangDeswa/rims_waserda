@@ -5,6 +5,8 @@ class server {
 //TODO : FINALISASI UI/TEST
 
 class link {
+  final Uri POST_edittoko = Uri.parse(server().host + 'edittoko');
+
   //login----------------------------------------------------------------------
   final Uri POST_login = Uri.parse(server().host + 'auth/login');
   final Uri POST_logout = Uri.parse(server().host + 'auth/logout');

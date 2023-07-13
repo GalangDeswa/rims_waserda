@@ -95,19 +95,19 @@ class edituserController extends GetxController {
     );
     var checkconn = await check_conn.check();
     if (checkconn == true) {
-      var user = await REST.userEditPassword(
-          token, id_toko, data.id, id_user, password.value.text);
-      if (user != null) {
+      var user = await REST.userEditPassword(token, id_toko, data.id, id_user,
+          password.value.text, passwordlama.value.text);
+      print(user['success']);
+      if (user['success'] == true) {
         print(user);
         await Get.find<datauserController>().userdata();
         Get.back(closeOverlays: true);
-
         Get.showSnackbar(toast()
             .bottom_snackbar_success('Sukses', 'Password berhasil diganti'));
       } else {
-        Get.back(closeOverlays: true);
+        Get.back();
         Get.showSnackbar(
-            toast().bottom_snackbar_error('Gagal', 'Password gagal diganti'));
+            toast().bottom_snackbar_error('Gagal', user['message']));
       }
     } else {
       Get.back(closeOverlays: true);

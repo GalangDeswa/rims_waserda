@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -25,19 +28,36 @@ class base_menuController extends GetxController {
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    namauser.value = GetStorage().read('name') ?? 'user';
-    namatoko.value = GetStorage().read('nama_toko') ?? 'toko';
-    token.value = await GetStorage().read('token');
+    await loadtoko();
     await getlayout();
     print('--------------------------- kasit layout index');
     print(layoutIndex.value);
   }
 
+  loadtoko() async {
+    namatoko.value = await GetStorage().read('nama_toko');
+    namauser.value = await GetStorage().read('name');
+    logo.value = await GetStorage().read('logo_toko') ?? '-';
+  }
+
+  var namatoko = ''.obs;
+  var namauser = ''.obs;
+  var logo = ''.obs;
+
   var token = ''.obs;
   var id_toko = GetStorage().read('id_toko');
+  var logo_toko = GetStorage().read('logo_toko');
   var id_user = GetStorage().read('id_user');
   var role = GetStorage().read('role');
   var point_loading = 0.0.obs;
+
+  String stringGenerator(int len) {
+    var random = Random.secure();
+    var values = List<int>.generate(len, (i) => random.nextInt(255));
+    var uniqueId = base64UrlEncode(values);
+    print(uniqueId);
+    return uniqueId;
+  }
 
   syncAll(id_toko) async {
     try {
@@ -112,9 +132,6 @@ class base_menuController extends GetxController {
   var extended = false.obs;
 
   var layoutIndex = 0.obs;
-
-  var namauser = ''.obs;
-  var namatoko = ''.obs;
 
   getlayout() {
     if (Get.find<kasirController>().layout.value == true) {
