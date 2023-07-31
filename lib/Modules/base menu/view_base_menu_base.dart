@@ -177,6 +177,7 @@ class base_menu extends GetView<base_menuController> {
                       print('workmanager ---------------->');
                       try {
                         await controller.syncAll(controller.id_toko);
+                        //  await Get.find<produkController>().checkup();
                       } catch (e) {
                         Get.back();
                         Get.showSnackbar(toast()
@@ -192,12 +193,12 @@ class base_menu extends GetView<base_menuController> {
                             'loading sync manual complete------------------>');
                         Get.back(closeOverlays: true);
                         Get.showSnackbar(toast().bottom_snackbar_success(
-                            'Sukses', 'Data berhasil di upload'));
+                            'Sukses', 'Data berhasil di sinkron'));
                       }
                     },
                     child: ListTile(
-                      title: Text('Backup data kasir'),
-                      leading: Icon(Icons.upload),
+                      title: Text('Sinkronkan data'),
+                      leading: Icon(Icons.sync),
                     ),
                   ),
                   InkWell(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/pelanggan/hutang/model_hutang_detail.dart';
 import 'package:rims_waserda/Modules/pelanggan/hutang/view_hutang_detail.dart';
 
 import '../../../Templates/setting.dart';
@@ -43,7 +44,6 @@ class hutang_table extends GetView<hutangController> {
                         ));
                         await controller
                             .fetchDataHutanglocal(controller.id_toko);
-
                         Get.back();
                       },
                     ),
@@ -252,6 +252,13 @@ class hutangTable extends DataTableSource {
 
   @override
   DataRow getRow(int index) {
+    var dtl = <DataHutangDetail>[].obs;
+    dtl.value = con.list_hutang_detaillocal
+        .where((e) => e.idHutang == data[index].idLocal)
+        .toList();
+    //TODO : check sisa bayar hutang
+    //TODO : reversal jual ggal
+    //TODO : Nama item untuk laporan
     return DataRow(cells: [
       DataCell(Text(
         con.dateFormatdisplay.format(DateTime.parse(data[index].tglHutang!)),
@@ -277,37 +284,48 @@ class hutangTable extends DataTableSource {
               style: font().reguler,
               overflow: TextOverflow.ellipsis,
             )),
-      DataCell(data[index].status == 1
+      DataCell(dtl.isNotEmpty && data[index].status == 2
           ? Container(
               padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(10)),
+                  color: Colors.teal, borderRadius: BorderRadius.circular(10)),
               child: Text(
-                'Lunas',
+                'Sudah bayar sebagian',
                 style: font().reguler_white,
                 overflow: TextOverflow.ellipsis,
               ))
-          : data[index].status == 2
+          : data[index].status == 1
               ? Container(
                   padding: EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                      color: Colors.orange,
+                      color: Colors.green,
                       borderRadius: BorderRadius.circular(10)),
                   child: Text(
-                    'Hutang',
+                    'Lunas',
                     style: font().reguler_white,
                     overflow: TextOverflow.ellipsis,
                   ))
-              : Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                      color: color_template().tritadery,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(
-                    'Batal',
-                    style: font().reguler_white,
-                    overflow: TextOverflow.ellipsis,
-                  ))),
+              : data[index].status == 2
+                  ? Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'Hutang',
+                        style: font().reguler_white,
+                        overflow: TextOverflow.ellipsis,
+                      ))
+                  : Container(
+                      padding: EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                          color: color_template().tritadery,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(
+                        'Batal',
+                        style: font().reguler_white,
+                        overflow: TextOverflow.ellipsis,
+                      ))),
       DataCell(data[index].status == 3
           ? Container()
           : Row(
@@ -321,7 +339,7 @@ class hutangTable extends DataTableSource {
                           AlertDialog(content: hutang_detail()));
                     },
                     icon: Icon(
-                      Icons.list,
+                      Icons.calendar_month,
                       size: 18,
                       color: color_template().secondary,
                     )),

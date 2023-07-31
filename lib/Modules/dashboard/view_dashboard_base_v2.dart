@@ -502,7 +502,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                           ),
                                           Expanded(
                                             child: Container(
-                                                // color: Colors.red,
+                                                //  color: Colors.red,
                                                 width: context.width_query,
                                                 // height: context.height_query / 3,
                                                 //   color: Colors.red,

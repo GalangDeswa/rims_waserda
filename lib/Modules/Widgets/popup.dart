@@ -123,7 +123,7 @@ class popscreen {
                         Get.back();
                       },
                       child: Text(
-                        'Batal',
+                        'Tidak',
                         style: font().primary,
                       ),
                       width: context.width_query,

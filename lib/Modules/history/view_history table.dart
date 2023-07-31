@@ -8,6 +8,7 @@ import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/Widgets/popup.dart';
 import 'package:rims_waserda/Modules/history/view_detail_penjualan.dart';
+import 'package:rims_waserda/Modules/pelanggan/hutang/model_hutang_detail.dart';
 
 import '../../Templates/setting.dart';
 import '../Widgets/buttons.dart';
@@ -509,6 +510,10 @@ class penjualanTable extends DataTableSource {
 
   @override
   DataRow getRow(int index) {
+    var dtl = <DataHutangDetail>[].obs;
+    dtl.value = con.list_hutang_detaillocal
+        .where((e) => e.idHutang == data[index].idHutang)
+        .toList();
     return DataRow(cells: [
       DataCell(Text(
         con.dateFormat.format(DateTime.parse(data[index].tglPenjualan!)),
@@ -545,18 +550,19 @@ class penjualanTable extends DataTableSource {
         style: font().reguler,
         overflow: TextOverflow.ellipsis,
       )),
-      DataCell(data[index].status == 1
+      DataCell(dtl.isNotEmpty && data[index].status == 3
+          // data[index].status != 1 &&
+          // data[index].status != 4
           ? Container(
-              padding: const EdgeInsets.all(6),
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(10)),
+                  color: Colors.teal, borderRadius: BorderRadius.circular(10)),
               child: Text(
-                'Selesai',
+                'Sudah bayar sebagian',
                 style: font().reguler_white,
                 overflow: TextOverflow.ellipsis,
-              ),
-            )
-          : data[index].status == 2
+              ))
+          : data[index].status == 1
               ? Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
@@ -568,35 +574,47 @@ class penjualanTable extends DataTableSource {
                     overflow: TextOverflow.ellipsis,
                   ),
                 )
-              : data[index].status == 3
+              : data[index].status == 2
                   ? Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                          color: Colors.orange,
+                          color: Colors.green,
                           borderRadius: BorderRadius.circular(10)),
                       child: Text(
-                        'Hutang',
+                        'Selesai',
                         style: font().reguler_white,
                         overflow: TextOverflow.ellipsis,
                       ),
                     )
-                  : data[index].status == 4
+                  : data[index].status == 3
                       ? Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                              color: color_template().tritadery,
+                              color: Colors.orange,
                               borderRadius: BorderRadius.circular(10)),
                           child: Text(
-                            'Reversal',
+                            'Hutang',
                             style: font().reguler_white,
                             overflow: TextOverflow.ellipsis,
                           ),
                         )
-                      : Text(
-                          '-',
-                          style: font().reguler,
-                          overflow: TextOverflow.ellipsis,
-                        )),
+                      : data[index].status == 4
+                          ? Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                  color: color_template().tritadery,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                'Reversal',
+                                style: font().reguler_white,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )
+                          : Text(
+                              '-',
+                              style: font().reguler,
+                              overflow: TextOverflow.ellipsis,
+                            )),
       DataCell(Row(
         children: [
           Expanded(

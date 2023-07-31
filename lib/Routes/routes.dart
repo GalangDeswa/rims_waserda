@@ -7,6 +7,8 @@ import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/binding_data_pel
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/pelanggan/edit%20pelanggan/view_edit_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/pelanggan/hutang/view_hutang_table.dart';
+import 'package:rims_waserda/Modules/pembelian/binding_pembelian.dart';
+import 'package:rims_waserda/Modules/pembelian/view_pembelian_base.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/binding_data_produk.dart';
 import 'package:rims_waserda/Modules/produk/edit%20produk/binding_edit_produk.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/binding_edit_jenis.dart';
@@ -144,4 +146,6 @@ final List<GetPage<dynamic>> route = [
       name: "/edit_tokov2",
       page: () => edit_tokov2(),
       binding: tokov2Binding()),
+  GetPage(
+      name: "/pembelian", page: () => pembelian(), binding: pembelianBinding()),
 ];

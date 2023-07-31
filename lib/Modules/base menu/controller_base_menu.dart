@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_base.dart';
+import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_base_v2.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/user/data%20user/view_data_user_base.dart';
@@ -68,8 +69,12 @@ class base_menuController extends GetxController {
       await produkController().syncProdukJenis(id_toko);
       point_loading.value = 0.1;
 
+      //TODO :  CHEK SYNC INIT SEMUA
+
       print("sync produk---------------------------->");
       await produkController().syncProduk(id_toko);
+      //get.find membuat refresh ui?
+      await Get.find<produkController>().initProdukToLocal(id_toko);
       point_loading.value = 0.2;
 
       print("sync beban jenis--------------------------->");
@@ -78,26 +83,38 @@ class base_menuController extends GetxController {
 
       print("sync beban---------------------------->");
       await bebanController().syncBeban(id_toko);
+      await Get.find<bebanController>().initBebanToLocal(id_toko);
       point_loading.value = 0.5;
 
       print("sync pelanggan---------------------------->");
       await pelangganController().syncPelanggan(id_toko);
+      await Get.find<pelangganController>().initPelangganToLocal(id_toko);
       point_loading.value = 0.6;
 
       print("sync hutang---------------------------->");
       await hutangController().syncHutang(id_toko);
+      await Get.find<hutangController>().initHutangToLocal(id_toko);
       point_loading.value = 0.7;
 
       print("sync hutang detail---------------------------->");
       await hutangController().syncHutangDetail(id_toko);
+      await Get.find<hutangController>().initHutangDetailToLocal(id_toko);
       point_loading.value = 0.8;
 
       print("sync penjualan---------------------------->");
       await historyController().syncPenjualan(id_toko);
+      await Get.find<historyController>().initPenjualanToLocal(id_toko);
       point_loading.value = 0.9;
 
       print("sync penjualan detail---------------------------->");
       await detailpenjualanController().syncPenjualanDetail(id_toko);
+      await Get.find<detailpenjualanController>()
+          .initPenjualanDetailToLocal(id_toko);
+
+      await Get.find<historyController>()
+          .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
+      await Get.find<dashboardController>().loadall();
+
       point_loading.value = 1.0;
     } catch (e) {
       Get.back();

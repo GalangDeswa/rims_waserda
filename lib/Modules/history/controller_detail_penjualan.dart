@@ -104,6 +104,8 @@ class detailpenjualanController extends GetxController {
   initPenjualanDetailToLocal(id_toko) async {
     List<DataPenjualanDetailV2> penjualan_detail_local =
         await penjualanDetailALl();
+    List<DataPenjualanDetailV2> check_penjualan_detail_local =
+        await fetchPenjualanDetailsync(id_toko);
 
     //List<DataDetailPenjualan> beban_detail_local = await fetchJenisBeban();
 
@@ -111,56 +113,63 @@ class detailpenjualanController extends GetxController {
         '-------------------init detail penjualan local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(penjualan_detail_local, (e) async {
-      await DBHelper().INSERT(
-          'penjualan_detail_local',
-          DataPenjualanDetailV2(
-                  idLocal: e.idLocal,
-                  idUser: e.idUser,
-                  diskonKasir: e.diskonKasir,
-                  qty: e.qty,
-                  total: e.total,
-                  diskonBrg: e.diskonBrg,
-                  hargaBrg: e.hargaBrg,
-                  hargaModal: e.hargaModal,
-                  idJenisStock: e.idJenisStock,
-                  idKategori: e.idKategori,
-                  idPenjualan: e.idPenjualan,
-                  idProduk: e.idProduk,
-                  namaBrg: e.namaBrg,
-                  tgl: e.tgl,
-                  sync: 'Y',
-                  aktif: e.aktif)
-              .toMapForDb());
+      var x = check_penjualan_detail_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print(
+            'insert ---------------------------------------> detail penjualan');
+        await DBHelper().INSERT(
+            'penjualan_detail_local',
+            DataPenjualanDetailV2(
+                    id: e.id,
+                    idLocal: e.idLocal,
+                    idUser: e.idUser,
+                    diskonKasir: e.diskonKasir,
+                    qty: e.qty,
+                    total: e.total,
+                    diskonBrg: e.diskonBrg,
+                    hargaBrg: e.hargaBrg,
+                    hargaModal: e.hargaModal,
+                    idJenisStock: e.idJenisStock,
+                    idKategori: e.idKategori,
+                    idPenjualan: e.idPenjualan,
+                    idProduk: e.idProduk,
+                    namaBrg: e.namaBrg,
+                    tgl: e.tgl,
+                    sync: 'Y',
+                    aktif: e.aktif)
+                .toMapForDb());
+      } else {
+        print(
+            'update ---------------------------------------> detail penjualan');
+        DBHelper().UPDATE(
+            table: 'penjualan_detail_local',
+            data: DataPenjualanDetailV2(
+                    idLocal: e.idLocal,
+                    idUser: e.idUser,
+                    diskonKasir: e.diskonKasir,
+                    qty: e.qty,
+                    total: e.total,
+                    diskonBrg: e.diskonBrg,
+                    hargaBrg: e.hargaBrg,
+                    hargaModal: e.hargaModal,
+                    idJenisStock: e.idJenisStock,
+                    idKategori: e.idKategori,
+                    idPenjualan: e.idPenjualan,
+                    idProduk: e.idProduk,
+                    namaBrg: e.namaBrg,
+                    tgl: e.tgl,
+                    sync: 'Y',
+                    id: e.id,
+                    aktif: e.aktif)
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
-    // await Future.forEach(beban_kategori_local, (e) async {
-    //   await DBHelper().INSERT(
-    //       'beban_kategori_local',
-    //       DataJenisBeban(id: e.id, idToko: e.idToko, kategori: e.kategori)
-    //           .toMapForDb());
-    // });
-
-    // if (up != null) {
-    //  print(up.toString());
     print('init success---------------------------------------------------->');
     await fetchPenjualanDetaillocal(id_toko);
-    //await fetchJenisBebanlocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
   }
 
   var penjualan_list_detail_local = <DataPenjualanDetailV2>[].obs;

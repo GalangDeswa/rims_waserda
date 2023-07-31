@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
@@ -46,47 +45,47 @@ class hutangController extends GetxController {
   var previouspage;
   var perpage = 0.obs;
 
-  next() async {
-    final respon = await http.post(Uri.parse(nextdata), body: {
-      'token': token,
-      'id_toko': id_toko,
-    });
-    final datav2 = json.decode(respon.body);
-    var dataHutang = ModelHutang.fromJson(datav2);
-    final data = json.decode(respon.body)['meta'];
-    list_hutang.value = dataHutang.data;
-    previouspage = data['pagination']['links']['previous'];
-    nextdata = data['pagination']['links']['next'];
-    currentpage.value = data['pagination']['current_page'];
-    count.value = data['pagination']['count'];
-    totaldata.value = data['pagination']['total'];
-    perpage.value = data['pagination']['per_page'];
-    print(nextdata);
-    print(data);
-
-    //return produk_list;
-  }
-
-  back() async {
-    final respon = await http.post(Uri.parse(previouspage), body: {
-      'token': token,
-      'id_toko': id_toko,
-    });
-    final datav2 = json.decode(respon.body);
-    var dataHutang = ModelHutang.fromJson(datav2);
-    final data = json.decode(respon.body)['meta'];
-    list_hutang.value = dataHutang.data;
-
-    previouspage = data['pagination']['links']['previous'];
-    nextdata = data['pagination']['links']['next'];
-    count.value = data['pagination']['count'];
-    totaldata.value = data['pagination']['total'];
-    currentpage.value = data['pagination']['current_page'];
-    perpage.value = data['pagination']['per_page'];
-    print(previouspage);
-
-    //return produk_list;
-  }
+  // next() async {
+  //   final respon = await http.post(Uri.parse(nextdata), body: {
+  //     'token': token,
+  //     'id_toko': id_toko,
+  //   });
+  //   final datav2 = json.decode(respon.body);
+  //   var dataHutang = ModelHutang.fromJson(datav2);
+  //   final data = json.decode(respon.body)['meta'];
+  //   list_hutang.value = dataHutang.data;
+  //   previouspage = data['pagination']['links']['previous'];
+  //   nextdata = data['pagination']['links']['next'];
+  //   currentpage.value = data['pagination']['current_page'];
+  //   count.value = data['pagination']['count'];
+  //   totaldata.value = data['pagination']['total'];
+  //   perpage.value = data['pagination']['per_page'];
+  //   print(nextdata);
+  //   print(data);
+  //
+  //   //return produk_list;
+  // }
+  //
+  // back() async {
+  //   final respon = await http.post(Uri.parse(previouspage), body: {
+  //     'token': token,
+  //     'id_toko': id_toko,
+  //   });
+  //   final datav2 = json.decode(respon.body);
+  //   var dataHutang = ModelHutang.fromJson(datav2);
+  //   final data = json.decode(respon.body)['meta'];
+  //   list_hutang.value = dataHutang.data;
+  //
+  //   previouspage = data['pagination']['links']['previous'];
+  //   nextdata = data['pagination']['links']['next'];
+  //   count.value = data['pagination']['count'];
+  //   totaldata.value = data['pagination']['total'];
+  //   currentpage.value = data['pagination']['current_page'];
+  //   perpage.value = data['pagination']['per_page'];
+  //   print(previouspage);
+  //
+  //   //return produk_list;
+  // }
 
   var id_user = GetStorage().read('id_user');
   var token = GetStorage().read('token');
@@ -108,7 +107,7 @@ class hutangController extends GetxController {
 
   searchhutanglocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id WHERE hutang_local.id_toko = $id_toko AND nama_pelanggan LIKE "%${search.value.text}%" ORDER BY ID DESC');
+        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id_local WHERE hutang_local.id_toko = $id_toko AND pelanggan_local.nama_pelanggan   LIKE "%${search.value.text}%" ORDER BY ID DESC');
     List<DataHutang> hutang = query.isNotEmpty
         ? query.map((e) => DataHutang.fromJson(e)).toList()
         : [];
@@ -228,46 +227,57 @@ class hutangController extends GetxController {
     //login -> sync -> init
 
     List<DataHutang> hutang_local = await fetchDataHutang();
+    List<DataHutang> check_hutang_local = await fetchDataHutangsync(id_toko);
 
     print('-------------------init hutang local---------------------');
 
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(hutang_local, (e) async {
-      await DBHelper().INSERT(
-          'hutang_local',
-          DataHutang(
-                  aktif: e.aktif,
-                  sync: 'Y',
-                  namaPelanggan: e.namaPelanggan,
-                  idToko: e.idToko,
-                  status: e.status,
-                  idLocal: e.idLocal,
-                  hutang: e.hutang,
-                  idPelanggan: e.idPelanggan,
-                  tglHutang: e.tglHutang)
-              .toMapForDb());
+      var x = check_hutang_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print('insert------------------------------------------> ' +
+            ' ' +
+            e.hutang.toString());
+        await DBHelper().INSERT(
+            'hutang_local',
+            DataHutang(
+                    id: e.id,
+                    aktif: e.aktif,
+                    sync: 'Y',
+                    namaPelanggan: e.namaPelanggan,
+                    idToko: e.idToko,
+                    status: e.status,
+                    idLocal: e.idLocal,
+                    hutang: e.hutang,
+                    idPelanggan: e.idPelanggan,
+                    tglHutang: e.tglHutang)
+                .toMapForDb());
+      } else {
+        print('update------------------------------------------> ' +
+            ' ' +
+            e.hutang.toString());
+        DBHelper().UPDATE(
+            table: 'hutang_local',
+            data: DataHutang(
+                    aktif: e.aktif,
+                    id: e.id,
+                    sync: 'Y',
+                    namaPelanggan: e.namaPelanggan,
+                    idToko: e.idToko,
+                    status: e.status,
+                    idLocal: e.idLocal,
+                    hutang: e.hutang,
+                    idPelanggan: e.idPelanggan,
+                    tglHutang: e.tglHutang)
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
-    // if (up != null) {
-    //  print(up.toString());
     print('init success---------------------------------------------------->');
     await fetchDataHutanglocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
   }
 
   var list_hutanglocal = <DataHutang>[].obs;
@@ -291,6 +301,20 @@ class hutangController extends GetxController {
     succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id_local WHERE hutang_local.id_toko = $id_toko AND hutang_local.aktif = "Y" ORDER BY ID DESC');
+    List<DataHutang> hutang = query.isNotEmpty
+        ? query.map((e) => DataHutang.fromJson(e)).toList()
+        : [];
+    list_hutanglocal.value = hutang;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return hutang;
+  }
+
+  fetchDataHutanglocaldashboard(id_toko) async {
+    print('-------------------fetch hutang local---------------------');
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id_local WHERE hutang_local.id_toko = $id_toko AND hutang_local.aktif = "Y" AND hutang_local.status = 2 ORDER BY ID DESC');
     List<DataHutang> hutang = query.isNotEmpty
         ? query.map((e) => DataHutang.fromJson(e)).toList()
         : [];
@@ -335,48 +359,62 @@ class hutangController extends GetxController {
     //login -> sync -> init
 
     List<DataHutangDetail> hutang_detail_local = await fetchDataHutangDetail();
+    List<DataHutangDetail> check_hutang_detail_local =
+        await fetchDataHutangDetailsync(id_toko);
 
     print('-------------------init hutang local---------------------');
 
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(hutang_detail_local, (e) async {
-      await DBHelper().INSERT(
-          'hutang_detail_local',
-          DataHutangDetail(
-                  tglLunas: e.tglLunas,
-                  sisa: e.sisa,
-                  tglBayar: e.tglBayar,
-                  aktif: e.aktif,
-                  sync: 'Y',
-                  tglHutang: e.tglHutang,
-                  idPelanggan: e.idPelanggan,
-                  idLocal: e.idLocal,
-                  idToko: e.idToko,
-                  bayar: e.bayar,
-                  idHutang: e.idHutang)
-              .toMapForDb());
+      var x = check_hutang_detail_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print(
+            'insert -------------------------------------- > ' + e.tglHutang!);
+        await DBHelper().INSERT(
+            'hutang_detail_local',
+            DataHutangDetail(
+                    id: e.id,
+                    tglLunas: e.tglLunas,
+                    sisa: e.sisa,
+                    tglBayar: e.tglBayar,
+                    aktif: e.aktif,
+                    sync: 'Y',
+                    tglHutang: e.tglHutang,
+                    idPelanggan: e.idPelanggan,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    bayar: e.bayar,
+                    idHutang: e.idHutang)
+                .toMapForDb());
+      } else {
+        print(
+            'update -------------------------------------- > ' + e.tglHutang!);
+        DBHelper().UPDATE(
+            table: 'hutang_detail_local',
+            data: DataHutangDetail(
+                    tglLunas: e.tglLunas,
+                    id: e.id,
+                    sisa: e.sisa,
+                    tglBayar: e.tglBayar,
+                    aktif: e.aktif,
+                    sync: 'Y',
+                    tglHutang: e.tglHutang,
+                    idPelanggan: e.idPelanggan,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    bayar: e.bayar,
+                    idHutang: e.idHutang)
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
     // if (up != null) {
     //  print(up.toString());
     print('init success---------------------------------------------------->');
     await fetchDataHutangDetaillocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
   }
 
   var list_hutang_detaillocal = <DataHutangDetail>[].obs;
@@ -405,6 +443,7 @@ class hutangController extends GetxController {
         ? query.map((e) => DataHutangDetail.fromJson(e)).toList()
         : [];
     list_hutang_detaillocal.value = hutang;
+    print(hutang);
     // print('fect produk local --->' + produk.toList().toString());
     //  succ.value = true;
     return hutang;
@@ -573,10 +612,11 @@ class hutangController extends GetxController {
     await fetchDataHutanglocal(id_toko);
     await Get.find<dashboardController>().loadhutangtotal();
     var con = Get.find<historyController>();
-    await con.fetchPenjualanlocal(
-        id_toko: id_toko, id_user: id_user, role: role);
-    Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
-    Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
+    await Get.find<historyController>()
+        .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
+    await Get.find<historyController>().fetchDataHutangDetaillocal(id_toko);
+    await Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
+    await Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
     var selectv2 =
         list_hutang_detaillocal.where((e) => e.idHutang == id_local).first;
     var ssv2 = list_hutanglocal.where((e) => e.idLocal == id_local).first;
@@ -647,10 +687,11 @@ class hutangController extends GetxController {
     print('bayar hutang  local berhasil------------------------------------->');
     await fetchDataHutanglocal(id_toko);
     await fetchDataHutangDetaillocal(id_toko);
-    Get.find<historyController>()
+    await Get.find<historyController>()
         .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
-    Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
-    Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
+    await Get.find<historyController>().fetchDataHutangDetaillocal(id_toko);
+    await Get.find<pelangganController>().fetchDataPelangganlocal(id_toko);
+    await Get.find<pelangganController>().fetchstatusPelangganlocal(id_toko);
     await Get.find<dashboardController>().loadhutangtotal();
     await Get.find<dashboardController>().loadpendapatantotal();
     await Get.find<dashboardController>().loadpendapatanhariini();
@@ -689,9 +730,12 @@ class hutangController extends GetxController {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Sisa hutang : ' +
-                        'Rp.' +
-                        nominal.format(int.parse(hutang))),
+                    Text(
+                      'Sisa hutang : ' +
+                          'Rp.' +
+                          nominal.format(int.parse(hutang)),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     SizedBox(
                       height: 5,
                     ),

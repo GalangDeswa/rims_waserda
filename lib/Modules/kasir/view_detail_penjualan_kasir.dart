@@ -180,8 +180,8 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                         onPressed: () {
                                           //TODO : chek kalkulasi harga di crud penjualan
                                           print('qweqweqweqweqweqew');
-                                          controller.deletekeranjanglocal(
-                                              'keranjang_local');
+                                          // controller.deletekeranjanglocal(
+                                          //     'keranjang_local');
                                           Get.back();
                                         },
                                         icon: const Icon(

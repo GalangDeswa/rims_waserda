@@ -24,7 +24,7 @@ class pelangganController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     await fetchDataPelangganlocal(id_toko);
-    await fetchstatusPelangganlocal(id_toko);
+    // await fetchstatusPelangganlocal(id_toko);
   }
 
   List<Widget> table = [
@@ -151,52 +151,50 @@ class pelangganController extends GetxController {
 
   initPelangganToLocal(id_toko) async {
     List<DataPelanggan> pelanggan_local = await fetchDataPelanggan();
+    List<DataPelanggan> check_pelanggan_local =
+        await fetchDataPelanggansync(id_toko);
     //List<DataDetailPenjualan> beban_detail_local = await fetchJenisBeban();
 
     print('-------------------init pelanggan local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(pelanggan_local, (e) async {
-      await DBHelper().INSERT(
-          'pelanggan_local',
-          DataPelanggan(
-                  idLocal: e.idLocal,
-                  id: e.id,
-                  idToko: e.idToko,
-                  namaPelanggan: e.namaPelanggan,
-                  noHp: e.noHp,
-                  sync: 'Y',
-                  aktif: e.aktif)
-              .toMapForDb());
+      var x = check_pelanggan_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print(
+            'insert ----------------------------- >' + ' ' + e.namaPelanggan!);
+        await DBHelper().INSERT(
+            'pelanggan_local',
+            DataPelanggan(
+                    idLocal: e.idLocal,
+                    id: e.id,
+                    idToko: e.idToko,
+                    namaPelanggan: e.namaPelanggan,
+                    noHp: e.noHp,
+                    sync: 'Y',
+                    aktif: e.aktif)
+                .toMapForDb());
+      } else {
+        print(
+            'update ----------------------------- >' + ' ' + e.namaPelanggan!);
+        await DBHelper().UPDATE(
+            table: 'pelanggan_local',
+            data: DataPelanggan(
+                    idLocal: e.idLocal,
+                    id: e.id,
+                    idToko: e.idToko,
+                    namaPelanggan: e.namaPelanggan,
+                    noHp: e.noHp,
+                    sync: 'Y',
+                    aktif: e.aktif)
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
-    // await Future.forEach(beban_kategori_local, (e) async {
-    //   await DBHelper().INSERT(
-    //       'beban_kategori_local',
-    //       DataJenisBeban(id: e.id, idToko: e.idToko, kategori: e.kategori)
-    //           .toMapForDb());
-    // });
-
-    // if (up != null) {
-    //  print(up.toString());
     print('init success---------------------------------------------------->');
     await fetchDataPelangganlocal(id_toko);
-    //await fetchJenisBebanlocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
   }
 
   fetchDataPelanggansync(id_toko) async {
@@ -274,7 +272,7 @@ class pelangganController extends GetxController {
     var xxx = list_pelanggan_local_status
         .map((x) => x)
         .toList()
-        .where((element) => element.id == id)
+        .where((element) => element.idLocal == id)
         .map((e) => e.status)
         .contains(3);
 

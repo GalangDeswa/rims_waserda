@@ -154,9 +154,9 @@ class pelanggan_table extends GetView<pelangganController> {
                             DataColumn(
                               label: Text('Nomor Hp', style: font().reguler),
                             ),
-                            DataColumn(
-                              label: Text('status', style: font().reguler),
-                            ),
+                            // DataColumn(
+                            //   label: Text('status', style: font().reguler),
+                            // ),
                             DataColumn(
                               label: Text('Aksi', style: font().reguler),
                             ),
@@ -252,11 +252,11 @@ class pelangganTable extends DataTableSource {
         style: font().reguler,
         overflow: TextOverflow.ellipsis,
       )),
-      DataCell(
-        con.statuspelanggan(
-          data[index].id,
-        ),
-      ),
+      // DataCell(
+      //   con.statuspelanggan(
+      //     data[index].idLocal,
+      //   ),
+      // ),
       DataCell(Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,

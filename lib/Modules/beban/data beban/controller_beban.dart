@@ -472,37 +472,86 @@ class bebanController extends GetxController {
 
     List<DataBeban> beban_local = await fetchDataBeban();
     List<DataJenisBeban> beban_kategori_local = await fetchJenisBeban();
+    List<DataBeban> check_beban_local = await fetchBebansync(id_toko);
+    List<DataJenisBeban> check_jenis_beban_local =
+        await fetchJenisBebansync(id_toko);
 
     print('-------------------init beban local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(beban_local, (e) async {
-      await DBHelper().INSERT(
-          'beban_local',
-          DataBeban(
-                  idLocal: e.idLocal,
-                  idToko: e.idToko,
-                  idUser: e.idUser,
-                  nama: e.nama,
-                  keterangan: e.keterangan,
-                  tgl: e.tgl,
-                  jumlah: e.jumlah,
-                  idKtrBeban: e.idKtrBeban,
-                  namaKtrBeban: e.namaKtrBeban,
-                  sync: 'Y',
-                  aktif: e.aktif)
-              .toMapForDb());
+      var x = check_beban_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print('insert------------------------------>' + ' ' + e.nama!);
+        await DBHelper().INSERT(
+            'beban_local',
+            DataBeban(
+                    id: e.id,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    nama: e.nama,
+                    keterangan: e.keterangan,
+                    tgl: e.tgl,
+                    jumlah: e.jumlah,
+                    idKtrBeban: e.idKtrBeban,
+                    namaKtrBeban: e.namaKtrBeban,
+                    sync: 'Y',
+                    aktif: e.aktif)
+                .toMapForDb());
+      } else {
+        print('update--------------------------------------------->' + e.nama!);
+        await DBHelper().UPDATE(
+            table: 'beban_local',
+            data: DataBeban(
+                    idLocal: e.idLocal,
+                    id: e.id,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    nama: e.nama,
+                    keterangan: e.keterangan,
+                    tgl: e.tgl,
+                    jumlah: e.jumlah,
+                    idKtrBeban: e.idKtrBeban,
+                    namaKtrBeban: e.namaKtrBeban,
+                    sync: 'Y',
+                    aktif: e.aktif)
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
     await Future.forEach(beban_kategori_local, (e) async {
-      await DBHelper().INSERT(
-          'beban_kategori_local',
-          DataJenisBeban(
-                  aktif: e.aktif,
-                  idLocal: e.idLocal,
-                  idToko: e.idToko,
-                  kategori: e.kategori,
-                  sync: 'Y')
-              .toMapForDb());
+      var x = check_jenis_beban_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print('insert ---------------------------------> ' + ' ' + e.kategori!);
+        await DBHelper().INSERT(
+            'beban_kategori_local',
+            DataJenisBeban(
+                    id: e.id,
+                    aktif: e.aktif,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    kategori: e.kategori,
+                    sync: 'Y')
+                .toMapForDb());
+      } else {
+        print('update ---------------------------------> ' + ' ' + e.kategori!);
+        await DBHelper().UPDATE(
+            table: 'beban_kategori_local',
+            data: DataJenisBeban(
+                    aktif: e.aktif,
+                    id: e.id,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    kategori: e.kategori,
+                    sync: 'Y')
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
     // if (up != null) {

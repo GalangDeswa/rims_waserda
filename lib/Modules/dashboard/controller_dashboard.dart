@@ -135,7 +135,8 @@ class dashboardController extends GetxController {
     print('sum beban hari ini----------------------------->');
     print(sumB);
 
-    List<DataHutang> h = await hutangController().fetchDataHutanglocal(id_toko);
+    List<DataHutang> h =
+        await hutangController().fetchDataHutanglocaldashboard(id_toko);
     var filterH = h
         .map((e) => e)
         .toList()
@@ -229,7 +230,8 @@ class dashboardController extends GetxController {
         .map((e) => e.jumlah)
         .fold(0, (previous, current) => previous + current!);
 
-    List<DataHutang> h = await hutangController().fetchDataHutanglocal(id_toko);
+    List<DataHutang> h =
+        await hutangController().fetchDataHutanglocaldashboard(id_toko);
 
     var sumH = h
         .map((e) => e.hutang)
@@ -252,12 +254,25 @@ class dashboardController extends GetxController {
 
   loadhutangtotal() async {
     print('load total hutang------------------------------>');
-    List<DataHutang> p = await hutangController().fetchDataHutanglocal(id_toko);
+    List<DataHutang> p =
+        await hutangController().fetchDataHutanglocaldashboard(id_toko);
     var filter = p
         .where((e) => e.status == 2)
         .toList()
         .fold(0, (previousValue, element) => previousValue + element.hutang!);
 
     return totalhutang.value = filter;
+  }
+
+  loadall() async {
+    await loadpendapatanhariini();
+    await loadhutangtotal();
+    await loadtransaksitotal();
+    await loadpendapatantotal();
+    await loadpelanggantotal();
+    await loadproduktotal();
+    await loadtransaksihariini();
+    await loadbebanhariini();
+    await loadtotalreversal();
   }
 }

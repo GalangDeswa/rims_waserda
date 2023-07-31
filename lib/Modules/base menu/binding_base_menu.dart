@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/history/controller_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
+import 'package:rims_waserda/Modules/pembelian/view_pembelian_table.dart';
 import 'package:rims_waserda/Modules/produk/jenis%20produk/controller_edit_jenis.dart';
 import 'package:rims_waserda/Modules/user/toko/controller_edit_tokov2.dart';
 
@@ -11,6 +12,7 @@ import '../kasir/controller_kasir.dart';
 import '../laporan/Controller_laporan.dart';
 import '../pelanggan/hutang/controller_hutang.dart';
 import '../pelanggan/hutang/controller_hutang_detail.dart';
+import '../pembelian/controller_pembelian.dart';
 import '../produk/data produk/controller_data_produk.dart';
 import '../user/data user/controller_data_user.dart';
 import '../user/edit user/controller_edit_user.dart';
@@ -48,5 +50,6 @@ class base_menuBinding extends Bindings {
         fenix: true);
     Get.lazyPut<edittokov2Controller>(() => edittokov2Controller(),
         fenix: true);
+    Get.lazyPut<pembelianController>(() => pembelianController(), fenix: true);
   }
 }

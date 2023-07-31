@@ -205,53 +205,76 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                           Expanded(
                               child: Column(
                             children: [
-                              Expanded(
-                                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Container(
-                                          //width: 200,
-                                          child: CheckboxListTile(
-                                            subtitle: const Text("opsional"),
-                                            title: const Text("Logo toko?"),
-                                            checkColor: Colors.white,
+                                  controller.checkfoto.value == false
+                                      ? Expanded(
+                                          child: Container(
+                                            // color: Colors.red,
+                                            //  width: 100,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Container(
+                                                    //color: Colors.green,
+                                                    //  width: 80,
+                                                    child: ListTile(
+                                                      title: Text('Foto toko'),
+                                                      subtitle:
+                                                          Text('opsional'),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Checkbox(
+                                                    value: controller
+                                                        .checkfoto.value,
+                                                    onChanged: (bool? value) {
+                                                      controller.checkfoto
+                                                          .value = value!;
+                                                      print(controller
+                                                          .checkfoto.value);
+                                                      // controller.check == true;
+                                                    },
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      : Container(
+                                          width: 40,
+                                          child: Checkbox(
                                             value: controller.checkfoto.value,
                                             onChanged: (bool? value) {
                                               controller.checkfoto.value =
                                                   value!;
-                                              if (controller.checkfoto.value ==
-                                                  false) {
-                                                controller.Logo.value = '-';
-                                              } else {
-                                                controller.Logo.value = '-';
-                                              }
                                               print(controller.checkfoto.value);
-                                              print(controller.Logo.value);
                                               // controller.check == true;
                                             },
                                           ),
                                         ),
-                                      ),
-                                      controller.checkfoto.value == false
-                                          ? Container()
-                                          : controller.pikedImagePath.value !=
-                                                  ''
-                                              ? Row(
+                                  controller.checkfoto.value == false
+                                      ? Container()
+                                      : controller.pikedImagePath.value != ''
+                                          ? Expanded(
+                                              child: Container(
+                                                child: Row(
                                                   mainAxisSize:
-                                                      MainAxisSize.min,
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
                                                   children: [
                                                     Container(
-                                                      width: 60,
-                                                      height: 60,
+                                                      width: 100,
+                                                      height: 100,
                                                       child: Image.file(
                                                         File(controller
                                                             .pickedImageFile!
                                                             .path),
-                                                        width: 60,
-                                                        height: 60,
+                                                        width: 100,
+                                                        height: 100,
                                                       ),
                                                     ),
                                                     Container(
@@ -317,94 +340,98 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                                       ),
                                                     ),
                                                   ],
-                                                )
-                                              : controller.Logo != '-'
-                                                  ? Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Container(
-                                                          width: 60,
-                                                          height: 60,
-                                                          child: Image.memory(
-                                                              base64Decode(
-                                                                  controller
-                                                                      .Logo
-                                                                      .value)),
-                                                        ),
-                                                        Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 10,
-                                                                  right: 5),
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(3),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color:
-                                                                color_template()
-                                                                    .primary,
-                                                          ),
-                                                          child: IconButton(
-                                                            splashColor:
-                                                                Colors.orange,
-                                                            focusColor:
-                                                                Colors.orange,
-                                                            onPressed:
-                                                                () async {
-                                                              DeviceInfoPlugin
-                                                                  deviceInfo =
-                                                                  DeviceInfoPlugin();
-                                                              AndroidDeviceInfo
-                                                                  androidInfo =
-                                                                  await deviceInfo
-                                                                      .androidInfo;
-                                                              if (androidInfo
-                                                                      .version
-                                                                      .sdkInt >=
-                                                                  33) {
-                                                                var status =
-                                                                    await Permission
-                                                                        .camera
-                                                                        .status;
-                                                                if (!status
-                                                                    .isGranted) {
-                                                                  await Permission
-                                                                      .camera
-                                                                      .request();
-                                                                }
-                                                              } else {
-                                                                var status =
-                                                                    await Permission
-                                                                        .camera
-                                                                        .status;
-                                                                if (!status
-                                                                    .isGranted) {
-                                                                  await Permission
-                                                                      .camera
-                                                                      .request();
-                                                                }
-                                                              }
-
+                                                ),
+                                              ),
+                                            )
+                                          : controller.Logo != '-'
+                                              ? Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceEvenly,
+                                                  children: [
+                                                    Container(
+                                                      width: 100,
+                                                      height: 100,
+                                                      child: Image.memory(
+                                                          base64Decode(
                                                               controller
-                                                                  .pilihsourcefoto();
-                                                            },
-                                                            icon: const Icon(
-                                                              Icons.add,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
+                                                                  .Logo.value)),
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 10,
+                                                              right: 5),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: color_template()
+                                                            .primary,
+                                                      ),
+                                                      child: IconButton(
+                                                        splashColor:
+                                                            Colors.orange,
+                                                        focusColor:
+                                                            Colors.orange,
+                                                        onPressed: () async {
+                                                          DeviceInfoPlugin
+                                                              deviceInfo =
+                                                              DeviceInfoPlugin();
+                                                          AndroidDeviceInfo
+                                                              androidInfo =
+                                                              await deviceInfo
+                                                                  .androidInfo;
+                                                          if (androidInfo
+                                                                  .version
+                                                                  .sdkInt >=
+                                                              33) {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          } else {
+                                                            var status =
+                                                                await Permission
+                                                                    .camera
+                                                                    .status;
+                                                            if (!status
+                                                                .isGranted) {
+                                                              await Permission
+                                                                  .camera
+                                                                  .request();
+                                                            }
+                                                          }
+
+                                                          controller
+                                                              .pilihsourcefoto();
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.add,
+                                                          color: Colors.white,
                                                         ),
-                                                      ],
-                                                    )
-                                                  : Row(
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              : Expanded(
+                                                  child: Container(
+                                                    //  color: Colors.red,
+                                                    child: Row(
                                                       mainAxisSize:
-                                                          MainAxisSize.min,
+                                                          MainAxisSize.max,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
                                                       children: [
                                                         Container(
                                                           width: 60,
@@ -496,153 +523,10 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                                         ),
                                                       ],
                                                     ),
-                                    ],
-                                  ),
-                                  // Row(
-                                  //   children: [
-                                  //     Expanded(
-                                  //       child: Container(
-                                  //         margin: EdgeInsets.only(bottom: 10),
-                                  //         //width: context.width_query / 3.3,
-                                  //
-                                  //         child: Obx(() {
-                                  //           return DropdownButtonFormField2(
-                                  //             decoration: InputDecoration(
-                                  //               icon:
-                                  //                   Icon(FontAwesomeIcons.boxOpen),
-                                  //               border: OutlineInputBorder(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(15),
-                                  //               ),
-                                  //             ),
-                                  //             // validator: (value) {
-                                  //             //   if (value != null) {
-                                  //             //     return 'Pilih kategori produk';
-                                  //             //   }
-                                  //             //   return null;
-                                  //             // },
-                                  //             isExpanded: true,
-                                  //             dropdownStyleData: DropdownStyleData(
-                                  //                 decoration: BoxDecoration(
-                                  //                     borderRadius:
-                                  //                         BorderRadius.circular(10),
-                                  //                     color: Colors.white)),
-                                  //             hint: Text('Pilih kategori produk'),
-                                  //             value: controller.jenisvalue.value,
-                                  //             items: controller.jenislist
-                                  //                 .map((DataJenis item) {
-                                  //               return DropdownMenuItem(
-                                  //                 child: Text(
-                                  //                     item.namaJenis.toString()),
-                                  //                 value: item.id.toString(),
-                                  //               );
-                                  //             }).toList(),
-                                  //             onChanged: (val) {
-                                  //               controller.jenisvalue.value =
-                                  //                   val!.toString();
-                                  //               print(controller.jenisvalue);
-                                  //             },
-                                  //           );
-                                  //         }),
-                                  //       ),
-                                  //     ),
-                                  //   ],
-                                  // ),
-                                  // Row(
-                                  //   children: [
-                                  //     Expanded(
-                                  //       child: Container(
-                                  //         margin: EdgeInsets.only(bottom: 10),
-                                  //         // width: context.width_query / 3.3,
-                                  //         //margin: EdgeInsets.only(left: 10),
-                                  //         child: Obx(() {
-                                  //           return DropdownButtonFormField2(
-                                  //             decoration: InputDecoration(
-                                  //               icon:
-                                  //                   Icon(FontAwesomeIcons.boxOpen),
-                                  //               border: OutlineInputBorder(
-                                  //                 borderRadius:
-                                  //                     BorderRadius.circular(15),
-                                  //               ),
-                                  //             ),
-                                  //             validator: (value) {
-                                  //               if (value == null) {
-                                  //                 return 'Pilih jenis produk';
-                                  //               }
-                                  //               return null;
-                                  //             },
-                                  //             isExpanded: true,
-                                  //             dropdownStyleData: DropdownStyleData(
-                                  //                 decoration: BoxDecoration(
-                                  //                     borderRadius:
-                                  //                         BorderRadius.circular(10),
-                                  //                     color: Colors.white)),
-                                  //             hint: Text('Pilih jenis produk'),
-                                  //             value: controller.jenisstokval.value,
-                                  //             items: controller.jenisstok.value
-                                  //                 .map((item) {
-                                  //               return DropdownMenuItem(
-                                  //                 child:
-                                  //                     Text(item['nama'].toString()),
-                                  //                 value: item['id'].toString(),
-                                  //               );
-                                  //             }).toList(),
-                                  //             onChanged: (val) {
-                                  //               controller.jenisstokval.value =
-                                  //                   val.toString();
-                                  //               controller.jj.value =
-                                  //                   val.toString();
-                                  //               print(controller.jj.value);
-                                  //               print(controller.jenisstokval);
-                                  //             },
-                                  //           );
-                                  //         }),
-                                  //       ),
-                                  //     ),
-                                  //     // controller.jj.value == '2' ||
-                                  //     //         controller.jj.value == ''
-                                  //     //     ? Container()
-                                  //     //     : Expanded(
-                                  //     //         child: Container(
-                                  //     //           margin: EdgeInsets.only(
-                                  //     //               left: 10, bottom: 10),
-                                  //     //           child: TextFormField(
-                                  //     //             keyboardType:
-                                  //     //                 TextInputType.number,
-                                  //     //             controller: controller.qty.value,
-                                  //     //             decoration: InputDecoration(
-                                  //     //               labelText: "Jumlah stock",
-                                  //     //               labelStyle: TextStyle(
-                                  //     //                 color: Colors.black87,
-                                  //     //               ),
-                                  //     //               border: OutlineInputBorder(
-                                  //     //                   borderRadius:
-                                  //     //                       BorderRadius.circular(
-                                  //     //                           10)),
-                                  //     //               focusedBorder:
-                                  //     //                   OutlineInputBorder(
-                                  //     //                       borderRadius:
-                                  //     //                           BorderRadius
-                                  //     //                               .circular(10)),
-                                  //     //             ),
-                                  //     //
-                                  //     //             validator: (value) {
-                                  //     //               if (value!.isEmpty) {
-                                  //     //                 return 'Masukan stock barang';
-                                  //     //               } else if (value
-                                  //     //                       .isNumericOnly ==
-                                  //     //                   false) {
-                                  //     //                 return 'Stock harus berupa angka';
-                                  //     //               }
-                                  //     //               return null;
-                                  //     //             },
-                                  //     //           ),
-                                  //     //         ),
-                                  //     //       ),
-                                  //   ],
-                                  // ),
+                                                  ),
+                                                ),
                                 ],
-                              )),
+                              ),
                             ],
                           ))
                         ],

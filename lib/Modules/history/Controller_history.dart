@@ -17,15 +17,17 @@ import '../Widgets/toast.dart';
 import '../pelanggan/data pelanggan/controller_data_pelanggan.dart';
 import '../pelanggan/hutang/controller_hutang.dart';
 import '../pelanggan/hutang/model_hutang.dart';
+import '../pelanggan/hutang/model_hutang_detail.dart';
 import '../produk/data produk/controller_data_produk.dart';
 import 'model_detail_penjualan_v2.dart';
 
 class historyController extends GetxController {
   @override
-  void onInit() {
+  Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
+    await fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
+    await fetchDataHutangDetaillocal(id_toko);
   }
 
   var sort = false.obs;
@@ -140,6 +142,23 @@ class historyController extends GetxController {
     return penjualan;
   }
 
+  var list_hutang_detaillocal = <DataHutangDetail>[].obs;
+
+  fetchDataHutangDetaillocal(id_toko) async {
+    print('-------------------fetch hutang detail local---------------------');
+    //  succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM hutang_detail_local WHERE id_toko = $id_toko AND aktif = "Y" ORDER BY ID DESC');
+    List<DataHutangDetail> hutang = query.isNotEmpty
+        ? query.map((e) => DataHutangDetail.fromJson(e)).toList()
+        : [];
+    list_hutang_detaillocal.value = hutang;
+    print(hutang);
+    // print('fect produk local --->' + produk.toList().toString());
+    //  succ.value = true;
+    return hutang;
+  }
+
   searchpenjualanstatuslocal(status) async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
         'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND status = $status AND penjualan_local.tgl_penjualan LIKE "%${dateFormatsearch.format(datedata.first!)}%" ORDER BY ID DESC');
@@ -213,64 +232,76 @@ class historyController extends GetxController {
 
   initPenjualanToLocal(id_toko) async {
     List<DataPenjualan> penjualan_local = await fetchPenjualan();
+    List<DataPenjualan> check_penjualan_local =
+        await fetchPenjualansync(id_toko);
 
     print('-------------------init penjualan local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(penjualan_local, (e) async {
-      await DBHelper().INSERT(
-          'penjualan_local',
-          DataPenjualan(
-                  idLocal: e.idLocal,
-                  status: e.status,
-                  bayar: e.bayar,
-                  diskonTotal: e.diskonTotal,
-                  idToko: e.idToko,
-                  idUser: e.idUser,
-                  kembalian: e.kembalian,
-                  meja: e.meja,
-                  metodeBayar: e.metodeBayar,
-                  namaPelanggan: e.namaPelanggan,
-                  namaUser: e.namaUser,
-                  subTotal: e.subTotal,
-                  tglPenjualan: e.tglPenjualan,
-                  total: e.total,
-                  totalItem: e.totalItem,
-                  sync: 'Y',
-                  idHutang: e.idHutang,
-                  idPelanggan: e.idPelanggan,
-                  aktif: e.aktif)
-              .toMapForDb());
+      var x = check_penjualan_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print('insert---------------------------------->' +
+            e.totalItem.toString());
+        await DBHelper().INSERT(
+            'penjualan_local',
+            DataPenjualan(
+                    id: e.id,
+                    idLocal: e.idLocal,
+                    status: e.status,
+                    bayar: e.bayar,
+                    diskonTotal: e.diskonTotal,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    kembalian: e.kembalian,
+                    meja: e.meja,
+                    metodeBayar: e.metodeBayar,
+                    namaPelanggan: e.namaPelanggan,
+                    namaUser: e.namaUser,
+                    subTotal: e.subTotal,
+                    tglPenjualan: e.tglPenjualan,
+                    total: e.total,
+                    totalItem: e.totalItem,
+                    sync: 'Y',
+                    idHutang: e.idHutang,
+                    idPelanggan: e.idPelanggan,
+                    aktif: e.aktif)
+                .toMapForDb());
+      } else {
+        print('update---------------------------------->' +
+            e.totalItem.toString());
+        DBHelper().UPDATE(
+            table: 'penjualan_local',
+            data: DataPenjualan(
+                    idLocal: e.idLocal,
+                    status: e.status,
+                    bayar: e.bayar,
+                    diskonTotal: e.diskonTotal,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    kembalian: e.kembalian,
+                    meja: e.meja,
+                    metodeBayar: e.metodeBayar,
+                    namaPelanggan: e.namaPelanggan,
+                    namaUser: e.namaUser,
+                    subTotal: e.subTotal,
+                    tglPenjualan: e.tglPenjualan,
+                    total: e.total,
+                    totalItem: e.totalItem,
+                    sync: 'Y',
+                    idHutang: e.idHutang,
+                    idPelanggan: e.idPelanggan,
+                    id: e.id,
+                    aktif: e.aktif)
+                .toMapForDb(),
+            id: e.idLocal);
+      }
     });
 
-    // await Future.forEach(beban_kategori_local, (e) async {
-    //   await DBHelper().INSERT(
-    //       'beban_kategori_local',
-    //       DataJenisBeban(id: e.id, idToko: e.idToko, kategori: e.kategori)
-    //           .toMapForDb());
-    // });
-
-    // if (up != null) {
-    //  print(up.toString());
     print(
         'init penjualan success---------------------------------------------------->');
-    //await fetchPenjualanlocal(id_toko:id_toko,id_user: id_user,role: role);
-    //await fetchJenisBebanlocal(id_toko);
-    // Get.back(closeOverlays: true);
-    //Get.showSnackbar(toast()
-    //  .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
-    // } else {
-    //   // Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
-
-    // if (add == 1) {
-    //
-    // } else {
-    //   Get.back(closeOverlays: true);
-    //   Get.showSnackbar(
-    //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
-    // }
+    await fetchPenjualanlocal();
   }
 
   var penjualan_list_local = <DataPenjualan>[].obs;
@@ -446,15 +477,14 @@ class historyController extends GetxController {
     return map;
   }
 
-  //TODO : CHECK HUTANG TGL DETAIL CHECK LAPORAN HUTANG LUNAS TINAK NAMBAH PEMASUKAN
-
   reversalPenjualanlocal(String id_local) async {
     print('-------------------reversal Penjualan local---------------------');
 
     Get.dialog(showloading(), barrierDismissible: false);
 
     var select = penjualan_list_local.where((e) => e.idLocal == id_local).first;
-
+    print(
+        '-------------------reversal Penjualan local non hutang---------------------');
     if (select.idHutang == 0 || select.idHutang == '0') {
       var query = await DBHelper().UPDATE(
           table: 'penjualan_local',
@@ -488,8 +518,8 @@ class historyController extends GetxController {
         List<DataPenjualanDetailV2> selectdetail =
             await fetchPenjualanDetaillocal(id_toko);
 
-        List<DataProduk> selectproduk =
-            await Get.find<produkController>().fetchProduklocal(id_toko);
+        List<DataProduk> selectproduk = await Get.find<produkController>()
+            .fetchProduklocalreversal(id_toko);
 
         var detail =
             selectdetail.where((e) => e.idPenjualan == id_local).toList();
@@ -530,6 +560,8 @@ class historyController extends GetxController {
             .bottom_snackbar_error('error', 'Penjualan gagal dibatalkan'));
       }
     } else {
+      print(
+          '-------------------reversal Penjualan local hutang---------------------');
       var query = await DBHelper().UPDATE(
           table: 'penjualan_local',
           data: DataPenjualan(
@@ -560,8 +592,8 @@ class historyController extends GetxController {
       if (query == 1) {
         List<DataPenjualanDetailV2> selectdetail =
             await fetchPenjualanDetaillocal(id_toko);
-        List<DataProduk> selectproduk =
-            await Get.find<produkController>().fetchProduklocal(id_toko);
+        List<DataProduk> selectproduk = await Get.find<produkController>()
+            .fetchProduklocalreversal(id_toko);
         List<DataHutang> selecthutang =
             await Get.find<hutangController>().fetchDataHutanglocal(id_toko);
         var hutang = selecthutang
