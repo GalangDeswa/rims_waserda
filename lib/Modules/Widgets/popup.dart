@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:group_button/group_button.dart';
+import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/kasir/model_kasir.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_pelanggan.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
@@ -17,14 +19,11 @@ import '../beban/edit jenis beban/model_jenis_beban.dart';
 import '../history/Controller_history.dart';
 import '../history/model_penjualan.dart';
 import '../kasir/controller_kasir.dart';
+import '../kasir/model_meja.dart';
 import '../pelanggan/data pelanggan/model_data_pelanggan.dart';
-import '../produk/detail produk/controller_detail_produk.dart';
-import '../produk/tambah_stock/controller_tambah_stock.dart';
-import '../produk/tambah_stock/view_tambah_stock_base.dart';
 import '../user/data user/model_data_user.dart';
 import 'buttons.dart';
 import 'header.dart';
-import 'keypad.dart';
 
 class popscreen {
   deletepelanggan(pelangganController controller, DataPelanggan arg) {
@@ -741,7 +740,7 @@ class popscreen {
                       Text(
                           controller.kembalian.value.text.isNotEmpty
                               ? controller.kembalian.value.text
-                              : '-',
+                              : '0',
                           style: font().reguler),
                     ],
                   ),
@@ -753,10 +752,8 @@ class popscreen {
                           controller.groupindex.value == 1
                               ? 'Tunai'
                               : controller.groupindex.value == 2
-                                  ? 'Non tunai'
-                                  : controller.groupindex.value == 3
-                                      ? 'Hutang'
-                                      : '-',
+                                  ? 'Hutang'
+                                  : '-',
                           style: font().reguler),
                     ],
                   ),
@@ -788,9 +785,9 @@ class popscreen {
                           onPressed: () {
                             print(
                                 'bayar local------------------------------->');
-                            controller.pembayaranlocal(controller.id_toko);
+                            popprintstruk(context, controller);
                           },
-                          child: Text(controller.groupindex.value != 3
+                          child: Text(controller.groupindex.value != 2
                               ? 'Bayar'
                               : 'Hutang'),
                           width: 100,
@@ -806,35 +803,46 @@ class popscreen {
     );
   }
 
-  void popbayar(BuildContext context, kasirController controller) {
-    List ongkir = [
-      'Hutang',
-      'Tidak dibayar',
-      'Cicil',
-    ];
-    String? val_ongkir;
+  //TODO: perlakuan untuk update cetak struk prebill
 
-    DateTime? dateTime;
+  void popkonfirmasiprebill(
+      BuildContext context,
+      kasirController controller,
+      List<DataMeja> prebill,
+      String nomor_meja,
+      int total_prebill,
+      diskon_kasir) {
+    var total_qty = prebill
+        .where((element) => element.idMeja.toString() == nomor_meja)
+        .toList();
+    print(
+        '------------------------------------------------------ total item pre bill ------------------------------------------------------');
+    print(total_qty.map((e) => e.namaProduk));
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        actions: [
-          button_border_custom(
-              onPressed: () {
-                controller.onInit();
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Batal',
-                style: font().primary,
-              ),
-              height: 50,
-              width: 100),
-        ],
-        elevation: elevation().def_elevation,
-        contentPadding: EdgeInsets.all(15),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.warning,
+              color: Colors.orange,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Konfirmasi pembayaran pre bill',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 21,
+                  color: Colors.black),
+            ),
+          ],
+        ),
+        //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
-          side: BorderSide(color: Colors.blueAccent, width: 3.5),
           borderRadius: BorderRadius.all(
             Radius.circular(12.0),
           ),
@@ -842,284 +850,154 @@ class popscreen {
         content: Builder(
           builder: (context) {
             return Container(
-              //color: Colors.red,
-              width: context.width_query * 0.75,
+              //  color: Colors.blue,
               height: context.height_query * 0.7,
-
-              //height: context.height_query * 0.6,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Row(
+              width: context.height_query * 0.6,
+              // color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: color_template().primary,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        'Detail Penjualan',
+                        style: font().header,
+                      ),
+                    ),
+                  ),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Text('sales person :', style: font().reguler),
+                      Text(controller.namakasir, style: font().reguler),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Total item :', style: font().reguler),
+                      Text(
+                          total_qty
+                              .map((e) => e.qty)
+                              .fold(
+                                  0,
+                                  (previous, current) =>
+                                      previous + current!.toInt())
+                              .toString(),
+                          style: font().reguler),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Total harga :', style: font().reguler),
+                      Text(total_prebill.toString(), style: font().reguler),
+                    ],
+                  ),
+                  controller.meja.value.text.isEmpty ||
+                          controller.meja.value.text == null ||
+                          controller.meja.value.text == ''
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: color_template().primary),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Icon(
-                                        Icons.attach_money,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                      Text('total tagihan :',
-                                          style: font().header_big),
-                                      Obx(() {
-                                        return Text(
-                                          'Rp.' +
-                                              controller.subtotal.toString(),
-                                          style: font().header_big,
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  height: 50,
-                                  //color: Colors.red,
-                                  padding: EdgeInsets.all(10),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      GroupButton(
-                                        isRadio: true,
-                                        onSelected: (string, index, bool) {
-                                          controller.groupindex.value = index;
-                                          print(index);
-                                        },
-                                        buttons: [
-                                          "Cash",
-                                          "Transfer",
-                                          "Utang",
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            Obx(() {
-                              return controller.groupindex.value == 9
-                                  ? Center(
-                                      child: Container(
-                                        child: Text(
-                                          "pilih metode bayar",
-                                          style: font().header_black,
-                                        ),
-                                      ),
-                                    )
-                                  : Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              padding: EdgeInsets.all(10),
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  color:
-                                                      color_template().primary),
-                                              child: GestureDetector(
-                                                  onTap: () {
-                                                    controller.keypadController
-                                                        .value.text = '10000';
-                                                  },
-                                                  child: Text(
-                                                    '10.000',
-                                                    style: font().header,
-                                                  )),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                controller.keypadController
-                                                    .value.text = '20000';
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: color_template()
-                                                        .primary),
-                                                child: Text('20.000',
-                                                    style: font().header),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                controller.keypadController
-                                                    .value.text = '50000';
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: color_template()
-                                                        .primary),
-                                                child: Text('50.000',
-                                                    style: font().header),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                controller.keypadController
-                                                    .value.text = '100000';
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: color_template()
-                                                        .primary),
-                                                child: Text('100.000',
-                                                    style: font().header),
-                                              ),
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                controller.keypadController
-                                                    .value.text = '500000';
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(10),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: color_template()
-                                                        .primary),
-                                                child: Text('500.000',
-                                                    style: font().header),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 30,
-                                        ),
-
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                child: TextFormField(
-                                                  controller: controller
-                                                      .keypadController.value,
-                                                  onChanged: (value) {
-                                                    print(value);
-                                                  },
-                                                  readOnly: true,
-                                                  decoration: InputDecoration(
-                                                      prefixIcon: Icon(Icons
-                                                          .attach_money_rounded),
-                                                      hintText: 'Jumlah bayar'),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Obx(() {
-                                              return Expanded(
-                                                  child: Container(
-                                                child: TextField(
-                                                  onTap: () {
-                                                    print(
-                                                        'kembalian kasir--------------------');
-                                                  },
-                                                  onChanged: (val) {
-                                                    print(
-                                                        'kembalian kasir--------------------' +
-                                                            val);
-                                                  },
-                                                  readOnly: true,
-                                                  decoration: InputDecoration(
-                                                    prefixIcon: Icon(
-                                                        Icons.change_circle),
-                                                    hintText: 'kembalian',
-                                                  ),
-                                                ),
-                                              ));
-                                            })
-                                          ],
-                                        ),
-                                        // Row(
-                                        //   mainAxisAlignment:
-                                        //       MainAxisAlignment.spaceAround,
-                                        //   children: [
-                                        //     Expanded(
-                                        //       child: Container(
-                                        //         child: DropdownButton(
-                                        //           hint: Text('Keterangan'),
-                                        //           value: val_ongkir,
-                                        //           items: ongkir.map((item) {
-                                        //             return DropdownMenuItem(
-                                        //               child: Text(item),
-                                        //               value: item,
-                                        //             );
-                                        //           }).toList(),
-                                        //           onChanged: (val) {
-                                        //             print('lol');
-                                        //           },
-                                        //         ),
-                                        //       ),
-                                        //     )
-                                        //   ],
-                                        // ),
-                                      ],
-                                    );
-                            })
+                            Text('Meja:', style: font().reguler),
+                            Text(nomor_meja, style: font().reguler),
                           ],
                         ),
-                      ),
-                      Column(
-                        children: [
-                          KeyPad(
-                            keypadController: controller.keypadController.value,
-                            onChange: (String pin) {
-                              print(pin + '-----------PRINT PIN');
-                              // controller.change();
-                            },
-                            onSubmit: (String pin) {},
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Pembayaran:', style: font().reguler),
+                      Text(
+                          controller.keypadController_prebill.value.text
+                                  .isNotEmpty
+                              ? controller.keypadController_prebill.value.text
+                              : '-',
+                          style: font().reguler),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Kembalian :', style: font().reguler),
+                      Text(
+                          controller.kembalian_prebill.value.text.isNotEmpty
+                              ? controller.kembalian_prebill.value.text
+                              : '0',
+                          style: font().reguler),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Metode bayar :', style: font().reguler),
+                      Text(
+                          controller.groupindex.value == 1
+                              ? 'Tunai'
+                              : controller.groupindex.value == 2
+                                  ? 'Hutang'
+                                  : '-',
+                          style: font().reguler),
+                    ],
+                  ),
+                  // Container(
+                  //   width: double.infinity,
+                  //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                  //   color: color_template().primary,
+                  //   child: Text(
+                  //     'Kembalian',
+                  //     style: font().header,
+                  //   ),
+                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button_border_custom(
+                          onPressed: () {
+                            //Navigator.of(context).pop();
+                            Get.back();
+                            print('back');
+                          },
+                          child: Text(
+                            'Batal',
+                            style: TextStyle(color: Colors.black),
                           ),
-                        ],
-                      ),
+                          width: 100,
+                          height: 50),
+                      button_solid_custom(
+                          onPressed: () async {
+                            print(
+                                'bayar local------------------------------->');
+                            await controller.pembayaranlocalprebill(
+                                controller.id_toko,
+                                nomor_meja,
+                                total_prebill,
+                                diskon_kasir);
+                            await controller.deletemeja(nomor_meja);
+                            var items = prebill
+                                .where((element) =>
+                                    element.idMeja.toString() == nomor_meja)
+                                .toList();
+                            await Future.forEach(items, (e) async {
+                              await controller.deletemejadetail(e.idMeja);
+                              await controller.fetchmeja();
+                              // Get.back(closeOverlays: true);
+                            });
+                          },
+                          child: Text(controller.groupindex.value != 2
+                              ? 'Bayar'
+                              : 'Hutang'),
+                          width: 100,
+                          height: 50),
                     ],
-                  ),
-                ),
+                  )
+                ],
               ),
             );
           },
@@ -1128,10 +1006,11 @@ class popscreen {
     );
   }
 
-  void popedit(BuildContext context, kasirController controller) {
+  void popprintstruk(BuildContext context, kasirController controller) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(12.0),
@@ -1140,332 +1019,328 @@ class popscreen {
         content: Builder(
           builder: (context) {
             return Container(
-              color: Colors.red,
-              height: 100,
-              width: context.width_query * 0.65,
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Table(
-                              columnWidths: {
-                                0: FlexColumnWidth(5),
-                                1: FlexColumnWidth(2),
-                                2: FlexColumnWidth(3),
-                                3: FlexColumnWidth(3),
-                              },
-                              children: [
-                                TableRow(children: [
-                                  Column(children: [
-                                    Text(
-                                      'nama produk',
-                                      style: font().table_header,
-                                    ),
-                                  ]),
-                                  Column(children: [
-                                    Text(
-                                      'harga',
-                                      style: font().table_header,
-                                    ),
-                                  ]),
-                                  Column(children: [
-                                    Text(
-                                      'qty',
-                                      style: font().table_header,
-                                    ),
-                                  ]),
-                                  Column(children: [
-                                    Text(
-                                      'diskon',
-                                      style: font().table_header,
-                                    ),
-                                  ]),
-                                ]),
-                                TableRow(children: [
-                                  Column(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        'milo 2 in 1 saset 300 ml',
-                                        style: font().reguler,
-                                      ),
-                                    )
-                                  ]),
-                                  Column(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Text(
-                                        '5000',
-                                        style: font().reguler,
-                                      ),
-                                    )
-                                  ]),
-                                  Column(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Container(
-                                            child: Icon(
-                                              Icons.remove,
-                                              size: 18,
-                                            ),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: color_template().select),
-                                          ),
-                                          Text(
-                                            '2',
-                                            style: font().reguler,
-                                          ),
-                                          Container(
-                                            child: Icon(
-                                              Icons.add,
-                                              size: 18,
-                                            ),
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: color_template().select),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ]),
-                                  Column(children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '0',
-                                            style: font().reguler,
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Container(
-                                            width: 35,
-                                            height: 20,
-                                            color: color_template().primary,
-                                            child: Text('Rp'),
-                                          ),
-                                          Container(
-                                            width: 35,
-                                            height: 20,
-                                            color: color_template().select,
-                                            child: Text('%'),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  ]),
-                                ]),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                button_border_custom(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'batal',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    height: 30,
-                                    width: 100),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                button_solid_custom(
-                                    onPressed: () {
-                                      //  controller.tambahkasir();
-                                    },
-                                    child: Text('Simpan'),
-                                    height: 30,
-                                    width: 100),
-                              ],
-                            )
-                          ],
-                        ),
+              //  color: Colors.blue,
+              height: context.height_query / 4,
+              width: context.height_query * 0.6,
+              // color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: color_template().primary,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        'Cetak struk ?',
+                        style: font().header,
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  void popsuplier(BuildContext context, tambah_stockController controller) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(12.0),
-          ),
-        ),
-        content: Builder(
-          builder: (context) {
-            return Center(
-              child: Container(
-                width: context.width_query / 2,
-                color: Colors.red,
-                child: SingleChildScrollView(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Icon(Icons.attach_money),
-                                    Text(
-                                      'Tambah suplier',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.edit_calendar),
-                                          hintText: 'nama suplier'),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.edit_calendar),
-                                          hintText: 'nomor hp'),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Container(
-                              height: 230,
-                              //  color: Colors.red,
-                              margin: EdgeInsets.only(top: 15),
-                              width: double.infinity,
-                              child: SingleChildScrollView(
-                                child: DataTable(
-                                  columns: const <DataColumn>[
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Text(
-                                          'no',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Text(
-                                          'suplier',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Text(
-                                          'no hp',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                      ),
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(child: Icon(Icons.edit)),
-                                    ),
-                                  ],
-                                  rows: const <DataRow>[
-                                    DataRow(
-                                      cells: <DataCell>[
-                                        DataCell(Text('1')),
-                                        DataCell(Text('Nusa indah')),
-                                        DataCell(Text('09832832')),
-                                        DataCell(Icon(Icons.edit)),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                button_border_custom(
-                                    onPressed: () {},
-                                    child: Text(
-                                      'batal',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    height: 40,
-                                    width: 220),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                button_solid_custom(
-                                    onPressed: () {
-                                      controller.tambah();
-                                    },
-                                    child: Text('Simpan'),
-                                    height: 40,
-                                    width: 220),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
+                      button_border_custom(
+                          onPressed: () async {
+                            await controller
+                                .pembayaranlocal(controller.id_toko);
+                          },
+                          child: Text(
+                            'Tidak',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          width: 100,
+                          height: 50),
+                      button_solid_custom(
+                          onPressed: () async {
+                            print(
+                                'cetak struk local------------------------------->');
+                            print(controller.listPrinter.toString());
+                            print(controller.isConnected == true);
+
+                            if (controller.groupindex == 1) {
+                              if ((await controller.printer.isConnected)!) {
+                                if (controller.logo == '-') {
+                                  controller.printer
+                                      .printImage(controller.pathImage.value);
+                                } else {
+                                  controller.printer.printImageBytes(
+                                      base64Decode(controller.logo));
+                                }
+                                controller.printer
+                                    .printCustom(controller.namatoko, 3, 1);
+                                controller.printer
+                                    .printCustom(controller.alamat_toko, 0, 3);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printLeftRight(
+                                    controller.dateFormat
+                                        .format(DateTime.now()),
+                                    controller.kasir,
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printNewLine();
+                                //item-------------------------------------------------
+                                controller.printer.print4Column(
+                                    'Produk', 'QTY', 'Harga', 'Subtotal', 0,
+                                    format: "%-17s %-4s %-10s %5s %n");
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.cache.forEach((e) {
+                                  String nama = e.namaProduk!;
+                                  if (nama.length > 15) {
+                                    nama =
+                                        e.namaProduk!.substring(0, 15) + '...';
+                                  }
+                                  controller.printer.print4Column(
+                                      nama,
+                                      e.qty.toString(),
+                                      format: "%-17s %-4s %-10s %5s %n",
+                                      controller.nominal.format(e.harga),
+                                      controller.nominal
+                                          .format((e.harga! * e.qty)),
+                                      0);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 2);
+                                });
+                                await controller.subtotalval();
+                                // controller.printer.print3Column(
+                                //     'Subtotal',
+                                //     ':',
+                                //     controller.nominal
+                                //         .format(controller.subtotal.value),
+                                //     0);
+                                controller.printer.printLeftRight(
+                                    'Subtotal :',
+                                    controller.nominal
+                                        .format(controller.subtotal.value),
+                                    0);
+                                // controller.printer.printCustom(
+                                //     '-------------------------------', 1, 1);
+                                await controller.hitungbesardiskonkasir();
+                                // controller.printer.print3Column(
+                                //     'Total diskon',
+                                //     ':',
+                                //     controller.nominal.format(
+                                //         controller.jumlahdiskonkasir.value),
+                                //     0);
+
+                                controller.printer.printLeftRight(
+                                    'Total diskon :',
+                                    controller.nominal.format(
+                                        controller.jumlahdiskonkasir.value),
+                                    0);
+
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                await controller.totalval();
+                                // controller.printer.print3Column(
+                                //   'PPN',
+                                //   ':',
+                                //   controller.nominal
+                                //       .format(controller.ppn.value),
+                                //   0,
+                                // );
+                                // controller.printer.print3Column(
+                                //   'Total',
+                                //   ':',
+                                //   controller.nominal
+                                //       .format(controller.total.value),
+                                //   0,
+                                // );
+                                // controller.printer.print3Column(
+                                //   'Tunai',
+                                //   ':',
+                                //   controller.nominal
+                                //       .format(controller.bayarvalue.value),
+                                //   0,
+                                // );
+                                // controller.printer.print3Column(
+                                //   'Kembalian',
+                                //   ':',
+                                //   controller.kembalian.value.text.isNotEmpty
+                                //       ? controller.kembalian.value.text
+                                //       : '0',
+                                //   0,
+                                // );
+
+                                controller.printer.printLeftRight(
+                                    'PPN :',
+                                    controller.nominal
+                                        .format(controller.ppn.value),
+                                    0);
+                                controller.printer.printLeftRight(
+                                    'Total :',
+                                    controller.nominal
+                                        .format(controller.bayarvalue.value),
+                                    0);
+                                controller.printer.printLeftRight(
+                                    'Tunai :',
+                                    controller.nominal
+                                        .format(controller.bayarvalue.value),
+                                    0);
+                                controller.printer.printLeftRight(
+                                    'Kembalian :',
+                                    controller.kembalian.value.text.isNotEmpty
+                                        ? controller.nominal
+                                            .format(controller.ppn.value)
+                                        : '0',
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer
+                                    .printCustom('-- Terima Kasih --', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printImage(
+                                    controller.printstruklogo.value);
+                                controller.printer.printCustom(
+                                    '*** Powered by RIMS ***', 0, 1);
+                                controller.printer
+                                    .printCustom('www.rims.co.id', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printNewLine();
+                                controller.printer.paperCut();
+                                //proses bayar local--------------------------
+                                await controller
+                                    .pembayaranlocal(controller.id_toko);
+                                //Get.back(closeOverlays: true);
+                              } else {
+                                Get.showSnackbar(toast().bottom_snackbar_error(
+                                    'Error', 'Printer belum terkoneksi'));
+                              }
+                            } else {
+                              if ((await controller.printer.isConnected)!) {
+                                var pelanggan = controller.list_pelanggan_local
+                                    .where((e) =>
+                                        e.idLocal ==
+                                        controller.id_pelanggan.value)
+                                    .first;
+                                if (controller.logo == '-') {
+                                  controller.printer
+                                      .printImage(controller.pathImage.value);
+                                } else {
+                                  controller.printer.printImageBytes(
+                                      base64Decode(controller.logo));
+                                }
+                                controller.printer
+                                    .printCustom(controller.namatoko, 3, 1);
+                                controller.printer
+                                    .printCustom(controller.alamat_toko, 0, 3);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printLeftRight(
+                                    controller.dateFormat
+                                        .format(DateTime.now()),
+                                    controller.kasir,
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printNewLine();
+                                controller.printer
+                                    .printCustom('--- Hutang ---', 2, 1);
+                                controller.printer.printNewLine();
+                                //item-------------------------------------------------
+                                controller.printer.print4Column(
+                                    'Produk', 'QTY', 'Harga', 'Subtotal', 0,
+                                    format: "%-17s %-4s %-10s %5s %n");
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.cache.forEach((e) {
+                                  String nama = e.namaProduk!;
+                                  if (nama.length > 15) {
+                                    nama =
+                                        e.namaProduk!.substring(0, 15) + '...';
+                                  }
+                                  controller.printer.print4Column(
+                                      nama,
+                                      e.qty.toString(),
+                                      format: "%-17s %-4s %-10s %5s %n",
+                                      controller.nominal.format(e.harga),
+                                      controller.nominal
+                                          .format((e.harga! * e.qty)),
+                                      0);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 2);
+                                });
+                                await controller.subtotalval();
+                                controller.printer.printLeftRight(
+                                    'Subtotal :',
+                                    controller.nominal
+                                        .format(controller.subtotal.value),
+                                    0);
+                                // controller.printer.printCustom(
+                                //     '-------------------------------', 1, 1);
+                                await controller.hitungbesardiskonkasir();
+                                controller.printer.printLeftRight(
+                                    'Total diskon :',
+                                    controller.nominal.format(
+                                        controller.jumlahdiskonkasir.value),
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printLeftRight(
+                                  'Nama pelanggan :',
+                                  pelanggan.namaPelanggan!,
+                                  0,
+                                );
+                                await controller.totalval();
+                                controller.printer.printLeftRight(
+                                  'PPN :',
+                                  controller.nominal
+                                      .format(controller.ppn.value),
+                                  0,
+                                );
+                                controller.printer.printLeftRight(
+                                  'Total Hutang :',
+                                  controller.nominal
+                                      .format(controller.total.value),
+                                  0,
+                                );
+                                controller.printer.printLeftRight(
+                                  'Tanggal hutang :',
+                                  controller.dateFormatprint
+                                      .format(DateTime.now()),
+                                  0,
+                                );
+
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer
+                                    .printCustom('-- Terima Kasih --', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printImage(
+                                    controller.printstruklogo.value);
+                                controller.printer.printCustom(
+                                    '*** Powered by RIMS ***', 0, 1);
+                                controller.printer
+                                    .printCustom('www.rims.co.id', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printNewLine();
+                                controller.printer.paperCut();
+                                //proses bayar local-----------------
+                                await controller
+                                    .pembayaranlocal(controller.id_toko);
+                                // Get.back(closeOverlays: true);
+                              } else {
+                                Get.showSnackbar(toast().bottom_snackbar_error(
+                                    'Error', 'Printer belum terkoneksi'));
+                              }
+                            }
+                          },
+                          child: Text(controller.groupindex.value != 2
+                              ? 'Cetak'
+                              : 'Cetak'),
+                          width: 100,
+                          height: 50),
                     ],
-                  ),
-                ),
+                  )
+                ],
               ),
             );
           },
@@ -1474,52 +1349,17 @@ class popscreen {
     );
   }
 
-  void popberhasil(BuildContext context) {
-    showDialog(
-      useSafeArea: true,
-      context: context,
-      builder: (_) => AlertDialog(
-        //backgroundColor: Colors.green,
-        insetPadding: EdgeInsets.symmetric(vertical: 100, horizontal: 200),
-        contentPadding: EdgeInsets.zero,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(12.0),
-          ),
-        ),
-        content: Builder(
-          builder: (context) {
-            return Center(
-              child: Container(
-                height: context.height_query * 0.3,
-                width: context.width_query * 0.3,
-                //  color: Colors.red,
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.check,
-                      color: Colors.green,
-                      size: 50,
-                    ),
-                    Text(
-                      'berhasil',
-                      style:
-                          TextStyle(fontSize: 70, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  void popstock(BuildContext context, detail_produkController controller) {
+  void popprintstrukprebill(
+      BuildContext context,
+      kasirController controller,
+      List<DataMeja> prebill,
+      String nomor_meja,
+      int total_prebill,
+      diskon_kasir) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(12.0),
@@ -1528,9 +1368,179 @@ class popscreen {
         content: Builder(
           builder: (context) {
             return Container(
-                width: context.width_query,
-                height: context.height_query,
-                child: tambah_stock());
+              //  color: Colors.blue,
+              height: context.height_query / 4,
+              width: context.height_query * 0.6,
+              // color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: color_template().primary,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        'Cetak struk pre-bill ?',
+                        style: font().header,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button_border_custom(
+                          onPressed: () async {
+                            await controller.addmeja();
+
+                            Get.back(closeOverlays: true);
+                          },
+                          child: Text(
+                            'Tidak',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          width: 100,
+                          height: 50),
+                      button_solid_custom(
+                          onPressed: () async {
+                            print(
+                                'cetak struk local prebill------------------------------->');
+                            print(controller.listPrinter.toString());
+                            print(controller.isConnected == true);
+
+                            if ((await controller.printer.isConnected)!) {
+                              if (controller.logo == '-') {
+                                controller.printer
+                                    .printImage(controller.pathImage.value);
+                              } else {
+                                controller.printer.printImageBytes(
+                                    base64Decode(controller.logo));
+                              }
+                              controller.printer
+                                  .printCustom(controller.namatoko, 3, 1);
+                              controller.printer
+                                  .printCustom(controller.alamat_toko, 0, 3);
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 3);
+                              controller.printer.printLeftRight(
+                                  controller.dateFormat.format(DateTime.now()),
+                                  controller.kasir,
+                                  0);
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 3);
+                              controller.printer.printNewLine();
+
+                              controller.printer.printCustom(
+                                  '-- Meja : ' +
+                                      controller.meja.value.text +
+                                      ' --',
+                                  2,
+                                  1);
+                              controller.printer.printNewLine();
+                              //item-------------------------------------------------
+                              controller.printer.print4Column(
+                                  'Produk', 'QTY', 'Harga', 'Subtotal', 0,
+                                  format: "%-17s %-4s %-10s %5s %n");
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 3);
+                              controller.cache.forEach((e) {
+                                String nama = e.namaProduk!;
+                                if (nama.length > 15) {
+                                  nama = e.namaProduk!.substring(0, 15) + '...';
+                                }
+                                controller.printer.print4Column(
+                                    nama,
+                                    e.qty.toString(),
+                                    format: "%-17s %-4s %-10s %5s %n",
+                                    controller.nominal.format(e.harga),
+                                    controller.nominal
+                                        .format((e.harga! * e.qty)),
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 2);
+                              });
+                              await controller.subtotalval();
+                              controller.printer.print3Column(
+                                  'Subtotal',
+                                  ':',
+                                  controller.nominal
+                                      .format(controller.subtotal.value),
+                                  0);
+                              // controller.printer.printCustom(
+                              //     '-------------------------------', 1, 1);
+                              await controller.hitungbesardiskonkasir();
+                              controller.printer.print3Column(
+                                  'Total diskon',
+                                  ':',
+                                  controller.nominal.format(
+                                      controller.jumlahdiskonkasir.value),
+                                  0);
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 1);
+                              await controller.totalval();
+                              controller.printer.print3Column(
+                                'PPN',
+                                ':',
+                                controller.nominal.format(controller.ppn.value),
+                                0,
+                              );
+                              controller.printer.print3Column(
+                                'Total',
+                                ':',
+                                controller.nominal
+                                    .format(controller.total.value),
+                                0,
+                              );
+                              // controller.printer.print3Column(
+                              //   'Tunai',
+                              //   ':',
+                              //   controller.nominal
+                              //       .format(controller.bayarvalue.value),
+                              //   0,
+                              // );
+                              // controller.printer.print3Column(
+                              //   'Kembalian',
+                              //   ':',
+                              //   controller.kembalian.value.text.isNotEmpty
+                              //       ? controller.kembalian.value.text
+                              //       : '0',
+                              //   0,
+                              // );
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 1);
+                              controller.printer
+                                  .printCustom('-- Terima Kasih --', 0, 1);
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 1);
+                              controller.printer
+                                  .printImage(controller.printstruklogo.value);
+                              controller.printer
+                                  .printCustom('*** Powered by RIMS ***', 0, 1);
+                              controller.printer
+                                  .printCustom('www.rims.co.id', 0, 1);
+                              controller.printer.printCustom(
+                                  '-------------------------------', 1, 1);
+                              controller.printer.printNewLine();
+                              controller.printer.paperCut();
+                              //proses bayar local--------------------------
+                              await controller.addmeja();
+                              Get.back(closeOverlays: true);
+                            } else {
+                              Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Error', 'Printer belum terkoneksi'));
+                            }
+                          },
+                          child: Text(controller.groupindex.value != 2
+                              ? 'Cetak'
+                              : 'Cetak'),
+                          width: 100,
+                          height: 50),
+                    ],
+                  )
+                ],
+              ),
+            );
           },
         ),
       ),

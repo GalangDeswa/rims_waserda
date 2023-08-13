@@ -23,6 +23,7 @@ class ModelJenisBeban {
   int statusCode;
   String messages;
   List<DataJenisBeban> data;
+
   // Meta meta;
 
   factory ModelJenisBeban.fromJson(Map<String, dynamic> json) =>
@@ -81,6 +82,16 @@ class DataJenisBeban {
   Map<String, dynamic> toMapForDb() {
     var map = <String, dynamic>{};
     map['id'] = id;
+    map['id_local'] = idLocal;
+    map['id_toko'] = idToko;
+    map['kategori'] = kategori;
+    map['sync'] = sync;
+    map['aktif'] = aktif;
+    return map;
+  }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
     map['id_local'] = idLocal;
     map['id_toko'] = idToko;
     map['kategori'] = kategori;

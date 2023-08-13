@@ -122,17 +122,26 @@ class historyController extends GetxController {
   List<DateTime?> datedata = [
     //DateTime.now(),
   ];
+  var date1;
+  var date2;
+
+  rangedate() {
+    var r = datedata.first.toString() + datedata.last.toString();
+    return r;
+  }
 
   stringdate() {
     var ff = dateFormat.format(datedata.first!);
-    search.value.text = ff;
+    var xx = dateFormat.format(datedata.last!);
+    search.value.text = ff + ' - ' + xx;
   }
 
   DateFormat dateFormatsearch = DateFormat("yyyy-MM-dd");
 
   searchpenjualanlocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND tgl_penjualan LIKE "%${dateFormatsearch.format(datedata.first!)}%" ORDER BY ID DESC');
+        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND tgl_penjualan >= "${dateFormatsearch.format(datedata.first!)}" AND tgl_penjualan <= "${dateFormatsearch.format(datedata.last!.add(Duration(days: 1))!)}" ORDER BY id DESC');
+    print(query.toString() + '-------- query');
     List<DataPenjualan> penjualan = query.isNotEmpty
         ? query.map((e) => DataPenjualan.fromJson(e)).toList()
         : [];
@@ -161,7 +170,7 @@ class historyController extends GetxController {
 
   searchpenjualanstatuslocal(status) async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND status = $status AND penjualan_local.tgl_penjualan LIKE "%${dateFormatsearch.format(datedata.first!)}%" ORDER BY ID DESC');
+        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id WHERE penjualan_local.id_toko = $id_toko AND status = $status AND tgl_penjualan >= "${dateFormatsearch.format(datedata.first!)}" AND tgl_penjualan <= "${dateFormatsearch.format(datedata.last!.add(Duration(days: 1))!)}" ORDER BY ID DESC');
     List<DataPenjualan> penjualan = query.isNotEmpty
         ? query.map((e) => DataPenjualan.fromJson(e)).toList()
         : [];
@@ -191,6 +200,7 @@ class historyController extends GetxController {
       } else {
         await Future.forEach(query, (e) async {
           await REST.syncpenjualan(
+              diskon_kasir: e.diskonKasir,
               token: token,
               id_hutang: e.idHutang,
               bayar: e.bayar,
@@ -248,6 +258,7 @@ class historyController extends GetxController {
             'penjualan_local',
             DataPenjualan(
                     id: e.id,
+                    diskonKasir: e.diskonKasir,
                     idLocal: e.idLocal,
                     status: e.status,
                     bayar: e.bayar,
@@ -275,6 +286,7 @@ class historyController extends GetxController {
             table: 'penjualan_local',
             data: DataPenjualan(
                     idLocal: e.idLocal,
+                    diskonKasir: e.diskonKasir,
                     status: e.status,
                     bayar: e.bayar,
                     diskonTotal: e.diskonTotal,
@@ -292,9 +304,8 @@ class historyController extends GetxController {
                     sync: 'Y',
                     idHutang: e.idHutang,
                     idPelanggan: e.idPelanggan,
-                    id: e.id,
                     aktif: e.aktif)
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });
@@ -326,7 +337,7 @@ class historyController extends GetxController {
     succ.value = false;
     if (role == 1) {
       List<Map<String, Object?>> query = await DBHelper().FETCH(
-          'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_Local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.id_user = $id_user ORDER BY ID DESC');
+          'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko ORDER BY ID DESC');
       List<DataPenjualan> penjualan = query.isNotEmpty
           ? query.map((e) => DataPenjualan.fromJson(e)).toList()
           : [];
@@ -351,7 +362,7 @@ class historyController extends GetxController {
     print('-------------------fetch Penjualan local---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status != 4 AND penjualan_local.status != 3 ORDER BY ID DESC');
+        'SELECT penjualan_local.*,pelanggan_local.nama_pelanggan from penjualan_Local LEFT JOIN pelanggan_local on penjualan_local.id_pelanggan = pelanggan_local.id_local WHERE penjualan_local.id_toko = $id_toko AND penjualan_local.status != 4 AND penjualan_local.status != 2 ORDER BY ID DESC');
     List<DataPenjualan> penjualan = query.isNotEmpty
         ? query.map((e) => DataPenjualan.fromJson(e)).toList()
         : [];

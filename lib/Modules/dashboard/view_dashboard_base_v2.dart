@@ -60,7 +60,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                               controller.logo.value == '-'
                                   ? Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 8),
+                                          vertical: 8, horizontal: 5),
                                       child: CircleAvatar(
                                         backgroundImage: AssetImage(
                                             'assets/images/login_toko.png'),
@@ -69,7 +69,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                     )
                                   : Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          vertical: 8),
+                                          vertical: 8, horizontal: 5),
                                       child: CircleAvatar(
                                         backgroundImage: MemoryImage(
                                           base64Decode(controller.logo.value),
@@ -98,13 +98,32 @@ class dashboard_v2 extends GetView<dashboardController> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 30),
-                                child: Text(
-                                  controller.dateFormatdashboard
-                                      .format(DateTime.now()),
-                                  style: font().header,
-                                ),
-                              ),
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Container(
+                                    width: 200,
+                                    child: ListTile(
+                                      leading: Container(
+                                          padding: EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Text(
+                                            controller.tgl
+                                                .format(DateTime.now()),
+                                            style: font().header_big_blue,
+                                          )),
+                                      title: Text(
+                                        controller.bulan.format(DateTime.now()),
+                                        style: font().header_big,
+                                      ),
+                                      subtitle: Text(
+                                          controller.tahun
+                                              .format(DateTime.now()),
+                                          style: font().reguler_white_bold),
+                                    ),
+                                  )),
                             ],
                           ),
 
@@ -363,7 +382,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                               controller.nominal
                                                                   .format(controller
                                                                       .totalpendapatan
-                                                                      .value),
+                                                                      .value
+                                                                      .round()),
                                                           style:
                                                               font().reguler),
                                                       subtitle: Text(

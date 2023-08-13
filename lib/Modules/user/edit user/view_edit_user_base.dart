@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 import 'package:rims_waserda/Modules/user/edit%20user/view_edit_user_form.dart';
 
+import '../../../Templates/setting.dart';
 import '../../Widgets/stack bg.dart';
 
 class edit_user extends GetView<edituserController> {
@@ -13,8 +14,7 @@ class edit_user extends GetView<edituserController> {
     return SafeArea(
       //minimum: EdgeInsets.all(10),
       child: Scaffold(
-
-          // backgroundColor: color_template().primary.withOpacity(0.2),
+          backgroundColor: color_template().base_blue,
           // appBar: appbar_custom(
           //     height: 50,
           //     child: Text(
@@ -22,9 +22,9 @@ class edit_user extends GetView<edituserController> {
           //       style: font().header,
           //     )),
           body: stack_bg(
-        isfullscreen: true,
-        child: SingleChildScrollView(child: edit_user_form()),
-      )),
+            isfullscreen: true,
+            child: SingleChildScrollView(child: edit_user_form()),
+          )),
     );
   }
 }

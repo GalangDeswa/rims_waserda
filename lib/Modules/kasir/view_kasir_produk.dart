@@ -36,18 +36,20 @@ class kasir_produk extends GetView<kasirController> {
                           //pakai string bisa di cari tp tidak bisa lengkap?
                           child: TextFormField(
                             controller: controller.search.value,
-                            onChanged: ((String pass) {
-                              controller.searchproduklocal();
+                            onChanged: ((String pass) async {
+                              await controller
+                                  .searchproduklocal(controller.id_toko);
                             }),
                             decoration: InputDecoration(
                               contentPadding: EdgeInsets.all(10),
                               labelText: "Cari produk",
+                              hintText: 'nama produk',
                               border: InputBorder.none,
                               labelStyle: TextStyle(
                                 color: Colors.black87,
                               ),
                             ),
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.start,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Please enter email';
@@ -60,10 +62,12 @@ class kasir_produk extends GetView<kasirController> {
                       Padding(
                         padding: EdgeInsets.only(right: 5),
                         child: icon_button_custom(
-                            onPressed: () {
-                              controller.searchproduklocal();
+                            onPressed: () async {
+                              await controller
+                                  .fetchProduklocal(controller.id_toko);
+                              await controller.fetchmeja();
                             },
-                            icon: Icons.search,
+                            icon: Icons.refresh,
                             container_color: color_template().primary),
                       ),
                     ],
@@ -71,52 +75,78 @@ class kasir_produk extends GetView<kasirController> {
                 ),
               ),
             ),
-            Container(
-              width: context.width_query / 10,
-              child: Card_custom(
-                border: false,
-                //color: Colors.red,
-
-                // margin: EdgeInsets.only(left: 5, top: 10, bottom: 10, right: 10),
-                child: Padding(
-                  padding: const EdgeInsets.all(3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(right: 10, left: 10),
-                          //color: Colors.red,
-                          //width: context.width_query * 0.60,
-                          //pakai string bisa di cari tp tidak bisa lengkap?
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: controller.meja.value,
-                            onChanged: ((String pass) {
-                              controller.fetchProduk();
-                            }),
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              labelText: 'Meja',
-                              border: InputBorder.none,
-                              labelStyle: TextStyle(
-                                color: Colors.black87,
-                              ),
-                            ),
-                            textAlign: TextAlign.center,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter email';
-                              }
-                              return null;
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
+            // Container(
+            //   width: context.width_query / 11,
+            //   child: Card_custom(
+            //     border: false,
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(3),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.center,
+            //         children: [
+            //           Expanded(
+            //             child: Container(
+            //               margin: EdgeInsets.only(right: 10, left: 10),
+            //               //color: Colors.red,
+            //               //width: context.width_query * 0.60,
+            //               //pakai string bisa di cari tp tidak bisa lengkap?
+            //               child: TextFormField(
+            //                 keyboardType: TextInputType.number,
+            //                 controller: controller.meja.value,
+            //                 decoration: InputDecoration(
+            //                   contentPadding: EdgeInsets.all(10),
+            //                   labelText: 'Meja',
+            //                   border: InputBorder.none,
+            //                   labelStyle: TextStyle(
+            //                     color: Colors.black87,
+            //                   ),
+            //                 ),
+            //                 textAlign: TextAlign.center,
+            //                 validator: (value) {
+            //                   if (value!.isEmpty) {
+            //                     return 'Please enter email';
+            //                   }
+            //                   return null;
+            //                 },
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            Stack(
+              children: [
+                Container(
+                  width: context.width_query / 11,
+                  child: Card_custom(
+                    border: false,
+                    child: Padding(
+                        padding: const EdgeInsets.all(3),
+                        child: IconButton(
+                          onPressed: () {
+                            controller.listMejaKasir(controller);
+                          },
+                          icon: Icon(Icons.receipt_long),
+                        )),
                   ),
                 ),
-              ),
+                Obx(() {
+                  return controller.cachemeja.isEmpty
+                      ? Container()
+                      : Container(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: color_template().select),
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            controller.cachemeja.length.toString(),
+                            style: font().reguler_white_bold,
+                          ),
+                        );
+                }),
+              ],
             ),
           ],
         ),
@@ -441,7 +471,7 @@ class ProductTilev2 extends GetView<kasirController> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      overflow: TextOverflow.fade,
+                                      overflow: TextOverflow.ellipsis,
                                       controller
                                           .produklistlocal[index].namaProduk
                                           .toString(),

@@ -40,7 +40,7 @@ class tambah_jenis extends GetView<produkController> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       header(
-                        title: 'Tambah Jenis Produk',
+                        title: 'Tambah Kategori Produk',
                         icon: FontAwesomeIcons.boxOpen,
                         iscenter: false,
                       ),

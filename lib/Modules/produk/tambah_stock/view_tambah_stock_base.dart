@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/produk/tambah_stock/view_tambah_stock_table.dart';
 
 import '../../../Templates/setting.dart';
 import '../../Widgets/buttons.dart';
 import '../../Widgets/header.dart';
-import '../../Widgets/popup.dart';
 import '../../Widgets/stack bg.dart';
 import 'controller_tambah_stock.dart';
 
@@ -185,10 +183,7 @@ class tambah_stock extends GetView<tambah_stockController> {
                                   ),
                                 ),
                                 icon_button_custom(
-                                    onPressed: () {
-                                      popscreen()
-                                          .popsuplier(context, controller);
-                                    },
+                                    onPressed: () {},
                                     icon: Icons.add,
                                     container_color: color_template().primary),
                               ],

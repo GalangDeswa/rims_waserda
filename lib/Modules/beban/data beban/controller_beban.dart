@@ -353,7 +353,7 @@ class bebanController extends GetxController {
 
   searchbebanlocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT * FROM beban_local WHERE id_toko = $id_toko AND aktif = "Y" AND nama LIKE "%${search.value.text}%" OR  tgl LIKE "%${search.value.text}%" ORDER BY ID DESC');
+        'SELECT * FROM beban_local WHERE id_toko = $id_toko AND aktif = "Y" AND nama LIKE "%${search.value.text}%" ORDER BY ID DESC');
     List<DataBeban> jenis = query.isNotEmpty
         ? query.map((e) => DataBeban.fromJson(e)).toList()
         : [];
@@ -506,7 +506,6 @@ class bebanController extends GetxController {
             table: 'beban_local',
             data: DataBeban(
                     idLocal: e.idLocal,
-                    id: e.id,
                     idToko: e.idToko,
                     idUser: e.idUser,
                     nama: e.nama,
@@ -517,7 +516,7 @@ class bebanController extends GetxController {
                     namaKtrBeban: e.namaKtrBeban,
                     sync: 'Y',
                     aktif: e.aktif)
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });
@@ -544,12 +543,11 @@ class bebanController extends GetxController {
             table: 'beban_kategori_local',
             data: DataJenisBeban(
                     aktif: e.aktif,
-                    id: e.id,
                     idLocal: e.idLocal,
                     idToko: e.idToko,
                     kategori: e.kategori,
                     sync: 'Y')
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });

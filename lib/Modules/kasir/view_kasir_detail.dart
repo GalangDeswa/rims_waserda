@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
+import 'package:rims_waserda/Modules/Widgets/popup.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Modules/kasir/view_kasir_keypad.dart';
@@ -191,7 +192,7 @@ class kasir_detail extends GetView<kasirController> {
                                                   ),
                                                   Container(
                                                     margin: EdgeInsets.only(
-                                                        right: 10),
+                                                        right: 5),
                                                     padding: EdgeInsets.all(3),
                                                     decoration: BoxDecoration(
                                                         shape: BoxShape.circle,
@@ -214,9 +215,42 @@ class kasir_detail extends GetView<kasirController> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Text(controller
-                                                      .cache[index].qty
-                                                      .toString()),
+                                                  InkWell(
+                                                    splashColor:
+                                                        color_template().select,
+                                                    onTap: () {
+                                                      controller
+                                                          .popeditqty(index);
+                                                    },
+                                                    child: Container(
+                                                      width: 55,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10,
+                                                              vertical: 5),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          border: Border.all(
+                                                              color:
+                                                                  color_template()
+                                                                      .primary)),
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 10),
+                                                      child: Center(
+                                                        heightFactor: 1,
+                                                        child: Text(
+                                                            controller
+                                                                .cache[index]
+                                                                .qty
+                                                                .toString(),
+                                                            style:
+                                                                font().reguler),
+                                                      ),
+                                                    ),
+                                                  ),
                                                   controller.cache[index]
                                                                   .qty! >=
                                                               pp.qty! &&
@@ -227,8 +261,8 @@ class kasir_detail extends GetView<kasirController> {
                                                       ? Container(
                                                           margin:
                                                               EdgeInsets.only(
-                                                                  left: 10,
-                                                                  right: 10),
+                                                            left: 5,
+                                                          ),
                                                           padding:
                                                               EdgeInsets.all(3),
                                                           decoration:
@@ -254,8 +288,8 @@ class kasir_detail extends GetView<kasirController> {
                                                           child: Container(
                                                             margin:
                                                                 EdgeInsets.only(
-                                                                    left: 10,
-                                                                    right: 10),
+                                                              left: 5,
+                                                            ),
                                                             padding:
                                                                 EdgeInsets.all(
                                                                     3),
@@ -287,24 +321,24 @@ class kasir_detail extends GetView<kasirController> {
                           });
                     })),
               ),
+
               Obx(() {
                 return Container(
                   //margin: EdgeInsets.only(top: 40),
-                  height: context.height_query / 6.5,
+                  height: context.height_query / 5.0,
                   // color: Colors.red,
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   // decoration: BoxDecoration(
                   //     color: color_template().primary,
                   //     borderRadius: border_radius().header_border),
-                  child: Center(
-                    child: Column(
-                      //  mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Obx(() {
-                          return Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Obx(() {
+                        return Expanded(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Expanded(
@@ -321,13 +355,51 @@ class kasir_detail extends GetView<kasirController> {
                                         : 'Rp.' +
                                             controller.nominal.format(
                                                 controller.subtotal.value),
-                                style: font().reguler,
+                                style: font().reguler_bold,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],
-                          );
-                        }),
-                        Row(
+                          ),
+                        );
+                      }),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Obx(() {
+                        return Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'PPN :',
+                                  style: font().reguler,
+                                ),
+                              ),
+                              controller.subtotal.value == 0.0
+                                  ? Text(
+                                      "Rp." +
+                                          controller.nominal
+                                              .format(controller.ppn.value = 0),
+                                      style: font().reguler_bold,
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      "Rp." +
+                                          controller.nominal
+                                              .format(controller.ppn.value),
+                                      style: font().reguler_bold,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                            ],
+                          ),
+                        );
+                      }),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Expanded(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
@@ -338,30 +410,68 @@ class kasir_detail extends GetView<kasirController> {
                                 Text(
                                   controller.displaydiskon.toStringAsFixed(0) +
                                       '%',
-                                  style: font().reguler,
+                                  style: font().reguler_bold,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                // Text(
-                                //     "(Rp. " +
-                                //         controller.nominal.format(
-                                //             controller.jumlahdiskonkasir.value) +
-                                //         ")",
-                                //     style: font().reguler),
-                                IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      controller.editDiskonKasir(controller);
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      size: context.height_query / 35,
-                                    )),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  width: 100,
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        controller.editDiskonKasir(controller);
+                                      },
+                                      child: Text(
+                                        'Diskon kasir',
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                )
                               ],
                             )
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      // SizedBox(
+                      //   height: 10,
+                      // ),
+                      // Expanded(
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //     children: [
+                      //       Expanded(
+                      //         child: Text(
+                      //           'Nomor meja :',
+                      //           style: font().reguler,
+                      //         ),
+                      //       ),
+                      //       Obx(() {
+                      //         return Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             Text(
+                      //               controller.nomor_meja.value,
+                      //               style: font().reguler_bold,
+                      //               overflow: TextOverflow.ellipsis,
+                      //             ),
+                      //             Container(
+                      //               margin: EdgeInsets.only(left: 10),
+                      //               width: 100,
+                      //               child: ElevatedButton(
+                      //                   onPressed: () {
+                      //                     controller.editMejaKasir(controller);
+                      //                   },
+                      //                   child: Text(
+                      //                     'Nomor meja',
+                      //                     style: TextStyle(fontSize: 12),
+                      //                   )),
+                      //             )
+                      //           ],
+                      //         );
+                      //       }),
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
                   ),
                 );
               }),
@@ -397,54 +507,86 @@ class kasir_detail extends GetView<kasirController> {
               SizedBox(
                 height: 10,
               ),
-              button_solid_custom(
-                  onPressed: () async {
-                    controller.cache.value.isEmpty
-                        ? Get.showSnackbar(toast().bottom_snackbar_error(
-                            'Error', 'Pilih item terlebih dahulu'))
-                        : controller.meja.value.text.isEmpty ||
-                                controller.meja.value.text == null ||
-                                controller.meja.value.text == ''
-                            ? Get.showSnackbar(toast().bottom_snackbar_error(
-                                'Gagal', 'Masukan nomor meja terlebih dahulu'))
-                            : Get.dialog(
-                                Stack(
-                                  children: [
-                                    Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                context.width_query / 10,
-                                            vertical:
-                                                context.height_query / 10),
-                                        child: kasir_keypad()),
-                                    Positioned(
-                                      top: context.height_query / 14,
-                                      left: context.width_query / 12,
-                                      child: Material(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: color_template().tritadery,
-                                        child: IconButton(
-                                            onPressed: () {
-                                              Get.back();
-                                            },
-                                            icon: Icon(
-                                              FontAwesomeIcons.xmark,
-                                              color: Colors.white,
-                                            )),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                barrierDismissible: false);
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: button_solid_custom(
+                        onPressed: () async {
+                          controller.cache.value.isEmpty
+                              ? Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Error', 'Pilih item terlebih dahulu'))
+                              : Get.dialog(
+                                  Stack(
+                                    children: [
+                                      Container(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  context.width_query / 10,
+                                              vertical:
+                                                  context.height_query / 10),
+                                          child: kasir_keypad()),
+                                      Positioned(
+                                        top: context.height_query / 14,
+                                        left: context.width_query / 12,
+                                        child: Material(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: color_template().tritadery,
+                                          child: IconButton(
+                                              onPressed: () {
+                                                Get.back();
+                                                controller.groupindex.value = 9;
+                                                controller
+                                                    .keypadController.value
+                                                    .clear();
+                                                controller.kembalian.value
+                                                    .clear();
+                                              },
+                                              icon: Icon(
+                                                FontAwesomeIcons.xmark,
+                                                color: Colors.white,
+                                              )),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  barrierDismissible: false);
 
-                    print('--------------pop-------------');
-                  },
-                  child: Text(
-                    'Bayar'.toUpperCase(),
-                    style: font().header,
+                          controller.meja.value.text = 'Takeout';
+                          controller.nomor_meja.value = 'Takeout';
+
+                          print('--------------pop-------------');
+                        },
+                        child: Text(
+                          'Takeout'.toUpperCase(),
+                          style: font().header,
+                        ),
+                        width: 100,
+                        height: context.height_query / 14),
                   ),
-                  width: double.infinity,
-                  height: context.height_query / 14),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: button_border_custom(
+                        onPressed: () async {
+                          controller.cache.value.isEmpty
+                              ? Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Error', 'Pilih item terlebih dahulu'))
+                              : controller.editMejaKasir(controller);
+
+                          print('--------------pop-------------');
+                        },
+                        child: Text(
+                          'open bill'.toUpperCase(),
+                          style: font().header_blue,
+                        ),
+                        width: 100,
+                        height: context.height_query / 14),
+                  ),
+                ],
+              ),
 
               // button_border_custom(
               //     onPressed: () {

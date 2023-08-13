@@ -94,6 +94,17 @@ class DataJenis {
     map['aktif'] = aktif;
     return map;
   }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_toko'] = idToko;
+    map['nama_jenis'] = namaJenis;
+    map['sync'] = sync;
+    map['aktif'] = aktif;
+    return map;
+  }
 }
 
 // class Meta {

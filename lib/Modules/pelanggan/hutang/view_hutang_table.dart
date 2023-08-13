@@ -85,8 +85,8 @@ class hutang_table extends GetView<hutangController> {
                       height: context.height_query / 15,
                       child: TextFormField(
                         controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          controller.searchhutanglocal();
+                        onChanged: ((String pass) async {
+                          await controller.searchhutanglocal();
                         }),
                         decoration: InputDecoration(
                           labelText: "Cari hutang",
@@ -156,6 +156,12 @@ class hutang_table extends GetView<hutangController> {
                             DataColumn(
                               label: Text(
                                 'Hutang',
+                                style: font().reguler,
+                              ),
+                            ),
+                            DataColumn(
+                              label: Text(
+                                'Sisa',
                                 style: font().reguler,
                               ),
                             ),
@@ -284,6 +290,12 @@ class hutangTable extends DataTableSource {
               style: font().reguler,
               overflow: TextOverflow.ellipsis,
             )),
+      DataCell(Text(
+        'Rp. ' +
+            con.nominal.format(int.parse(data[index].sisaHutang.toString())),
+        style: font().reguler,
+        overflow: TextOverflow.ellipsis,
+      )),
       DataCell(dtl.isNotEmpty && data[index].status == 2
           ? Container(
               padding: EdgeInsets.all(6),
@@ -344,18 +356,16 @@ class hutangTable extends DataTableSource {
                       color: color_template().secondary,
                     )),
 
-                data[index].hutang == 0
+                data[index].sisaHutang == 0
                     ? Container()
-                    : IconButton(
-                        onPressed: () {
-                          con.bayarhutangpop(data[index].idLocal!,
-                              data[index].hutang.toString());
-                        },
-                        icon: Icon(
-                          FontAwesomeIcons.dollarSign,
-                          size: 18,
-                          color: color_template().secondary,
-                        )),
+                    : Expanded(
+                        child: ElevatedButton(
+                            onPressed: () {
+                              con.bayarhutangpop(data[index].idLocal!,
+                                  data[index].sisaHutang.toString());
+                            },
+                            child: Text('Bayar')),
+                      ),
                 // IconButton(
                 //     onPressed: () {
                 //       // popscreen().deletepelanggan(

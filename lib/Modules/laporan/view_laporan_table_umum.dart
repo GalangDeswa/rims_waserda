@@ -158,7 +158,7 @@ class laporan_table_umum extends GetView<laporanController> {
                           }
                         },
                         child: Text(
-                          'Cari laporan',
+                          'Buat laporan',
                           style: font().header,
                         ),
                         width: context.width_query * 0.2,

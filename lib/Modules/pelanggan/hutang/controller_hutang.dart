@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +16,6 @@ import '../../../Services/handler.dart';
 import '../../../Templates/setting.dart';
 import '../../../db_helper.dart';
 import '../../Widgets/buttons.dart';
-import '../../Widgets/header.dart';
 import '../../Widgets/toast.dart';
 import '../../history/model_penjualan.dart';
 import 'model_hutang.dart';
@@ -107,7 +105,7 @@ class hutangController extends GetxController {
 
   searchhutanglocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id_local WHERE hutang_local.id_toko = $id_toko AND pelanggan_local.nama_pelanggan   LIKE "%${search.value.text}%" ORDER BY ID DESC');
+        'SELECT hutang_local.*, pelanggan_local.nama_pelanggan FROM hutang_local JOIN pelanggan_local ON hutang_local.id_pelanggan = pelanggan_local.id_local WHERE hutang_local.id_toko = $id_toko AND pelanggan_local.nama_pelanggan LIKE "%${search.value.text}%" ORDER BY ID DESC');
     List<DataHutang> hutang = query.isNotEmpty
         ? query.map((e) => DataHutang.fromJson(e)).toList()
         : [];
@@ -141,6 +139,7 @@ class hutangController extends GetxController {
               id: e.idLocal,
               status: e.status,
               hutang: e.hutang.toString(),
+              sisa_hutang: e.sisaHutang.toString(),
               id_pelanggan: e.idPelanggan.toString(),
               tgl_hutang: e.tglHutang);
           print("HUTANG UP ---->   " +
@@ -251,6 +250,7 @@ class hutangController extends GetxController {
                     status: e.status,
                     idLocal: e.idLocal,
                     hutang: e.hutang,
+                    sisaHutang: e.sisaHutang,
                     idPelanggan: e.idPelanggan,
                     tglHutang: e.tglHutang)
                 .toMapForDb());
@@ -262,16 +262,16 @@ class hutangController extends GetxController {
             table: 'hutang_local',
             data: DataHutang(
                     aktif: e.aktif,
-                    id: e.id,
                     sync: 'Y',
                     namaPelanggan: e.namaPelanggan,
                     idToko: e.idToko,
                     status: e.status,
                     idLocal: e.idLocal,
                     hutang: e.hutang,
+                    sisaHutang: e.sisaHutang,
                     idPelanggan: e.idPelanggan,
                     tglHutang: e.tglHutang)
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });
@@ -324,6 +324,20 @@ class hutangController extends GetxController {
     return hutang;
   }
 
+  fetchDataHutangbayarhariinidashboard(id_toko) async {
+    print('-------------------fetch hutang local---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM hutang_detail_local WHERE id_toko = $id_toko ORDER BY ID DESC');
+    List<DataHutangDetail> hutang = query.isNotEmpty
+        ? query.map((e) => DataHutangDetail.fromJson(e)).toList()
+        : [];
+    //list_hutanglocal.value = hutang;
+    // print('fect produk local --->' + produk.toList().toString());
+    // succ.value = true;
+    return hutang;
+  }
+
   fetchDataHutang() async {
     print('-------------------fetch data hutang---------------------');
 
@@ -336,7 +350,7 @@ class hutangController extends GetxController {
 
         list_hutang.value = dataHutang.data;
 
-        print('--------------------list data beban---------------');
+        print('--------------------list data hutang---------------');
         print(list_hutang);
 
         // Get.back(closeOverlays: true);
@@ -362,7 +376,7 @@ class hutangController extends GetxController {
     List<DataHutangDetail> check_hutang_detail_local =
         await fetchDataHutangDetailsync(id_toko);
 
-    print('-------------------init hutang local---------------------');
+    print('-------------------init hutang detail local---------------------');
 
     //Get.dialog(showloading(), barrierDismissible: false);
     await Future.forEach(hutang_detail_local, (e) async {
@@ -395,7 +409,6 @@ class hutangController extends GetxController {
             table: 'hutang_detail_local',
             data: DataHutangDetail(
                     tglLunas: e.tglLunas,
-                    id: e.id,
                     sisa: e.sisa,
                     tglBayar: e.tglBayar,
                     aktif: e.aktif,
@@ -406,7 +419,7 @@ class hutangController extends GetxController {
                     idToko: e.idToko,
                     bayar: e.bayar,
                     idHutang: e.idHutang)
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });
@@ -528,8 +541,6 @@ class hutangController extends GetxController {
 
   DateFormat dateFormatdisplay = DateFormat("dd-MM-yyyy");
 
-  //TODO : CHECK BAYAR HTUANG
-
   bayarHutanglocal(String id_local) async {
     Get.dialog(showloading(), barrierDismissible: false);
     print('-------------------bayar hutang local---------------------');
@@ -537,7 +548,7 @@ class hutangController extends GetxController {
     var ss = list_hutanglocal.where((e) => e.idLocal == id_local).first;
     print('jumlah hutang--------------------------------------.>');
     print(ss.hutang);
-    var sisa = ss.hutang! - jumlahbayarhutang.value;
+    var sisa = ss.sisaHutang! - jumlahbayarhutang.value;
     var con1 = Get.find<historyController>();
     await con1.fetchPenjualanlocal(
         id_toko: id_toko, id_user: id_user, role: role);
@@ -572,7 +583,8 @@ class hutangController extends GetxController {
                 sync: 'N',
                 aktif: 'Y',
                 namaPelanggan: ss.namaPelanggan,
-                hutang: sisa,
+                hutang: ss.hutang,
+                sisaHutang: sisa,
                 id: ss.id,
                 idLocal: ss.idLocal,
                 status: 2)
@@ -595,6 +607,7 @@ class hutangController extends GetxController {
                 total: pp1.total,
                 meja: pp1.meja,
                 diskonTotal: pp1.diskonTotal,
+                diskonKasir: pp1.diskonKasir,
                 kembalian: pp1.kembalian,
                 metodeBayar: pp1.metodeBayar,
                 namaUser: pp1.namaUser,
@@ -636,7 +649,7 @@ class hutangController extends GetxController {
             idPelanggan: ssv2.idPelanggan,
             idToko: ssv2.idToko,
             idHutang: ssv2.idLocal,
-            bayar: jumlahbayarhutang.value,
+            bayar: ss.sisaHutang,
             tglBayar: DateTime.now().toString(),
             sisa: 0,
             tglLunas: DateTime.now().toString(),
@@ -650,7 +663,8 @@ class hutangController extends GetxController {
                   sync: 'N',
                   aktif: 'Y',
                   namaPelanggan: ssv2.namaPelanggan,
-                  hutang: 0,
+                  hutang: ssv2.hutang,
+                  sisaHutang: 0,
                   id: ssv2.id,
                   idLocal: ssv2.idLocal,
                   status: 1)
@@ -679,6 +693,7 @@ class hutangController extends GetxController {
                   subTotal: pp.subTotal,
                   tglPenjualan: pp.tglPenjualan,
                   totalItem: pp.totalItem,
+                  diskonKasir: pp.diskonKasir,
                   idUser: pp.idUser)
               .toMapForDb(),
           id: pp.idLocal);
@@ -707,11 +722,6 @@ class hutangController extends GetxController {
 
   bayarhutangpop(String id_local, hutang) {
     Get.dialog(AlertDialog(
-      title: header(
-        title: 'Bayar hutang',
-        icon: FontAwesomeIcons.dollarSign,
-        icon_color: color_template().primary,
-      ),
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -734,7 +744,7 @@ class hutangController extends GetxController {
                       'Sisa hutang : ' +
                           'Rp.' +
                           nominal.format(int.parse(hutang)),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: font().header_black,
                     ),
                     SizedBox(
                       height: 5,
@@ -752,6 +762,7 @@ class hutangController extends GetxController {
                       }),
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        prefixText: 'Rp. ',
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),
                         border: OutlineInputBorder(
@@ -764,34 +775,43 @@ class hutangController extends GetxController {
                     SizedBox(
                       height: 10,
                     ),
-                    button_solid_custom(
-                        onPressed: () {
-                          if (bayarhutang.value.text.isEmpty) {
-                            Get.showSnackbar(toast().bottom_snackbar_error(
-                                'Gagal', 'masukan jumlah bayar'));
-                          } else {
-                            bayarHutanglocal(id_local);
-                          }
-                        },
-                        child: Text(
-                          'Bayar',
-                          style: font().primary_white,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: button_border_custom(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text(
+                                'Batal',
+                                style: font().primary,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
                         ),
-                        width: context.width_query,
-                        height: context.height_query / 11),
-                    SizedBox(
-                      height: 10,
+                        SizedBox(
+                          width: 25,
+                        ),
+                        Expanded(
+                          child: button_solid_custom(
+                              onPressed: () {
+                                if (bayarhutang.value.text.isEmpty) {
+                                  Get.showSnackbar(toast()
+                                      .bottom_snackbar_error(
+                                          'Gagal', 'masukan jumlah bayar'));
+                                } else {
+                                  bayarHutanglocal(id_local);
+                                }
+                              },
+                              child: Text(
+                                'Bayar',
+                                style: font().primary_white,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
+                        ),
+                      ],
                     ),
-                    button_border_custom(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text(
-                          'Batal',
-                          style: font().primary,
-                        ),
-                        width: context.width_query,
-                        height: context.height_query / 11)
                   ],
                 )),
           );

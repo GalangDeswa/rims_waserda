@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intro_slider/intro_slider.dart';
 
 import '../../Services/handler.dart';
 import '../Widgets/toast.dart';
@@ -21,35 +22,6 @@ class splashController extends GetxController {
   }
 
   var x = Duration(seconds: 1);
-  //Timer.periodic(Duration(secon), (timer) { })
-
-  // Future askPermission() async {
-  //   return await [
-  //     Permission.photos,
-  //     //Permission.videos,
-  //     //Permission.audio,
-  //     //Permission.manageExternalStorage,
-  //     //Permission.accessMediaLocation,
-  //   ].request().then((permission) async {
-  //     print(
-  //         'permisison----------------------------------------------------------');
-  //     print(permission);
-  //     if (permission.containsValue(PermissionStatus.denied) ||
-  //         permission.containsValue(PermissionStatus.permanentlyDenied)) {
-  //       isGranted(false);
-  //       await [
-  //         Permission.photos,
-  //         Permission.videos,
-  //         Permission.audio,
-  //         //Permission.manageExternalStorage,
-  //         // Permission.accessMediaLocation,
-  //         // Permission.locationAlways,
-  //       ].request();
-  //     } else {
-  //       isGranted(true);
-  //     }
-  //   });
-  // }
 
   checkbanner() async {
     var konten = await GetStorage().read('konten_banner');
@@ -68,33 +40,45 @@ class splashController extends GetxController {
       print('konten masih ada ---------------------');
     } else {
       print('konten tidak ada--------------------------');
-       await fetchKontenSquare();
+      await fetchKontenSquare();
     }
   }
 
   checkLogin() async {
     await checkbanner();
     await checkKonten();
+
     var loginStatus = await GetStorage().read('token');
-    var toko_user = await GetStorage().read('id_toko');
-    //var db = await GetStorage().read('db_local');
+    // var toko_user = await GetStorage().read('id_toko');
+    var check = await GetStorage().read('intro');
+    print(
+        'check intro----------------------------------------------------------->');
+    print(check);
 
     print("LOGIN " + loginStatus.toString());
-    if (loginStatus != null) {
-      //await fetchKontenSquare();
+    if (check == false || check == null) {
       Timer(const Duration(seconds: 3), () {
-        Get.offAndToNamed('/base_menu');
-      }
-          //     {
-          //   Get.off(const Dashboard());
-          // }
-          );
-    } else {
-      //await fetchKontenSquare();
-      // await GetStorage().read('konten_banner');
-      Timer(const Duration(seconds: 2), () {
-        Get.offAndToNamed('/login');
+        Get.offAndToNamed('/intro');
       });
+
+      await GetStorage().write('intro', true);
+    } else {
+      if (loginStatus != null) {
+        //await fetchKontenSquare();
+        Timer(const Duration(seconds: 3), () {
+          Get.offAndToNamed('/base_menu');
+        }
+            //     {
+            //   Get.off(const Dashboard());
+            // }
+            );
+      } else {
+        //await fetchKontenSquare();
+        // await GetStorage().read('konten_banner');
+        Timer(const Duration(seconds: 3), () {
+          Get.offAndToNamed('/login');
+        });
+      }
     }
   }
 

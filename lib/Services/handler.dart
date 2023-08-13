@@ -1363,6 +1363,7 @@ class REST extends GetConnect {
     tgl_penjualan,
     metode_bayar,
     status,
+    diskon_kasir,
   }) async {
     try {
       var response = await http.post(link().POST_syncpenjualan,
@@ -1384,6 +1385,7 @@ class REST extends GetConnect {
             'tgl_penjualan': tgl_penjualan,
             'metode_bayar': metode_bayar.toString(),
             'status': status.toString(),
+            'diskon_kasir': diskon_kasir.toString(),
           }));
       if (response.statusCode == 200) {
         print(
@@ -2065,6 +2067,7 @@ class REST extends GetConnect {
       id,
       id_pelanggan,
       hutang,
+      sisa_hutang,
       tgl_hutang,
       status}) async {
     try {
@@ -2076,6 +2079,7 @@ class REST extends GetConnect {
             'aktif': aktif,
             'id_pelanggan': id_pelanggan.toString(),
             'hutang': hutang.toString(),
+            'sisa_hutang': sisa_hutang.toString(),
             'tgl_hutang': tgl_hutang.toString(),
             'status': status.toString(),
           }));

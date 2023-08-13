@@ -91,6 +91,26 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Expanded(
+                              child: Text(
+                                'PPN :',
+                                style: font().reguler,
+                              ),
+                            ),
+                            Text(
+                              "Rp." +
+                                  controller.nominal
+                                      .format(controller.ppn.value),
+                              style: font().reguler,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        );
+                      }),
+                      Obx(() {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
                                 child: Text('Diskon :', style: font().reguler)),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,15 +127,18 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                 //             controller.jumlahdiskonkasir.value) +
                                 //         ")",
                                 //     style: font().reguler),
-                                IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      controller.editDiskonKasir(controller);
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      size: context.height_query / 35,
-                                    )),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  width: 100,
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        controller.editDiskonKasir(controller);
+                                      },
+                                      child: Text(
+                                        'Diskon kasir',
+                                        style: TextStyle(fontSize: 12),
+                                      )),
+                                )
                               ],
                             )
                           ],

@@ -21,6 +21,7 @@ import 'package:rims_waserda/Modules/user/toko/view_edit_tokov2_base.dart';
 import '../Modules/Login/binding_login.dart';
 import '../Modules/Login/view_login_base.dart';
 import '../Modules/Splash/binding_splash.dart';
+import '../Modules/Splash/view_intro.dart';
 import '../Modules/Splash/view_splash_base.dart';
 import '../Modules/base menu/binding_base_menu.dart';
 import '../Modules/base menu/view_base_menu_base.dart';
@@ -58,6 +59,7 @@ import '../Modules/user/verification/view_verification_base.dart';
 
 final List<GetPage<dynamic>> route = [
   GetPage(name: "/splash", page: () => splash(), binding: splashBinding()),
+  GetPage(name: "/intro", page: () => intro(), binding: splashBinding()),
   GetPage(
       name: "/pilih_toko",
       page: () => pilih_toko(),

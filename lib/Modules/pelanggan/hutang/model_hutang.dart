@@ -50,6 +50,7 @@ class DataHutang {
   String? namaPelanggan;
   int? idToko;
   int? hutang;
+  int? sisaHutang;
   String? tglHutang;
   int? status;
   String? sync;
@@ -62,6 +63,7 @@ class DataHutang {
       this.namaPelanggan,
       this.idToko,
       this.hutang,
+      this.sisaHutang,
       this.tglHutang,
       this.status,
       this.sync,
@@ -74,6 +76,7 @@ class DataHutang {
         namaPelanggan: json["nama_pelanggan"],
         idToko: json["id_toko"],
         hutang: json["hutang"],
+        sisaHutang: json["sisa_hutang"],
         tglHutang: json["tgl_hutang"],
         status: json["status"],
         sync: json["sync"],
@@ -87,6 +90,7 @@ class DataHutang {
         "nama_pelanggan": namaPelanggan,
         "id_toko": idToko,
         "hutang": hutang,
+        "sisa_hutang": sisaHutang,
         "tgl_hutang": tglHutang,
         "status": status,
         "sync": sync,
@@ -101,6 +105,23 @@ class DataHutang {
     map['id_pelanggan'] = idPelanggan;
     // map['nama_pelanggan'] = namaPelanggan;
     map['hutang'] = hutang;
+    map['sisa_hutang'] = sisaHutang;
+    map['tgl_hutang'] = tglHutang;
+    map['sync'] = sync;
+    map['status'] = status;
+    map['aktif'] = aktif;
+    return map;
+  }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_toko'] = idToko;
+    map['id_pelanggan'] = idPelanggan;
+    // map['nama_pelanggan'] = namaPelanggan;
+    map['hutang'] = hutang;
+    map['sisa_hutang'] = sisaHutang;
     map['tgl_hutang'] = tglHutang;
     map['sync'] = sync;
     map['status'] = status;

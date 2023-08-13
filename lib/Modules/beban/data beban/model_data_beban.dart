@@ -118,6 +118,24 @@ class DataBeban {
     map['aktif'] = aktif;
     return map;
   }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_toko'] = idToko;
+    map['id_user'] = idUser;
+    map['nama'] = nama;
+    map['keterangan'] = keterangan;
+    map['tgl'] = tgl;
+    map['jumlah'] = jumlah;
+    map['id_ktr_beban'] = idKtrBeban;
+    map['nama_ktr_beban'] = namaKtrBeban;
+    map['sync'] = sync;
+    map['aktif'] = aktif;
+
+    return map;
+  }
 }
 
 // class Meta {

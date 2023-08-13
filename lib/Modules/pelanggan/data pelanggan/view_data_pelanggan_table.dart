@@ -88,8 +88,8 @@ class pelanggan_table extends GetView<pelangganController> {
                       height: context.height_query / 15,
                       child: TextFormField(
                         controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          controller.searchpelangganlocal();
+                        onChanged: ((String pass) async {
+                          await controller.searchpelangganlocal();
                         }),
                         decoration: InputDecoration(
                           labelText: "Cari pelanggan",

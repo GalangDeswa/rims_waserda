@@ -62,39 +62,43 @@ class history_table extends GetView<historyController> {
                               builder: (_) => AlertDialog(
                                     content: Container(
                                       width: context.width_query / 2,
-                                      height: context.height_query / 2,
-                                      child: CalendarDatePicker2(
-                                          config: CalendarDatePicker2Config(
-                                              weekdayLabels: [
-                                                'Minggu',
-                                                'Senin',
-                                                'Selasa',
-                                                'Rabu',
-                                                'Kamis',
-                                                'Jumat',
-                                                'Sabtu',
-                                              ],
-                                              firstDayOfWeek: 1,
-                                              calendarType:
-                                                  CalendarDatePicker2Type
-                                                      .single),
-                                          value: controller.datedata,
-                                          onValueChanged: (dates) {
-                                            print(dates);
-                                            controller.datedata = dates;
-                                            controller.stringdate();
-                                            controller.searchpenjualanlocal();
-                                            controller.stts.value = false;
-                                            controller.valstatus = 0.toString();
+                                      //  height: context.height_query / 2,
+                                      child:
+                                          CalendarDatePicker2WithActionButtons(
+                                              config:
+                                                  CalendarDatePicker2WithActionButtonsConfig(
+                                                      weekdayLabels: [
+                                                    'Minggu',
+                                                    'Senin',
+                                                    'Selasa',
+                                                    'Rabu',
+                                                    'Kamis',
+                                                    'Jumat',
+                                                    'Sabtu',
+                                                  ],
+                                                      firstDayOfWeek: 1,
+                                                      calendarType:
+                                                          CalendarDatePicker2Type
+                                                              .range),
+                                              value: controller.datedata,
+                                              onValueChanged: (dates) {
+                                                print(dates);
+                                                controller.datedata = dates;
+                                                controller.stringdate();
+                                                controller
+                                                    .searchpenjualanlocal();
+                                                controller.stts.value = false;
+                                                controller.valstatus =
+                                                    0.toString();
 
-                                            Get.back();
-                                          }),
+                                                Get.back();
+                                              }),
                                     ),
                                   ));
                         },
                         controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          controller.searchpenjualanlocal();
+                        onChanged: ((String pass) async {
+                          await controller.searchpenjualanlocal();
                         }),
                         decoration: InputDecoration(
                           labelText: "Cari tanggal penjualan",
@@ -161,7 +165,6 @@ class history_table extends GetView<historyController> {
                   //
                   //     container_color: color_template().primary),
 
-                  //TODO : cek laporan api
                   Obx(() {
                     return controller.search.value.text.isEmpty
                         ? Container()
@@ -578,10 +581,10 @@ class penjualanTable extends DataTableSource {
                   ? Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: Colors.orange,
                           borderRadius: BorderRadius.circular(10)),
                       child: Text(
-                        'Selesai',
+                        'Hutang',
                         style: font().reguler_white,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -593,7 +596,7 @@ class penjualanTable extends DataTableSource {
                               color: Colors.orange,
                               borderRadius: BorderRadius.circular(10)),
                           child: Text(
-                            'Hutang',
+                            'Tunda',
                             style: font().reguler_white,
                             overflow: TextOverflow.ellipsis,
                           ),

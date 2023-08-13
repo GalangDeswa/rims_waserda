@@ -194,7 +194,7 @@ class produkController extends GetxController {
 
   searchproduklocal() async {
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 AND nama_produk LIKE "%${search.value.text}%" OR  barcode LIKE "%${search.value.text}%" OR  nama_jenis LIKE "%${search.value.text}%" ORDER BY ID DESC');
+        'SELECT * FROM produk_local WHERE id_toko = $id_toko AND status = 1 AND nama_produk LIKE "%${search.value.text}%" ORDER BY ID DESC');
     List<DataProduk> produk = query.isNotEmpty
         ? query.map((e) => DataProduk.fromJson(e)).toList()
         : [];
@@ -639,6 +639,48 @@ class produkController extends GetxController {
     // });
   }
 
+  Map<String, dynamic> datainit(
+      {idLocal,
+      idUser,
+      barcode,
+      idToko,
+      idJenis,
+      idKategori,
+      idJenisStock,
+      namaProduk,
+      deskripsi,
+      qty,
+      harga,
+      hargaModal,
+      diskonBarang,
+      image,
+      status,
+      namaJenis}) {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_user'] = idUser;
+    map['barcode'] = barcode ?? '-';
+    map['id_toko'] = idToko;
+    map['id_jenis'] = idJenis;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_produk'] = namaProduk;
+    map['deskripsi'] = deskripsi;
+    map['qty'] = qty;
+    map['harga'] = harga;
+    map['harga_modal'] = hargaModal;
+    map['diskon_barang'] = diskonBarang;
+    map['image'] = image ?? '-';
+    map['status'] = status;
+    map['sync'] = 'Y';
+    map['nama_jenis'] = namaJenis ?? '-';
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
+
   initProdukToLocal(id_toko) async {
     //login -> sync -> init
 
@@ -687,7 +729,6 @@ class produkController extends GetxController {
               table: 'produk_local',
               data: DataProduk(
                       idLocal: e.idLocal,
-                      id: e.id,
                       idKategori: e.idKategori,
                       idToko: e.idToko,
                       idUser: e.idUser,
@@ -705,7 +746,7 @@ class produkController extends GetxController {
                       status: e.status,
                       sync: 'Y',
                       namaJenis: e.namaJenis)
-                  .toMapForDb(),
+                  .updateInit(),
               id: e.idLocal);
         }
       });
@@ -731,13 +772,12 @@ class produkController extends GetxController {
           DBHelper().UPDATE(
               table: 'produk_jenis_local',
               data: DataJenis(
-                      id: ex.id,
                       aktif: ex.aktif,
                       idLocal: ex.idLocal,
                       idToko: ex.idToko,
                       sync: 'Y',
                       namaJenis: ex.namaJenis)
-                  .toMapForDb(),
+                  .updateInit(),
               id: ex.idLocal);
         }
       });
@@ -748,6 +788,8 @@ class produkController extends GetxController {
           'init success---------------------------------------------------->');
       await fetchProduklocal(id_toko);
       await fetchjenislocal(id_toko);
+      // await Get.find<kasirController>().fetchProduklocal(id_toko);
+      // await Get.find<kasirController>().fetchjenislocal(id_toko);
     } catch (e) {
       print(e);
       Get.back();
@@ -1299,11 +1341,6 @@ class produkController extends GetxController {
 
   addqty(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
-      title: header(
-        title: 'Tambah Stock',
-        icon: Icons.add,
-        icon_color: color_template().primary,
-      ),
       contentPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -1324,7 +1361,10 @@ class produkController extends GetxController {
                     const SizedBox(
                       height: 10,
                     ),
-                    const Text('Masukan jumlah yang akan di tambah'),
+                    Text(
+                      'Masukan jumlah stock',
+                      style: font().header_black,
+                    ),
                     const SizedBox(
                       height: 15,
                     ),
@@ -1335,6 +1375,7 @@ class produkController extends GetxController {
                             child: TextField(
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
+                                hintText: 'Stock',
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 border: OutlineInputBorder(
@@ -1349,31 +1390,39 @@ class produkController extends GetxController {
                       ),
                     ),
                     const SizedBox(
-                      height: 15,
-                    ),
-                    button_solid_custom(
-                        onPressed: () {
-                          editqtylocal(arg.idLocal);
-                        },
-                        child: Text(
-                          'Tambah Stock',
-                          style: font().primary_white,
-                        ),
-                        width: context.width_query,
-                        height: context.height_query / 11),
-                    const SizedBox(
                       height: 10,
                     ),
-                    button_border_custom(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        child: Text(
-                          'Batal',
-                          style: font().primary,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: button_border_custom(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text(
+                                'Batal',
+                                style: font().primary,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
                         ),
-                        width: context.width_query,
-                        height: context.height_query / 11)
+                        SizedBox(
+                          width: 25,
+                        ),
+                        Expanded(
+                          child: button_solid_custom(
+                              onPressed: () {
+                                editqtylocal(arg.idLocal);
+                              },
+                              child: Text(
+                                'Tambah Stock',
+                                style: font().primary_white,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
+                        ),
+                      ],
+                    )
                   ],
                 )),
           );

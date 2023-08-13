@@ -150,6 +150,28 @@ class DataPenjualanDetailV2 {
     map['id_user'] = idUser;
     return map;
   }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_penjualan'] = idPenjualan;
+    map['id_produk'] = idProduk;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_brg'] = namaBrg;
+    map['harga_brg'] = hargaBrg;
+    map['harga_modal'] = hargaModal;
+    map['diskon_brg'] = diskonBrg;
+    map['diskon_kasir'] = diskonKasir;
+    map['qty'] = qty;
+    map['total'] = total;
+    map['sync'] = sync;
+    map['tgl'] = tgl;
+    map['aktif'] = aktif;
+    map['id_user'] = idUser;
+    return map;
+  }
 }
 
 // class Meta {

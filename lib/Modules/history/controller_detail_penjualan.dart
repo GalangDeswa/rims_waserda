@@ -161,9 +161,8 @@ class detailpenjualanController extends GetxController {
                     namaBrg: e.namaBrg,
                     tgl: e.tgl,
                     sync: 'Y',
-                    id: e.id,
                     aktif: e.aktif)
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });

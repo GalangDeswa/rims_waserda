@@ -101,12 +101,12 @@ class produk_table extends GetView<produkController> {
                       //width: 200,
                       child: TextFormField(
                         controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          controller.searchproduklocal();
+                        onChanged: ((String pass) async {
+                          await controller.searchproduklocal();
                         }),
                         decoration: InputDecoration(
                           labelText: "cari produk",
-                          hintText: 'Nama produk / Barcode',
+                          hintText: 'Nama produk',
                           labelStyle: const TextStyle(
                             color: Colors.black87,
                           ),

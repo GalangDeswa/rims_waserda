@@ -44,28 +44,28 @@ class ModelPenjualan {
 }
 
 class DataPenjualan {
-  DataPenjualan({
-    this.id,
-    this.idLocal,
-    this.meja,
-    this.idToko,
-    this.idUser,
-    this.namaPelanggan,
-    this.namaUser,
-    this.totalItem,
-    this.diskonTotal,
-    this.subTotal,
-    this.total,
-    this.bayar,
-    this.kembalian,
-    this.tglPenjualan,
-    this.metodeBayar,
-    this.status,
-    this.sync,
-    this.idPelanggan,
-    required this.aktif,
-    this.idHutang,
-  });
+  DataPenjualan(
+      {this.id,
+      this.idLocal,
+      this.meja,
+      this.idToko,
+      this.idUser,
+      this.namaPelanggan,
+      this.namaUser,
+      this.totalItem,
+      this.diskonTotal,
+      this.subTotal,
+      this.total,
+      this.bayar,
+      this.kembalian,
+      this.tglPenjualan,
+      this.metodeBayar,
+      this.status,
+      this.sync,
+      this.idPelanggan,
+      required this.aktif,
+      this.idHutang,
+      this.diskonKasir});
 
   int? id;
   String? idLocal;
@@ -87,32 +87,34 @@ class DataPenjualan {
   String? sync;
   String aktif;
   String? idHutang;
+  int? diskonKasir;
 
   // List<DetailItem>? detailItem;
 
   factory DataPenjualan.fromJson(Map<String, dynamic> json) => DataPenjualan(
-        id: json["id"],
-        idLocal: json["id_local"],
-        meja: json["meja"] ?? '0',
-        idToko: json["id_toko"],
-        idUser: json["id_user"],
-        idPelanggan: json["id_pelanggan"] ?? '0',
-        namaPelanggan: json["nama_pelanggan"] ?? '-',
-        namaUser: json["nama_user"],
-        totalItem: json["total_item"],
-        diskonTotal: json["diskon_total"],
-        subTotal: json["sub_total"],
-        total: json["total"],
-        bayar: json["bayar"] ?? 0.toString(),
-        kembalian: json["kembalian"],
-        tglPenjualan: json["tgl_penjualan"],
-        metodeBayar: json["metode_bayar"],
-        status: json["status"],
-        sync: json["sync"],
-        aktif: json["aktif"],
-        idHutang: json["id_hutang"] ?? '0',
-        // detailItem: List<DetailItem>.from(
-        //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
+      id: json["id"],
+      idLocal: json["id_local"],
+      meja: json["meja"] ?? '0',
+      idToko: json["id_toko"],
+      idUser: json["id_user"],
+      idPelanggan: json["id_pelanggan"] ?? '0',
+      namaPelanggan: json["nama_pelanggan"] ?? '-',
+      namaUser: json["nama_user"],
+      totalItem: json["total_item"],
+      diskonTotal: json["diskon_total"],
+      subTotal: json["sub_total"],
+      total: json["total"],
+      bayar: json["bayar"] ?? 0.toString(),
+      kembalian: json["kembalian"],
+      tglPenjualan: json["tgl_penjualan"],
+      metodeBayar: json["metode_bayar"],
+      status: json["status"],
+      sync: json["sync"],
+      aktif: json["aktif"],
+      idHutang: json["id_hutang"] ?? '0',
+      diskonKasir: json["diskon_kasir"]
+      // detailItem: List<DetailItem>.from(
+      //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -136,6 +138,7 @@ class DataPenjualan {
         "sync": sync,
         "aktif": aktif,
         "id_hutang": idHutang,
+        "diskon_kasir": diskonKasir,
         //   "detail_item": List<dynamic>.from(detailItem!.map((x) => x.toJson())),
       };
 
@@ -161,6 +164,34 @@ class DataPenjualan {
     map['status'] = status;
     map['aktif'] = aktif;
     map['id_hutang'] = idHutang ?? '0';
+    map['diskon_kasir'] = diskonKasir;
+
+    return map;
+  }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_user'] = idUser;
+    map['meja'] = meja;
+    map['id_toko'] = idToko;
+    map['id_pelanggan'] = idPelanggan ?? '0';
+    map['nama_pelanggan'] = namaPelanggan ?? '-';
+    map['nama_user'] = namaUser;
+    map['total_item'] = totalItem;
+    map['diskon_total'] = diskonTotal;
+    map['sub_total'] = subTotal;
+    map['total'] = total;
+    map['bayar'] = bayar;
+    map['kembalian'] = kembalian;
+    map['tgl_penjualan'] = tglPenjualan;
+    map['metode_bayar'] = metodeBayar;
+    map['sync'] = sync;
+    map['status'] = status;
+    map['aktif'] = aktif;
+    map['id_hutang'] = idHutang ?? '0';
+    map['diskon_kasir'] = diskonKasir;
 
     return map;
   }

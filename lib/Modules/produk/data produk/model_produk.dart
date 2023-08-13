@@ -164,6 +164,33 @@ class DataProduk {
     return map;
   }
 
+  //TODO : chek id apa harus di remove untuk update init
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+    map['id_local'] = idLocal;
+    map['id_user'] = idUser;
+    map['barcode'] = barcode ?? '-';
+    map['id_toko'] = idToko;
+    map['id_jenis'] = idJenis;
+    map['id_kategori'] = idKategori;
+    map['id_jenis_stock'] = idJenisStock;
+    map['nama_produk'] = namaProduk;
+    map['deskripsi'] = deskripsi;
+    map['qty'] = qty;
+    map['harga'] = harga;
+    map['harga_modal'] = hargaModal;
+    map['diskon_barang'] = diskonBarang;
+    map['image'] = image ?? '-';
+    map['status'] = status;
+    map['sync'] = sync;
+    map['nama_jenis'] = namaJenis ?? '-';
+    // map['created_at'] = createdAt;
+    //map['updated_at'] = updatedAt;
+
+    return map;
+  }
+
   Map<String, dynamic> synclocal() {
     var map = <String, dynamic>{};
 

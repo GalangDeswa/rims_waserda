@@ -58,6 +58,8 @@ class font {
   var reguler_bold = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
 
   var reguler_white = TextStyle(fontSize: 15, color: Colors.white);
+  var reguler_white_bold =
+      TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold);
   var reguler_white_datacard = TextStyle(fontSize: 15, color: Colors.white);
 
   var produktitle =

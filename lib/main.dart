@@ -140,6 +140,7 @@ void main() async {
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+  // Intl.systemLocale = await findSystemLocale();
   //await DBHelper().initDb();
   runApp(const MyApp());
 }
@@ -155,8 +156,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.blue,
           colorScheme: ThemeData().colorScheme.copyWith(
-            primary: color_template().select,
-          )),
+                primary: color_template().select,
+              )),
       getPages: route,
       initialRoute: '/splash',
       //initialBinding: splashBinding(),

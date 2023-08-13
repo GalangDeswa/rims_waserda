@@ -83,8 +83,8 @@ class jenis_table extends GetView<produkController> {
                     margin: const EdgeInsets.symmetric(horizontal: 3),
                     child: TextFormField(
                       controller: controller.searchjenis.value,
-                      onChanged: ((String pass) {
-                        controller.searchjenislocal();
+                      onChanged: ((String pass) async {
+                        await controller.searchjenislocal();
                       }),
                       decoration: InputDecoration(
                         labelText: "Cari Kategori",

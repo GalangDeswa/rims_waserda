@@ -11,6 +11,8 @@ class detail_penjualan extends GetView<detailpenjualanController> {
 
   @override
   Widget build(BuildContext context) {
+    var subtotal = controller.data.subTotal - controller.data.diskonTotal;
+    var ppn = 11 / 100 * subtotal;
     return Container(
       width: context.width_query / 1.8,
       height: context.height_query,
@@ -168,38 +170,55 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                         ),
                         DataColumn(
                           label: Text(
-                            'Diskon',
+                            'Subtotal',
                             style: font().reguler,
                           ),
                         ),
                       ],
-                      rows: List.generate(
-                          controller.isilocal.length,
-                          (index) => DataRow(cells: <DataCell>[
-                                DataCell(Text(
-                                  controller.isilocal[index].namaBrg!,
-                                  style: font().reguler,
-                                  overflow: TextOverflow.ellipsis,
-                                )),
-                                DataCell(Text(
-                                    controller.isilocal[index].qty.toString())),
-                                DataCell(Text(
+                      rows: List.generate(controller.isilocal.length, (index) {
+                        var hargadiskon = controller.isilocal[index].hargaBrg! -
+                            controller.isilocal[index].diskonBrg!;
+                        return DataRow(cells: <DataCell>[
+                          DataCell(Text(
+                            controller.isilocal[index].namaBrg!,
+                            style: font().reguler,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                          DataCell(
+                              Text(controller.isilocal[index].qty.toString())),
+                          DataCell(controller.isilocal[index].diskonBrg == 0
+                              ? Text(
                                   'Rp.' +
                                       controller.nominal.format(double.parse(
                                           controller.isilocal[index].hargaBrg
                                               .toString())),
                                   style: font().reguler,
                                   overflow: TextOverflow.ellipsis,
-                                )),
-                                DataCell(Text(
+                                )
+                              : Text(
                                   'Rp.' +
-                                      controller.nominal.format(double.parse(
-                                          controller.isilocal[index].diskonBrg
-                                              .toString())),
+                                      controller.nominal.format(hargadiskon),
                                   style: font().reguler,
                                   overflow: TextOverflow.ellipsis,
                                 )),
-                              ])));
+                          DataCell(controller.isilocal[index].diskonBrg == 0
+                              ? Text(
+                                  'Rp.' +
+                                      controller.nominal.format(
+                                          controller.isilocal[index].hargaBrg! *
+                                              controller.isilocal[index].qty!),
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                )
+                              : Text(
+                                  'Rp.' +
+                                      controller.nominal.format(hargadiskon *
+                                          controller.isilocal[index].qty!),
+                                  style: font().reguler,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                        ]);
+                      }));
                 }),
               ),
               Container(
@@ -247,11 +266,28 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   children: [
                     Expanded(
                         child:
-                            Text('Diskon total :', style: font().reguler_bold)),
+                            Text('Diskon kasir :', style: font().reguler_bold)),
                     Text(
                       'Rp.' +
                           controller.nominal
-                              .format(controller.data.diskonTotal),
+                              .format(controller.data.diskonKasir),
+                      style: font().reguler,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: context.width_query,
+                height: 0.3,
+                color: Colors.black,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 3),
+                child: Row(
+                  children: [
+                    Expanded(child: Text('PPN :', style: font().reguler_bold)),
+                    Text(
+                      'Rp.' + controller.nominal.format(ppn.round()),
                       style: font().reguler,
                     ),
                   ],
@@ -323,7 +359,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                       controller.data.metodeBayar == 1
                           ? 'Tunai'
                           : controller.data.metodeBayar == 2
-                              ? 'Non tunai'
+                              ? 'Hutang'
                               : controller.data.metodeBayar == 3
                                   ? 'Hutang'
                                   : '-',
@@ -376,7 +412,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                       controller.data.status == 1
                           ? 'Selesai'
                           : controller.data.status == 2
-                              ? 'Selesai'
+                              ? 'Hutang'
                               : controller.data.status == 3
                                   ? 'Hutang'
                                   : controller.data.status == 4

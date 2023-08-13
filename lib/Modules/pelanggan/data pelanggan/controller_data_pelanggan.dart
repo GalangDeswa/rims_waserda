@@ -182,13 +182,12 @@ class pelangganController extends GetxController {
             table: 'pelanggan_local',
             data: DataPelanggan(
                     idLocal: e.idLocal,
-                    id: e.id,
                     idToko: e.idToko,
                     namaPelanggan: e.namaPelanggan,
                     noHp: e.noHp,
                     sync: 'Y',
                     aktif: e.aktif)
-                .toMapForDb(),
+                .updateInit(),
             id: e.idLocal);
       }
     });

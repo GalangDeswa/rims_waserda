@@ -15,7 +15,7 @@ class data_user extends GetView<datauserController> {
     return SafeArea(
       //minimum: EdgeInsets.all(10),
       child: Scaffold(
-          backgroundColor: color_template().primary.withOpacity(0.2),
+          backgroundColor: color_template().base_blue,
           // appBar: appbar_custom(
           //     height: 50,
           //     child: Text(

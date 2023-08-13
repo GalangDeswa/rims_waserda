@@ -210,31 +210,35 @@ class tambah_beban extends GetView<bebanController> {
                                         builder: (_) => AlertDialog(
                                               content: Container(
                                                 width: context.width_query / 2,
-                                                height:
-                                                    context.height_query / 2,
-                                                child: CalendarDatePicker2(
-                                                    config: CalendarDatePicker2Config(
-                                                        weekdayLabels: [
-                                                          'Minggu',
-                                                          'Senin',
-                                                          'Selasa',
-                                                          'Rabu',
-                                                          'Kamis',
-                                                          'Jumat',
-                                                          'Sabtu',
-                                                        ],
-                                                        firstDayOfWeek: 1,
-                                                        calendarType:
-                                                            CalendarDatePicker2Type
-                                                                .single),
-                                                    value: controller.datedata,
-                                                    onValueChanged: (dates) {
-                                                      print(dates);
-                                                      controller.datedata =
-                                                          dates;
-                                                      controller.stringdate();
-                                                      Get.back();
-                                                    }),
+                                                // height:
+                                                //     context.height_query / 1.5,
+                                                child:
+                                                    CalendarDatePicker2WithActionButtons(
+                                                        config: CalendarDatePicker2WithActionButtonsConfig(
+                                                            weekdayLabels: [
+                                                              'Minggu',
+                                                              'Senin',
+                                                              'Selasa',
+                                                              'Rabu',
+                                                              'Kamis',
+                                                              'Jumat',
+                                                              'Sabtu',
+                                                            ],
+                                                            firstDayOfWeek: 1,
+                                                            calendarType:
+                                                                CalendarDatePicker2Type
+                                                                    .single),
+                                                        value:
+                                                            controller.datedata,
+                                                        onValueChanged:
+                                                            (dates) {
+                                                          print(dates);
+                                                          controller.datedata =
+                                                              dates;
+                                                          controller
+                                                              .stringdate();
+                                                          Get.back();
+                                                        }),
                                               ),
                                             ));
                                   },

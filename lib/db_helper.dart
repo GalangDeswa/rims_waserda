@@ -126,6 +126,8 @@ class DBHelper {
           .update(table, data, where: 'id_local = ?', whereArgs: [id]);
       return query;
     } catch (e) {
+      print('---------------------------errorr-----------');
+      print(e);
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
@@ -136,6 +138,18 @@ class DBHelper {
       var dbClient = await db;
       var query =
           await dbClient!.delete(table, where: 'id_local = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  DELETEMEJA(String table, int id) async {
+    try {
+      var dbClient = await db;
+      var query =
+          await dbClient!.delete(table, where: 'id= ?', whereArgs: [id]);
       return query;
     } catch (e) {
       Get.back(closeOverlays: true);

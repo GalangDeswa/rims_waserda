@@ -91,6 +91,11 @@ class dashboardController extends GetxController {
   DateFormat dateFormat = DateFormat("dd");
 
   DateFormat dateFormatdashboard = DateFormat('EEEE, d MMMM  yyyy');
+  DateFormat tgl = DateFormat('dd');
+  DateFormat bulan = DateFormat(
+    'MMMM',
+  );
+  DateFormat tahun = DateFormat('yyyy');
 
   loadtotalreversal() async {
     print('load reversal total------------------------------>');
@@ -145,13 +150,22 @@ class dashboardController extends GetxController {
             dateFormat.format(DateTime.now()))
         .toList();
 
-    var sumH = filterH
-        .map((e) => e.hutang)
+    var sumHhariini = filterH
+        .map((e) => e.sisaHutang)
+        .fold(0, (previous, current) => previous + current!);
+
+    var sumH = h
+        .map((e) => e.sisaHutang)
         .fold(0, (previous, current) => previous + current!);
 
     print('sum hutang hari ini----------------------------->');
-    print(sumH);
-    hutanghariini.value = sumH;
+    print(sumHhariini);
+    hutanghariini.value = sumHhariini;
+
+    //TODO : CHECK PENAMBAHAN HUTANG INI
+
+    print('sum penjualan hari ini----------------------------->');
+    print(sumP);
 
     // dateFormat.format(DateTime.parse(element!)
 
@@ -193,12 +207,6 @@ class dashboardController extends GetxController {
             dateFormat.format(DateTime.now()))
         .toList();
 
-    // var sumB = filterB
-    //     .map((e) => e.jumlah)
-    //     .fold(0, (previous, current) => previous + current!);
-
-    // dateFormat.format(DateTime.parse(element!)
-
     return transaksihariini.value = filterB.length;
   }
 
@@ -234,7 +242,7 @@ class dashboardController extends GetxController {
         await hutangController().fetchDataHutanglocaldashboard(id_toko);
 
     var sumH = h
-        .map((e) => e.hutang)
+        .map((e) => e.sisaHutang)
         .fold(0, (previous, current) => previous + current!);
 
     print('sum hutang total----------------------------->');
@@ -256,10 +264,8 @@ class dashboardController extends GetxController {
     print('load total hutang------------------------------>');
     List<DataHutang> p =
         await hutangController().fetchDataHutanglocaldashboard(id_toko);
-    var filter = p
-        .where((e) => e.status == 2)
-        .toList()
-        .fold(0, (previousValue, element) => previousValue + element.hutang!);
+    var filter = p.where((e) => e.status == 2).toList().fold(
+        0, (previousValue, element) => previousValue + element.sisaHutang!);
 
     return totalhutang.value = filter;
   }

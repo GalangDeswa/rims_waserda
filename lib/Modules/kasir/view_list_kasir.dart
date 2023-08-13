@@ -8,6 +8,7 @@ import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
+import '../Widgets/buttons.dart';
 import 'controller_kasir.dart';
 
 class list_kasir extends GetView<kasirController> {
@@ -179,7 +180,7 @@ class list_kasir extends GetView<kasirController> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 icon: Icon(FontAwesomeIcons.magnifyingGlass),
-                                hintText: "Nama produk / Nomor barcode"),
+                                hintText: "Nama produk"),
                           ),
                           fit: FlexFit.loose,
                           constraints: BoxConstraints(
@@ -199,7 +200,7 @@ class list_kasir extends GetView<kasirController> {
 
                         dropdownDecoratorProps: DropDownDecoratorProps(
                           dropdownSearchDecoration: InputDecoration(
-                            labelText: "Cari nama produk/barcode",
+                            labelText: "Nama produk",
                             border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10)),
                             focusedBorder: OutlineInputBorder(
@@ -211,12 +212,6 @@ class list_kasir extends GetView<kasirController> {
 
                         onChanged: (value) {
                           controller.tambahKeranjangcache(value!.idLocal);
-                          // controller.isikeranjang(value!.kodeProduk.toString());
-                          // controller.getkeranjang();
-                          //  controller.totalkeranjang();
-                          // controller.totalqty();
-                          // controller.i++;
-                          // print(controller.keranjang_list);
                         },
                         //items: controller.produk_list,
                         itemAsString: (DataProduk u) {
@@ -229,19 +224,15 @@ class list_kasir extends GetView<kasirController> {
                         },
                       )),
                     ),
-                    // icon_button_custom(
-                    //     onPressed: () {
-                    //       Get.toNamed('/tambah_user');
-                    //     },
-                    //     icon: Icons.person_add,
-                    //     container_color: color_template().primary),
-
-                    /* Container(
-                    width: context.width_query * 0.04,
-                    child: TextField(
-                      decoration: InputDecoration(hintText: 'Tambah user'),
+                    Padding(
+                      padding: EdgeInsets.only(right: 5, left: 10),
+                      child: icon_button_custom(
+                          onPressed: () {
+                            controller.fetchProduklocal(controller.id_toko);
+                          },
+                          icon: Icons.refresh,
+                          container_color: color_template().primary),
                     ),
-                  )*/
                   ],
                 );
               }),
@@ -485,7 +476,7 @@ class ProductTilev2 extends GetView<kasirController> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(right: 15),
+                    margin: const EdgeInsets.only(right: 5),
                     padding: const EdgeInsets.all(3),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: color_template().select),
@@ -501,12 +492,32 @@ class ProductTilev2 extends GetView<kasirController> {
                       ),
                     ),
                   ),
-                  Text(controller.cache[index].qty.toString(),
-                      style: font().reguler),
+                  InkWell(
+                    splashColor: color_template().select,
+                    onTap: () {
+                      controller.popeditqty(index);
+                    },
+                    child: Container(
+                      width: 55,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: color_template().primary)),
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: Center(
+                        heightFactor: 1,
+                        child: Text(controller.cache[index].qty.toString(),
+                            style: font().reguler),
+                      ),
+                    ),
+                  ),
                   controller.cache[index].qty >= pp.qty! &&
                           controller.cache[index].idJenisStock == 1
                       ? Container(
-                          margin: const EdgeInsets.only(left: 15, right: 15),
+                          margin: const EdgeInsets.only(
+                            left: 5,
+                          ),
                           padding: const EdgeInsets.all(3),
                           decoration: const BoxDecoration(
                               shape: BoxShape.circle, color: Colors.grey),
@@ -521,7 +532,9 @@ class ProductTilev2 extends GetView<kasirController> {
                             controller.tambahqty(index);
                           },
                           child: Container(
-                            margin: const EdgeInsets.only(left: 15, right: 15),
+                            margin: const EdgeInsets.only(
+                              left: 5,
+                            ),
                             padding: const EdgeInsets.all(3),
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,

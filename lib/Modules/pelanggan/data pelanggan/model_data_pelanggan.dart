@@ -100,6 +100,19 @@ class DataPelanggan {
     // map['detail_item'] = List<dynamic>.from(detailItem!.map((x) => x.toJson()));
     return map;
   }
+
+  Map<String, dynamic> updateInit() {
+    var map = <String, dynamic>{};
+
+    map['id_local'] = idLocal;
+    map['id_toko'] = idToko;
+    map['nama_pelanggan'] = namaPelanggan;
+    map['no_hp'] = noHp;
+    map['sync'] = sync;
+    map['aktif'] = aktif;
+
+    return map;
+  }
 }
 
 // class RiwayatPembelian {

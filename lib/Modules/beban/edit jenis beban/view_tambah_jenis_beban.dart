@@ -50,7 +50,7 @@ class tambah_jenis_beban extends GetView<bebanController> {
                               controller: controller.kategori.value,
                               onChanged: ((String pass) {}),
                               decoration: InputDecoration(
-                                labelText: "Katergori",
+                                labelText: "Kategori beban",
                                 labelStyle: TextStyle(
                                   color: Colors.black87,
                                 ),

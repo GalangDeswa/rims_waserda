@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -224,6 +225,9 @@ class base_menu extends GetView<base_menuController> {
                       leading: Icon(Icons.logout),
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Container(
                     width: context.width_query,
                     color: Colors.black,
@@ -231,7 +235,7 @@ class base_menu extends GetView<base_menuController> {
                     margin: EdgeInsets.symmetric(vertical: 10),
                   ),
                   SizedBox(
-                    height: 5,
+                    height: 10,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -291,6 +295,143 @@ class base_menu extends GetView<base_menuController> {
                         ),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: context.width_query,
+                    color: Colors.black,
+                    height: 0.3,
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Obx(() {
+                    return ListTile(
+                        leading: Icon(Icons.print),
+                        title: DropdownButton<BluetoothDevice>(
+                            hint: Text(
+                              'Pilih bluetooth printer',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            value: controller.selectedPrinter,
+                            items: controller.listPrinter.value
+                                .map((e) => DropdownMenuItem(
+                                      child: Text(e.name!),
+                                      value: e,
+                                    ))
+                                .toList(),
+                            onChanged: (device) async {
+                              controller.loading.value = 'loading';
+                              if (controller.printer.isConnected == true) {
+                                await controller.printer.disconnect();
+                              }
+                              controller.isConnected.value = false;
+                              controller.selectedPrinter = device;
+                              await controller.printer.connect(device!);
+                              if (await controller.printer.isConnected ==
+                                  true) {
+                                controller.isConnected.value = true;
+                                controller.loading.value = 'done';
+                                print(
+                                    'connected printer----------------------------- > ' +
+                                        device.name!);
+                              } else {
+                                print('beelum konek--------------->');
+                              }
+                              print(device.name.toString());
+                              // logic.update();
+                            }),
+                        subtitle: controller.loading.value == ''
+                            ? Text('berlum terhubung')
+                            : controller.loading.value == 'loading'
+                                ? Container(
+                                    margin: EdgeInsets.only(right: 190),
+                                    width: 5,
+                                    height: 20,
+                                    child: CircularProgressIndicator())
+                                : controller.loading.value == 'done'
+                                    ? Text('Terhubung')
+                                    : Text('Printer tidak ditemukan'));
+                  }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: ElevatedButton(
+                              onPressed: () async {
+                                //print('qweqweqweqeqeqweqweqe');
+                                if ((await controller.printer.isConnected)!) {
+                                  if (controller.logo.value == '-') {
+                                    controller.printer
+                                        .printImage(controller.pathImage.value);
+                                  } else {
+                                    controller.printer.printImageBytes(
+                                        base64Decode(controller.logo.value));
+                                  }
+                                  controller.printer.printCustom(
+                                      controller.namatoko.value, 3, 1);
+                                  controller.printer.printCustom(
+                                      controller.alamat_toko.value, 0, 3);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 3);
+                                  controller.printer.printLeftRight(
+                                      controller.dateFormat
+                                          .format(DateTime.now()),
+                                      controller.namauser.value,
+                                      0);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 3);
+                                  controller.printer.printNewLine();
+                                  controller.printer.print3Column(
+                                      '-->', 'Print struk berhasil', '<--', 0);
+                                  controller.printer.printNewLine();
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 3);
+                                  controller.printer.printNewLine();
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 1);
+                                  controller.printer.printImage(
+                                      controller.printstruklogo.value);
+                                  controller.printer.printCustom(
+                                      '*** Powered by RIMS ***', 0, 1);
+                                  controller.printer
+                                      .printCustom('www.rims.co.id', 0, 1);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 1);
+                                  controller.printer.printNewLine();
+                                } else {
+                                  Get.showSnackbar(toast()
+                                      .bottom_snackbar_error(
+                                          'Error', 'Printer belum terkoneksi'));
+                                }
+                                //controller.tesPrint();
+                              },
+                              child: Text('Test printer')),
+                        ),
+                      ),
+                      Container(
+                        width: 50,
+                        margin: EdgeInsets.symmetric(horizontal: 15),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              if (controller.printer.isConnected == true) {
+                                await controller.printer.disconnect();
+                              }
+
+                              await controller.getDevice();
+                              controller.isConnected.value = false;
+                              controller.loading.value = '';
+                            },
+                            child: Icon(Icons.refresh)),
+                      ),
+                    ],
                   ),
                 ],
               ),

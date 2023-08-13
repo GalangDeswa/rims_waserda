@@ -4,16 +4,24 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:group_button/group_button.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
-import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
 import 'package:rims_waserda/Templates/setting.dart';
 
 import '../Widgets/buttons.dart';
 import '../Widgets/card_custom.dart';
 import '../Widgets/header.dart';
 import '../Widgets/keypad.dart';
+import '../pelanggan/data pelanggan/model_data_pelanggan.dart';
+import 'model_meja.dart';
 
-class kasir_keypad extends GetView<kasirController> {
-  const kasir_keypad({Key? key}) : super(key: key);
+class kasir_keypad_prebill extends GetView<kasirController> {
+  const kasir_keypad_prebill(
+      this.total_prebill, this.prebill, this.nomor_meja, this.diskon_kasir,
+      {super.key});
+
+  final int total_prebill;
+  final List<DataMeja> prebill;
+  final String nomor_meja;
+  final int diskon_kasir;
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +73,12 @@ class kasir_keypad extends GetView<kasirController> {
                                     width: 10,
                                   ),
                                   Expanded(
-                                    child: Obx(() {
-                                      return Text(
-                                          'Rp.' +
-                                              controller.nominal.format(
-                                                  double.parse(controller.total
-                                                      .toString())),
-                                          style: font().header_big);
-                                    }),
+                                    child: Text(
+                                        'Rp.' +
+                                            controller.nominal.format(
+                                                double.parse(
+                                                    total_prebill.toString())),
+                                        style: font().header_big),
                                   ),
                                 ],
                               ),
@@ -208,11 +214,13 @@ class kasir_keypad extends GetView<kasirController> {
                                                     color_template().primary),
                                             child: GestureDetector(
                                                 onTap: () {
-                                                  controller.add_5000(controller
-                                                      .keypadController
-                                                      .value
-                                                      .text);
-                                                  controller.balik();
+                                                  controller.add_5000_prebill(
+                                                      controller
+                                                          .keypadController_prebill
+                                                          .value
+                                                          .text);
+                                                  controller.balikprebill(
+                                                      total_prebill.toDouble());
                                                 },
                                                 child: Text(
                                                   '5.000',
@@ -221,9 +229,13 @@ class kasir_keypad extends GetView<kasirController> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              controller.add_10000(controller
-                                                  .keypadController.value.text);
-                                              controller.balik();
+                                              controller.add_10000_prebill(
+                                                  controller
+                                                      .keypadController_prebill
+                                                      .value
+                                                      .text);
+                                              controller.balikprebill(
+                                                  total_prebill.toDouble());
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(10),
@@ -238,9 +250,13 @@ class kasir_keypad extends GetView<kasirController> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              controller.add_20000(controller
-                                                  .keypadController.value.text);
-                                              controller.balik();
+                                              controller.add_20000_prebill(
+                                                  controller
+                                                      .keypadController_prebill
+                                                      .value
+                                                      .text);
+                                              controller.balikprebill(
+                                                  total_prebill.toDouble());
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(10),
@@ -255,9 +271,13 @@ class kasir_keypad extends GetView<kasirController> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              controller.add_50000(controller
-                                                  .keypadController.value.text);
-                                              controller.balik();
+                                              controller.add_50000_prebill(
+                                                  controller
+                                                      .keypadController_prebill
+                                                      .value
+                                                      .text);
+                                              controller.balikprebill(
+                                                  total_prebill.toDouble());
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(10),
@@ -272,9 +292,13 @@ class kasir_keypad extends GetView<kasirController> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              controller.add_100000(controller
-                                                  .keypadController.value.text);
-                                              controller.balik();
+                                              controller.add_100000_prebill(
+                                                  controller
+                                                      .keypadController_prebill
+                                                      .value
+                                                      .text);
+                                              controller.balikprebill(
+                                                  total_prebill.toDouble());
                                             },
                                             child: Container(
                                               padding: const EdgeInsets.all(10),
@@ -301,11 +325,13 @@ class kasir_keypad extends GetView<kasirController> {
                                               keyboardType:
                                                   TextInputType.number,
                                               controller: controller
-                                                  .keypadController.value,
+                                                  .keypadController_prebill
+                                                  .value,
                                               onChanged: (value) {
                                                 print(value);
-                                                print('keypad chanhge');
-                                                controller.balik();
+                                                print('keypad prebill change');
+                                                controller.balikprebill(
+                                                    total_prebill.toDouble());
                                               },
                                               // readOnly: true,
                                               decoration: const InputDecoration(
@@ -322,8 +348,8 @@ class kasir_keypad extends GetView<kasirController> {
                                           Expanded(
                                               child: Container(
                                             child: TextFormField(
-                                              controller:
-                                                  controller.kembalian.value,
+                                              controller: controller
+                                                  .kembalian_prebill.value,
                                               onChanged: (val) {
                                                 print(
                                                     'kembalian kasir--------->' +
@@ -348,15 +374,19 @@ class kasir_keypad extends GetView<kasirController> {
               Container(
                 width: context.width_query / 3.5,
                 child: KeyPad(
-                  keypadController: controller.keypadController.value,
+                  keypadController: controller.keypadController_prebill.value,
+                  prebill: prebill,
+                  nomor_meja: nomor_meja,
+                  total_prebill: total_prebill,
+                  diskon_kasir: diskon_kasir,
                   onChange: (String value) {
                     // controller.keypadController.value.text = value;
-                    controller.bayarvalue.value =
+                    controller.bayarvalue_prebill.value =
                         int.parse(value.toString().replaceAll(',', ''));
-                    controller.balik();
+                    controller.balikprebill(total_prebill.toDouble());
                     print(value + '--> mappeed string');
                     print('bayar value ===> ' +
-                        controller.bayarvalue.value.toString());
+                        controller.bayarvalue_prebill.value.toString());
                     // controller.change();
                   },
                   onSubmit: (String pin) {},

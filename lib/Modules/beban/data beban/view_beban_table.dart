@@ -89,8 +89,8 @@ class beban_table extends GetView<bebanController> {
                       //width: 200,
                       child: TextFormField(
                         controller: controller.search.value,
-                        onChanged: ((String pass) {
-                          controller.searchbebanlocal();
+                        onChanged: ((String pass) async {
+                          await controller.searchbebanlocal();
                         }),
                         decoration: InputDecoration(
                           labelText: "cari beban",

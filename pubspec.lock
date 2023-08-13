@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  blue_thermal_printer:
+    dependency: "direct main"
+    description:
+      name: blue_thermal_printer
+      sha256: "2b8a93f90be335494d2172dbc869c31b95638087f89591b4ad69fd9305eaf80b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.3"
   boolean_selector:
     dependency: transitive
     description:
@@ -297,14 +305,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.6"
-  endless:
-    dependency: transitive
-    description:
-      name: endless
-      sha256: "2016ce4df3cb44ac8ea505207b8954f46a3400ce8ba8026a914607499cae3bb2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.3"
   fake_async:
     dependency: transitive
     description:
@@ -696,6 +696,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
+  intro_slider:
+    dependency: "direct main"
+    description:
+      name: intro_slider
+      sha256: c6b3e830b01859446ea008a32d753d302d19805fdf1f775fb857a1e3590aead9
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   js:
     dependency: transitive
     description:
@@ -784,14 +792,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.0"
-  nested:
-    dependency: transitive
-    description:
-      name: nested
-      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   nm:
     dependency: transitive
     description:
@@ -808,14 +808,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
-  paginated_search_bar:
-    dependency: "direct main"
-    description:
-      name: paginated_search_bar
-      sha256: "61ad88426b55586e688b7f650a57f560b04ea8f89fd57fbb52aafa62b007dd97"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.2"
   path:
     dependency: transitive
     description:
@@ -984,14 +976,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
-  provider:
-    dependency: "direct main"
-    description:
-      name: provider
-      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.5"
   quiver:
     dependency: transitive
     description:
@@ -1045,14 +1029,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
-  state_property:
-    dependency: transitive
-    description:
-      name: state_property
-      sha256: "9762a86f4f0c30c264734069cc10899a211ab4869a392289ac4eddb8f3dbf6dc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
   stream_channel:
     dependency: transitive
     description:

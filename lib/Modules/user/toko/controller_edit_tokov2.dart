@@ -146,8 +146,8 @@ class edittokov2Controller extends GetxController {
       final image = await ImagePicker().pickImage(
           source: ImageSource.camera,
           imageQuality: 85,
-          maxHeight: 300,
-          maxWidth: 300);
+          maxHeight: 200,
+          maxWidth: 200);
       if (image == null) return;
       pickedImageFile = File(image.path);
       final bytes = File(image!.path).readAsBytesSync();
@@ -167,8 +167,8 @@ class edittokov2Controller extends GetxController {
       final image = await ImagePicker().pickImage(
           source: ImageSource.gallery,
           imageQuality: 85,
-          maxHeight: 300,
-          maxWidth: 300);
+          maxHeight: 200,
+          maxWidth: 200);
       if (image == null) return;
       pickedImageFile = File(image.path);
       final bytes = File(image!.path).readAsBytesSync();
