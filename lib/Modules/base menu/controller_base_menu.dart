@@ -9,13 +9,18 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:restart_app/restart_app.dart';
+import 'package:rims_waserda/Modules/Widgets/buttons.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_base.dart';
 import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_base_v2.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/user/data%20user/view_data_user_base.dart';
+import 'package:rims_waserda/db_helper.dart';
 
 import '../../Services/handler.dart';
+import '../../Templates/setting.dart';
+import '../Widgets/header.dart';
 import '../Widgets/toast.dart';
 import '../beban/data beban/controller_beban.dart';
 import '../history/Controller_history.dart';
@@ -172,68 +177,147 @@ class base_menuController extends GetxController {
     return uniqueId;
   }
 
+  resetapp() async {
+    await DBHelper().deleteDatabase();
+    await GetStorage().erase();
+    //await DBHelper().initDb();
+    // Get.offAllNamed('/splash');
+    Restart.restartApp();
+  }
+
+  test() async {
+    await produkController().fetchProduk();
+    await bebanController().fetchDataBeban();
+    await historyController().fetchPenjualan();
+  }
+
+  resetpop() {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Reset Aplikasi',
+          icon: Icons.warning,
+          iscenter: true,
+          icon_color: color_template().tritadery,
+          base_color: Colors.white),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+              child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  width: context.width_query / 2.5,
+                  // height: context.height_query / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.symmetric(vertical: 50),
+                        child: Text(
+                            'Apakah anda ingin reset aplikasi? (semua data akan hilang)'),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 15),
+                              child: button_border_custom(
+                                  onPressed: () async {
+                                    // await produkController().fetchProduk();
+                                    resetapp();
+                                  },
+                                  child: Text(
+                                    'Reset',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: color_template().tritadery),
+                                  ),
+                                  height: 50,
+                                  width: 200),
+                            ),
+                          ),
+                          Expanded(
+                            child: button_solid_custom(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text(
+                                  'batal',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                height: 50,
+                                width: 200),
+                          )
+                        ],
+                      )
+                    ],
+                  )));
+        },
+      ),
+    ));
+  }
+
   syncAll(id_toko) async {
-    try {
-      print("id toko---------------------------->");
-      print(id_toko);
+    print("id toko---------------------------->");
+    print(id_toko);
 
-      print("sync produk jenis---------------------------->");
-      await produkController().syncProdukJenis(id_toko);
-      point_loading.value = 0.1;
+    print("sync produk jenis---------------------------->");
+    await produkController().syncProdukJenis(id_toko);
+    point_loading.value = 0.1;
 
-      print("sync produk---------------------------->");
-      await produkController().syncProduk(id_toko);
-      //get.find membuat refresh ui?
-      await Get.find<produkController>().initProdukToLocal(id_toko);
-      point_loading.value = 0.2;
+    print("sync produk---------------------------->");
+    await produkController().syncProduk(id_toko);
+    //get.find membuat refresh ui?
+    await Get.find<produkController>().initProdukToLocal(id_toko);
+    point_loading.value = 0.2;
 
-      print("sync beban jenis--------------------------->");
-      await bebanController().syncBebanKategori(id_toko);
-      point_loading.value = 0.3;
+    print("sync beban jenis--------------------------->");
+    await bebanController().syncBebanKategori(id_toko);
+    point_loading.value = 0.3;
 
-      print("sync beban---------------------------->");
-      await bebanController().syncBeban(id_toko);
-      await Get.find<bebanController>().initBebanToLocal(id_toko);
-      point_loading.value = 0.5;
+    print("sync beban---------------------------->");
+    await bebanController().syncBeban(id_toko);
+    await Get.find<bebanController>().initBebanToLocal(id_toko);
+    point_loading.value = 0.5;
 
-      print("sync pelanggan---------------------------->");
-      await pelangganController().syncPelanggan(id_toko);
-      await Get.find<pelangganController>().initPelangganToLocal(id_toko);
-      point_loading.value = 0.6;
+    print("sync pelanggan---------------------------->");
+    await pelangganController().syncPelanggan(id_toko);
+    await Get.find<pelangganController>().initPelangganToLocal(id_toko);
+    point_loading.value = 0.6;
 
-      print("sync hutang---------------------------->");
-      await hutangController().syncHutang(id_toko);
-      await Get.find<hutangController>().initHutangToLocal(id_toko);
-      point_loading.value = 0.7;
+    print("sync hutang---------------------------->");
+    await hutangController().syncHutang(id_toko);
+    await Get.find<hutangController>().initHutangToLocal(id_toko);
+    point_loading.value = 0.7;
 
-      print("sync hutang detail---------------------------->");
-      await hutangController().syncHutangDetail(id_toko);
-      await Get.find<hutangController>().initHutangDetailToLocal(id_toko);
-      point_loading.value = 0.8;
+    print("sync hutang detail---------------------------->");
+    await hutangController().syncHutangDetail(id_toko);
+    await Get.find<hutangController>().initHutangDetailToLocal(id_toko);
+    point_loading.value = 0.8;
 
-      print("sync penjualan---------------------------->");
-      await historyController().syncPenjualan(id_toko);
-      await Get.find<historyController>().initPenjualanToLocal(id_toko);
-      point_loading.value = 0.9;
+    print("sync penjualan---------------------------->");
+    await historyController().syncPenjualan(id_toko);
+    await Get.find<historyController>().initPenjualanToLocal(id_toko);
+    point_loading.value = 0.9;
 
-      print("sync penjualan detail---------------------------->");
-      await detailpenjualanController().syncPenjualanDetail(id_toko);
-      await Get.find<detailpenjualanController>()
-          .initPenjualanDetailToLocal(id_toko);
+    print("sync penjualan detail---------------------------->");
+    await detailpenjualanController().syncPenjualanDetail(id_toko);
+    await Get.find<detailpenjualanController>()
+        .initPenjualanDetailToLocal(id_toko);
 
-      await Get.find<historyController>()
-          .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
+    await Get.find<historyController>()
+        .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
 
-      await Get.find<dashboardController>().loadall();
+    await Get.find<dashboardController>().loadall();
 
-      point_loading.value = 1.0;
-    } catch (e) {
-      print(
-          '-----------------------------------------------------------------------error------------------------------------------------------------------------------------------------------------->');
-      print(e);
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('error', e.toString()));
-    }
+    point_loading.value = 1.0;
   }
 
   List<Widget> views_kasir = const [

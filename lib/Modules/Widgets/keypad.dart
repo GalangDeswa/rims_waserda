@@ -16,6 +16,8 @@ class KeyPad extends GetView<kasirController> {
   final String? nomor_meja;
   final int? total_prebill;
   final int? diskon_kasir;
+  final int? subtotal;
+  final int? ppn;
 
   KeyPad(
       {required this.onChange,
@@ -24,7 +26,9 @@ class KeyPad extends GetView<kasirController> {
       this.prebill,
       this.nomor_meja,
       this.total_prebill,
-      this.diskon_kasir});
+      this.diskon_kasir,
+      this.subtotal,
+      this.ppn});
 
   @override
   Widget build(BuildContext context) {
@@ -89,47 +93,83 @@ class KeyPad extends GetView<kasirController> {
                 padding: EdgeInsets.all(10),
                 child: IconButton(
                     onPressed: () async {
-                      if (controller.bayarvalue.value <
-                              controller.total.value &&
-                          controller.groupindex.value != 2) {
-                        Get.showSnackbar(toast().bottom_snackbar_error(
-                            'Gagal', "Jumlah bayaran tidak mencukupi"));
+                      if (prebill == null) {
+                        if (controller.groupindex.value == 9) {
+                          Get.showSnackbar(toast().bottom_snackbar_error(
+                              'Gagal', 'Pilih metode bayar terlebih dahulu'));
+                        } else {
+                          if (controller.groupindex.value == 2) {
+                            if (controller.id_pelanggan.value.isEmpty) {
+                              Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Gagal', 'Pilih pelanggan terlebih dahulu'));
+                            } else {
+                              popscreen().popkonfirmasi(context, controller);
+                            }
+                          } else {
+                            if (keypadController.text.isEmpty) {
+                              Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Gagal',
+                                  'masukan jumlah bayar terlebih dahulu'));
+                            } else {
+                              if (controller.bayarvalue.value <
+                                      controller.total.value &&
+                                  controller.groupindex.value != 2) {
+                                Get.showSnackbar(toast().bottom_snackbar_error(
+                                    'Gagal', "Jumlah bayaran tidak mencukupi"));
+                              } else {
+                                popscreen().popkonfirmasi(context, controller);
+                              }
+                            }
+                          }
+                        }
                       } else {
                         if (controller.groupindex.value == 9) {
                           Get.showSnackbar(toast().bottom_snackbar_error(
                               'Gagal', 'Pilih metode bayar terlebih dahulu'));
-                        } else if (controller.groupindex.value == 2) {
-                          if (controller.id_pelanggan.value.isEmpty) {
-                            Get.showSnackbar(toast().bottom_snackbar_error(
-                                'Gagal', 'Pilih pelanggan terlebih dahulu'));
-                          } else if (prebill == null) {
-                            popscreen().popkonfirmasi(context, controller);
-                          } else {
-                            List<DataMeja> items =
-                                await controller.fetchmejadetail(nomor_meja);
-                            popscreen().popkonfirmasiprebill(
-                                context,
-                                controller,
-                                items,
-                                nomor_meja!,
-                                total_prebill!,
-                                diskon_kasir);
-                          }
-                        } else if (keypadController.text.isEmpty) {
-                          Get.showSnackbar(toast().bottom_snackbar_error(
-                              'Gagal', 'masukan jumlah bayar terlebih dahulu'));
-                        } else if (prebill == null) {
-                          popscreen().popkonfirmasi(context, controller);
-                        } else if (controller.bayarvalue_prebill.value <
-                                controller.totalprebill.value &&
-                            controller.groupindex.value != 2) {
-                          Get.showSnackbar(toast().bottom_snackbar_error(
-                              'Gagal', 'Jumlah pembayaran tidak mencukupi'));
                         } else {
-                          List<DataMeja> items =
-                              await controller.fetchmejadetail(nomor_meja);
-                          popscreen().popkonfirmasiprebill(context, controller,
-                              items, nomor_meja!, total_prebill!, diskon_kasir);
+                          if (controller.groupindex.value == 2) {
+                            if (controller.id_pelanggan.value.isEmpty) {
+                              Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Gagal', 'Pilih pelanggan terlebih dahulu'));
+                            } else {
+                              List<DataMeja> items =
+                                  await controller.fetchmejadetail(nomor_meja);
+                              popscreen().popkonfirmasiprebill(
+                                  context,
+                                  controller,
+                                  items,
+                                  nomor_meja!,
+                                  total_prebill!,
+                                  diskon_kasir,
+                                  subtotal,
+                                  ppn);
+                            }
+                          } else {
+                            if (keypadController.text.isEmpty) {
+                              Get.showSnackbar(toast().bottom_snackbar_error(
+                                  'Gagal',
+                                  'masukan jumlah bayar terlebih dahulu'));
+                            } else {
+                              if (controller.bayarvalue_prebill.value <
+                                      total_prebill!.toInt() &&
+                                  controller.groupindex.value != 2) {
+                                Get.showSnackbar(toast().bottom_snackbar_error(
+                                    'Gagal', "Jumlah bayaran tidak mencukupi"));
+                              } else {
+                                List<DataMeja> items = await controller
+                                    .fetchmejadetail(nomor_meja);
+                                popscreen().popkonfirmasiprebill(
+                                    context,
+                                    controller,
+                                    items,
+                                    nomor_meja!,
+                                    total_prebill!,
+                                    diskon_kasir,
+                                    subtotal,
+                                    ppn);
+                              }
+                            }
+                          }
                         }
                       }
                     },

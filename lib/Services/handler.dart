@@ -22,7 +22,8 @@ class check_conn {
         }
       } on SocketException catch (_) {
         print('not connected');
-        Get.snackbar('Error', 'Tidak bisa mengakses internet');
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
       }
     } else if (connectivityResult == ConnectivityResult.wifi) {
       //Get.snackbar('conn', 'wifi');
@@ -34,11 +35,13 @@ class check_conn {
         }
       } on SocketException catch (_) {
         print('not connected');
-        Get.snackbar('Error', 'Tidak bisa mengakses internet');
+        Get.showSnackbar(
+            toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
       }
     } else {
       // AppAlert.getOnlyAlert(FAILED, NO_INTERNET_CONNECTION);
-      Get.snackbar("Gagal", "tidak ada jaringan");
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
       //     backgroundColor: AppColor.APP_BUTTON, colorText: Colors.white);
     }
     return false;
@@ -298,28 +301,33 @@ class REST extends GetConnect {
   //-------------------------------------------------------------------------
 
   static Future<dynamic> produkAll(String token, idtoko, search) async {
-    var response = await http.post(link().POST_produkall,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-          'search': search,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'PRODUKALL network handler----------------------------------------->');
+    try {
+      var response = await http.post(link().POST_produkall,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+            'search': search,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'PRODUKALL network handler----------------------------------------->');
 
-      var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
+        var data = json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
 
-      print(response.statusCode);
-      return (data);
-    } else {
-      print(
-          'PRODUKALLnetwork handler----------------------------------------->');
-      print('gagal PRODUKALL');
-      print(response.statusCode);
-      print(response.body);
+        print(response.statusCode);
+        return (data);
+      } else {
+        print(
+            'PRODUKALLnetwork handler----------------------------------------->');
+        print('gagal PRODUKALL');
+        print(response.statusCode);
+        print(response.body);
+      }
+    } catch (e) {
+      print(e);
+      Get.showSnackbar(toast().bottom_snackbar_error('error', e.toString()));
     }
   }
 
@@ -331,36 +339,40 @@ class REST extends GetConnect {
 
   static Future<dynamic> produkAllv2(String token, idtoko) async {
     //Get.dialog(showloading());
+    try {
+      var response = await http.post(link().POST_produkall,
+          body: ({
+            'token': token,
+            'id_toko': idtoko,
+          }));
+      if (response.statusCode == 200) {
+        print(
+            'PRODUKALL V2 network handler----------------------------------------->');
 
-    var response = await http.post(link().POST_produkall,
-        body: ({
-          'token': token,
-          'id_toko': idtoko,
-        }));
-    if (response.statusCode == 200) {
-      print(
-          'PRODUKALL V2 network handler----------------------------------------->');
-
-      var data = await json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
-      // var l = [];
-      //data = l;
-      //print(l.length);
-      print(data['data']);
-      print(response.statusCode);
-      //Get.back(closeOverlays: true);
-      return data;
-    } else {
-      var data = json.decode(response.body);
-      print(data['message']);
-      print(
-          'PRODUKALLnetwork handler----------------------------------------->');
-      print('gagal PRODUKALL');
-      print(response.statusCode);
-      print(response.body);
-      return Future.error(
-          response.statusCode.toString() + ' - ' + 'Fetch produk all gagal');
+        var data = await json.decode(response.body);
+        //var data = response.body;
+        //var data = response;
+        // var l = [];
+        //data = l;
+        //print(l.length);
+        // print(data['data']);
+        print(response.statusCode);
+        //Get.back(closeOverlays: true);
+        return data;
+      } else {
+        var data = json.decode(response.body);
+        print(data['message']);
+        print(
+            'PRODUKALLnetwork handler----------------------------------------->');
+        print('gagal PRODUKALL');
+        print(response.statusCode);
+        print(response.body);
+        return Future.error(
+            response.statusCode.toString() + ' - ' + 'Fetch produk all gagal');
+      }
+    } catch (e) {
+      print(e);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
   }
 
@@ -1331,7 +1343,7 @@ class REST extends GetConnect {
       var data = json.decode(response.body);
       //var data = response.body;
       //var data = response;
-      print(data);
+      // print(data);
       print(response.statusCode);
       return (data);
     } else {
@@ -1364,6 +1376,7 @@ class REST extends GetConnect {
     metode_bayar,
     status,
     diskon_kasir,
+    ppn,
   }) async {
     try {
       var response = await http.post(link().POST_syncpenjualan,
@@ -1386,6 +1399,7 @@ class REST extends GetConnect {
             'metode_bayar': metode_bayar.toString(),
             'status': status.toString(),
             'diskon_kasir': diskon_kasir.toString(),
+            'ppn': ppn.toString(),
           }));
       if (response.statusCode == 200) {
         print(
@@ -1394,7 +1408,7 @@ class REST extends GetConnect {
         var data = json.decode(response.body);
         //var data = response.body;
         //var data = response;
-        print(data);
+        // print(data);
         print(response.statusCode);
         return (data);
       } else {
@@ -1495,7 +1509,7 @@ class REST extends GetConnect {
         var data = json.decode(response.body);
         //var data = response.body;
         //var data = response;
-        print(data);
+        // print(data);
         print(response.statusCode);
         return (data);
       } else {
@@ -1994,6 +2008,7 @@ class REST extends GetConnect {
         return (data);
       }
     } catch (e) {
+      print(e);
       Get.back();
       Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }

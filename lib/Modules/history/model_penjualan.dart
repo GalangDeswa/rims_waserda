@@ -65,7 +65,8 @@ class DataPenjualan {
       this.idPelanggan,
       required this.aktif,
       this.idHutang,
-      this.diskonKasir});
+      this.diskonKasir,
+      this.ppn});
 
   int? id;
   String? idLocal;
@@ -88,33 +89,35 @@ class DataPenjualan {
   String aktif;
   String? idHutang;
   int? diskonKasir;
+  int? ppn;
 
   // List<DetailItem>? detailItem;
 
   factory DataPenjualan.fromJson(Map<String, dynamic> json) => DataPenjualan(
-      id: json["id"],
-      idLocal: json["id_local"],
-      meja: json["meja"] ?? '0',
-      idToko: json["id_toko"],
-      idUser: json["id_user"],
-      idPelanggan: json["id_pelanggan"] ?? '0',
-      namaPelanggan: json["nama_pelanggan"] ?? '-',
-      namaUser: json["nama_user"],
-      totalItem: json["total_item"],
-      diskonTotal: json["diskon_total"],
-      subTotal: json["sub_total"],
-      total: json["total"],
-      bayar: json["bayar"] ?? 0.toString(),
-      kembalian: json["kembalian"],
-      tglPenjualan: json["tgl_penjualan"],
-      metodeBayar: json["metode_bayar"],
-      status: json["status"],
-      sync: json["sync"],
-      aktif: json["aktif"],
-      idHutang: json["id_hutang"] ?? '0',
-      diskonKasir: json["diskon_kasir"]
-      // detailItem: List<DetailItem>.from(
-      //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
+        id: json["id"],
+        idLocal: json["id_local"],
+        meja: json["meja"] ?? '0',
+        idToko: json["id_toko"],
+        idUser: json["id_user"],
+        idPelanggan: json["id_pelanggan"] ?? '0',
+        namaPelanggan: json["nama_pelanggan"] ?? '-',
+        namaUser: json["nama_user"],
+        totalItem: json["total_item"],
+        diskonTotal: json["diskon_total"],
+        subTotal: json["sub_total"],
+        total: json["total"],
+        bayar: json["bayar"] ?? 0.toString(),
+        kembalian: json["kembalian"],
+        tglPenjualan: json["tgl_penjualan"],
+        metodeBayar: json["metode_bayar"],
+        status: json["status"],
+        sync: json["sync"],
+        aktif: json["aktif"],
+        idHutang: json["id_hutang"] ?? '0',
+        diskonKasir: json["diskon_kasir"],
+        ppn: json["ppn"],
+        // detailItem: List<DetailItem>.from(
+        //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -139,6 +142,7 @@ class DataPenjualan {
         "aktif": aktif,
         "id_hutang": idHutang,
         "diskon_kasir": diskonKasir,
+        "ppn": ppn,
         //   "detail_item": List<dynamic>.from(detailItem!.map((x) => x.toJson())),
       };
 
@@ -165,6 +169,7 @@ class DataPenjualan {
     map['aktif'] = aktif;
     map['id_hutang'] = idHutang ?? '0';
     map['diskon_kasir'] = diskonKasir;
+    map['ppn'] = ppn;
 
     return map;
   }
@@ -192,6 +197,7 @@ class DataPenjualan {
     map['aktif'] = aktif;
     map['id_hutang'] = idHutang ?? '0';
     map['diskon_kasir'] = diskonKasir;
+    map['ppn'] = ppn;
 
     return map;
   }

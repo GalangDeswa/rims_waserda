@@ -24,6 +24,7 @@ class bebanController extends GetxController {
     super.onInit();
     print('----------------------bebancon init--------------------');
     fetchJenisBebanlocal(id_toko);
+    fetchBebanlocalhariini(id_toko);
     fetchBebanlocal(id_toko);
   }
 
@@ -414,9 +415,9 @@ class bebanController extends GetxController {
 
       // return [];
     } else {
-      // Get.back(closeOverlays: true);
-      // Get.showSnackbar(
-      //     toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
     }
   }
 
@@ -561,6 +562,10 @@ class bebanController extends GetxController {
 
   var databebanlistlocal = <DataBeban>[].obs;
   var jenisbebanlistlocal = <DataJenisBeban>[].obs;
+  String? databebanlistlocalval;
+  var databebanlistlocalv2 = <DataBeban>[].obs;
+
+  var pilihbeban = '-'.obs;
 
   fetchBebansync(id_toko) async {
     print('-------------------fetch beban sync---------------------');
@@ -585,6 +590,20 @@ class bebanController extends GetxController {
         ? query.map((e) => DataBeban.fromJson(e)).toList()
         : [];
     databebanlistlocal.value = beban;
+    // print('fect produk local --->' + produk.toList().toString());
+    succ.value = true;
+    return beban;
+  }
+
+  fetchBebanlocalhariini(id_toko) async {
+    print('-------------------fetch beban local---------------------');
+    succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT * FROM beban_local WHERE id_toko = $id_toko AND aktif = "Y" GROUP BY nama ORDER BY ID DESC');
+    List<DataBeban> beban = query.isNotEmpty
+        ? query.map((e) => DataBeban.fromJson(e)).toList()
+        : [];
+    databebanlistlocalv2.value = beban;
     // print('fect produk local --->' + produk.toList().toString());
     succ.value = true;
     return beban;
@@ -616,6 +635,9 @@ class bebanController extends GetxController {
   }
 
   //DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+  var bebanharian = <DataBeban>[].obs;
+
+  //TODO : check beban check diskon bayar kasir kalok di check via persen
 
   bebanTambahlocal() async {
     print('-------------------tambah beban local---------------------');
@@ -647,6 +669,7 @@ class bebanController extends GetxController {
       print('id user------------>');
       print(id_user);
       await fetchBebanlocal(id_toko);
+      await fetchBebanlocalhariini(id_toko);
       await Get.find<dashboardController>().loadbebanhariini();
       await Get.find<dashboardController>().loadpendapatanhariini();
       await Get.find<dashboardController>().loadpendapatantotal();
@@ -667,6 +690,49 @@ class bebanController extends GetxController {
     //   Get.showSnackbar(
     //       toast().bottom_snackbar_error('error', 'gagal tambah data local'));
     // }
+  }
+
+  bebanTambahlocalhariini() async {
+    print(
+        '-------------------tambah beban local hari ini---------------------');
+
+    Get.dialog(showloading(), barrierDismissible: false);
+
+    var query = await DBHelper().INSERT(
+        'beban_local',
+        DataBeban(
+                idLocal: bebanharian.map((e) => e.idLocal).first,
+                aktif: 'Y',
+                sync: 'N',
+                idToko: int.parse(id_toko),
+                idKtrBeban: bebanharian.map((e) => e.idKtrBeban).first,
+                namaKtrBeban: bebanharian.map((e) => e.namaKtrBeban).first,
+                idUser: bebanharian.map((e) => e.idUser).first,
+                nama: bebanharian.map((e) => e.nama).first,
+                keterangan: bebanharian.map((e) => e.keterangan).first,
+                tgl: datedata.first!.toString(),
+                jumlah: jumlahbeban.value.toInt())
+            .toMapForDb());
+
+    if (query != null) {
+      print(query);
+      print('id user------------>');
+      print(id_user);
+      await fetchBebanlocal(id_toko);
+      await fetchBebanlocalhariini(id_toko);
+      await Get.find<dashboardController>().loadbebanhariini();
+      await Get.find<dashboardController>().loadpendapatanhariini();
+      await Get.find<dashboardController>().loadpendapatantotal();
+      clear();
+      pilihbeban.value = '-';
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('Sukses', 'Produk berhasil ditambah'));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('error', 'gagal tambah data local'));
+    }
   }
 
   fetchJenisBebansync(id_toko) async {

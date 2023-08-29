@@ -435,7 +435,7 @@ class ProductTilev2 extends GetView<kasirController> {
 
           String display_diskon = persen!.toStringAsFixed(0);
           var pp = controller.produklistlocal
-              .where((e) => e.id == controller.cache[index].id)
+              .where((e) => e.idLocal == controller.cache[index].idLocal)
               .first;
           return DataRow(cells: [
             DataCell(

@@ -51,6 +51,8 @@ class editprodukController extends GetxController {
         ? checkbarcode.value = false
         : checkbarcode.value = true;
 
+    data.diskonBarang == 0 ? metode_diskon.value = 9 : metode_diskon.value = 1;
+
     data.image == '' || data.image == null || data.image == '-'
         ? checkfoto.value = false
         : checkfoto.value = true;
@@ -70,6 +72,8 @@ class editprodukController extends GetxController {
     print(jenisstokval);
     jj.value = data.idJenisStock.toString();
     cekfoto();
+    print('check metode diskon');
+    print(metode_diskon);
   }
 
   var check = false.obs;
@@ -77,6 +81,7 @@ class editprodukController extends GetxController {
   var checkbarcode = false.obs;
 
   var barcode = TextEditingController().obs;
+  var metode_diskon = 9.obs;
 
   cekfoto() {
     print('---------------------------------------------------- chek foto-->');
@@ -276,9 +281,6 @@ class editprodukController extends GetxController {
     return x;
   }
 
-  //TODO : coba fix nama jenis bad state karna pas edit produk, jenisnya ke hapus\
-  //TODO : chek update sesuatu trus di tempat lain ke update jugak gak cuman nambah kalok di tambah
-
   ProdukEditlocal() async {
     print('-------------------edit Produk local---------------------');
 
@@ -297,7 +299,10 @@ class editprodukController extends GetxController {
                 idUser: id_user,
                 qty: data.qty,
                 deskripsi: desc.value.text,
-                diskonBarang: int.parse(jumlahdiskon.value.toInt().toString()),
+                diskonBarang: metode_diskon.value == 1
+                    ? int.parse(jumlahdiskon.value.toInt().toString())
+                    : (jumlahdiskon.value.round() / jumlahharga.value * 100)
+                        .toInt(),
                 harga: int.parse(jumlahharga.value.toString()),
                 hargaModal: int.parse(jumlahhargamodal.value.toString()),
                 namaProduk: nama_produk.value.text,

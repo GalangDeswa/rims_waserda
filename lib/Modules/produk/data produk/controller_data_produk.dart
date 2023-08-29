@@ -46,6 +46,8 @@ class produkController extends GetxController {
     print('produk controller--------------------------------------->');
   }
 
+  var metode_diskon = 9.obs;
+
   final nominal = NumberFormat("#,##0");
   var formKeyproduk = GlobalKey<FormState>().obs;
   var formKeyjenis = GlobalKey<FormState>().obs;
@@ -219,45 +221,40 @@ class produkController extends GetxController {
     print('-------------------fetchProduk---------------------');
     //succ.value = false;
 
-    try {
-      var checkconn = await check_conn.check();
-      if (checkconn == true) {
-        var produk = await REST.produkAllv2(token, id_toko);
-        if (produk != null) {
-          print('-------------------dataproduk---------------');
-          //   succ.value = true;
+    var checkconn = await check_conn.check();
+    if (checkconn == true) {
+      var produk = await REST.produkAllv2(token, id_toko);
+      if (produk != null) {
+        print('-------------------dataproduk---------------');
+        //   succ.value = true;
 
-          var dataProduk = ModelProduk.fromJson(produk);
-          // if (produk['success'] == false) {
-          //   succ.value = false;
-          //   print('faslese');
-          //   print(produk['messages']);
-          //   // produklist.value = [];
-          // } else {
-          //   succ.value = true;
-          // }
-          //produklist.value = dataProduk.data;
+        var dataProduk = ModelProduk.fromJson(produk);
+        // if (produk['success'] == false) {
+        //   succ.value = false;
+        //   print('faslese');
+        //   print(produk['messages']);
+        //   // produklist.value = [];
+        // } else {
+        //   succ.value = true;
+        // }
+        //produklist.value = dataProduk.data;
 
-          produklist.value = dataProduk.data;
+        produklist.value = dataProduk.data;
 
-          print('--------------------list produk---------------');
-          print(produklist);
+        print('--------------------list produk---------------');
+        print(produklist);
 
-          return produklist;
-        } else {
-          Get.back(closeOverlays: true);
-          Get.showSnackbar(toast()
-              .bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
-          return Future.error('fetch produk gagal');
-        }
+        return produklist;
       } else {
         Get.back(closeOverlays: true);
         Get.showSnackbar(
             toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+        return Future.error('fetch produk gagal');
       }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    } else {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
     }
 
     // return [];
@@ -581,7 +578,10 @@ class produkController extends GetxController {
                 qty: jenisstokval == '1' ? int.parse(qty.value.text) : 0,
                 harga: int.parse(jumlahharga.value.toString()),
                 hargaModal: int.parse(jumlahhargamodal.value.toString()),
-                diskonBarang: int.parse(jumlahdiskon.value.toInt().toString()),
+                diskonBarang: metode_diskon.value == 1
+                    ? int.parse(jumlahdiskon.value.toInt().toString())
+                    : (jumlahdiskon.value.round() / jumlahharga.value * 100)
+                        .toInt(),
                 barcode: barcode.value.text.isEmpty
                     ? barcode.value.text = '-'
                     : barcode.value.text,

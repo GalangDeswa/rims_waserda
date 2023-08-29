@@ -2,8 +2,6 @@ class server {
   final String host = 'https://rims.co.id/rimspos-standar/api-pos/';
 }
 
-//TODO : FINALISASI UI/TEST
-
 class link {
   final Uri POST_edittoko = Uri.parse(server().host + 'edittoko');
 

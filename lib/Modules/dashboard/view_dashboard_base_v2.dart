@@ -171,7 +171,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             subtitle: Text(
-                                              'Pendapatan hari ini',
+                                              'Kas hari ini',
                                               style:
                                                   font().header_black_nonbold,
                                             ),
@@ -325,12 +325,32 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .boxArchive,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                         controller.nominal
                                                             .format(controller
                                                                 .totalproduk
                                                                 .value),
-                                                        style: font().reguler,
+                                                        style:
+                                                            font().reguler_bold,
                                                       ),
                                                       subtitle: Text(
                                                           'Total produk',
@@ -351,13 +371,32 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .person,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                           controller.nominal
                                                               .format(controller
                                                                   .totalpelanggan
                                                                   .value),
-                                                          style:
-                                                              font().reguler),
+                                                          style: font()
+                                                              .reguler_bold),
                                                       subtitle: Text(
                                                           'Total pelanggan',
                                                           style:
@@ -377,6 +416,25 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .dollarSign,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                           'Rp. ' +
                                                               controller.nominal
@@ -384,8 +442,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                                       .totalpendapatan
                                                                       .value
                                                                       .round()),
-                                                          style:
-                                                              font().reguler),
+                                                          style: font()
+                                                              .reguler_bold),
                                                       subtitle: Text(
                                                           'Total pendapatan',
                                                           style:
@@ -405,13 +463,32 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .cashRegister,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                           controller.nominal
                                                               .format(controller
                                                                   .totaltransaksi
                                                                   .value),
-                                                          style:
-                                                              font().reguler),
+                                                          style: font()
+                                                              .reguler_bold),
                                                       subtitle: Text(
                                                           'Total Transaksi',
                                                           style:
@@ -431,14 +508,33 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .commentDollar,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                           'Rp. ' +
                                                               controller.nominal
                                                                   .format(controller
                                                                       .hutanghariini
                                                                       .value),
-                                                          style:
-                                                              font().reguler),
+                                                          style: font()
+                                                              .reguler_bold),
                                                       subtitle: Text(
                                                           'Hutang hari ini',
                                                           style:
@@ -458,14 +554,33 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .moneyCheckDollar,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                           'Rp. ' +
                                                               controller.nominal
                                                                   .format(controller
                                                                       .totalhutang
                                                                       .value),
-                                                          style:
-                                                              font().reguler),
+                                                          style: font()
+                                                              .reguler_bold),
                                                       subtitle: Text(
                                                           'Total hutang yang belum lunas',
                                                           style:
@@ -485,13 +600,32 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     elevation: elevation()
                                                         .def_elevation,
                                                     child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .cancel,
+                                                            color: Colors.white,
+                                                          )),
                                                       title: Text(
                                                           controller.nominal
                                                               .format(controller
                                                                   .totalreversal
                                                                   .value),
-                                                          style:
-                                                              font().reguler),
+                                                          style: font()
+                                                              .reguler_bold),
                                                       subtitle: Text(
                                                           'Total transaksi batal',
                                                           style:

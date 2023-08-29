@@ -13,6 +13,7 @@ import 'package:rims_waserda/Modules/user/data%20user/controller_data_user.dart'
 import 'package:rims_waserda/Modules/user/edit%20user/controller_edit_user.dart';
 
 import '../../Templates/setting.dart';
+import '../../db_helper.dart';
 import '../beban/data beban/controller_beban.dart';
 import '../beban/data beban/model_data_beban.dart';
 import '../beban/edit jenis beban/model_jenis_beban.dart';
@@ -523,6 +524,174 @@ class popscreen {
     ));
   }
 
+  deletemejadetail(kasirController controller, DataMeja arg) {
+    Get.dialog(AlertDialog(
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              margin: EdgeInsets.all(10),
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Center(
+                    child: Text(
+                      'Hapus pesanan ' + arg.namaProduk! + ' ?',
+                      style: font().header_black,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  button_solid_custom(
+                      onPressed: () async {
+                        await DBHelper().DELETEITEMMEJADETAIL(
+                            'meja_detail', arg.idProdukLocal!);
+                        List<DataMeja> datadetail =
+                            await controller.fetchmejadetail(arg.idMeja);
+                        List<DataMeja> datameja = await controller.fetchmeja();
+
+                        List<int> subtotal = [];
+
+                        datadetail.forEach((e) {
+                          var harga = e.harga!.round() -
+                              (e.harga!.round() * e.diskonBrg!.round() / 100)
+                                  .round();
+                          subtotal.add(e.harga! * e.qty!);
+                        });
+                        var foldsubtotal = subtotal.fold(
+                            0,
+                            (previousValue, element) =>
+                                previousValue + element);
+
+                        var filter = datameja
+                            .map((e) => e)
+                            .where((element) =>
+                                element.meja.toString() ==
+                                arg.idMeja.toString())
+                            .first;
+                        var diskonkasir = filter.diskonKasir;
+                        var totalsub = foldsubtotal - diskonkasir!.round();
+                        var ppn = 11 / 100 * totalsub;
+
+                        var total = totalsub + ppn!.toInt();
+
+                        await DBHelper().UPDATEMEJA(
+                            table: 'meja',
+                            data: controller.updatesubtotalmeja(
+                                foldsubtotal, total, ppn),
+                            id: arg.idMeja);
+
+                        List<DataMeja> check =
+                            await controller.fetchmejadetail(arg.idMeja);
+
+                        if (check.isEmpty) {
+                          print('empety');
+
+                          await DBHelper().DELETEMEJAITEMKOSONG(
+                              'meja', arg.idMeja.toString());
+                          await controller.fetchmeja();
+                          Get.back();
+                        } else {
+                          await controller.fetchmeja();
+                          Get.back();
+                        }
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
+  }
+
+  deletemeja(kasirController controller, DataMeja arg) {
+    Get.dialog(AlertDialog(
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              margin: EdgeInsets.all(10),
+              width: context.width_query / 2.6,
+              height: context.height_query / 2.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Center(
+                    child: Text(
+                      'Batalkan pesana meja ' + arg.meja!,
+                      style: font().header_black,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  button_solid_custom(
+                      onPressed: () async {
+                        await DBHelper().DELETEMEJA('meja', arg.id!);
+                        await controller.fetchmeja();
+                        List<DataMeja> data =
+                            await controller.fetchmejadetail(arg.meja);
+                        Future.forEach(data, (element) async {
+                          // var query = data
+                          //     .where((element) => element.idMeja == arg.meja)
+                          //     .first;
+                          await DBHelper().DELETEMEJADETAIL(
+                              'meja_detail', int.parse(arg.meja!));
+                        });
+
+                        Get.back();
+                      },
+                      child: Text(
+                        'Hapus',
+                        style: font().primary_white,
+                      ),
+                      width: context.width_query,
+                      height: context.height_query / 10),
+                  button_border_custom(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Batal',
+                        style: font().primary,
+                      ),
+                      width: context.width_query,
+                      height: context.height_query / 10)
+                ],
+              ));
+        },
+      ),
+    ));
+  }
+
   lupapassword() {
     Get.dialog(AlertDialog(
       title: header(
@@ -679,9 +848,19 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('sales person :', style: font().reguler),
-                      Text(controller.namakasir, style: font().reguler),
+                      Text(controller.namakasir, style: font().reguler_bold),
                     ],
                   ),
+                  controller.bayarprebill.value == false
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Meja:', style: font().reguler),
+                            Text(controller.nomormejabayarprebill.value,
+                                style: font().reguler_bold),
+                          ],
+                        ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -692,7 +871,7 @@ class popscreen {
                               .fold(
                                   0, (previous, current) => previous + current)
                               .toString(),
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   Row(
@@ -700,27 +879,16 @@ class popscreen {
                     children: [
                       Text('Total harga :', style: font().reguler),
                       Text(
-                          controller.total
-                              .toStringAsFixed(0)
-                              .replaceAll(RegExp(r'[^\w\s]+'), '')
-                              .replaceAllMapped(
-                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                  (Match m) => '${m[1]},'),
-                          style: font().reguler),
+                          'Rp. ' +
+                              controller.total
+                                  .toStringAsFixed(0)
+                                  .replaceAll(RegExp(r'[^\w\s]+'), '')
+                                  .replaceAllMapped(
+                                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                      (Match m) => '${m[1]},'),
+                          style: font().reguler_bold),
                     ],
                   ),
-                  controller.meja.value.text.isEmpty ||
-                          controller.meja.value.text == null ||
-                          controller.meja.value.text == ''
-                      ? Container()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Meja:', style: font().reguler),
-                            Text(controller.meja.value.text,
-                                style: font().reguler),
-                          ],
-                        ),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -728,9 +896,9 @@ class popscreen {
                       Text('Pembayaran:', style: font().reguler),
                       Text(
                           controller.keypadController.value.text.isNotEmpty
-                              ? controller.keypadController.value.text
+                              ? 'Rp. ' + controller.keypadController.value.text
                               : '-',
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   Row(
@@ -739,9 +907,9 @@ class popscreen {
                       Text('Kembalian :', style: font().reguler),
                       Text(
                           controller.kembalian.value.text.isNotEmpty
-                              ? controller.kembalian.value.text
+                              ? 'Rp. ' + controller.kembalian.value.text
                               : '0',
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   Row(
@@ -754,7 +922,7 @@ class popscreen {
                               : controller.groupindex.value == 2
                                   ? 'Hutang'
                                   : '-',
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   // Container(
@@ -803,15 +971,15 @@ class popscreen {
     );
   }
 
-  //TODO: perlakuan untuk update cetak struk prebill
-
   void popkonfirmasiprebill(
       BuildContext context,
       kasirController controller,
       List<DataMeja> prebill,
       String nomor_meja,
       int total_prebill,
-      diskon_kasir) {
+      diskon_kasir,
+      subtotal,
+      ppn) {
     var total_qty = prebill
         .where((element) => element.idMeja.toString() == nomor_meja)
         .toList();
@@ -833,7 +1001,7 @@ class popscreen {
               width: 10,
             ),
             Text(
-              'Konfirmasi pembayaran pre bill',
+              'Konfirmasi pembayaran open bill',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 21,
@@ -873,7 +1041,14 @@ class popscreen {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('sales person :', style: font().reguler),
-                      Text(controller.namakasir, style: font().reguler),
+                      Text(controller.namakasir, style: font().reguler_bold),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Meja:', style: font().reguler),
+                      Text(nomor_meja, style: font().reguler_bold),
                     ],
                   ),
                   Row(
@@ -888,27 +1063,17 @@ class popscreen {
                                   (previous, current) =>
                                       previous + current!.toInt())
                               .toString(),
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Total harga :', style: font().reguler),
-                      Text(total_prebill.toString(), style: font().reguler),
+                      Text('Rp. ' + total_prebill.toString(),
+                          style: font().reguler_bold),
                     ],
                   ),
-                  controller.meja.value.text.isEmpty ||
-                          controller.meja.value.text == null ||
-                          controller.meja.value.text == ''
-                      ? Container()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Meja:', style: font().reguler),
-                            Text(nomor_meja, style: font().reguler),
-                          ],
-                        ),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -917,9 +1082,10 @@ class popscreen {
                       Text(
                           controller.keypadController_prebill.value.text
                                   .isNotEmpty
-                              ? controller.keypadController_prebill.value.text
+                              ? 'Rp. ' +
+                                  controller.keypadController_prebill.value.text
                               : '-',
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   Row(
@@ -928,9 +1094,9 @@ class popscreen {
                       Text('Kembalian :', style: font().reguler),
                       Text(
                           controller.kembalian_prebill.value.text.isNotEmpty
-                              ? controller.kembalian_prebill.value.text
+                              ? 'Rp. ' + controller.kembalian_prebill.value.text
                               : '0',
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   Row(
@@ -943,7 +1109,7 @@ class popscreen {
                               : controller.groupindex.value == 2
                                   ? 'Hutang'
                                   : '-',
-                          style: font().reguler),
+                          style: font().reguler_bold),
                     ],
                   ),
                   // Container(
@@ -972,23 +1138,15 @@ class popscreen {
                           height: 50),
                       button_solid_custom(
                           onPressed: () async {
-                            print(
-                                'bayar local------------------------------->');
-                            await controller.pembayaranlocalprebill(
-                                controller.id_toko,
+                            popprintstrukmeja(
+                                context,
+                                controller,
+                                prebill,
                                 nomor_meja,
                                 total_prebill,
-                                diskon_kasir);
-                            await controller.deletemeja(nomor_meja);
-                            var items = prebill
-                                .where((element) =>
-                                    element.idMeja.toString() == nomor_meja)
-                                .toList();
-                            await Future.forEach(items, (e) async {
-                              await controller.deletemejadetail(e.idMeja);
-                              await controller.fetchmeja();
-                              // Get.back(closeOverlays: true);
-                            });
+                                diskon_kasir,
+                                subtotal,
+                                ppn);
                           },
                           child: Text(controller.groupindex.value != 2
                               ? 'Bayar'
@@ -1075,10 +1233,19 @@ class popscreen {
                                 controller.printer.printCustom(
                                     '-------------------------------', 1, 3);
                                 controller.printer.printLeftRight(
-                                    controller.dateFormat
-                                        .format(DateTime.now()),
+                                    controller.tgl_penjualan.isEmpty
+                                        ? controller.dateFormatprint
+                                            .format(DateTime.now())
+                                        : controller.dateFormatprint.format(
+                                            controller.tgl_penjualan.first!),
                                     controller.kasir,
                                     0);
+                                controller.bayarprebill.value == false
+                                    ? print('lol')
+                                    : controller.printer.printLeftRight(
+                                        'Meja :',
+                                        controller.nomormejabayarprebill.value,
+                                        0);
                                 controller.printer.printCustom(
                                     '-------------------------------', 1, 3);
                                 controller.printer.printNewLine();
@@ -1174,7 +1341,7 @@ class popscreen {
                                 controller.printer.printLeftRight(
                                     'Total :',
                                     controller.nominal
-                                        .format(controller.bayarvalue.value),
+                                        .format(controller.total.value),
                                     0);
                                 controller.printer.printLeftRight(
                                     'Tunai :',
@@ -1185,7 +1352,7 @@ class popscreen {
                                     'Kembalian :',
                                     controller.kembalian.value.text.isNotEmpty
                                         ? controller.nominal
-                                            .format(controller.ppn.value)
+                                            .format(controller.balikvalue.value)
                                         : '0',
                                     0);
                                 controller.printer.printCustom(
@@ -1233,10 +1400,19 @@ class popscreen {
                                 controller.printer.printCustom(
                                     '-------------------------------', 1, 3);
                                 controller.printer.printLeftRight(
-                                    controller.dateFormat
-                                        .format(DateTime.now()),
+                                    controller.tgl_penjualan.isEmpty
+                                        ? controller.dateFormatprint
+                                            .format(DateTime.now())
+                                        : controller.dateFormatprint.format(
+                                            controller.tgl_penjualan.first!),
                                     controller.kasir,
                                     0);
+                                controller.bayarprebill.value == false
+                                    ? print('lol')
+                                    : controller.printer.printLeftRight(
+                                        'Meja :',
+                                        controller.nomormejabayarprebill.value,
+                                        0);
                                 controller.printer.printCustom(
                                     '-------------------------------', 1, 3);
                                 controller.printer.printNewLine();
@@ -1302,8 +1478,11 @@ class popscreen {
                                 );
                                 controller.printer.printLeftRight(
                                   'Tanggal hutang :',
-                                  controller.dateFormatprint
-                                      .format(DateTime.now()),
+                                  controller.tgl_penjualan.isEmpty
+                                      ? controller.dateFormatprint
+                                          .format(DateTime.now())
+                                      : controller.dateFormatprint.format(
+                                          controller.tgl_penjualan.first!),
                                   0,
                                 );
 
@@ -1327,6 +1506,397 @@ class popscreen {
                                 await controller
                                     .pembayaranlocal(controller.id_toko);
                                 // Get.back(closeOverlays: true);
+                              } else {
+                                Get.showSnackbar(toast().bottom_snackbar_error(
+                                    'Error', 'Printer belum terkoneksi'));
+                              }
+                            }
+                          },
+                          child: Text(controller.groupindex.value != 2
+                              ? 'Cetak'
+                              : 'Cetak'),
+                          width: 100,
+                          height: 50),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  void popprintstrukmeja(
+      BuildContext context,
+      kasirController controller,
+      List<DataMeja> prebill,
+      String nomor_meja,
+      int total_prebill,
+      diskon_kasir,
+      subtotal,
+      ppn) {
+    print('print struk meja-----------------------');
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        //backgroundColor: Colors.red,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
+        ),
+        content: Builder(
+          builder: (context) {
+            return Container(
+              //  color: Colors.blue,
+              height: context.height_query / 4,
+              width: context.height_query * 0.6,
+              // color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: color_template().primary,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        'Cetak struk ?',
+                        style: font().header,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button_border_custom(
+                          onPressed: () async {
+                            print(
+                                'bayar local------------------------------->');
+                            await controller.pembayaranlocalprebill(
+                                controller.id_toko,
+                                nomor_meja,
+                                total_prebill,
+                                diskon_kasir);
+                            await controller.deletemeja(nomor_meja);
+                            var items = prebill
+                                .where((element) =>
+                                    element.idMeja.toString() == nomor_meja)
+                                .toList();
+                            await Future.forEach(items, (e) async {
+                              await controller.deletemejadetail(e.idMeja);
+                              await controller.fetchmeja();
+                              // Get.back(closeOverlays: true);
+                            });
+                          },
+                          child: Text(
+                            'Tidak',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          width: 100,
+                          height: 50),
+                      button_solid_custom(
+                          onPressed: () async {
+                            print(
+                                'cetak struk local------------------------------->');
+                            print(controller.listPrinter.toString());
+                            print(controller.isConnected == true);
+
+                            if (controller.groupindex == 1) {
+                              if ((await controller.printer.isConnected)!) {
+                                if (controller.logo == '-') {
+                                  controller.printer
+                                      .printImage(controller.pathImage.value);
+                                } else {
+                                  controller.printer.printImageBytes(
+                                      base64Decode(controller.logo));
+                                }
+                                controller.printer
+                                    .printCustom(controller.namatoko, 3, 1);
+                                controller.printer
+                                    .printCustom(controller.alamat_toko, 0, 3);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printLeftRight(
+                                    controller.tgl_penjualan.isEmpty
+                                        ? controller.dateFormatprint
+                                            .format(DateTime.now())
+                                        : controller.dateFormatprint.format(
+                                            controller.tgl_penjualan.first!),
+                                    controller.kasir,
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printNewLine();
+                                //item-------------------------------------------------
+                                controller.printer.print4Column(
+                                    'Produk', 'QTY', 'Harga', 'Subtotal', 0,
+                                    format: "%-17s %-4s %-10s %5s %n");
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.cachemejadetail.forEach((e) {
+                                  String nama = e.namaProduk!;
+                                  if (nama.length > 15) {
+                                    nama =
+                                        e.namaProduk!.substring(0, 15) + '...';
+                                  }
+                                  controller.printer.print4Column(
+                                      nama,
+                                      e.qty.toString(),
+                                      format: "%-17s %-4s %-10s %5s %n",
+                                      controller.nominal.format(e.harga),
+                                      controller.nominal
+                                          .format((e.harga! * e.qty!.toInt())),
+                                      0);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 2);
+                                });
+                                //  await controller.subtotalval();
+                                // controller.printer.print3Column(
+                                //     'Subtotal',
+                                //     ':',
+                                //     controller.nominal
+                                //         .format(controller.subtotal.value),
+                                //     0);
+                                controller.printer.printLeftRight('Subtotal :',
+                                    controller.nominal.format(subtotal), 0);
+                                // controller.printer.printCustom(
+                                //     '-------------------------------', 1, 1);
+                                // await controller.hitungbesardiskonkasir();
+                                // controller.printer.print3Column(
+                                //     'Total diskon',
+                                //     ':',
+                                //     controller.nominal.format(
+                                //         controller.jumlahdiskonkasir.value),
+                                //     0);
+
+                                controller.printer.printLeftRight(
+                                    'Total diskon :',
+                                    controller.nominal.format(diskon_kasir),
+                                    0);
+
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                // await controller.totalval();
+                                // controller.printer.print3Column(
+                                //   'PPN',
+                                //   ':',
+                                //   controller.nominal
+                                //       .format(controller.ppn.value),
+                                //   0,
+                                // );
+                                // controller.printer.print3Column(
+                                //   'Total',
+                                //   ':',
+                                //   controller.nominal
+                                //       .format(controller.total.value),
+                                //   0,
+                                // );
+                                // controller.printer.print3Column(
+                                //   'Tunai',
+                                //   ':',
+                                //   controller.nominal
+                                //       .format(controller.bayarvalue.value),
+                                //   0,
+                                // );
+                                // controller.printer.print3Column(
+                                //   'Kembalian',
+                                //   ':',
+                                //   controller.kembalian.value.text.isNotEmpty
+                                //       ? controller.kembalian.value.text
+                                //       : '0',
+                                //   0,
+                                // );
+
+                                controller.printer.printLeftRight(
+                                    'PPN :', controller.nominal.format(ppn), 0);
+                                controller.printer.printLeftRight(
+                                    'Total :',
+                                    controller.nominal.format(total_prebill),
+                                    0);
+                                controller.printer.printLeftRight(
+                                    'Tunai :',
+                                    controller.nominal.format(
+                                        controller.bayarvalue_prebill.value),
+                                    0);
+                                controller.printer.printLeftRight(
+                                    'Kembalian :',
+                                    controller.kembalian_prebill.value.text
+                                            .isNotEmpty
+                                        ? controller.nominal.format(
+                                            controller.balikvalue_prebill.value)
+                                        : '0',
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer
+                                    .printCustom('-- Terima Kasih --', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printImage(
+                                    controller.printstruklogo.value);
+                                controller.printer.printCustom(
+                                    '*** Powered by RIMS ***', 0, 1);
+                                controller.printer
+                                    .printCustom('www.rims.co.id', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printNewLine();
+                                controller.printer.paperCut();
+                                //proses bayar local--------------------------
+                                print(
+                                    'bayar local------------------------------->');
+                                await controller.pembayaranlocalprebill(
+                                    controller.id_toko,
+                                    nomor_meja,
+                                    total_prebill,
+                                    diskon_kasir);
+                                await controller.deletemeja(nomor_meja);
+                                var items = prebill
+                                    .where((element) =>
+                                        element.idMeja.toString() == nomor_meja)
+                                    .toList();
+                                await Future.forEach(items, (e) async {
+                                  await controller.deletemejadetail(e.idMeja);
+                                  await controller.fetchmeja();
+                                  // Get.back(closeOverlays: true);
+                                });
+                              } else {
+                                Get.showSnackbar(toast().bottom_snackbar_error(
+                                    'Error', 'Printer belum terkoneksi'));
+                              }
+                            } else {
+                              if ((await controller.printer.isConnected)!) {
+                                var pelanggan = controller.list_pelanggan_local
+                                    .where((e) =>
+                                        e.idLocal ==
+                                        controller.id_pelanggan.value)
+                                    .first;
+                                if (controller.logo == '-') {
+                                  controller.printer
+                                      .printImage(controller.pathImage.value);
+                                } else {
+                                  controller.printer.printImageBytes(
+                                      base64Decode(controller.logo));
+                                }
+                                controller.printer
+                                    .printCustom(controller.namatoko, 3, 1);
+                                controller.printer
+                                    .printCustom(controller.alamat_toko, 0, 3);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printLeftRight(
+                                    controller.tgl_penjualan.isEmpty
+                                        ? controller.dateFormatprint
+                                            .format(DateTime.now())
+                                        : controller.dateFormatprint.format(
+                                            controller.tgl_penjualan.first!),
+                                    controller.kasir,
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.printer.printNewLine();
+                                controller.printer
+                                    .printCustom('--- Hutang ---', 2, 1);
+                                controller.printer.printNewLine();
+                                //item-------------------------------------------------
+                                controller.printer.print4Column(
+                                    'Produk', 'QTY', 'Harga', 'Subtotal', 0,
+                                    format: "%-17s %-4s %-10s %5s %n");
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 3);
+                                controller.cachemejadetail.forEach((e) {
+                                  String nama = e.namaProduk!;
+                                  if (nama.length > 15) {
+                                    nama =
+                                        e.namaProduk!.substring(0, 15) + '...';
+                                  }
+                                  controller.printer.print4Column(
+                                      nama,
+                                      e.qty.toString(),
+                                      format: "%-17s %-4s %-10s %5s %n",
+                                      controller.nominal.format(e.harga),
+                                      controller.nominal
+                                          .format((e.harga! * e.qty!.toInt())),
+                                      0);
+                                  controller.printer.printCustom(
+                                      '-------------------------------', 1, 2);
+                                });
+                                await controller.subtotalval();
+                                controller.printer.printLeftRight('Subtotal :',
+                                    controller.nominal.format(subtotal), 0);
+                                // controller.printer.printCustom(
+                                //     '-------------------------------', 1, 1);
+                                await controller.hitungbesardiskonkasir();
+                                controller.printer.printLeftRight(
+                                    'Total diskon :',
+                                    controller.nominal.format(diskon_kasir),
+                                    0);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printLeftRight(
+                                  'Nama pelanggan :',
+                                  pelanggan.namaPelanggan!,
+                                  0,
+                                );
+                                await controller.totalval();
+                                controller.printer.printLeftRight(
+                                  'PPN :',
+                                  controller.nominal.format(ppn),
+                                  0,
+                                );
+                                controller.printer.printLeftRight(
+                                  'Total Hutang :',
+                                  controller.nominal.format(total_prebill),
+                                  0,
+                                );
+                                controller.printer.printLeftRight(
+                                  'Tanggal hutang :',
+                                  controller.tgl_penjualan.isEmpty
+                                      ? controller.dateFormatprint
+                                          .format(DateTime.now())
+                                      : controller.dateFormatprint.format(
+                                          controller.tgl_penjualan.first!),
+                                  0,
+                                );
+
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer
+                                    .printCustom('-- Terima Kasih --', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printImage(
+                                    controller.printstruklogo.value);
+                                controller.printer.printCustom(
+                                    '*** Powered by RIMS ***', 0, 1);
+                                controller.printer
+                                    .printCustom('www.rims.co.id', 0, 1);
+                                controller.printer.printCustom(
+                                    '-------------------------------', 1, 1);
+                                controller.printer.printNewLine();
+                                controller.printer.paperCut();
+
+                                print(
+                                    'bayar local------------------------------->');
+                                await controller.pembayaranlocalprebill(
+                                    controller.id_toko,
+                                    nomor_meja,
+                                    total_prebill,
+                                    diskon_kasir);
+                                await controller.deletemeja(nomor_meja);
+                                var items = prebill
+                                    .where((element) =>
+                                        element.idMeja.toString() == nomor_meja)
+                                    .toList();
+                                await Future.forEach(items, (e) async {
+                                  await controller.deletemejadetail(e.idMeja);
+                                  await controller.fetchmeja();
+                                  // Get.back(closeOverlays: true);
+                                });
                               } else {
                                 Get.showSnackbar(toast().bottom_snackbar_error(
                                     'Error', 'Printer belum terkoneksi'));
@@ -1382,7 +1952,7 @@ class popscreen {
                         borderRadius: BorderRadius.circular(10)),
                     child: Center(
                       child: Text(
-                        'Cetak struk pre-bill ?',
+                        'Cetak struk open bill ?',
                         style: font().header,
                       ),
                     ),
@@ -1424,7 +1994,11 @@ class popscreen {
                               controller.printer.printCustom(
                                   '-------------------------------', 1, 3);
                               controller.printer.printLeftRight(
-                                  controller.dateFormat.format(DateTime.now()),
+                                  controller.tgl_penjualan.isEmpty
+                                      ? controller.dateFormatprint
+                                          .format(DateTime.now())
+                                      : controller.dateFormatprint.format(
+                                          controller.tgl_penjualan.first!),
                                   controller.kasir,
                                   0);
                               controller.printer.printCustom(
@@ -1461,33 +2035,29 @@ class popscreen {
                                     '-------------------------------', 1, 2);
                               });
                               await controller.subtotalval();
-                              controller.printer.print3Column(
-                                  'Subtotal',
-                                  ':',
+                              controller.printer.printLeftRight(
+                                  'Subtotal :',
                                   controller.nominal
                                       .format(controller.subtotal.value),
                                   0);
                               // controller.printer.printCustom(
                               //     '-------------------------------', 1, 1);
                               await controller.hitungbesardiskonkasir();
-                              controller.printer.print3Column(
-                                  'Total diskon',
-                                  ':',
+                              controller.printer.printLeftRight(
+                                  'Total diskon :',
                                   controller.nominal.format(
                                       controller.jumlahdiskonkasir.value),
                                   0);
                               controller.printer.printCustom(
                                   '-------------------------------', 1, 1);
                               await controller.totalval();
-                              controller.printer.print3Column(
-                                'PPN',
-                                ':',
+                              controller.printer.printLeftRight(
+                                'PPN :',
                                 controller.nominal.format(controller.ppn.value),
                                 0,
                               );
-                              controller.printer.print3Column(
-                                'Total',
-                                ':',
+                              controller.printer.printLeftRight(
+                                'Total :',
                                 controller.nominal
                                     .format(controller.total.value),
                                 0,

@@ -71,7 +71,7 @@ class beban_table extends GetView<bebanController> {
                         style: font().header,
                       ),
                       width: context.width_query * 0.2,
-                      height: 65)
+                      height: 65),
                 ],
               ),
             ),

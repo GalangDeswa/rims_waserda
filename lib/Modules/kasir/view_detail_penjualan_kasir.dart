@@ -64,7 +64,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                         (previous, current) =>
                                             previous + current!)
                                     .toString(),
-                                style: font().reguler),
+                                style: font().reguler_bold),
                           ],
                         );
                       }),
@@ -81,7 +81,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                       : 'Rp.' +
                                           controller.nominal.format(
                                               controller.subtotal.value),
-                              style: font().reguler,
+                              style: font().reguler_bold,
                             ),
                           ],
                         );
@@ -96,13 +96,28 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                 style: font().reguler,
                               ),
                             ),
-                            Text(
-                              "Rp." +
-                                  controller.nominal
-                                      .format(controller.ppn.value),
-                              style: font().reguler,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            controller.ppnSwitch.value == true
+                                ? Text(
+                                    "Rp." +
+                                        controller.nominal
+                                            .format(controller.ppn.value),
+                                    style: font().reguler_bold,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : Text(
+                                    "-",
+                                    style: font().reguler,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                            Switch(
+                                activeColor: color_template().primary,
+                                value: controller.ppnSwitch.value,
+                                onChanged: (x) {
+                                  controller.ppnSwitch.value = x;
+                                  print(controller.ppnSwitch);
+                                  print(controller.ppn);
+                                  controller.totalval();
+                                }),
                           ],
                         );
                       }),
@@ -115,18 +130,21 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  controller.displaydiskon.toStringAsFixed(0) +
-                                      '%',
-                                  style: font().reguler,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                // Text(
-                                //     "(Rp. " +
-                                //         controller.nominal.format(
-                                //             controller.jumlahdiskonkasir.value) +
-                                //         ")",
-                                //     style: font().reguler),
+                                controller.metode_diskon == 1
+                                    ? Text(
+                                        controller.displaydiskon
+                                                .toStringAsFixed(0) +
+                                            '%',
+                                        style: font().reguler_bold,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Text(
+                                        'Rp. ' +
+                                            controller.nominal.format(
+                                                controller.displaydiskon.value),
+                                        style: font().reguler_bold,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                 Container(
                                   margin: EdgeInsets.only(left: 10),
                                   width: 100,
@@ -202,7 +220,7 @@ class detail_penjualan_kasir extends GetView<kasirController> {
                                     child: IconButton(
                                         onPressed: () {
                                           //TODO : chek kalkulasi harga di crud penjualan
-                                          print('qweqweqweqweqweqew');
+
                                           // controller.deletekeranjanglocal(
                                           //     'keranjang_local');
                                           Get.back();

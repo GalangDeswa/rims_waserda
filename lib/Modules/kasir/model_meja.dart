@@ -61,7 +61,8 @@ class DataMeja {
       this.idJenisStock,
       this.idKategori,
       this.hargaModal,
-      this.diskonKasir});
+      this.diskonKasir,
+      this.ppn});
 
   int? id;
   String? namaProduk;
@@ -78,6 +79,7 @@ class DataMeja {
   int? idKategori;
   int? hargaModal;
   int? diskonKasir;
+  int? ppn;
 
   factory DataMeja.fromJson(Map<String, dynamic> json) => DataMeja(
         id: json["id"],
@@ -95,6 +97,7 @@ class DataMeja {
         idKategori: json["id_kategori"],
         hargaModal: json["harga_modal"],
         diskonKasir: json["diskon_kasir"],
+        ppn: json["ppn"],
 
         // updated: json["updated"]!,
         // createdAt: json["created_at"]!,
@@ -131,6 +134,19 @@ class DataMeja {
     map['diskon_kasir'] = diskonKasir;
     map['subtotal'] = subtotal;
     map['total'] = total;
+    map['ppn'] = ppn;
+
+    return map;
+  }
+
+  Map<String, dynamic> toMapForDbMEJAUPDATE() {
+    var map = <String, dynamic>{};
+
+    map['meja'] = meja;
+    map['diskon_kasir'] = diskonKasir;
+    map['subtotal'] = subtotal;
+    map['total'] = total;
+    map['ppn'] = ppn;
 
     return map;
   }
@@ -139,6 +155,23 @@ class DataMeja {
     var map = <String, dynamic>{};
 
     map['id'] = id;
+    map['id_meja'] = idMeja;
+    map['id_produk_local'] = idProduk;
+    map['nama_produk'] = namaProduk;
+    map['qty'] = qty;
+    map['diskonBrg'] = diskonBrg;
+    map['harga'] = harga;
+    map['id_produk_local'] = idProdukLocal;
+    map['id_jenis_stock'] = idJenisStock;
+    map['id_kategori'] = idKategori;
+    map['harga_modal'] = hargaModal;
+
+    return map;
+  }
+
+  Map<String, dynamic> toMapForDbMEJADETAILUPDATE() {
+    var map = <String, dynamic>{};
+
     map['id_meja'] = idMeja;
     map['id_produk_local'] = idProduk;
     map['nama_produk'] = namaProduk;

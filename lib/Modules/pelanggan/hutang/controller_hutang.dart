@@ -595,6 +595,7 @@ class hutangController extends GetxController {
         table: 'penjualan_local',
         data: DataPenjualan(
                 aktif: 'Y',
+                ppn: pp1.ppn,
                 status: pp1.status,
                 id: pp1.id,
                 idLocal: pp1.idLocal,
@@ -675,6 +676,7 @@ class hutangController extends GetxController {
           table: 'penjualan_local',
           data: DataPenjualan(
                   aktif: 'Y',
+                  ppn: pp.ppn,
                   status: 1,
                   id: pp.id,
                   idLocal: pp.idLocal,

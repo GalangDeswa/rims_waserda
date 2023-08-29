@@ -201,6 +201,7 @@ class historyController extends GetxController {
         await Future.forEach(query, (e) async {
           await REST.syncpenjualan(
               diskon_kasir: e.diskonKasir,
+              ppn: e.ppn,
               token: token,
               id_hutang: e.idHutang,
               bayar: e.bayar,
@@ -259,6 +260,7 @@ class historyController extends GetxController {
             DataPenjualan(
                     id: e.id,
                     diskonKasir: e.diskonKasir,
+                    ppn: e.ppn,
                     idLocal: e.idLocal,
                     status: e.status,
                     bayar: e.bayar,

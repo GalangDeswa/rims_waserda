@@ -81,7 +81,7 @@ dependencies:
   
   
   
-  mobile_scanner: ^3.2.0
+
 
   audioplayers: ^4.0.1
 
@@ -96,6 +96,8 @@ dependencies:
   blue_thermal_printer: ^1.2.3
 
   intro_slider: ^4.2.0
+
+  restart_app: ^1.2.1
 
 
 

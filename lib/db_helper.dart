@@ -19,12 +19,13 @@ class DBHelper {
       print(
           'DB is ready---------------------------------------------------------->');
       return _db;
+    } else {
+      print(
+          'DB is not ready, init DB---------------------------------------------------------------->');
+      await GetStorage().write('db_local', 'new');
+      _db = await initDb();
+      return _db;
     }
-    print(
-        'DB is not ready, init DB---------------------------------------------------------------->');
-    await GetStorage().write('db_local', 'new');
-    _db = await initDb();
-    return _db;
   }
 
   initDb() async {
@@ -44,11 +45,27 @@ class DBHelper {
       // Write and flush the bytes written
       //  await GetStorage().write('db_local', 'new');
       await File(path).writeAsBytes(bytes, flush: true);
+    } else {
+      print('DB exits, opening DB----------------------------------->');
+      //  await GetStorage().write('db_local', 'exist');
+      var theDb = await openDatabase(path, version: 1);
+      return theDb;
     }
-    print('DB exits, opening DB----------------------------------->');
-    //  await GetStorage().write('db_local', 'exist');
-    var theDb = await openDatabase(path, version: 1);
-    return theDb;
+  }
+
+  Future<void> deleteDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "waserda.db");
+    //print(path);
+    await databaseFactory.deleteDatabase(path);
+    bool dbExists = await File(path).exists();
+    if (dbExists == false) {
+      print('db gada lagi');
+      print(path);
+    } else {
+      print('db masioh ada');
+      print(path);
+    }
   }
 
   getProduk() async {
@@ -111,6 +128,7 @@ class DBHelper {
       var query = await dbClient!.insert(table, data);
       return query;
     } catch (e) {
+      print(e);
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
@@ -124,6 +142,57 @@ class DBHelper {
       var dbClient = await db;
       var query = await dbClient!
           .update(table, data, where: 'id_local = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      print('---------------------------errorr-----------');
+      print(e);
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  UPDATEMEJA(
+      {required String table,
+      required dynamic data,
+      required dynamic id}) async {
+    try {
+      var dbClient = await db;
+      var query = await dbClient!
+          .update(table, data, where: 'meja = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      print('---------------------------errorr-----------');
+      print(e);
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  UPDATEMEJADETAILNOMORMEJA(
+      {required String table,
+      required dynamic data,
+      required String id_meja}) async {
+    try {
+      var dbClient = await db;
+      var query = await dbClient!
+          .update(table, data, where: 'id_meja = ?', whereArgs: [id_meja]);
+      return query;
+    } catch (e) {
+      print('---------------------------errorr-----------');
+      print(e);
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  UPDATEMEJASUBTOTAL(
+      {required String table,
+      required dynamic data,
+      required dynamic id}) async {
+    try {
+      var dbClient = await db;
+      var query = await dbClient!
+          .update(table, data, where: 'meja = ?', whereArgs: [id]);
       return query;
     } catch (e) {
       print('---------------------------errorr-----------');
@@ -149,9 +218,62 @@ class DBHelper {
     try {
       var dbClient = await db;
       var query =
-          await dbClient!.delete(table, where: 'id= ?', whereArgs: [id]);
+          await dbClient!.delete(table, where: 'id = ?', whereArgs: [id]);
       return query;
     } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  DELETEMEJAITEMKOSONG(String table, String meja) async {
+    try {
+      var dbClient = await db;
+      var query =
+          await dbClient!.delete(table, where: 'meja = ?', whereArgs: [meja]);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  DELETEMEJADETAIL(String table, int id) async {
+    try {
+      var dbClient = await db;
+      var query =
+          await dbClient!.delete(table, where: 'id_meja = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  DELETEITEMMEJADETAIL(String table, String id) async {
+    try {
+      var dbClient = await db;
+      var query = await dbClient!
+          .delete(table, where: 'id_produk_local = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    }
+  }
+
+  UPDATEMEJADETAIL(
+      {required String table,
+      required dynamic data,
+      required dynamic id}) async {
+    try {
+      var dbClient = await db;
+      var query = await dbClient!
+          .update(table, data, where: 'id_produk_local = ?', whereArgs: [id]);
+      return query;
+    } catch (e) {
+      print('---------------------------errorr-----------');
+      print(e);
       Get.back(closeOverlays: true);
       Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }

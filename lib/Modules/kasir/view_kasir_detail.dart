@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
-import 'package:rims_waserda/Modules/Widgets/popup.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Modules/kasir/view_kasir_keypad.dart';
@@ -33,10 +32,15 @@ class kasir_detail extends GetView<kasirController> {
                     color: Colors.white,
                     border: Border.all(color: color_template().primary)),
                 child: Center(
-                  child: Text(
-                    'Keranjang'.toUpperCase(),
-                    style: font().header_blue,
-                  ),
+                  child: Obx(() {
+                    return Text(
+                      controller.bayarprebill.value == false
+                          ? 'Keranjang'.toUpperCase()
+                          : 'Meja ' +
+                              controller.nomormejabayarprebill.toUpperCase(),
+                      style: font().header_blue,
+                    );
+                  }),
                 ),
               ),
               Expanded(
@@ -55,8 +59,9 @@ class kasir_detail extends GetView<kasirController> {
                             String display_diskon = persen!.toStringAsFixed(0);
 
                             var pp = controller.produklistlocal
-                                .where(
-                                    (e) => e.id == controller.cache[index].id)
+                                .where((e) =>
+                                    e.idLocal ==
+                                    controller.cache[index].idLocal)
                                 .first;
                             return Card(
                                 elevation: elevation().def_elevation,
@@ -376,21 +381,28 @@ class kasir_detail extends GetView<kasirController> {
                                   style: font().reguler,
                                 ),
                               ),
-                              controller.subtotal.value == 0.0
+                              controller.ppnSwitch.value == true
                                   ? Text(
-                                      "Rp." +
-                                          controller.nominal
-                                              .format(controller.ppn.value = 0),
-                                      style: font().reguler_bold,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  : Text(
                                       "Rp." +
                                           controller.nominal
                                               .format(controller.ppn.value),
                                       style: font().reguler_bold,
                                       overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      "-",
+                                      style: font().reguler_bold,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
+                              Switch(
+                                  activeColor: color_template().primary,
+                                  value: controller.ppnSwitch.value,
+                                  onChanged: (x) {
+                                    controller.ppnSwitch.value = x;
+                                    print(controller.ppnSwitch);
+                                    print(controller.ppn);
+                                    controller.totalval();
+                                  }),
                             ],
                           ),
                         );
@@ -407,12 +419,21 @@ class kasir_detail extends GetView<kasirController> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  controller.displaydiskon.toStringAsFixed(0) +
-                                      '%',
-                                  style: font().reguler_bold,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                controller.metode_diskon == 1
+                                    ? Text(
+                                        controller.displaydiskon
+                                                .toStringAsFixed(0) +
+                                            '%',
+                                        style: font().reguler_bold,
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Text(
+                                        'Rp. ' +
+                                            controller.nominal.format(
+                                                controller.displaydiskon.value),
+                                        style: font().reguler_bold,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                 Container(
                                   margin: EdgeInsets.only(left: 10),
                                   width: 100,
@@ -507,86 +528,219 @@ class kasir_detail extends GetView<kasirController> {
               SizedBox(
                 height: 10,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: button_solid_custom(
-                        onPressed: () async {
-                          controller.cache.value.isEmpty
-                              ? Get.showSnackbar(toast().bottom_snackbar_error(
-                                  'Error', 'Pilih item terlebih dahulu'))
-                              : Get.dialog(
-                                  Stack(
-                                    children: [
-                                      Container(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal:
-                                                  context.width_query / 10,
-                                              vertical:
-                                                  context.height_query / 10),
-                                          child: kasir_keypad()),
-                                      Positioned(
-                                        top: context.height_query / 14,
-                                        left: context.width_query / 12,
-                                        child: Material(
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          color: color_template().tritadery,
-                                          child: IconButton(
-                                              onPressed: () {
-                                                Get.back();
-                                                controller.groupindex.value = 9;
-                                                controller
-                                                    .keypadController.value
-                                                    .clear();
-                                                controller.kembalian.value
-                                                    .clear();
-                                              },
-                                              icon: Icon(
-                                                FontAwesomeIcons.xmark,
-                                                color: Colors.white,
-                                              )),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  barrierDismissible: false);
+              Obx(() {
+                return controller.bayarprebill.value == false
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: button_solid_custom(
+                                onPressed: () async {
+                                  controller.cache.value.isEmpty
+                                      ? Get.showSnackbar(toast()
+                                          .bottom_snackbar_error('Error',
+                                              'Pilih item terlebih dahulu'))
+                                      : Get.dialog(
+                                          Stack(
+                                            children: [
+                                              Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          context.width_query /
+                                                              10,
+                                                      vertical:
+                                                          context.height_query /
+                                                              10),
+                                                  child: kasir_keypad()),
+                                              Positioned(
+                                                top: context.height_query / 14,
+                                                left: context.width_query / 12,
+                                                child: Material(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: color_template()
+                                                      .tritadery,
+                                                  child: IconButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                        controller.groupindex
+                                                            .value = 9;
+                                                        controller
+                                                            .keypadController
+                                                            .value
+                                                            .clear();
+                                                        controller
+                                                            .kembalian.value
+                                                            .clear();
+                                                      },
+                                                      icon: Icon(
+                                                        FontAwesomeIcons.xmark,
+                                                        color: Colors.white,
+                                                      )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          barrierDismissible: false);
 
-                          controller.meja.value.text = 'Takeout';
-                          controller.nomor_meja.value = 'Takeout';
+                                  controller.meja.value.text = 'Takeout';
+                                  controller.nomor_meja.value = 'Takeout';
 
-                          print('--------------pop-------------');
-                        },
-                        child: Text(
-                          'Takeout'.toUpperCase(),
-                          style: font().header,
-                        ),
-                        width: 100,
-                        height: context.height_query / 14),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: button_border_custom(
-                        onPressed: () async {
-                          controller.cache.value.isEmpty
-                              ? Get.showSnackbar(toast().bottom_snackbar_error(
-                                  'Error', 'Pilih item terlebih dahulu'))
-                              : controller.editMejaKasir(controller);
+                                  print('--------------pop-------------');
+                                },
+                                child: Text(
+                                  'Takeout'.toUpperCase(),
+                                  style: font().header,
+                                ),
+                                width: 100,
+                                height: context.height_query / 14),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: button_border_custom(
+                                onPressed: () async {
+                                  controller.meja.value.clear();
+                                  controller.cache.value.isEmpty
+                                      ? Get.showSnackbar(toast()
+                                          .bottom_snackbar_error('Error',
+                                              'Pilih item terlebih dahulu'))
+                                      : controller.editMejaKasir(controller);
 
-                          print('--------------pop-------------');
-                        },
-                        child: Text(
-                          'open bill'.toUpperCase(),
-                          style: font().header_blue,
-                        ),
-                        width: 100,
-                        height: context.height_query / 14),
-                  ),
-                ],
-              ),
+                                  print('--------------pop-------------');
+                                },
+                                child: Text(
+                                  'open bill'.toUpperCase(),
+                                  style: font().header_blue,
+                                ),
+                                width: 100,
+                                height: context.height_query / 14),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: button_border_custom(
+                                onPressed: () async {
+                                  // controller.cache.value.isEmpty
+                                  //     ? Get.showSnackbar(toast().bottom_snackbar_error(
+                                  //     'Error', 'Pilih item terlebih dahulu'))
+                                  //     : Get.dialog(
+                                  //     Stack(
+                                  //       children: [
+                                  //         Container(
+                                  //             padding: EdgeInsets.symmetric(
+                                  //                 horizontal:
+                                  //                 context.width_query / 10,
+                                  //                 vertical:
+                                  //                 context.height_query / 10),
+                                  //             child: kasir_keypad()),
+                                  //         Positioned(
+                                  //           top: context.height_query / 14,
+                                  //           left: context.width_query / 12,
+                                  //           child: Material(
+                                  //             borderRadius:
+                                  //             BorderRadius.circular(30),
+                                  //             color: color_template().tritadery,
+                                  //             child: IconButton(
+                                  //                 onPressed: () {
+                                  //                   Get.back();
+                                  //                   controller.groupindex.value = 9;
+                                  //                   controller
+                                  //                       .keypadController.value
+                                  //                       .clear();
+                                  //                   controller.kembalian.value
+                                  //                       .clear();
+                                  //                 },
+                                  //                 icon: Icon(
+                                  //                   FontAwesomeIcons.xmark,
+                                  //                   color: Colors.white,
+                                  //                 )),
+                                  //           ),
+                                  //         )
+                                  //       ],
+                                  //     ),
+                                  //     barrierDismissible: false);
+                                  //
+                                  // controller.meja.value.text = 'Takeout';
+                                  // controller.nomor_meja.value = 'Takeout';
+                                  controller.cache.clear();
+                                  controller.nomormejabayarprebill.value = '';
+                                  controller.subtotal.value = 0;
+                                  controller.total.value = 0;
+                                  controller.jumlahdiskonkasir.value = 0;
+                                  controller.displaydiskon.value = 0;
+                                  controller.ppn.value = 0;
+                                  controller.bayarprebill.value = false;
+
+                                  Get.back();
+
+                                  print('--------------pop-------------');
+                                },
+                                child: Text(
+                                  'Batal'.toUpperCase(),
+                                  style: font().header_blue,
+                                ),
+                                width: 100,
+                                height: context.height_query / 14),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: button_solid_custom(
+                                onPressed: () async {
+                                  controller.cache.value.isEmpty
+                                      ? Get.showSnackbar(toast()
+                                          .bottom_snackbar_error('Gagal',
+                                              'Pilih item terlebih dahulu'))
+                                      : Get.dialog(
+                                          Stack(
+                                            children: [
+                                              Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          context.width_query /
+                                                              10,
+                                                      vertical:
+                                                          context.height_query /
+                                                              10),
+                                                  child: const kasir_keypad()),
+                                              Positioned(
+                                                top: context.height_query / 14,
+                                                left: context.width_query / 12,
+                                                child: Material(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  color: color_template()
+                                                      .tritadery,
+                                                  child: IconButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      icon: const Icon(
+                                                        FontAwesomeIcons.close,
+                                                        color: Colors.white,
+                                                      )),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                          barrierDismissible: false);
+                                },
+                                child: Text(
+                                  'Bayar'.toUpperCase(),
+                                  style: font().header,
+                                ),
+                                width: 100,
+                                height: context.height_query / 14),
+                          ),
+                        ],
+                      );
+              })
 
               // button_border_custom(
               //     onPressed: () {

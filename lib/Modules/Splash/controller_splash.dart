@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intro_slider/intro_slider.dart';
 
 import '../../Services/handler.dart';
 import '../Widgets/toast.dart';
@@ -56,12 +55,11 @@ class splashController extends GetxController {
     print(check);
 
     print("LOGIN " + loginStatus.toString());
-    if (check == false || check == null) {
+    if (check == null) {
+      await GetStorage().write('intro', true);
       Timer(const Duration(seconds: 3), () {
         Get.offAndToNamed('/intro');
       });
-
-      await GetStorage().write('intro', true);
     } else {
       if (loginStatus != null) {
         //await fetchKontenSquare();

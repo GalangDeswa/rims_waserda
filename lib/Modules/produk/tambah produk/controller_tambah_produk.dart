@@ -21,6 +21,8 @@ class tambah_produkController extends GetxController {
     //getjenis();
   }
 
+  var metode_diskon = 9.obs;
+
   var jenisproduk = ['produk', 'jasa'].obs;
   var kategoriv2 = ['makanan', 'minuman'].obs;
   var defvalue = ''.obs;

@@ -1,3 +1,4 @@
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,42 +38,143 @@ class kasir_keypad extends GetView<kasirController> {
                           Expanded(
                             child: Container(
                               margin: const EdgeInsets.only(right: 10),
-                              height: context.height_query / 8,
+                              height: context.height_query / 5,
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: color_template().primary),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                  color: Colors.white,
+                                  border: Border.all(
+                                      color: color_template().primary)),
+                              child: Column(
                                 children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(right: 10),
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            border_radius().header_border),
-                                    child: Icon(
-                                      Icons.attach_money,
-                                      color: color_template().primary,
-                                      size: context.height_query / 17,
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 15),
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: BoxDecoration(
+                                              color: color_template().primary,
+                                              borderRadius: border_radius()
+                                                  .header_border),
+                                          child: Icon(
+                                            Icons.attach_money,
+                                            color: Colors.white,
+                                            size: context.height_query / 30,
+                                          ),
+                                        ),
+                                        Text('Total Tagihan :',
+                                            style: font().header_big_blue),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Obx(() {
+                                            return Text(
+                                                'Rp.' +
+                                                    controller.nominal.format(
+                                                        double.parse(controller
+                                                            .total
+                                                            .toString())),
+                                                style: font().header_big_blue);
+                                          }),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Text('Total Tagihan :',
-                                      style: font().header_big),
-                                  const SizedBox(
-                                    width: 10,
+                                  Container(
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    height: 0.5,
+                                    color: color_template().primary,
+                                    width: context.width_query,
                                   ),
                                   Expanded(
-                                    child: Obx(() {
-                                      return Text(
-                                          'Rp.' +
-                                              controller.nominal.format(
-                                                  double.parse(controller.total
-                                                      .toString())),
-                                          style: font().header_big);
-                                    }),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'Kasir : ' + controller.nama_user,
+                                          style: font().reguler_bold,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Obx(() {
+                                              return Text(
+                                                controller.tgl_penjualan.value
+                                                        .isEmpty
+                                                    ? controller.dateFormatprint
+                                                        .format(DateTime.now())
+                                                    : controller.dateFormatprint
+                                                        .format(controller
+                                                            .tgl_penjualan
+                                                            .first!),
+                                                style: font().reguler_bold,
+                                              );
+                                            }),
+                                            Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 10, top: 5, bottom: 5),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  color:
+                                                      color_template().primary),
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    Get.dialog(AlertDialog(
+                                                      content: Container(
+                                                        width: context
+                                                                .width_query /
+                                                            2,
+                                                        // height:
+                                                        //     context.height_query / 1.5,
+                                                        child:
+                                                            CalendarDatePicker2WithActionButtons(
+                                                                config: CalendarDatePicker2WithActionButtonsConfig(
+                                                                    weekdayLabels: [
+                                                                      'Minggu',
+                                                                      'Senin',
+                                                                      'Selasa',
+                                                                      'Rabu',
+                                                                      'Kamis',
+                                                                      'Jumat',
+                                                                      'Sabtu',
+                                                                    ],
+                                                                    firstDayOfWeek:
+                                                                        1,
+                                                                    calendarType:
+                                                                        CalendarDatePicker2Type
+                                                                            .single),
+                                                                value: controller
+                                                                    .tgl_penjualan
+                                                                    .value,
+                                                                onValueChanged:
+                                                                    (dates) {
+                                                                  print(dates);
+                                                                  controller
+                                                                      .tgl_penjualan
+                                                                      .value = dates;
+
+                                                                  Get.back();
+                                                                }),
+                                                      ),
+                                                    ));
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.calendar_month,
+                                                    color: Colors.white,
+                                                    size: context.height_query /
+                                                        45,
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -114,7 +216,7 @@ class kasir_keypad extends GetView<kasirController> {
                             direction: Axis.horizontal,
                             buttonHeight: context.height_query / 13,
                             buttonWidth: context.width_query / 10,
-                            mainGroupAlignment: MainGroupAlignment.spaceAround,
+                            mainGroupAlignment: MainGroupAlignment.spaceBetween,
                             crossGroupAlignment: CrossGroupAlignment.center,
                             groupRunAlignment: GroupRunAlignment.spaceBetween,
                             textAlign: TextAlign.center,

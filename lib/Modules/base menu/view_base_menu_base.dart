@@ -433,6 +433,49 @@ class base_menu extends GetView<base_menuController> {
                       ),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: context.width_query,
+                    color: Colors.black,
+                    height: 0.3,
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    highlightColor: color_template().select,
+                    splashColor: Colors.orangeAccent,
+                    onTap: () {
+                      controller.resetpop();
+                    },
+                    child: ListTile(
+                      title: Text('Reset aplikasi'),
+                      leading: Icon(
+                        Icons.warning_amber,
+                        color: color_template().tritadery,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  // InkWell(
+                  //   highlightColor: color_template().select,
+                  //   splashColor: Colors.orangeAccent,
+                  //   onTap: () {
+                  //     controller.test();
+                  //   },
+                  //   child: ListTile(
+                  //     title: Text('Test'),
+                  //     leading: Icon(
+                  //       Icons.transfer_within_a_station,
+                  //       color: color_template().tritadery,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             );

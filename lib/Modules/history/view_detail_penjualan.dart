@@ -287,7 +287,7 @@ class detail_penjualan extends GetView<detailpenjualanController> {
                   children: [
                     Expanded(child: Text('PPN :', style: font().reguler_bold)),
                     Text(
-                      'Rp.' + controller.nominal.format(ppn.round()),
+                      'Rp.' + controller.nominal.format(controller.data.ppn),
                       style: font().reguler,
                     ),
                   ],

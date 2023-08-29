@@ -311,9 +311,9 @@ class loginController extends GetxController {
       }
     } catch (e) {
       print(e);
-      Get.back();
       Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
     }
+
     // Get.dialog(showloading(), barrierDismissible: false);
   }
 

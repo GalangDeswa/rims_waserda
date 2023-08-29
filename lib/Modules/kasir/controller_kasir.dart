@@ -10,16 +10,17 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:group_button/group_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:rims_waserda/Modules/Widgets/toast.dart';
 import 'package:rims_waserda/Modules/base%20menu/controller_base_menu.dart';
 import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
 import 'package:rims_waserda/Modules/history/Controller_history.dart';
 import 'package:rims_waserda/Modules/history/model_penjualan.dart';
 import 'package:rims_waserda/Modules/kasir/model_keranjang_cache.dart';
-import 'package:rims_waserda/Modules/kasir/view_kasir_keypad_prebill.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/controller_data_produk.dart';
 import 'package:rims_waserda/Templates/setting.dart';
@@ -548,6 +549,7 @@ class kasirController extends GetxController {
   var max = false.obs;
 
   var editqty = TextEditingController().obs;
+  var editqtyprebill = TextEditingController().obs;
 
   popeditqty(index) {
     editqty.value.clear();
@@ -633,8 +635,116 @@ class kasirController extends GetxController {
                                   cache[index].qty =
                                       int.parse(editqty.value.text);
                                   await subtotalval();
-                                  await totalval();
                                   await hitungbesardiskonkasir();
+                                  await totalval();
+
+                                  Get.back();
+                                }
+                              },
+                              child: Text(
+                                'Tambah Qty',
+                                style: font().primary_white,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          );
+        },
+      ),
+    ));
+  }
+
+  popeditqtyprebill(index, id_meja) {
+    editqtyprebill.value.clear();
+    Get.dialog(AlertDialog(
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                width: context.width_query / 2.6,
+                height: context.height_query / 2.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Masukan jumlah QTY',
+                      style: font().header_black,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'Qty',
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        textAlign: TextAlign.center,
+                        controller: editqtyprebill.value,
+                        style: font().header_black,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: button_border_custom(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text(
+                                'Batal',
+                                style: font().primary,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
+                        ),
+                        SizedBox(
+                          width: 25,
+                        ),
+                        Expanded(
+                          child: button_solid_custom(
+                              onPressed: () async {
+                                //editqty.value.text = cache[index].qty.toString();
+                                cachemejadetail.refresh();
+
+                                var pp = produklistlocal
+                                    .where((e) =>
+                                        e.idLocal ==
+                                        cachemejadetail[index].idProdukLocal)
+                                    .first;
+
+                                var qty = int.parse(editqtyprebill.value.text);
+                                if (qty > pp.qty! &&
+                                    cachemejadetail[index].idJenisStock == 1) {
+                                  Get.showSnackbar(toast()
+                                      .bottom_snackbar_error(
+                                          'Gagal', 'Stock tidak mencukupi'));
+                                } else {
+                                  cachemejadetail[index].qty =
+                                      int.parse(editqtyprebill.value.text);
+                                  await subtotalvalprebill(id_meja);
+
                                   Get.back();
                                 }
                               },
@@ -669,8 +779,8 @@ class kasirController extends GetxController {
     // }
 
     await subtotalval();
-    await totalval();
     await hitungbesardiskonkasir();
+    await totalval();
     print('qty cache ------------------------------------------');
 
     //cache.refresh();
@@ -680,20 +790,74 @@ class kasirController extends GetxController {
     return sum;
   }
 
+  tambahqtyprebill(int index, String idproduklocal, id_meja) async {
+    cachemejadetail.refresh();
+    var qty = cachemejadetail.value[index].qty;
+    var add = qty! + 1;
+    var sum = cachemejadetail[index].qty = add;
+    print(produklistlocal[index].qty);
+
+    await DBHelper().UPDATEMEJADETAIL(
+        table: 'meja_detail', data: qtymejadetail(sum), id: idproduklocal);
+
+    await subtotalvalprebill(id_meja);
+
+    //cache.refresh();
+
+    print(cachemejadetail[index].qty);
+    print(cachemejadetail[index]);
+    return sum;
+  }
+
   deleteqty(int index, String idproduklocal) async {
     max.value = false;
     var qty = cache.value[index].qty;
     var del = qty - 1;
     var sum = cache[index].qty = del;
     await subtotalval();
-    await totalval();
     await hitungbesardiskonkasir();
+    await totalval();
+
     if (sum < 1) {
       cache.value.removeWhere((element) => element.idLocal == idproduklocal);
       print('qty cache deldete ------------------------------------------');
       cache.refresh();
     } else {
       cache.refresh();
+      return sum;
+    }
+  }
+
+  Map<String, dynamic> qtymejadetail(qty) {
+    var map = <String, dynamic>{};
+
+    map['qty'] = qty;
+
+    return map;
+  }
+
+  deleteqtyprebill(int index, String idproduklocal, int id_meja) async {
+    max.value = false;
+    var qty = cachemejadetail.value[index].qty;
+    var del = qty! - 1;
+    var sum = cachemejadetail[index].qty = del;
+    // print('qty cache prebill ------------------------------------------');
+
+    await subtotalvalprebill(id_meja);
+
+    if (sum < 1) {
+      cachemejadetail.value
+          .removeWhere((element) => element.idProdukLocal == idproduklocal);
+      print('qty cache deldete ------------------------------------------');
+
+      await DBHelper().DELETEITEMMEJADETAIL('meja_detail', idproduklocal);
+      cachemejadetail.refresh();
+      //  await fetchmejadetail(id_meja);
+    } else {
+      await DBHelper().UPDATEMEJADETAIL(
+          table: 'meja_detail', data: qtymejadetail(sum), id: idproduklocal);
+      cachemejadetail.refresh();
+      // await fetchmejadetail(id_meja);
       return sum;
     }
   }
@@ -721,113 +885,246 @@ class kasirController extends GetxController {
   var textdiskon = TextEditingController().obs;
 
   hitungbesardiskonkasir() {
-    return jumlahdiskonkasir.value = subtotal.value * displaydiskon.value / 100;
+    if (metode_diskon.value == 1) {
+      print(
+          '------------------------------ persen diskon ------------------------------');
+      return jumlahdiskonkasir.value =
+          subtotal.value * displaydiskon.value / 100;
+    } else {
+      print(
+          '------------------------------ nominal diskon ------------------------------');
+      print(displaydiskon);
+      return jumlahdiskonkasir.value = displaydiskon.value;
+    }
   }
 
   var jumlahdiskonkasir = 0.0.obs;
+  var metode_diskon = 9.obs;
 
   editDiskonKasir(kasirController controller) {
-    Get.dialog(AlertDialog(
-      contentPadding: EdgeInsets.all(10),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(12.0),
-        ),
-      ),
-      content: Builder(
-        builder: (context) {
-          return SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                width: context.width_query / 2.6,
-                height: context.height_query / 2.6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      'Masukan jumlah dikon',
-                      style: font().header_black,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                hintText: 'Persentase diskon',
-                                suffixText: '%',
-                                suffixStyle:
-                                    TextStyle(fontWeight: FontWeight.bold),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                              ),
-                              textAlign: TextAlign.center,
-                              controller: textdiskon.value,
-                              style: font().header_black,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
+    Get.dialog(
+        AlertDialog(
+          contentPadding: EdgeInsets.all(10),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.0),
+            ),
+          ),
+          content: Builder(
+            builder: (context) {
+              return SingleChildScrollView(
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    width: context.width_query / 2.6,
+                    height: context.height_query / 2.6,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: button_border_custom(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text(
-                                'Batal',
-                                style: font().primary,
-                              ),
-                              width: context.width_query,
-                              height: context.height_query / 11),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Masukan jumlah dikon',
+                          style: font().header_black,
                         ),
                         SizedBox(
-                          width: 25,
+                          height: 10,
                         ),
-                        Expanded(
-                          child: button_solid_custom(
-                              onPressed: () {
-                                displaydiskon.value =
-                                    double.parse(textdiskon.value.text);
-                                hitungbesardiskonkasir();
-                                totalval();
+                        Obx(() {
+                          return Expanded(
+                            child: Row(
+                              children: [
+                                metode_diskon.value == 9
+                                    ? Expanded(
+                                        child: Container(
+                                            child: Center(
+                                                child: Text(
+                                        'pilih metode diskon',
+                                        style: font().reguler_bold,
+                                      ))))
+                                    : metode_diskon.value == 1
+                                        ? Expanded(
+                                            child: TextField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              onChanged: ((String num) {
+                                                displaydiskon.value =
+                                                    double.parse(num.toString()
+                                                        .replaceAll(',', ''));
+                                                print(displaydiskon);
+                                              }),
+                                              decoration: InputDecoration(
+                                                hintText: 'Persentase diskon',
+                                                suffixText: '%',
+                                                suffixStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              controller: textdiskon.value,
+                                              style: font().header_black,
+                                            ),
+                                          )
+                                        : Expanded(
+                                            child: TextField(
+                                              inputFormatters: [
+                                                ThousandsFormatter()
+                                              ],
+                                              onChanged: ((String num) {
+                                                displaydiskon.value =
+                                                    double.parse(num.toString()
+                                                        .replaceAll(',', ''));
+                                                print(displaydiskon);
+                                              }),
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: InputDecoration(
+                                                hintText: 'Potongan harga',
+                                                prefixText: 'Rp.',
+                                                suffixStyle: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              controller: textdiskon.value,
+                                              style: font().header_black,
+                                            ),
+                                          ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 15),
+                                  child: GroupButton(
+                                    isRadio: true,
+                                    controller: GroupButtonController(
+                                        selectedIndex: metode_diskon.value - 1),
+                                    onSelected: (string, index, bool) {
+                                      metode_diskon.value = index + 1;
+                                      print(metode_diskon.value);
+                                    },
+                                    buttons: [
+                                      "Persen",
+                                      "Nominal",
+                                    ],
+                                    options: GroupButtonOptions(
+                                      selectedShadow: const [],
+                                      selectedTextStyle: const TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                      ),
+                                      selectedColor: color_template().select,
+                                      unselectedShadow: const [],
+                                      unselectedColor: Colors.white,
+                                      unselectedTextStyle: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                      ),
+                                      //selectedBorderColor: Colors.pink[900],
+                                      unselectedBorderColor:
+                                          color_template().select,
+                                      borderRadius: BorderRadius.circular(10),
+                                      spacing: 5,
+                                      runSpacing: 5,
+                                      groupingType: GroupingType.column,
+                                      direction: Axis.vertical,
+                                      buttonHeight: context.height_query / 15,
+                                      buttonWidth: context.width_query / 15,
+                                      mainGroupAlignment:
+                                          MainGroupAlignment.spaceAround,
+                                      crossGroupAlignment:
+                                          CrossGroupAlignment.center,
+                                      groupRunAlignment:
+                                          GroupRunAlignment.spaceBetween,
+                                      textAlign: TextAlign.center,
+                                      textPadding: EdgeInsets.zero,
+                                      alignment: Alignment.center,
+                                      elevation: 3,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: button_border_custom(
+                                  onPressed: () {
+                                    metode_diskon.value = 9;
+                                    textdiskon.value.clear();
 
-                                print(
-                                    ' jumalh diskon kasir ---------------------> == $jumlahdiskonkasir');
-                                Get.back();
-                              },
-                              child: Text(
-                                'Edit diskon',
-                                style: font().primary_white,
-                              ),
-                              width: context.width_query,
-                              height: context.height_query / 11),
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    'Batal',
+                                    style: font().primary,
+                                  ),
+                                  width: context.width_query,
+                                  height: context.height_query / 11),
+                            ),
+                            SizedBox(
+                              width: 25,
+                            ),
+                            Expanded(
+                              child: button_solid_custom(
+                                  onPressed: () {
+                                    if (metode_diskon.value == 9) {
+                                      Get.showSnackbar(toast()
+                                          .bottom_snackbar_error('Gagal',
+                                              'Pilih metode diskon terlebih dahulu'));
+                                    } else if (textdiskon.value.text.isEmpty) {
+                                      Get.showSnackbar(toast()
+                                          .bottom_snackbar_error('Gagal',
+                                              'masukan diskon terlebih dahulu'));
+                                    } else {
+                                      // displaydiskon.value =
+                                      //     double.parse(textdiskon.value.text);
+                                      hitungbesardiskonkasir();
+                                      totalval();
+
+                                      print(
+                                          ' jumalh diskon kasir ---------------------> == $jumlahdiskonkasir');
+                                      Get.back();
+                                    }
+                                  },
+                                  child: Text(
+                                    'Edit diskon',
+                                    style: font().primary_white,
+                                  ),
+                                  width: context.width_query,
+                                  height: context.height_query / 11),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
-                )),
-          );
-        },
-      ),
-    ));
+                    )),
+              );
+            },
+          ),
+        ),
+        barrierDismissible: false);
   }
 
-  //TODO : check total diskon dan pnn di detail penjualan
   var nomor_meja = ''.obs;
 
   editMejaKasir(kasirController controller) {
@@ -904,13 +1201,20 @@ class kasirController extends GetxController {
                         Expanded(
                           child: button_solid_custom(
                               onPressed: () {
-                                popscreen().popprintstrukprebill(
-                                    context,
-                                    controller,
-                                    controller.cachemejadetail,
-                                    controller.meja.value.text,
-                                    controller.total.value.round(),
-                                    controller.jumlahdiskonkasir.value.round());
+                                if (meja.value.text.isEmpty) {
+                                  Get.showSnackbar(toast().bottom_snackbar_error(
+                                      'Gagal',
+                                      'Masukan nomor meja terlebih dahulu'));
+                                } else {
+                                  popscreen().popprintstrukprebill(
+                                      context,
+                                      controller,
+                                      controller.cachemejadetail,
+                                      controller.meja.value.text,
+                                      controller.total.value.round(),
+                                      controller.jumlahdiskonkasir.value
+                                          .round());
+                                }
                               },
                               child: Text(
                                 'Simpan',
@@ -931,8 +1235,17 @@ class kasirController extends GetxController {
 
   var cachemeja = <DataMeja>[].obs;
   var cachemejadetail = <DataMeja>[].obs;
+  var tgl_penjualan = <DateTime?>[].obs;
 
-//TODO : chek print struk margin print struk prebill
+//TODO :
+
+// -Menu pembatalan
+
+  // edit meja dan tgl penjualan
+
+  // tampilan bayar meja di area kasir lama
+  // check update ga di update berubah sync apa ngak di local -> sync berubah n
+  // print ulang bayar prebill
 
   addmeja() async {
     var dbClient = await DBHelper().db;
@@ -947,6 +1260,7 @@ class kasirController extends GetxController {
                   meja: meja.value.text,
                   diskonKasir: jumlahdiskonkasir.value.round(),
                   subtotal: subtotal.value.round(),
+                  ppn: ppn.value.round(),
                   total: total.value.round())
               .toMapForDbMEJA());
 
@@ -971,13 +1285,13 @@ class kasirController extends GetxController {
       dbClient!.update(
           'meja',
           DataMeja(
-                  id: cachemeja[existingIndex].id,
                   diskonKasir: jumlahdiskonkasir.value.round(),
                   meja: meja.value.text,
                   subtotal: cachemeja[existingIndex].subtotal!.round() +
                       subtotal.value.round(),
+                  ppn: cachemeja[existingIndex].ppn,
                   total: cachemeja[existingIndex].total! + total.value.round())
-              .toMapForDbMEJA(),
+              .toMapForDbMEJAUPDATE(),
           where: 'id = ?',
           whereArgs: [cachemeja[existingIndex].id]);
 
@@ -994,7 +1308,7 @@ class kasirController extends GetxController {
                 namaProduk: e.namaProduk,
                 qty: e.qty,
                 harga: e.harga,
-                diskonBrg: diskonbarang.round(),
+                diskonBrg: e.diskonBarang,
                 idJenisStock: e.idJenisStock,
                 idProdukLocal: e.idLocal,
                 idKategori: e.idKategori,
@@ -1005,7 +1319,6 @@ class kasirController extends GetxController {
               'meja_detail',
               DataMeja(
                 idMeja: cachemejadetail[indexdetail].idMeja,
-                id: cachemejadetail[indexdetail].id,
                 idProduk: cachemejadetail[indexdetail].idProduk,
                 namaProduk: cachemejadetail[indexdetail].namaProduk,
                 qty: cachemejadetail[indexdetail].qty! + e.qty,
@@ -1015,7 +1328,7 @@ class kasirController extends GetxController {
                 idKategori: cachemejadetail[indexdetail].idKategori,
                 idProdukLocal: cachemejadetail[indexdetail].idProdukLocal,
                 idJenisStock: cachemejadetail[indexdetail].idJenisStock,
-              ).toMapForDbMEJADETAIL(),
+              ).toMapForDbMEJADETAILUPDATE(),
               where: 'id = ?',
               whereArgs: [cachemejadetail[indexdetail].id]);
         }
@@ -1069,6 +1382,209 @@ class kasirController extends GetxController {
 
   var totalprebill = 0.0.obs;
 
+  var editnomormejaprebillCon = TextEditingController().obs;
+
+  Map<String, dynamic> updatenomormeja(nomeja) {
+    var map = <String, dynamic>{};
+
+    map['meja'] = nomeja;
+
+    return map;
+  }
+
+  Map<String, dynamic> updatenomormejadetail(nomeja) {
+    var map = <String, dynamic>{};
+
+    map['id_meja'] = nomeja;
+
+    return map;
+  }
+
+  editnomormejaprebill(id, nomor_meja) {
+    Get.dialog(AlertDialog(
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                width: context.width_query / 2.6,
+                height: context.height_query / 2.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Edit nomor meja',
+                      style: font().header_black,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                hintText: 'Nomor meja',
+                                suffixStyle:
+                                    TextStyle(fontWeight: FontWeight.bold),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                              textAlign: TextAlign.center,
+                              controller: editnomormejaprebillCon.value,
+                              style: font().header_black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: button_border_custom(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text(
+                                'Batal',
+                                style: font().primary,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
+                        ),
+                        SizedBox(
+                          width: 25,
+                        ),
+                        Expanded(
+                          child: button_solid_custom(
+                              onPressed: () async {
+                                if (editnomormejaprebillCon
+                                    .value.text.isEmpty) {
+                                  Get.showSnackbar(toast().bottom_snackbar_error(
+                                      'Gagal',
+                                      'Masukan nomor meja terlebih dahulu'));
+                                } else {
+                                  List<DataMeja> item = await fetchmejadetail(
+                                      nomor_meja.toString());
+                                  print(item.toString() +
+                                      ' <------------------------------');
+                                  Future.forEach(item, (element) async {
+                                    print('update meja detail');
+                                    await DBHelper().UPDATEMEJADETAILNOMORMEJA(
+                                        table: 'meja_detail',
+                                        data: updatenomormejadetail(
+                                            editnomormejaprebillCon.value.text),
+                                        id_meja: nomor_meja.toString());
+                                  });
+                                  await DBHelper().UPDATEMEJA(
+                                      table: 'meja',
+                                      data: updatenomormeja(
+                                          editnomormejaprebillCon.value.text),
+                                      id: id);
+
+                                  await fetchmeja();
+                                  editnomormejaprebillCon.value.clear();
+                                  Get.back();
+                                  Get.showSnackbar(toast()
+                                      .bottom_snackbar_success('Sukses',
+                                          'Nomor meja berhasil di edit'));
+                                }
+                              },
+                              child: Text(
+                                'Simpan',
+                                style: font().primary_white,
+                              ),
+                              width: context.width_query,
+                              height: context.height_query / 11),
+                        ),
+                      ],
+                    ),
+                  ],
+                )),
+          );
+        },
+      ),
+    ));
+  }
+
+  Map<String, dynamic> updatesubtotalmeja(subtotal, total, ppn) {
+    var map = <String, dynamic>{};
+
+    map['subtotal'] = subtotal;
+    map['total'] = total;
+    map['ppn'] = ppn;
+
+    return map;
+  }
+
+  var bayarprebill = false.obs;
+  var nomormejabayarprebill = ''.obs;
+
+  pindahbayarprebill(String id_meja) async {
+    bayarprebill.value = true;
+    List<DataMeja> datameja = await fetchmeja();
+    List<DataMeja> datadetail = await fetchmejadetail(id_meja);
+    var mejafilter = datameja.where((element) => element.meja == id_meja).first;
+    await Future.forEach(
+        datadetail,
+        (e) => {
+              cache.add(DataKeranjangCache(
+                idLocal: e.idProdukLocal,
+                id: e.id,
+                idToko: int.parse(id_toko),
+                idUser: id_user,
+                idJenis: '-',
+                idJenisStock: e.idJenisStock,
+                namaJenis: '-',
+                idKategori: e.idKategori,
+                namaProduk: e.namaProduk,
+                deskripsi: '-',
+                qty: e.qty!,
+                harga: e.harga,
+                hargaModal: e.hargaModal,
+                diskonBarang: e.diskonBrg,
+                diskonKasir: mejafilter.diskonKasir,
+                image: '-',
+                status: '1',
+                updated: null,
+                createdAt: null,
+                updatedAt: null,
+              ))
+            });
+
+    subtotal.value = mejafilter.subtotal!.toDouble();
+    if (mejafilter.ppn == 0) {
+      ppnSwitch.value = false;
+      ppn.value = 0;
+    } else {
+      ppnSwitch.value = true;
+      ppn.value = mejafilter.ppn!.toDouble();
+    }
+    metode_diskon.value = 2;
+    displaydiskon.value = mejafilter.diskonKasir!.toDouble();
+    jumlahdiskonkasir.value = mejafilter.diskonKasir!.toDouble();
+    total.value = mejafilter.total!.toDouble();
+    nomormejabayarprebill.value = id_meja;
+    print(bayarprebill.value);
+    Get.back();
+  }
+
   listMejaKasir(kasirController controller) {
     Get.dialog(AlertDialog(
       title: header(
@@ -1087,9 +1603,9 @@ class kasirController extends GetxController {
         builder: (context) {
           return SingleChildScrollView(
               child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  width: context.width_query / 1.2,
-                  height: context.height_query / 1.2,
+                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  width: context.width_query / 1,
+                  height: context.height_query / 1,
                   child: Obx(() {
                     return DataTable2(
                       columnSpacing: 0,
@@ -1109,17 +1625,49 @@ class kasirController extends GetxController {
 
                         // totalprebill.value = cachemeja[index].total!.toDouble();
                         return DataRow(cells: <DataCell>[
-                          DataCell(Text(cachemeja[index].meja!)),
+                          DataCell(Row(
+                            children: [
+                              Expanded(child: Text(cachemeja[index].meja!)),
+                              Container(
+                                width: 50,
+                                margin: EdgeInsets.only(
+                                    right: context.width_query / 15),
+                                child: IconButton(
+                                  onPressed: () {
+                                    editnomormejaprebill(cachemeja[index].meja,
+                                        cachemeja[index].meja);
+                                  },
+                                  icon: Icon(
+                                    Icons.edit,
+                                    size: 20,
+                                  ),
+                                  //color: color_template().select,
+                                ),
+                              ),
+                            ],
+                          )),
                           DataCell(Text('Rp. ' +
                               nominal.format(cachemeja[index].subtotal))),
                           DataCell(Text('Rp. ' +
                               nominal.format(cachemeja[index].diskonKasir!))),
-                          DataCell(Text('Rp. ' + nominal.format(ppn))),
+                          DataCell(Text(
+                              'Rp. ' + nominal.format(cachemeja[index].ppn))),
                           DataCell(Text('Rp. ' +
                               nominal.format(cachemeja[index].total!))),
                           DataCell(Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Expanded(
+                                child: IconButton(
+                                    onPressed: () async {
+                                      popscreen().deletemeja(
+                                          controller, cachemeja[index]);
+                                    },
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: color_template().tritadery,
+                                    )),
+                              ),
                               Expanded(
                                 child: IconButton(
                                     onPressed: () async {
@@ -1131,55 +1679,61 @@ class kasirController extends GetxController {
                               ),
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    Get.dialog(
-                                        Stack(
-                                          children: [
-                                            Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        context.width_query /
-                                                            10,
-                                                    vertical:
-                                                        context.height_query /
-                                                            10),
-                                                child: kasir_keypad_prebill(
-                                                    cachemeja[index].total!,
-                                                    cachemejadetail.value,
-                                                    cachemeja[index].meja!,
-                                                    cachemeja[index]
-                                                        .diskonKasir!)),
-                                            Positioned(
-                                              top: context.height_query / 14,
-                                              left: context.width_query / 12,
-                                              child: Material(
-                                                borderRadius:
-                                                    BorderRadius.circular(30),
-                                                color:
-                                                    color_template().tritadery,
-                                                child: IconButton(
-                                                    onPressed: () {
-                                                      groupindex.value = 9;
-
-                                                      keypadController_prebill
-                                                          .value
-                                                          .clear();
-                                                      kembalian_prebill.value
-                                                          .clear();
-                                                      Get.back();
-                                                    },
-                                                    icon: Icon(
-                                                      FontAwesomeIcons.xmark,
-                                                      color: Colors.white,
-                                                    )),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                        barrierDismissible: false);
-                                  },
-                                  child: Text('Bayar'),
-                                ),
+                                    onPressed: () {
+                                      // Get.dialog(
+                                      //     Stack(
+                                      //       children: [
+                                      //         Container(
+                                      //             padding: EdgeInsets.symmetric(
+                                      //                 horizontal:
+                                      //                     context.width_query /
+                                      //                         10,
+                                      //                 vertical:
+                                      //                     context.height_query /
+                                      //                         10),
+                                      //             child: kasir_keypad_prebill(
+                                      //                 cachemeja[index].total!,
+                                      //                 cachemejadetail.value,
+                                      //                 cachemeja[index].meja!,
+                                      //                 cachemeja[index]
+                                      //                     .diskonKasir!,
+                                      //                 cachemeja[index].subtotal,
+                                      //                 cachemeja[index].ppn)),
+                                      //         Positioned(
+                                      //           top: context.height_query / 14,
+                                      //           left: context.width_query / 12,
+                                      //           child: Material(
+                                      //             borderRadius:
+                                      //                 BorderRadius.circular(30),
+                                      //             color:
+                                      //                 color_template().tritadery,
+                                      //             child: IconButton(
+                                      //                 onPressed: () {
+                                      //                   groupindex.value = 9;
+                                      //
+                                      //                   keypadController_prebill
+                                      //                       .value
+                                      //                       .clear();
+                                      //                   kembalian_prebill.value
+                                      //                       .clear();
+                                      //                   Get.back();
+                                      //                 },
+                                      //                 icon: Icon(
+                                      //                   FontAwesomeIcons.xmark,
+                                      //                   color: Colors.white,
+                                      //                 )),
+                                      //           ),
+                                      //         )
+                                      //       ],
+                                      //     ),
+                                      //     barrierDismissible: false)
+                                      pindahbayarprebill(
+                                          cachemeja[index].meja!);
+                                    },
+                                    child: Icon(
+                                      FontAwesomeIcons.cashRegister,
+                                      color: Colors.white,
+                                    )),
                               )
                             ],
                           ))
@@ -1195,7 +1749,7 @@ class kasirController extends GetxController {
   listMejaDetailKasir(kasirController controller) {
     Get.dialog(AlertDialog(
       title: header(
-          title: 'Detail open bill',
+          title: 'Detail meja',
           icon: Icons.table_restaurant,
           iscenter: true,
           icon_color: color_template().primary,
@@ -1211,43 +1765,164 @@ class kasirController extends GetxController {
           return SingleChildScrollView(
               child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  width: context.width_query / 1.8,
-                  height: context.height_query / 1.8,
+                  width: context.width_query / 1.3,
+                  height: context.height_query / 1.3,
                   child: Column(
                     children: [
                       Expanded(
-                        child: DataTable2(
-                          columns: <DataColumn>[
-                            DataColumn(label: Text('Nama produk')),
-                            DataColumn(label: Text('qty')),
-                            DataColumn(label: Text('harga')),
-                            DataColumn(label: Text('Subtotal')),
-                          ],
+                        child: Obx(() {
+                          return DataTable2(
+                            columns: <DataColumn>[
+                              DataColumn(label: Text('Nama produk')),
+                              DataColumn(label: Text('qty')),
+                              DataColumn(label: Text('harga')),
+                              DataColumn(label: Text('Subtotal')),
+                              DataColumn(label: Text('Aksi')),
+                            ],
+                            rows:
+                                List.generate(cachemejadetail.length, (index) {
+                              var pp = controller.produklistlocal
+                                  .where((e) =>
+                                      e.idLocal ==
+                                      controller
+                                          .cachemejadetail[index].idProdukLocal)
+                                  .first;
+                              var hargadiskon = cachemejadetail[index].harga! -
+                                  (cachemejadetail[index].harga! *
+                                      cachemejadetail[index].diskonBrg! /
+                                      100);
 
-                          //TODO : check display diskon dan isi nilai diskon di penjualan
-                          rows: List.generate(cachemejadetail.length, (index) {
-                            var hargadiskon = cachemejadetail[index].harga! -
-                                (cachemejadetail[index].harga! *
-                                    cachemejadetail[index].diskonBrg! /
-                                    100);
-
-                            var subtotal =
-                                hargadiskon * cachemejadetail[index].qty!;
-                            return DataRow(cells: <DataCell>[
-                              DataCell(Text(cachemejadetail[index]
-                                  .namaProduk!
-                                  .toString())),
-                              DataCell(
-                                  Text(cachemejadetail[index].qty!.toString())),
-                              DataCell(cachemejadetail[index].diskonBrg == 0
-                                  ? Text('Rp. ' +
-                                      nominal.format(
-                                          cachemejadetail[index].harga!))
-                                  : Text('Rp. ' + nominal.format(hargadiskon))),
-                              DataCell(Text('Rp. ' + nominal.format(subtotal))),
-                            ]);
-                          }),
-                        ),
+                              var subtotal =
+                                  hargadiskon * cachemejadetail[index].qty!;
+                              return DataRow(cells: <DataCell>[
+                                DataCell(Text(cachemejadetail[index]
+                                    .namaProduk!
+                                    .toString())),
+                                DataCell(
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      // Container(
+                                      //   margin: const EdgeInsets.only(right: 5),
+                                      //   padding: const EdgeInsets.all(3),
+                                      //   decoration: BoxDecoration(
+                                      //       shape: BoxShape.circle,
+                                      //       color: color_template().select),
+                                      //   child: InkWell(
+                                      //     onTap: () {
+                                      //       controller.deleteqtyprebill(
+                                      //           index,
+                                      //           cachemejadetail[index]
+                                      //               .idProdukLocal!,
+                                      //           cachemejadetail[index].idMeja!);
+                                      //     },
+                                      //     child: Icon(
+                                      //       Icons.remove,
+                                      //       color: Colors.white,
+                                      //       size: context.height_query / 40,
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      InkWell(
+                                        splashColor: color_template().select,
+                                        onTap: () {
+                                          // controller.popeditqtyprebill(index,cachemejadetail[index].idMeja);
+                                        },
+                                        child: Container(
+                                          width: 55,
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: color_template()
+                                                      .primary)),
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Center(
+                                            heightFactor: 1,
+                                            child: Text(
+                                                controller
+                                                    .cachemejadetail[index].qty
+                                                    .toString(),
+                                                style: font().reguler),
+                                          ),
+                                        ),
+                                      ),
+                                      // controller.cachemejadetail[index].qty! >=
+                                      //             pp.qty! &&
+                                      //         controller.cachemejadetail[index]
+                                      //                 .idJenisStock ==
+                                      //             1
+                                      //     ? Container(
+                                      //         margin: const EdgeInsets.only(
+                                      //           left: 5,
+                                      //         ),
+                                      //         padding: const EdgeInsets.all(3),
+                                      //         decoration: const BoxDecoration(
+                                      //             shape: BoxShape.circle,
+                                      //             color: Colors.grey),
+                                      //         child: Icon(
+                                      //           Icons.add,
+                                      //           color: Colors.white,
+                                      //           size: context.height_query / 40,
+                                      //         ),
+                                      //       )
+                                      //     : InkWell(
+                                      //         onTap: () {
+                                      //           controller.tambahqtyprebill(
+                                      //               index,
+                                      //               cachemejadetail[index]
+                                      //                   .idProdukLocal!,
+                                      //               cachemejadetail[index]
+                                      //                   .idMeja);
+                                      //         },
+                                      //         child: Container(
+                                      //           margin: const EdgeInsets.only(
+                                      //             left: 5,
+                                      //           ),
+                                      //           padding:
+                                      //               const EdgeInsets.all(3),
+                                      //           decoration: BoxDecoration(
+                                      //               shape: BoxShape.circle,
+                                      //               color: color_template()
+                                      //                   .primary),
+                                      //           child: Icon(
+                                      //             Icons.add,
+                                      //             color: Colors.white,
+                                      //             size:
+                                      //                 context.height_query / 40,
+                                      //           ),
+                                      //         ),
+                                      //       )
+                                    ],
+                                  ),
+                                ),
+                                DataCell(cachemejadetail[index].diskonBrg == 0
+                                    ? Text('Rp. ' +
+                                        nominal.format(
+                                            cachemejadetail[index].harga!))
+                                    : Text(
+                                        'Rp. ' + nominal.format(hargadiskon))),
+                                DataCell(
+                                    Text('Rp. ' + nominal.format(subtotal))),
+                                DataCell(IconButton(
+                                  onPressed: () async {
+                                    popscreen().deletemejadetail(
+                                        controller, cachemejadetail[index]);
+                                  },
+                                  icon: Icon(Icons.delete),
+                                  color: color_template().tritadery,
+                                )),
+                              ]);
+                            }),
+                          );
+                        }),
                       ),
                       // Padding(
                       //   padding: const EdgeInsets.all(8.0),
@@ -1341,12 +2016,18 @@ class kasirController extends GetxController {
   }
 
   var ppn = 0.0.obs;
+  var ppnSwitch = false.obs;
 
   totalval() {
     var total1 = subtotal.value - jumlahdiskonkasir.value;
     var ppn1 = 11 / 100 * total1;
-    ppn.value = ppn1;
-    return total.value = total1 + ppn1;
+    if (ppnSwitch.value == true) {
+      ppn.value = ppn1;
+      return total.value = total1 + ppn1;
+    } else {
+      ppn.value = 0.0;
+      return total.value = total1;
+    }
   }
 
   subtotalval() {
@@ -1357,6 +2038,30 @@ class kasirController extends GetxController {
             (amount.qty *
                 (amount.harga! -
                     (amount.harga! * amount.diskonBarang! / 100))));
+  }
+
+  Map<String, dynamic> datasubtotalprebill(subtotal, total) {
+    var map = <String, dynamic>{};
+
+    map['subtotal'] = subtotal;
+    map['total'] = total;
+
+    return map;
+  }
+
+  subtotalvalprebill(id_meja) async {
+    print('subtotal prebil--------');
+    List<DataMeja> sub = await fetchmejadetail(id_meja);
+    List<DataMeja> total = await fetchmeja();
+    var s = sub
+        .map((e) => e.subtotal)
+        .fold(0, (previousValue, element) => previousValue + element!);
+    var t = total.where((element) => element.meja == id_meja).first;
+
+    var totaltotal = s - t.diskonKasir!.toInt() - t.ppn!.toInt();
+
+    await DBHelper().UPDATEMEJASUBTOTAL(
+        table: 'meja', data: datasubtotalprebill(s, totaltotal), id: id_meja);
   }
 
   fetchkeranjangcache() async {
@@ -1605,7 +2310,6 @@ class kasirController extends GetxController {
     return uniqueId;
   }
 
-
   // todo : final check;
 
   pembayaranlocal(id_toko) async {
@@ -1633,19 +2337,24 @@ class kasirController extends GetxController {
                   totalItem: cache
                       .map((e) => e.qty)
                       .fold(0, (previous, current) => previous! + current),
-                  tglPenjualan: DateTime.now().toString(),
+                  tglPenjualan: tgl_penjualan.value.isEmpty
+                      ? DateTime.now().toString()
+                      : tgl_penjualan.value.first.toString(),
                   subTotal: subtotal.value.round(),
                   namaUser: nama_user,
                   namaPelanggan:
                       groupindex.value == 2 ? nama_pelanggan.value.text : '-',
                   // idPelanggan: listpelanggan.,
                   metodeBayar: groupindex.value,
-                  meja: meja.value.text.isEmpty ? '0' : meja.value.text,
+                  //meja:  meja.value.text.isEmpty ? '0' : meja.value.text,
+                  meja:
+                      bayarprebill == true ? nomormejabayarprebill.value : '-',
                   kembalian: balikvalue.value.round(),
                   diskonTotal:
                       diskonbarangtotal + jumlahdiskonkasir.value.round(),
                   bayar: bayarvalue.value,
                   diskonKasir: jumlahdiskonkasir.value.round(),
+                  ppn: ppn.value.round(),
                   status: groupindex.value == 2 ? 2 : 1)
               .toMapForDb());
       // print('diskon barang total------------------------->');
@@ -1670,7 +2379,9 @@ class kasirController extends GetxController {
                       hargaBrg: e.harga,
                       diskonBrg: dd.round(),
                       qty: e.qty,
-                      tgl: DateTime.now().toString(),
+                      tgl: tgl_penjualan.value.isEmpty
+                          ? DateTime.now().toString()
+                          : tgl_penjualan.value.first.toString(),
                       hargaModal: e.hargaModal,
                       diskonKasir: jumlahdiskonkasir.value.round(),
                       total: total.value.round())
@@ -1752,7 +2463,9 @@ class kasirController extends GetxController {
             idLocal: id_hutang_generator,
             idToko: int.parse(id_toko),
             idPelanggan: id_pelanggan.value,
-            tglHutang: DateTime.now().toString(),
+            tglHutang: tgl_penjualan.value.isEmpty
+                ? DateTime.now().toString()
+                : tgl_penjualan.value.first.toString(),
             sync: 'N',
             aktif: 'Y',
             hutang: total.value.round(),
@@ -1774,16 +2487,21 @@ class kasirController extends GetxController {
                   totalItem: cache
                       .map((e) => e.qty)
                       .fold(0, (previous, current) => previous! + current),
-                  tglPenjualan: DateTime.now().toString(),
+                  tglPenjualan: tgl_penjualan.value.isEmpty
+                      ? DateTime.now().toString()
+                      : tgl_penjualan.value.first.toString(),
                   subTotal: subtotal.value.round(),
                   namaUser: nama_user,
                   metodeBayar: groupindex.value,
-                  meja: meja.value.text.isEmpty ? '1' : meja.value.text,
+                  //  meja: meja.value.text.isEmpty ? '1' : meja.value.text,
+                  meja:
+                      bayarprebill == true ? nomormejabayarprebill.value : '-',
                   kembalian: 0,
                   diskonTotal:
                       diskonbarangtotal + jumlahdiskonkasir.value.round(),
                   diskonKasir: jumlahdiskonkasir.value.round(),
                   bayar: 0,
+                  ppn: ppn.value.round(),
                   status: 2)
               .toMapForDb());
       print('diskon barang total------------------------->');
@@ -1808,7 +2526,9 @@ class kasirController extends GetxController {
                       hargaBrg: e.harga,
                       diskonBrg: dd.round(),
                       qty: e.qty,
-                      tgl: DateTime.now().toString(),
+                      tgl: tgl_penjualan.value.isEmpty
+                          ? DateTime.now().toString()
+                          : tgl_penjualan.value.first.toString(),
                       hargaModal: e.hargaModal,
                       diskonKasir: jumlahdiskonkasir.value.round(),
                       total: 0)
@@ -1878,6 +2598,13 @@ class kasirController extends GetxController {
             toast().bottom_snackbar_error('error', 'Hutang gagal'));
       }
     }
+    if (bayarprebill == true) {
+      await DBHelper()
+          .DELETEMEJAITEMKOSONG('meja', nomormejabayarprebill.value);
+      await fetchmeja();
+      bayarprebill.value = false;
+      nomormejabayarprebill.value = '';
+    }
   }
 
   pembayaranlocalprebill(
@@ -1908,7 +2635,9 @@ class kasirController extends GetxController {
                       .map((e) => e.qty)
                       .fold(0,
                           (previous, current) => previous! + current!.round()),
-                  tglPenjualan: DateTime.now().toString(),
+                  tglPenjualan: tgl_penjualan.value.isEmpty
+                      ? DateTime.now().toString()
+                      : tgl_penjualan.value.first.toString(),
                   subTotal: cachemeja
                       .where((p0) => p0.meja.toString() == nomor_meja)
                       .map((e) => e.subtotal)
@@ -1923,6 +2652,7 @@ class kasirController extends GetxController {
                   diskonTotal: diskonbarangtotal + diskon_kasir.round(),
                   bayar: bayarvalue_prebill.value,
                   diskonKasir: diskon_kasir.round(),
+                  ppn: ppn.value.round(),
                   status: groupindex.value == 2 ? 2 : 1)
               .toMapForDb());
       // print('diskon barang total------------------------->');
@@ -1947,7 +2677,9 @@ class kasirController extends GetxController {
                       hargaBrg: e.harga,
                       diskonBrg: dd.round(),
                       qty: e.qty,
-                      tgl: DateTime.now().toString(),
+                      tgl: tgl_penjualan.value.isEmpty
+                          ? DateTime.now().toString()
+                          : tgl_penjualan.value.first.toString(),
                       hargaModal: e.hargaModal,
                       diskonKasir: diskon_kasir.round(),
                       total: total_prebill)
@@ -2026,7 +2758,9 @@ class kasirController extends GetxController {
             idLocal: id_hutang_generator,
             idToko: int.parse(id_toko),
             idPelanggan: id_pelanggan.value,
-            tglHutang: DateTime.now().toString(),
+            tglHutang: tgl_penjualan.value.isEmpty
+                ? DateTime.now().toString()
+                : tgl_penjualan.value.first.toString(),
             sync: 'N',
             aktif: 'Y',
             hutang: total_prebill,
@@ -2047,7 +2781,9 @@ class kasirController extends GetxController {
                   total: total_prebill,
                   totalItem: cachemejadetail.map((e) => e.qty).fold(
                       0, (previous, current) => previous! + current!.round()),
-                  tglPenjualan: DateTime.now().toString(),
+                  tglPenjualan: tgl_penjualan.value.isEmpty
+                      ? DateTime.now().toString()
+                      : tgl_penjualan.value.first.toString(),
                   subTotal: cachemeja
                       .where((p0) => p0.meja.toString() == nomor_meja)
                       .map((e) => e.subtotal)
@@ -2059,6 +2795,7 @@ class kasirController extends GetxController {
                   diskonTotal: diskonbarangtotal + diskon_kasir.round(),
                   diskonKasir: diskon_kasir.round(),
                   bayar: 0,
+                  ppn: ppn.value.round(),
                   status: 2)
               .toMapForDb());
       print('diskon barang total------------------------->');
@@ -2083,7 +2820,9 @@ class kasirController extends GetxController {
                       hargaBrg: e.harga,
                       diskonBrg: dd.round(),
                       qty: e.qty,
-                      tgl: DateTime.now().toString(),
+                      tgl: tgl_penjualan.value.isEmpty
+                          ? DateTime.now().toString()
+                          : tgl_penjualan.value.first.toString(),
                       hargaModal: e.hargaModal,
                       diskonKasir: diskon_kasir.round(),
                       total: 0)
@@ -2173,6 +2912,7 @@ class kasirController extends GetxController {
     kembalian_prebill.value.clear();
     kembalian.value.clear();
     id_pelanggan.value = '';
+    tgl_penjualan.value.clear();
   }
 
   deletekeranjanglocal(String table) async {

@@ -5,6 +5,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:group_button/group_button.dart';
 import 'package:pattern_formatter/numeric_formatter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
@@ -775,37 +776,33 @@ class tambah_produk_form extends GetView<produkController> {
                                 children: [
                                   controller.check == false
                                       ? Expanded(
-                                          child: Container(
-                                            // color: Colors.red,
-                                            //  width: 100,
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Container(
-                                                    //color: Colors.green,
-                                                    //  width: 80,
-                                                    child: ListTile(
-                                                      title: Text('Diskon'),
-                                                      subtitle:
-                                                          Text('opsional'),
-                                                    ),
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  //color: Colors.green,
+                                                  //  width: 80,
+                                                  child: ListTile(
+                                                    title: Text('Diskon'),
+                                                    subtitle: Text('opsional'),
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: Checkbox(
-                                                    value:
-                                                        controller.check.value,
-                                                    onChanged: (bool? value) {
-                                                      controller.check.value =
-                                                          value!;
-                                                      print(controller
-                                                          .check.value);
-                                                      // controller.check == true;
-                                                    },
-                                                  ),
-                                                )
-                                              ],
-                                            ),
+                                              ),
+                                              Expanded(
+                                                child: Checkbox(
+                                                  value: controller.check.value,
+                                                  onChanged: (bool? value) {
+                                                    controller.check.value =
+                                                        value!;
+                                                    controller.metode_diskon
+                                                        .value = 9;
+                                                    print(
+                                                        controller.check.value);
+                                                    // controller.check == true;
+                                                  },
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         )
                                       : Container(
@@ -824,42 +821,196 @@ class tambah_produk_form extends GetView<produkController> {
                                       : Expanded(
                                           child: Container(
                                             margin: EdgeInsets.only(left: 10),
-                                            child: TextFormField(
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              controller: controller
-                                                  .diskon_barang.value,
-                                              inputFormatters: [
-                                                ThousandsFormatter()
-                                              ],
-                                              onChanged: ((String num) {
-                                                controller.jumlahdiskon.value =
-                                                    double.parse(num.toString()
-                                                        .replaceAll(',', ''));
-                                                print(controller.jumlahdiskon);
-                                              }),
-                                              decoration: InputDecoration(
-                                                suffix: Text('%'),
-                                                labelText: "Besar diskon",
-                                                labelStyle: TextStyle(
-                                                  color: Colors.black87,
+                                            child: Row(
+                                              children: [
+                                                controller.metode_diskon == 9
+                                                    ? Text(
+                                                        'Pilih metode diskon')
+                                                    : controller.metode_diskon ==
+                                                            1
+                                                        ? Expanded(
+                                                            child:
+                                                                TextFormField(
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              controller: controller
+                                                                  .diskon_barang
+                                                                  .value,
+                                                              inputFormatters: [
+                                                                ThousandsFormatter()
+                                                              ],
+                                                              onChanged:
+                                                                  ((String
+                                                                      num) {
+                                                                controller
+                                                                    .jumlahdiskon
+                                                                    .value = double.parse(num
+                                                                        .toString()
+                                                                    .replaceAll(
+                                                                        ',',
+                                                                        ''));
+                                                                print(controller
+                                                                    .jumlahdiskon);
+                                                              }),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                suffix:
+                                                                    Text('%'),
+                                                                labelText:
+                                                                    "Persentase diskon",
+                                                                labelStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                ),
+                                                                border: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                              ),
+                                                              validator:
+                                                                  (value) {
+                                                                if (value!
+                                                                    .isEmpty) {
+                                                                  return 'Masukan persentase diskon';
+                                                                }
+                                                                return null;
+                                                              },
+                                                            ),
+                                                          )
+                                                        : Expanded(
+                                                            child:
+                                                                TextFormField(
+                                                              keyboardType:
+                                                                  TextInputType
+                                                                      .number,
+                                                              controller: controller
+                                                                  .diskon_barang
+                                                                  .value,
+                                                              inputFormatters: [
+                                                                ThousandsFormatter()
+                                                              ],
+                                                              onChanged:
+                                                                  ((String
+                                                                      num) {
+                                                                controller
+                                                                    .jumlahdiskon
+                                                                    .value = double.parse(num
+                                                                        .toString()
+                                                                    .replaceAll(
+                                                                        ',',
+                                                                        ''));
+                                                                print(controller
+                                                                    .jumlahdiskon);
+                                                              }),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                prefixText:
+                                                                    'Rp.',
+                                                                labelText:
+                                                                    "Potongan harga",
+                                                                labelStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                ),
+                                                                border: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                              ),
+                                                              validator:
+                                                                  (value) {
+                                                                if (value!
+                                                                    .isEmpty) {
+                                                                  return 'Masukan potongan harga';
+                                                                }
+                                                                return null;
+                                                              },
+                                                            ),
+                                                          ),
+                                                Container(
+                                                  margin: EdgeInsets.only(
+                                                      left: 15, top: 10),
+                                                  child: GroupButton(
+                                                    isRadio: true,
+                                                    onSelected:
+                                                        (string, index, bool) {
+                                                      controller.metode_diskon
+                                                          .value = index + 1;
+                                                      print(controller
+                                                          .metode_diskon.value);
+                                                    },
+                                                    buttons: [
+                                                      "Persen",
+                                                      "Nominal",
+                                                    ],
+                                                    options: GroupButtonOptions(
+                                                      selectedShadow: const [],
+                                                      selectedTextStyle:
+                                                          TextStyle(
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                      selectedColor:
+                                                          color_template()
+                                                              .select,
+                                                      unselectedShadow: const [],
+                                                      unselectedColor:
+                                                          Colors.white,
+                                                      unselectedTextStyle:
+                                                          const TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black,
+                                                      ),
+                                                      //selectedBorderColor: Colors.pink[900],
+                                                      unselectedBorderColor:
+                                                          color_template()
+                                                              .select,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      spacing: 5,
+                                                      runSpacing: 5,
+                                                      groupingType:
+                                                          GroupingType.column,
+                                                      direction: Axis.vertical,
+                                                      buttonHeight:
+                                                          context.height_query /
+                                                              20,
+                                                      buttonWidth:
+                                                          context.width_query /
+                                                              20,
+                                                      mainGroupAlignment:
+                                                          MainGroupAlignment
+                                                              .spaceAround,
+                                                      crossGroupAlignment:
+                                                          CrossGroupAlignment
+                                                              .center,
+                                                      groupRunAlignment:
+                                                          GroupRunAlignment
+                                                              .spaceBetween,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      textPadding:
+                                                          EdgeInsets.zero,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      elevation: 3,
+                                                    ),
+                                                  ),
                                                 ),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                              ),
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return 'Masukan potongan diskon';
-                                                }
-                                                return null;
-                                              },
+                                              ],
                                             ),
                                           ),
                                         ),

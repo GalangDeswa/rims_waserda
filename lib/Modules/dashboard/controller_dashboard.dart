@@ -8,6 +8,7 @@ import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/controller_data_
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/model_data_pelanggan.dart';
 import 'package:rims_waserda/Modules/pelanggan/hutang/controller_hutang.dart';
 import 'package:rims_waserda/Modules/pelanggan/hutang/model_hutang.dart';
+import 'package:rims_waserda/Modules/pelanggan/hutang/model_hutang_detail.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 
 import '../beban/data beban/controller_beban.dart';
@@ -124,52 +125,64 @@ class dashboardController extends GetxController {
 
     print('sum penjualan hari ini----------------------------->');
     print(sumP);
-
-    List<DataBeban> b = await bebanController().fetchBebanlocal(id_toko);
-    var filterB = b
-        .map((e) => e)
-        .toList()
-        .where((element) =>
-            element.tgl!.substring(8, 10) == dateFormat.format(DateTime.now()))
-        .toList();
-
-    var sumB = filterB
-        .map((e) => e.jumlah)
-        .fold(0, (previous, current) => previous + current!);
-
-    print('sum beban hari ini----------------------------->');
-    print(sumB);
-
-    List<DataHutang> h =
-        await hutangController().fetchDataHutanglocaldashboard(id_toko);
+    List<DataHutangDetail> h =
+        await hutangController().fetchDataHutangDetaillocal(id_toko);
     var filterH = h
         .map((e) => e)
         .toList()
         .where((element) =>
-            element.tglHutang!.substring(8, 10) ==
+            element.tglBayar!.substring(8, 10) ==
             dateFormat.format(DateTime.now()))
         .toList();
-
-    var sumHhariini = filterH
-        .map((e) => e.sisaHutang)
+    var sumH = filterH
+        .map((e) => e.bayar)
         .fold(0, (previous, current) => previous + current!);
 
-    var sumH = h
-        .map((e) => e.sisaHutang)
-        .fold(0, (previous, current) => previous + current!);
+    // List<DataBeban> b = await bebanController().fetchBebanlocal(id_toko);
+    // var filterB = b
+    //     .map((e) => e)
+    //     .toList()
+    //     .where((element) =>
+    //         element.tgl!.substring(8, 10) == dateFormat.format(DateTime.now()))
+    //     .toList();
+    //
+    // var sumB = filterB
+    //     .map((e) => e.jumlah)
+    //     .fold(0, (previous, current) => previous + current!);
+    //
+    // print('sum beban hari ini----------------------------->');
+    // print(sumB);
+    //
+    // List<DataHutang> h =
+    //     await hutangController().fetchDataHutanglocaldashboard(id_toko);
+    // var filterH = h
+    //     .map((e) => e)
+    //     .toList()
+    //     .where((element) =>
+    //         element.tglHutang!.substring(8, 10) ==
+    //         dateFormat.format(DateTime.now()))
+    //     .toList();
+    //
+    // var sumHhariini = filterH
+    //     .map((e) => e.sisaHutang)
+    //     .fold(0, (previous, current) => previous + current!);
+    //
+    // var sumH = h
+    //     .map((e) => e.sisaHutang)
+    //     .fold(0, (previous, current) => previous + current!);
+    //
+    // print('sum hutang hari ini----------------------------->');
+    // print(sumHhariini);
+    // hutanghariini.value = sumHhariini;
+    //
 
-    print('sum hutang hari ini----------------------------->');
-    print(sumHhariini);
-    hutanghariini.value = sumHhariini;
-
-    //TODO : CHECK PENAMBAHAN HUTANG INI
-
-    print('sum penjualan hari ini----------------------------->');
-    print(sumP);
+    //
+    // print('sum penjualan hari ini----------------------------->');
+    // print(sumP);
 
     // dateFormat.format(DateTime.parse(element!)
 
-    return pendapatanhariini.value = sumP - sumB - sumH;
+    return pendapatanhariini.value = sumP + sumH;
   }
 
   loadbebanhariini() async {
@@ -232,25 +245,25 @@ class dashboardController extends GetxController {
         .map((e) => e.total)
         .fold(0, (previous, current) => previous + current!);
 
-    List<DataBeban> b = await bebanController().fetchBebanlocal(id_toko);
+    // List<DataBeban> b = await bebanController().fetchBebanlocal(id_toko);
+    //
+    // var sumB = b
+    //     .map((e) => e.jumlah)
+    //     .fold(0, (previous, current) => previous + current!);
+    //
+    // List<DataHutang> h =
+    //     await hutangController().fetchDataHutanglocaldashboard(id_toko);
+    //
+    // var sumH = h
+    //     .map((e) => e.sisaHutang)
+    //     .fold(0, (previous, current) => previous + current!);
+    //
+    // print('sum hutang total----------------------------->');
+    // print(sumH);
 
-    var sumB = b
-        .map((e) => e.jumlah)
-        .fold(0, (previous, current) => previous + current!);
+    // var sumsum = sumP - sumB - sumH;
 
-    List<DataHutang> h =
-        await hutangController().fetchDataHutanglocaldashboard(id_toko);
-
-    var sumH = h
-        .map((e) => e.sisaHutang)
-        .fold(0, (previous, current) => previous + current!);
-
-    print('sum hutang total----------------------------->');
-    print(sumH);
-
-    var sumsum = sumP - sumB - sumH;
-
-    return totalpendapatan.value = sumsum;
+    return totalpendapatan.value = sumP;
   }
 
   loadtransaksitotal() async {
