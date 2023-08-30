@@ -138,6 +138,15 @@ class dashboardController extends GetxController {
         .map((e) => e.bayar)
         .fold(0, (previous, current) => previous + current!);
 
+    List<DataHutangDetail> j =
+        await historyController().fetchPenjualanlocalhutanglunas(id_toko);
+    print('yang lunas hari ini');
+    print(j.map((e) => e.bayar));
+    var sumJ = j
+        .map((e) => e.bayar)
+        .fold(0, (previous, current) => previous + current!);
+    print(sumJ.toString() + '  <-- yg lunas hr ini;lololol');
+
     // List<DataBeban> b = await bebanController().fetchBebanlocal(id_toko);
     // var filterB = b
     //     .map((e) => e)
@@ -153,27 +162,27 @@ class dashboardController extends GetxController {
     // print('sum beban hari ini----------------------------->');
     // print(sumB);
     //
-    // List<DataHutang> h =
-    //     await hutangController().fetchDataHutanglocaldashboard(id_toko);
-    // var filterH = h
-    //     .map((e) => e)
-    //     .toList()
-    //     .where((element) =>
-    //         element.tglHutang!.substring(8, 10) ==
-    //         dateFormat.format(DateTime.now()))
-    //     .toList();
-    //
-    // var sumHhariini = filterH
-    //     .map((e) => e.sisaHutang)
-    //     .fold(0, (previous, current) => previous + current!);
-    //
+    List<DataHutang> hini =
+        await hutangController().fetchDataHutanglocaldashboard(id_toko);
+    var filterHini = hini
+        .map((e) => e)
+        .toList()
+        .where((element) =>
+            element.tglHutang!.substring(8, 10) ==
+            dateFormat.format(DateTime.now()))
+        .toList();
+
+    var sumHhariini = filterHini
+        .map((e) => e.sisaHutang)
+        .fold(0, (previous, current) => previous + current!);
+
     // var sumH = h
     //     .map((e) => e.sisaHutang)
     //     .fold(0, (previous, current) => previous + current!);
-    //
-    // print('sum hutang hari ini----------------------------->');
-    // print(sumHhariini);
-    // hutanghariini.value = sumHhariini;
+
+    print('sum hutang hari ini----------------------------->');
+    print(sumHhariini);
+    hutanghariini.value = sumHhariini;
     //
 
     //
@@ -182,7 +191,7 @@ class dashboardController extends GetxController {
 
     // dateFormat.format(DateTime.parse(element!)
 
-    return pendapatanhariini.value = sumP + sumH;
+    return pendapatanhariini.value = sumP + sumH - sumJ;
   }
 
   loadbebanhariini() async {

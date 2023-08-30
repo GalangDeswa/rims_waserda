@@ -92,19 +92,16 @@ class splashController extends GetxController {
 
         await GetStorage().write('konten_square', konten['data']);
 
-        print('--------------------list konten square---------------');
-        print(konten);
-
         return konten;
       } else {
         Get.back(closeOverlays: true);
         Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+            toast().bottom_snackbar_error('Error', 'Konten gagal ditampilkan'));
       }
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+          toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
     }
     // return [];
   }

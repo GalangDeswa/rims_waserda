@@ -374,6 +374,32 @@ class historyController extends GetxController {
     return penjualan;
   }
 
+  var penjualan_list_local_lunas = <DataHutangDetail>[].obs;
+  var tgl_lunas = DateTime.now();
+
+  Map<String, dynamic> bb(id) {
+    var map = <String, dynamic>{};
+    map['total_bayar_hari_ini'] = id;
+
+    return map;
+  }
+
+  fetchPenjualanlocalhutanglunas(id_toko) async {
+    print(
+        '-------------------fetch Penjualan local lunas---------------------');
+    //succ.value = false;
+    List<Map<String, Object?>> query = await DBHelper().FETCH(
+        'SELECT bayar FROM hutang_detail_local INNER JOIN hutang_local ON hutang_detail_local.id_hutang = hutang_local.id_local WHERE hutang_local.status = 1 AND DATE(hutang_detail_local.tgl_bayar) = "2023-08-30" and DATE(hutang_local.tgl_hutang) = "2023-08-30"');
+    List<DataHutangDetail> penjualan = query.isNotEmpty
+        ? query.map((e) => DataHutangDetail.fromJson(e)).toList()
+        : [];
+    penjualan_list_local_lunas.value = penjualan;
+    print('iuyerhgfoiuewyrgfairyeugfoiueyriyuegairyegiytgae');
+    print(penjualan);
+
+    return penjualan;
+  }
+
   fetchPenjualanlocaldashboardtransaksi(id_toko) async {
     print('-------------------fetch Penjualan local---------------------');
     //succ.value = false;

@@ -403,53 +403,53 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                               font().reguler),
                                                     ),
                                                   ),
-                                                  Card(
-                                                    margin: EdgeInsets.only(
-                                                        bottom: 10),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          border_radius()
-                                                              .icon_border,
-                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
-                                                    ),
-                                                    elevation: elevation()
-                                                        .def_elevation,
-                                                    child: ListTile(
-                                                      leading: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color:
-                                                                color_template()
-                                                                    .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                          child: Icon(
-                                                            FontAwesomeIcons
-                                                                .dollarSign,
-                                                            color: Colors.white,
-                                                          )),
-                                                      title: Text(
-                                                          'Rp. ' +
-                                                              controller.nominal
-                                                                  .format(controller
-                                                                      .totalpendapatan
-                                                                      .value
-                                                                      .round()),
-                                                          style: font()
-                                                              .reguler_bold),
-                                                      subtitle: Text(
-                                                          'Total pendapatan',
-                                                          style:
-                                                              font().reguler),
-                                                    ),
-                                                  ),
+                                                  // Card(
+                                                  //   margin: EdgeInsets.only(
+                                                  //       bottom: 10),
+                                                  //   shape:
+                                                  //       RoundedRectangleBorder(
+                                                  //     borderRadius:
+                                                  //         border_radius()
+                                                  //             .icon_border,
+                                                  //     // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                  //   ),
+                                                  //   elevation: elevation()
+                                                  //       .def_elevation,
+                                                  //   child: ListTile(
+                                                  //     leading: Container(
+                                                  //         padding:
+                                                  //             EdgeInsets.all(
+                                                  //                 10),
+                                                  //         decoration:
+                                                  //             BoxDecoration(
+                                                  //           color:
+                                                  //               color_template()
+                                                  //                   .primary,
+                                                  //           borderRadius:
+                                                  //               BorderRadius
+                                                  //                   .circular(
+                                                  //                       10),
+                                                  //         ),
+                                                  //         child: Icon(
+                                                  //           FontAwesomeIcons
+                                                  //               .dollarSign,
+                                                  //           color: Colors.white,
+                                                  //         )),
+                                                  //     title: Text(
+                                                  //         'Rp. ' +
+                                                  //             controller.nominal
+                                                  //                 .format(controller
+                                                  //                     .totalpendapatan
+                                                  //                     .value
+                                                  //                     .round()),
+                                                  //         style: font()
+                                                  //             .reguler_bold),
+                                                  //     subtitle: Text(
+                                                  //         'Total pendapatan',
+                                                  //         style:
+                                                  //             font().reguler),
+                                                  //   ),
+                                                  // ),
                                                   Card(
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
@@ -491,6 +491,51 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                               .reguler_bold),
                                                       subtitle: Text(
                                                           'Total Transaksi',
+                                                          style:
+                                                              font().reguler),
+                                                    ),
+                                                  ),
+                                                  Card(
+                                                    margin: EdgeInsets.only(
+                                                        bottom: 10),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          border_radius()
+                                                              .icon_border,
+                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
+                                                    ),
+                                                    elevation: elevation()
+                                                        .def_elevation,
+                                                    child: ListTile(
+                                                      leading: Container(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color:
+                                                                color_template()
+                                                                    .primary,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Icon(
+                                                            FontAwesomeIcons
+                                                                .cancel,
+                                                            color: Colors.white,
+                                                          )),
+                                                      title: Text(
+                                                          controller.nominal
+                                                              .format(controller
+                                                                  .totalreversal
+                                                                  .value),
+                                                          style: font()
+                                                              .reguler_bold),
+                                                      subtitle: Text(
+                                                          'Total transaksi batal',
                                                           style:
                                                               font().reguler),
                                                     ),
@@ -583,51 +628,6 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                               .reguler_bold),
                                                       subtitle: Text(
                                                           'Total hutang yang belum lunas',
-                                                          style:
-                                                              font().reguler),
-                                                    ),
-                                                  ),
-                                                  Card(
-                                                    margin: EdgeInsets.only(
-                                                        bottom: 10),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          border_radius()
-                                                              .icon_border,
-                                                      // side: BorderSide(color: color_template().primary, width: 3.5),
-                                                    ),
-                                                    elevation: elevation()
-                                                        .def_elevation,
-                                                    child: ListTile(
-                                                      leading: Container(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  10),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color:
-                                                                color_template()
-                                                                    .primary,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                          child: Icon(
-                                                            FontAwesomeIcons
-                                                                .cancel,
-                                                            color: Colors.white,
-                                                          )),
-                                                      title: Text(
-                                                          controller.nominal
-                                                              .format(controller
-                                                                  .totalreversal
-                                                                  .value),
-                                                          style: font()
-                                                              .reguler_bold),
-                                                      subtitle: Text(
-                                                          'Total transaksi batal',
                                                           style:
                                                               font().reguler),
                                                     ),

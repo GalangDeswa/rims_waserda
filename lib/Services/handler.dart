@@ -1995,9 +1995,9 @@ class REST extends GetConnect {
         var data = json.decode(response.body);
         //var data = response.body;
         //var data = response;
-        print(data);
+        // print(data);
         print(response.statusCode);
-        return (data);
+        return data;
       } else {
         var data = json.decode(response.body);
         print(
@@ -2005,7 +2005,7 @@ class REST extends GetConnect {
         print('GAGAL DATA KONTEN SQUARE');
         print(response.statusCode);
         print(response.body);
-        return (data);
+        return data;
       }
     } catch (e) {
       print(e);
@@ -2027,7 +2027,7 @@ class REST extends GetConnect {
         //var data = response;
         print(data);
         print(response.statusCode);
-        return (data);
+        return data;
       } else {
         var data = json.decode(response.body);
         print(
@@ -2035,7 +2035,7 @@ class REST extends GetConnect {
         print('GAGAL DATA KONTEN BANNER');
         print(response.statusCode);
         print(response.body);
-        return (data);
+        return data;
       }
     } catch (e) {
       Get.back();
