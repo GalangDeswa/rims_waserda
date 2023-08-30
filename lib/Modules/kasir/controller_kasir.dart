@@ -130,6 +130,254 @@ class kasirController extends GetxController {
       Get.find<base_menuController>().selectedPrinter;
   BlueThermalPrinter printer = Get.find<base_menuController>().printer;
 
+  xxx() {
+    var x = 1;
+    var y = 2;
+    var t = x + y;
+    print(t.toString() + '    uhgoierudhgoeihgeoirgheori');
+    return t;
+  }
+
+  printstrukpembayaran() async {
+    print('cetak struk local------------------------------->');
+    print(listPrinter.toString());
+    print(isConnected == true);
+
+    if (groupindex == 1) {
+      if (logo == '-') {
+        printer.printImage(pathImage.value);
+      } else {
+        printer.printImageBytes(base64Decode(logo));
+      }
+      printer.printCustom(namatoko, 3, 1);
+      printer.printCustom(alamat_toko, 0, 3);
+      printer.printCustom('-------------------------------', 1, 3);
+      printer.printLeftRight(
+          tgl_penjualan.isEmpty
+              ? dateFormatprint.format(DateTime.now())
+              : dateFormatprint.format(tgl_penjualan.first!),
+          kasir,
+          0);
+      bayarprebill.value == false
+          ? print('lol')
+          : printer.printLeftRight('Meja :', nomormejabayarprebill.value, 0);
+      printer.printCustom('-------------------------------', 1, 3);
+      printer.printNewLine();
+      //item-------------------------------------------------
+      printer.print4Column('Produk', 'QTY', 'Harga', 'Subtotal', 0,
+          format: "%-17s %-4s %-10s %5s %n");
+      printer.printCustom('-------------------------------', 1, 3);
+      cache.forEach((e) {
+        String nama = e.namaProduk!;
+        if (nama.length > 15) {
+          nama = e.namaProduk!.substring(0, 15) + '...';
+        }
+        printer.print4Column(
+            nama,
+            e.qty.toString(),
+            format: "%-17s %-4s %-10s %5s %n",
+            nominal.format(e.harga),
+            nominal.format((e.harga! * e.qty)),
+            0);
+        printer.printCustom('-------------------------------', 1, 2);
+      });
+      await subtotalval();
+
+      printer.printLeftRight('Subtotal :', nominal.format(subtotal.value), 0);
+
+      await hitungbesardiskonkasir();
+
+      printer.printLeftRight(
+          'Total diskon :', nominal.format(jumlahdiskonkasir.value), 0);
+
+      printer.printCustom('-------------------------------', 1, 1);
+      await totalval();
+
+      printer.printLeftRight('PPN :', nominal.format(ppn.value), 0);
+      printer.printLeftRight('Total :', nominal.format(total.value), 0);
+      printer.printLeftRight('Tunai :', nominal.format(bayarvalue.value), 0);
+      printer.printLeftRight(
+          'Kembalian :',
+          kembalian.value.text.isNotEmpty
+              ? nominal.format(balikvalue.value)
+              : '0',
+          0);
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printCustom('-- Terima Kasih --', 0, 1);
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printImage(printstruklogo.value);
+      printer.printCustom('*** Powered by RIMS ***', 0, 1);
+      printer.printCustom('www.rims.co.id', 0, 1);
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printNewLine();
+      printer.paperCut();
+      //proses bayar local--------------------------
+      await pembayaranlocal(id_toko);
+    } else {
+      var pelanggan = list_pelanggan_local
+          .where((e) => e.idLocal == id_pelanggan.value)
+          .first;
+      if (logo == '-') {
+        printer.printImage(pathImage.value);
+      } else {
+        printer.printImageBytes(base64Decode(logo));
+      }
+      printer.printCustom(namatoko, 3, 1);
+      printer.printCustom(alamat_toko, 0, 3);
+      printer.printCustom('-------------------------------', 1, 3);
+      printer.printLeftRight(
+          tgl_penjualan.isEmpty
+              ? dateFormatprint.format(DateTime.now())
+              : dateFormatprint.format(tgl_penjualan.first!),
+          kasir,
+          0);
+      bayarprebill.value == false
+          ? print('lol')
+          : printer.printLeftRight('Meja :', nomormejabayarprebill.value, 0);
+      printer.printCustom('-------------------------------', 1, 3);
+      printer.printNewLine();
+      printer.printCustom('--- Hutang ---', 2, 1);
+      printer.printNewLine();
+      //item-------------------------------------------------
+      printer.print4Column('Produk', 'QTY', 'Harga', 'Subtotal', 0,
+          format: "%-17s %-4s %-10s %5s %n");
+      printer.printCustom('-------------------------------', 1, 3);
+      cache.forEach((e) {
+        String nama = e.namaProduk!;
+        if (nama.length > 15) {
+          nama = e.namaProduk!.substring(0, 15) + '...';
+        }
+        printer.print4Column(
+            nama,
+            e.qty.toString(),
+            format: "%-17s %-4s %-10s %5s %n",
+            nominal.format(e.harga),
+            nominal.format((e.harga! * e.qty)),
+            0);
+        printer.printCustom('-------------------------------', 1, 2);
+      });
+      await subtotalval();
+      printer.printLeftRight('Subtotal :', nominal.format(subtotal.value), 0);
+      // controller.printer.printCustom(
+      //     '-------------------------------', 1, 1);
+      await hitungbesardiskonkasir();
+      printer.printLeftRight(
+          'Total diskon :', nominal.format(jumlahdiskonkasir.value), 0);
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printLeftRight(
+        'Nama pelanggan :',
+        pelanggan.namaPelanggan!,
+        0,
+      );
+      await totalval();
+      printer.printLeftRight(
+        'PPN :',
+        nominal.format(ppn.value),
+        0,
+      );
+      printer.printLeftRight(
+        'Total Hutang :',
+        nominal.format(total.value),
+        0,
+      );
+      printer.printLeftRight(
+        'Tanggal hutang :',
+        tgl_penjualan.isEmpty
+            ? dateFormatprint.format(DateTime.now())
+            : dateFormatprint.format(tgl_penjualan.first!),
+        0,
+      );
+
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printCustom('-- Terima Kasih --', 0, 1);
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printImage(printstruklogo.value);
+      printer.printCustom('*** Powered by RIMS ***', 0, 1);
+      printer.printCustom('www.rims.co.id', 0, 1);
+      printer.printCustom('-------------------------------', 1, 1);
+      printer.printNewLine();
+      printer.paperCut();
+      //proses bayar local-----------------
+      await pembayaranlocal(id_toko);
+    }
+  }
+
+  printstrukprebill() async {
+    print('cetak struk local prebill------------------------------->');
+    print(listPrinter.toString());
+    print(isConnected == true);
+
+    if (logo == '-') {
+      printer.printImage(pathImage.value);
+    } else {
+      printer.printImageBytes(base64Decode(logo));
+    }
+    printer.printCustom(namatoko, 3, 1);
+    printer.printCustom(alamat_toko, 0, 3);
+    printer.printCustom('-------------------------------', 1, 3);
+    printer.printLeftRight(
+        tgl_penjualan.isEmpty
+            ? dateFormatprint.format(DateTime.now())
+            : dateFormatprint.format(tgl_penjualan.first!),
+        kasir,
+        0);
+    printer.printCustom('-------------------------------', 1, 3);
+    printer.printNewLine();
+
+    printer.printCustom('-- Meja : ' + meja.value.text + ' --', 2, 1);
+    printer.printNewLine();
+    //item-------------------------------------------------
+    printer.print4Column('Produk', 'QTY', 'Harga', 'Subtotal', 0,
+        format: "%-17s %-4s %-10s %5s %n");
+    printer.printCustom('-------------------------------', 1, 3);
+    cache.forEach((e) {
+      String nama = e.namaProduk!;
+      if (nama.length > 15) {
+        nama = e.namaProduk!.substring(0, 15) + '...';
+      }
+      printer.print4Column(
+          nama,
+          e.qty.toString(),
+          format: "%-17s %-4s %-10s %5s %n",
+          nominal.format(e.harga),
+          nominal.format((e.harga! * e.qty)),
+          0);
+      printer.printCustom('-------------------------------', 1, 2);
+    });
+    await subtotalval();
+    printer.printLeftRight('Subtotal :', nominal.format(subtotal.value), 0);
+    // controller.printer.printCustom(
+    //     '-------------------------------', 1, 1);
+    await hitungbesardiskonkasir();
+    printer.printLeftRight(
+        'Total diskon :', nominal.format(jumlahdiskonkasir.value), 0);
+    printer.printCustom('-------------------------------', 1, 1);
+    await totalval();
+    printer.printLeftRight(
+      'PPN :',
+      nominal.format(ppn.value),
+      0,
+    );
+    printer.printLeftRight(
+      'Total :',
+      nominal.format(total.value),
+      0,
+    );
+
+    printer.printCustom('-------------------------------', 1, 1);
+    printer.printCustom('-- Terima Kasih --', 0, 1);
+    printer.printCustom('-------------------------------', 1, 1);
+    printer.printImage(printstruklogo.value);
+    printer.printCustom('*** Powered by RIMS ***', 0, 1);
+    printer.printCustom('www.rims.co.id', 0, 1);
+    printer.printCustom('-------------------------------', 1, 1);
+    printer.printNewLine();
+    printer.paperCut();
+    //proses bayar local--------------------------
+    await addmeja();
+    Get.back(closeOverlays: true);
+  }
+
   Future<void> refresh() async {
     await fetchProduklocal(id_toko);
     await fetchjenislocal(id_toko);

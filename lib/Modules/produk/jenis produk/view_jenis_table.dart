@@ -87,6 +87,7 @@ class jenis_table extends GetView<produkController> {
                         await controller.searchjenislocal();
                       }),
                       decoration: InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
                         labelText: "Cari Kategori",
                         labelStyle: const TextStyle(
                           color: Colors.black87,

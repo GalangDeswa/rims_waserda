@@ -75,8 +75,7 @@ void callbackDispatcher() {
     var token = await storage.read('token');
     FlutterLocalNotificationsPlugin flip = FlutterLocalNotificationsPlugin();
     var android = AndroidInitializationSettings('logo');
-    //var IOS = new IOSInitializationSettings();
-    // initialise settings for both Android and iOS device.
+
     var settings = InitializationSettings(android: android);
     flip.initialize(settings);
 

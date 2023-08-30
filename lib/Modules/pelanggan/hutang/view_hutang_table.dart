@@ -89,6 +89,7 @@ class hutang_table extends GetView<hutangController> {
                           await controller.searchhutanglocal();
                         }),
                         decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           labelText: "Cari hutang",
                           hintText: 'Nama pelanggan',
                           labelStyle: TextStyle(

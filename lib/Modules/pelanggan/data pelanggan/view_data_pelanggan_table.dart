@@ -92,6 +92,7 @@ class pelanggan_table extends GetView<pelangganController> {
                           await controller.searchpelangganlocal();
                         }),
                         decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           labelText: "Cari pelanggan",
                           hintText: 'Nama pelanggan',
                           labelStyle: TextStyle(

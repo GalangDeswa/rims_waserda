@@ -360,7 +360,7 @@ class history_table extends GetView<historyController> {
                                 onSortColum(columnIndex, ascending);
                               },
                               label: const Text(
-                                'Nama kasir',
+                                'kasir',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),
@@ -371,7 +371,7 @@ class history_table extends GetView<historyController> {
                                 onSortColum(columnIndex, ascending);
                               },
                               label: const Text(
-                                'Nama pelanggan',
+                                'pelanggan',
                                 style: TextStyle(fontStyle: FontStyle.italic),
                               ),
                             ),

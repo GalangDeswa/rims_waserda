@@ -106,6 +106,7 @@ class produk_table extends GetView<produkController> {
                         }),
                         decoration: InputDecoration(
                           labelText: "cari produk",
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           hintText: 'Nama produk',
                           labelStyle: const TextStyle(
                             color: Colors.black87,

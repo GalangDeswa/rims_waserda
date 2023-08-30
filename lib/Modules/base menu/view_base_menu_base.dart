@@ -175,7 +175,8 @@ class base_menu extends GetView<base_menuController> {
                         );
                       }));
                       p.value = p.value + 0.2;
-                      print('workmanager ---------------->');
+                      print(
+                          '<---------------- workmanager manual sync ---------------->');
                       try {
                         await controller.syncAll(controller.id_toko);
                         //  await Get.find<produkController>().checkup();
@@ -312,10 +313,15 @@ class base_menu extends GetView<base_menuController> {
                     return ListTile(
                         leading: Icon(Icons.print),
                         title: DropdownButton<BluetoothDevice>(
-                            hint: Text(
-                              'Pilih bluetooth printer',
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            hint: controller.listPrinter.value.isEmpty
+                                ? Text(
+                                    'Cari bluetooth printer',
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : Text(
+                                    'Pilih bluetooth printer',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                             value: controller.selectedPrinter,
                             items: controller.listPrinter.value
                                 .map((e) => DropdownMenuItem(
@@ -325,7 +331,8 @@ class base_menu extends GetView<base_menuController> {
                                 .toList(),
                             onChanged: (device) async {
                               controller.loading.value = 'loading';
-                              if (controller.printer.isConnected == true) {
+                              if (await controller.printer.isConnected ==
+                                  true) {
                                 await controller.printer.disconnect();
                               }
                               controller.isConnected.value = false;
@@ -359,80 +366,120 @@ class base_menu extends GetView<base_menuController> {
                   SizedBox(
                     height: 10,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          child: ElevatedButton(
-                              onPressed: () async {
-                                //print('qweqweqweqeqeqweqweqe');
-                                if ((await controller.printer.isConnected)!) {
-                                  if (controller.logo.value == '-') {
-                                    controller.printer
-                                        .printImage(controller.pathImage.value);
-                                  } else {
-                                    controller.printer.printImageBytes(
-                                        base64Decode(controller.logo.value));
-                                  }
-                                  controller.printer.printCustom(
-                                      controller.namatoko.value, 3, 1);
-                                  controller.printer.printCustom(
-                                      controller.alamat_toko.value, 0, 3);
-                                  controller.printer.printCustom(
-                                      '-------------------------------', 1, 3);
-                                  controller.printer.printLeftRight(
-                                      controller.dateFormat
-                                          .format(DateTime.now()),
-                                      controller.namauser.value,
-                                      0);
-                                  controller.printer.printCustom(
-                                      '-------------------------------', 1, 3);
-                                  controller.printer.printNewLine();
-                                  controller.printer.print3Column(
-                                      '-->', 'Print struk berhasil', '<--', 0);
-                                  controller.printer.printNewLine();
-                                  controller.printer.printCustom(
-                                      '-------------------------------', 1, 3);
-                                  controller.printer.printNewLine();
-                                  controller.printer.printCustom(
-                                      '-------------------------------', 1, 1);
-                                  controller.printer.printImage(
-                                      controller.printstruklogo.value);
-                                  controller.printer.printCustom(
-                                      '*** Powered by RIMS ***', 0, 1);
-                                  controller.printer
-                                      .printCustom('www.rims.co.id', 0, 1);
-                                  controller.printer.printCustom(
-                                      '-------------------------------', 1, 1);
-                                  controller.printer.printNewLine();
-                                } else {
-                                  Get.showSnackbar(toast()
-                                      .bottom_snackbar_error(
-                                          'Error', 'Printer belum terkoneksi'));
-                                }
-                                //controller.tesPrint();
-                              },
-                              child: Text('Test printer')),
-                        ),
-                      ),
-                      Container(
-                        width: 50,
-                        margin: EdgeInsets.symmetric(horizontal: 15),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              if (controller.printer.isConnected == true) {
-                                await controller.printer.disconnect();
-                              }
+                  Obx(() {
+                    return controller.listPrinter.value.isEmpty
+                        ? Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 15),
+                                  child: ElevatedButton(
+                                      onPressed: () async {
+                                        if (controller.printer.isConnected ==
+                                            true) {
+                                          await controller.printer.disconnect();
+                                        }
 
-                              await controller.getDevice();
-                              controller.isConnected.value = false;
-                              controller.loading.value = '';
-                            },
-                            child: Icon(Icons.refresh)),
-                      ),
-                    ],
-                  ),
+                                        await controller.getDevice();
+                                        controller.isConnected.value = false;
+                                        controller.loading.value = '';
+                                      },
+                                      child: Text('Cari printer')),
+                                ),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: ElevatedButton(
+                                      onPressed: () async {
+                                        //print('qweqweqweqeqeqweqweqe');
+                                        if ((await controller
+                                            .printer.isConnected)!) {
+                                          if (controller.logo.value == '-') {
+                                            controller.printer.printImage(
+                                                controller.pathImage.value);
+                                          } else {
+                                            controller.printer.printImageBytes(
+                                                base64Decode(
+                                                    controller.logo.value));
+                                          }
+                                          controller.printer.printCustom(
+                                              controller.namatoko.value, 3, 1);
+                                          controller.printer.printCustom(
+                                              controller.alamat_toko.value,
+                                              0,
+                                              3);
+                                          controller.printer.printCustom(
+                                              '-------------------------------',
+                                              1,
+                                              3);
+                                          controller.printer.printLeftRight(
+                                              controller.dateFormat
+                                                  .format(DateTime.now()),
+                                              controller.namauser.value,
+                                              0);
+                                          controller.printer.printCustom(
+                                              '-------------------------------',
+                                              1,
+                                              3);
+                                          controller.printer.printNewLine();
+                                          controller.printer.print3Column('-->',
+                                              'Print struk berhasil', '<--', 0);
+                                          controller.printer.printNewLine();
+                                          controller.printer.printCustom(
+                                              '-------------------------------',
+                                              1,
+                                              3);
+                                          controller.printer.printNewLine();
+                                          controller.printer.printCustom(
+                                              '-------------------------------',
+                                              1,
+                                              1);
+                                          controller.printer.printImage(
+                                              controller.printstruklogo.value);
+                                          controller.printer.printCustom(
+                                              '*** Powered by RIMS ***', 0, 1);
+                                          controller.printer.printCustom(
+                                              'www.rims.co.id', 0, 1);
+                                          controller.printer.printCustom(
+                                              '-------------------------------',
+                                              1,
+                                              1);
+                                          controller.printer.printNewLine();
+                                        } else {
+                                          Get.showSnackbar(toast()
+                                              .bottom_snackbar_error('Error',
+                                                  'Printer belum terkoneksi'));
+                                        }
+                                        //controller.tesPrint();
+                                      },
+                                      child: Text('Test printer')),
+                                ),
+                              ),
+                              Container(
+                                width: 50,
+                                margin: EdgeInsets.symmetric(horizontal: 15),
+                                child: ElevatedButton(
+                                    onPressed: () async {
+                                      if (controller.printer.isConnected ==
+                                          true) {
+                                        await controller.printer.disconnect();
+                                      }
+
+                                      await controller.getDevice();
+                                      controller.isConnected.value = false;
+                                      controller.loading.value = '';
+                                    },
+                                    child: Icon(Icons.refresh)),
+                              ),
+                            ],
+                          );
+                  }),
+
                   SizedBox(
                     height: 10,
                   ),
@@ -450,6 +497,7 @@ class base_menu extends GetView<base_menuController> {
                     splashColor: Colors.orangeAccent,
                     onTap: () {
                       controller.resetpop();
+                      //controller.popprinter(context);
                     },
                     child: ListTile(
                       title: Text('Reset aplikasi'),

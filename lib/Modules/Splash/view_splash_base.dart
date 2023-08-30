@@ -48,7 +48,19 @@ class splash extends GetView<splashController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: CircularProgressIndicator(),
-              )
+              ),
+              SizedBox(
+                height: 50,
+              ),
+              Text(
+                'Powered by',
+                style: font().header_blue,
+              ),
+              Container(
+                width: 150,
+                height: 50,
+                child: Image.asset('assets/images/powered.png'),
+              ),
             ],
           ),
         ),

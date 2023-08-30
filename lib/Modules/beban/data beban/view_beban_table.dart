@@ -93,8 +93,9 @@ class beban_table extends GetView<bebanController> {
                           await controller.searchbebanlocal();
                         }),
                         decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           labelText: "cari beban",
-                          hintText: 'Nama beban / Tanggal beban',
+                          hintText: 'Nama beban',
                           labelStyle: const TextStyle(
                             color: Colors.black87,
                           ),

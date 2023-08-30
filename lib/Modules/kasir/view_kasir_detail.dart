@@ -326,7 +326,6 @@ class kasir_detail extends GetView<kasirController> {
                           });
                     })),
               ),
-
               Obx(() {
                 return Container(
                   //margin: EdgeInsets.only(top: 40),
@@ -524,7 +523,6 @@ class kasir_detail extends GetView<kasirController> {
                       ],
                     ));
               }),
-
               SizedBox(
                 height: 10,
               ),
@@ -741,23 +739,6 @@ class kasir_detail extends GetView<kasirController> {
                         ],
                       );
               })
-
-              // button_border_custom(
-              //     onPressed: () {
-              //       Get.snackbar(
-              //         "Pesan",
-              //         "Di tunda",
-              //         icon: Icon(Icons.dangerous, color: Colors.white),
-              //         snackPosition: SnackPosition.BOTTOM,
-              //         backgroundColor: color_template().tritadery,
-              //       );
-              //     },
-              //     child: Text(
-              //       'Tunda',
-              //       style: TextStyle(fontSize: 20, color: Colors.black),
-              //     ),
-              //     width: double.infinity,
-              //     height: 50)
             ],
           ),
         ),

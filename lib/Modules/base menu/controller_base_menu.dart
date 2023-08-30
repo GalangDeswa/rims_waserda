@@ -373,6 +373,233 @@ class base_menuController extends GetxController {
     print(pathImage);
   }
 
+  popprinter(String metode) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Pilih printer',
+          icon: Icons.print,
+          iscenter: true,
+          icon_color: color_template().primary,
+          base_color: Colors.white),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              width: context.width_query / 3,
+              height: context.height_query / 3,
+              child: Obx(() {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                          leading: Icon(Icons.print),
+                          title: DropdownButton<BluetoothDevice>(
+                              hint: listPrinter.value.isEmpty
+                                  ? Text(
+                                      'Cari bluetooth printer',
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      'Pilih bluetooth printer',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                              value: selectedPrinter,
+                              items: listPrinter.value
+                                  .map((e) => DropdownMenuItem(
+                                        child: Text(e.name!),
+                                        value: e,
+                                      ))
+                                  .toList(),
+                              onChanged: (device) async {
+                                loading.value = 'loading';
+                                if (await printer.isConnected == true) {
+                                  await printer.disconnect();
+                                }
+                                isConnected.value = false;
+                                selectedPrinter = device;
+                                await printer.connect(device!);
+                                if (await printer.isConnected == true) {
+                                  isConnected.value = true;
+                                  loading.value = 'done';
+                                  print(
+                                      'connected printer----------------------------- > ' +
+                                          device.name!);
+                                } else {
+                                  print('beelum konek--------------->');
+                                }
+                                print(device.name.toString());
+                                if (await printer.isConnected == true) {
+                                  if (metode == 'normal') {
+                                    print('pembayaran normal');
+                                    await Get.find<kasirController>()
+                                        .printstrukpembayaran();
+
+                                    Get.back(closeOverlays: true);
+                                    Get.showSnackbar(toast()
+                                        .bottom_snackbar_success(
+                                            'Sukses', 'Pembayaran berhasil'));
+                                  } else if (metode == 'prebill') {
+                                    print('prebill');
+                                    await Get.find<kasirController>()
+                                        .printstrukprebill();
+
+                                    Get.back(closeOverlays: true);
+                                    Get.showSnackbar(toast()
+                                        .bottom_snackbar_success('Sukses',
+                                            'Meja berhasil ditambah'));
+                                  }
+
+                                  //   Get.showSnackbar(toast()
+                                  //       .bottom_snackbar_success(
+                                  //           'Sukses', 'Printer telah terhubung'));
+                                }
+                              }),
+                          subtitle: loading.value == ''
+                              ? Text('berlum terhubung')
+                              : loading.value == 'loading'
+                                  ? Container(
+                                      margin: EdgeInsets.only(right: 250),
+                                      width: 5,
+                                      height: 30,
+                                      child: CircularProgressIndicator())
+                                  : loading.value == 'done'
+                                      ? Text('Terhubung')
+                                      : Text('Printer tidak ditemukan')),
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            if (printer.isConnected == true) {
+                              await printer.disconnect();
+                            }
+
+                            await getDevice();
+                            isConnected.value = false;
+                            loading.value = '';
+                          },
+                          child: Text('Cari printer')),
+                    ),
+                  ],
+                );
+              }));
+        },
+      ),
+    ));
+  }
+
+  void popprinterv2(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
+        ),
+        content: Builder(
+          builder: (context) {
+            return Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                width: context.width_query / 3,
+                height: context.height_query / 3,
+                child: Obx(() {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                            leading: Icon(Icons.print),
+                            title: DropdownButton<BluetoothDevice>(
+                                hint: listPrinter.value.isEmpty
+                                    ? Text(
+                                        'Cari bluetooth printer',
+                                        overflow: TextOverflow.ellipsis,
+                                      )
+                                    : Text(
+                                        'Pilih bluetooth printer',
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                value: selectedPrinter,
+                                items: listPrinter.value
+                                    .map((e) => DropdownMenuItem(
+                                          child: Text(e.name!),
+                                          value: e,
+                                        ))
+                                    .toList(),
+                                onChanged: (device) async {
+                                  loading.value = 'loading';
+                                  if (await printer.isConnected == true) {
+                                    await printer.disconnect();
+                                  }
+                                  isConnected.value = false;
+                                  selectedPrinter = device;
+                                  await printer.connect(device!);
+                                  if (await printer.isConnected == true) {
+                                    isConnected.value = true;
+                                    loading.value = 'done';
+                                    print(
+                                        'connected printer----------------------------- > ' +
+                                            device.name!);
+                                  } else {
+                                    print('beelum konek--------------->');
+                                  }
+                                  print(device.name.toString());
+                                  if (isConnected.value == true) {
+                                    //Get.back();
+                                    Get.showSnackbar(toast()
+                                        .bottom_snackbar_success('Sukses',
+                                            'Printer telah terhubung'));
+                                  }
+                                }),
+                            subtitle: loading.value == ''
+                                ? Text('berlum terhubung')
+                                : loading.value == 'loading'
+                                    ? Container(
+                                        margin: EdgeInsets.only(right: 250),
+                                        width: 5,
+                                        height: 30,
+                                        child: CircularProgressIndicator())
+                                    : loading.value == 'done'
+                                        ? Text('Terhubung')
+                                        : Text('Printer tidak ditemukan')),
+                      ),
+                      Container(
+                        height: 50,
+                        margin: EdgeInsets.symmetric(horizontal: 15),
+                        child: ElevatedButton(
+                            onPressed: () async {
+                              if (printer.isConnected == true) {
+                                await printer.disconnect();
+                              }
+
+                              await getDevice();
+                              isConnected.value = false;
+                              loading.value = '';
+                            },
+                            child: Text('Cari printer')),
+                      ),
+                    ],
+                  );
+                }));
+          },
+        ),
+      ),
+    );
+  }
+
   var scaffoldKey = GlobalKey<ScaffoldState>().obs;
 
   void openDrawer() {

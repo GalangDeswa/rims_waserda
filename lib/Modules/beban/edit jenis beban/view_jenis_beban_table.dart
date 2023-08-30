@@ -74,8 +74,6 @@ class jenis_beban_table extends GetView<bebanController> {
               height: 10,
             ),
 
-            //TODO : sync auto di relase mode gabisa
-            //TODO : chek sisa hutang di dashboard
             Expanded(
               child: Obx(() {
                 var source =

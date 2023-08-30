@@ -75,79 +75,65 @@ class kasir_produk extends GetView<kasirController> {
                 ),
               ),
             ),
-            // Container(
-            //   width: context.width_query / 11,
-            //   child: Card_custom(
-            //     border: false,
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(3),
-            //       child: Row(
-            //         mainAxisAlignment: MainAxisAlignment.center,
-            //         children: [
-            //           Expanded(
-            //             child: Container(
-            //               margin: EdgeInsets.only(right: 10, left: 10),
-            //               //color: Colors.red,
-            //               //width: context.width_query * 0.60,
-            //               //pakai string bisa di cari tp tidak bisa lengkap?
-            //               child: TextFormField(
-            //                 keyboardType: TextInputType.number,
-            //                 controller: controller.meja.value,
-            //                 decoration: InputDecoration(
-            //                   contentPadding: EdgeInsets.all(10),
-            //                   labelText: 'Meja',
-            //                   border: InputBorder.none,
-            //                   labelStyle: TextStyle(
-            //                     color: Colors.black87,
-            //                   ),
-            //                 ),
-            //                 textAlign: TextAlign.center,
-            //                 validator: (value) {
-            //                   if (value!.isEmpty) {
-            //                     return 'Please enter email';
-            //                   }
-            //                   return null;
-            //                 },
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            Stack(
-              children: [
-                Container(
-                  width: context.width_query / 11,
-                  child: Card_custom(
-                    border: false,
-                    child: Padding(
-                        padding: const EdgeInsets.all(3),
-                        child: IconButton(
-                          onPressed: () {
-                            controller.listMejaKasir(controller);
-                          },
-                          icon: Icon(Icons.receipt_long),
-                        )),
-                  ),
-                ),
-                Obx(() {
-                  return controller.cachemeja.isEmpty
-                      ? Container()
-                      : Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: color_template().select),
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            controller.cachemeja.length.toString(),
-                            style: font().reguler_white_bold,
+            Obx(() {
+              return controller.bayarprebill.value == false
+                  ? Stack(
+                      children: [
+                        Container(
+                          width: context.width_query / 11,
+                          child: Card_custom(
+                            border: false,
+                            child: Padding(
+                                padding: const EdgeInsets.all(3),
+                                child: IconButton(
+                                  onPressed: () {
+                                    controller.listMejaKasir(controller);
+                                  },
+                                  icon: Icon(Icons.receipt_long),
+                                )),
                           ),
-                        );
-                }),
-              ],
-            ),
+                        ),
+                        Obx(() {
+                          return controller.cachemeja.isEmpty
+                              ? Container()
+                              : Container(
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: color_template().select),
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    controller.cachemeja.length.toString(),
+                                    style: font().reguler_white_bold,
+                                  ),
+                                );
+                        }),
+                      ],
+                    )
+                  : Stack(children: [
+                      Container(
+                        width: context.width_query / 11,
+                        child: Card_custom(
+                          border: false,
+                          child: Padding(
+                              padding: const EdgeInsets.all(3),
+                              child: IconButton(
+                                onPressed: () {
+                                  controller.listMejaKasir(controller);
+                                },
+                                icon: Icon(Icons.receipt_long),
+                              )),
+                        ),
+                      ),
+                      Container(
+                        width: context.width_query / 11,
+                        height: context.height_query / 11,
+                        decoration: BoxDecoration(
+                            color:
+                                color_template().primary_dark.withOpacity(0.6),
+                            borderRadius: border_radius().def_border),
+                      ),
+                    ]);
+            })
           ],
         ),
         Padding(
