@@ -119,48 +119,35 @@ class hutangController extends GetxController {
   syncHutang(id_toko) async {
     print('-----------------SYNC HUTANG LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataHutang> hutang = await fetchDataHutangsync(id_toko);
-      // list_hutanglocal.refresh();
-      print('start up DB SYNC HUTANG--------------------------------------->');
-      var query = hutang.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          await REST.synchutang(
-              token: token,
-              id_toko: e.idToko.toString(),
-              aktif: e.aktif!,
-              id: e.idLocal,
-              status: e.status,
-              hutang: e.hutang.toString(),
-              sisa_hutang: e.sisaHutang.toString(),
-              id_pelanggan: e.idPelanggan.toString(),
-              tgl_hutang: e.tglHutang);
+    List<DataHutang> hutang = await fetchDataHutangsync(id_toko);
+    // list_hutanglocal.refresh();
+    print('start up DB SYNC HUTANG--------------------------------------->');
+    var query = hutang.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.synchutang(
+            token: token,
+            id_toko: e.idToko.toString(),
+            aktif: e.aktif!,
+            id: e.idLocal,
+            status: e.status,
+            hutang: e.hutang.toString(),
+            sisa_hutang: e.sisaHutang.toString(),
+            id_pelanggan: e.idPelanggan.toString(),
+            tgl_hutang: e.tglHutang);
+
+        if (up != null) {
           print("HUTANG UP ---->   " +
               e.hutang.toString() +
               "------------------------------------------>");
-
           await DBHelper().UPDATE(
               table: 'hutang_local', data: synclocal('Y'), id: e.idLocal);
-        });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+        }
+      });
     }
   }
 
@@ -177,34 +164,31 @@ class hutangController extends GetxController {
     print(
         '-----------------SYNC HUTANG DETAIL LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataHutangDetail> hutangdetail =
-          await fetchDataHutangDetailsync(id_toko);
-      //list_hutang_detaillocal.refresh();
-      print(
-          'start up DB SYNC HUTANG DETAIL--------------------------------------->');
-      var query = hutangdetail.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          await REST.synchutangdetail(
-              token: token,
-              id_toko: e.idToko.toString(),
-              aktif: e.aktif!,
-              tgl_hutang: e.tglHutang,
-              id_pelanggan: e.idPelanggan.toString(),
-              id: e.idLocal,
-              bayar: e.bayar.toString(),
-              sisa: e.sisa.toString(),
-              id_hutang: e.idHutang.toString(),
-              tgl_bayar: e.tglBayar,
-              tgl_lunas: e.tglLunas);
-          //TODO : chek hutang detail up datetime null tgl lunas
+    List<DataHutangDetail> hutangdetail =
+        await fetchDataHutangDetailsync(id_toko);
+    //list_hutang_detaillocal.refresh();
+    print(
+        'start up DB SYNC HUTANG DETAIL--------------------------------------->');
+    var query = hutangdetail.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.synchutangdetail(
+            token: token,
+            id_toko: e.idToko.toString(),
+            aktif: e.aktif!,
+            tgl_hutang: e.tglHutang,
+            id_pelanggan: e.idPelanggan.toString(),
+            id: e.idLocal,
+            bayar: e.bayar.toString(),
+            sisa: e.sisa.toString(),
+            id_hutang: e.idHutang.toString(),
+            tgl_bayar: e.tglBayar,
+            tgl_lunas: e.tglLunas);
+        if (up != null) {
           print("HUTANG DETAIL UP ---->   " +
               e.bayar.toString() +
               "------------------------------------------>");
@@ -213,18 +197,12 @@ class hutangController extends GetxController {
               table: 'hutang_detail_local',
               data: synclocal('Y'),
               id: e.idLocal);
-        });
-      }
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+        }
+      });
     }
   }
 
   initHutangToLocal(id_toko) async {
-    //login -> sync -> init
-
     List<DataHutang> hutang_local = await fetchDataHutang();
     List<DataHutang> check_hutang_local = await fetchDataHutangsync(id_toko);
 
@@ -341,31 +319,22 @@ class hutangController extends GetxController {
   fetchDataHutang() async {
     print('-------------------fetch data hutang---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var hutang = await REST.hutangAll(token: token, id_toko: id_toko);
-      if (hutang['status_code'] == 200) {
-        print('-------------------data beban---------------');
-        var dataHutang = ModelHutang.fromJson(hutang);
+    var hutang = await REST.hutangAll(token: token, id_toko: id_toko);
+    if (hutang['status_code'] == 200) {
+      print('-------------------data beban---------------');
+      var dataHutang = ModelHutang.fromJson(hutang);
 
-        list_hutang.value = dataHutang.data;
+      list_hutang.value = dataHutang.data;
 
-        print('--------------------list data hutang---------------');
-        print(list_hutang);
+      print('--------------------list data hutang---------------');
+      print(list_hutang);
 
-        // Get.back(closeOverlays: true);
-
-        return list_hutang;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal fecth butang'));
-      }
+      return list_hutang;
     } else {
-      //Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+          toast().bottom_snackbar_error('Error', 'Gagal fecth butang'));
     }
+
     return [];
   }
 
@@ -465,40 +434,21 @@ class hutangController extends GetxController {
   fetchDataHutangDetail() async {
     print('-------------------fetch data hutang detail---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var hutang = await REST.hutangDetail(token: token, id_toko: id_toko);
-      if (hutang['status_code'] == 200) {
-        print('-------------------data beban---------------');
-        var dataHutang = ModelHutangDetail.fromJson(hutang);
+    var hutang = await REST.hutangDetail(token: token, id_toko: id_toko);
+    if (hutang['status_code'] == 200) {
+      print('-------------------data beban---------------');
+      var dataHutang = ModelHutangDetail.fromJson(hutang);
 
-        list_hutang_detail.value = dataHutang.data;
-        // totalpage.value = dataHutang.meta.pagination.totalPages;
-        // totaldata.value = dataHutang.meta.pagination.total;
-        // perpage.value = dataHutang.meta.pagination.perPage;
-        // currentpage.value = hutang['meta']['pagination']['current_page'];
-        // count.value = dataHutang.meta.pagination.count;
-        // if (totalpage > 1) {
-        //   nextdata = hutang['meta']['pagination']['links']['next'];
-        // }
+      list_hutang_detail.value = dataHutang.data;
 
-        print('--------------------list data hutang detail---------------');
-        print(list_hutang_detail);
+      print('--------------------list data hutang detail---------------');
+      print(list_hutang_detail);
 
-        // Get.back(closeOverlays: true);
-
-        return list_hutang_detail;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal fecth butang'));
-      }
+      return list_hutang_detail;
     } else {
-      //Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+          toast().bottom_snackbar_error('Error', 'Gagal fecth butang'));
     }
-    return [];
   }
 
   bayarHutang(String id) async {
@@ -563,7 +513,7 @@ class hutangController extends GetxController {
         DataHutangDetail(
                 aktif: 'Y',
                 sync: 'N',
-                idLocal: stringGenerator(10),
+                idLocal: ss.idPelanggan! + stringGenerator(10),
                 tglHutang: ss.tglHutang,
                 idPelanggan: ss.idPelanggan,
                 idToko: ss.idToko,

@@ -623,6 +623,16 @@ class penjualanTable extends DataTableSource {
           Expanded(
             child: IconButton(
                 onPressed: () {
+                  popscreen().popprintstrukulang(context, con, data[index]);
+                },
+                icon: const Icon(
+                  Icons.receipt_long,
+                  size: 18,
+                )),
+          ),
+          Expanded(
+            child: IconButton(
+                onPressed: () {
                   Get.dialog(
                       const AlertDialog(
                         shape: RoundedRectangleBorder(

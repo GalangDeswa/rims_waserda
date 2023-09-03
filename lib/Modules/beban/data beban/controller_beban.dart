@@ -366,103 +366,67 @@ class bebanController extends GetxController {
   syncBeban(id_toko) async {
     print('-----------------SYNC BEBAN LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataBeban> beban = await fetchBebansync(id_toko);
-      // databebanlistlocal.refresh();
-      print('start up DB SYNC BEBAN--------------------------------------->');
-      var query = beban.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          var x = await REST.syncbeban(
-            token: token,
-            id: e.idLocal,
-            idtoko: e.idToko.toString(),
-            idkatbeban: e.idKtrBeban.toString(),
-            iduser: e.idUser.toString(),
-            nama: e.nama,
-            keterangan: e.keterangan,
-            tgl: e.tgl,
-            jumlah: e.jumlah.toString(),
-            aktif: e.aktif,
-          );
-          print('print x--------------------->');
-          print(x);
-          print("BEBAN UP --------->   " +
-              e.nama! +
-              "------------------------------------------>");
+    List<DataBeban> beban = await fetchBebansync(id_toko);
 
-          if (x == false) {
-            print('gagal sync beban x= gagal------------------------>');
-            return;
-          } else {
-            print('beban local sync = y------------------------>');
-            await DBHelper().UPDATE(
-                table: 'beban_local', data: synclocal('Y'), id: e.idLocal);
-          }
-        });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
+    print('start up DB SYNC BEBAN--------------------------------------->');
+    var query = beban.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
     } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncbeban(
+          token: token,
+          id: e.idLocal,
+          idtoko: e.idToko.toString(),
+          idkatbeban: e.idKtrBeban.toString(),
+          iduser: e.idUser.toString(),
+          nama: e.nama,
+          keterangan: e.keterangan,
+          tgl: e.tgl,
+          jumlah: e.jumlah.toString(),
+          aktif: e.aktif,
+        );
+
+        if (up != null) {
+          print('beban up --->>> ' + e.nama!);
+          print('beban local sync = y------------------------>');
+          await DBHelper().UPDATE(
+              table: 'beban_local', data: synclocal('Y'), id: e.idLocal);
+        }
+      });
     }
   }
 
   syncBebanKategori(id_toko) async {
     print(
         '-----------------SYNC BEBAN KATEGORI LOCAL TO HOST-------------------');
+    List<DataJenisBeban> bebankategori = await fetchJenisBebansync(id_toko);
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataJenisBeban> bebankategori = await fetchJenisBebansync(id_toko);
-      // jenisbebanlistlocal.refresh();
-      print(
-          'start up DB SYNC BEBAN KATEGORI LOCAL--------------------------------------->');
-      var query = bebankategori.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          var sync = await REST.syncbebanJenis(
-              token, e.idLocal, e.idToko.toString(), e.kategori, e.aktif);
+    print(
+        'start up DB SYNC BEBAN KATEGORI LOCAL--------------------------------------->');
+
+    var query = bebankategori.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncbebanJenis(
+            token, e.idLocal, e.idToko.toString(), e.kategori, e.aktif);
+
+        if (up != null) {
           print("BEBAN KATEGORI UP ------>    " +
               e.kategori! +
               "------------------------------------------>");
-          if (sync != null) {
-            await DBHelper().UPDATE(
-                table: 'beban_kategori_local',
-                data: synclocal('Y'),
-                id: e.idLocal);
-          }
-        });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+          await DBHelper().UPDATE(
+              table: 'beban_kategori_local',
+              data: synclocal('Y'),
+              id: e.idLocal);
+        }
+      });
     }
   }
 
@@ -476,6 +440,38 @@ class bebanController extends GetxController {
     List<DataBeban> check_beban_local = await fetchBebansync(id_toko);
     List<DataJenisBeban> check_jenis_beban_local =
         await fetchJenisBebansync(id_toko);
+
+    print('-------------------init beban kategori local---------------------');
+    await Future.forEach(beban_kategori_local, (e) async {
+      var x = check_jenis_beban_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print('insert ---------------------------------> ' + ' ' + e.kategori!);
+        await DBHelper().INSERT(
+            'beban_kategori_local',
+            DataJenisBeban(
+                    id: e.id,
+                    aktif: e.aktif,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    kategori: e.kategori,
+                    sync: 'Y')
+                .toMapForDb());
+      } else {
+        print('update ---------------------------------> ' + ' ' + e.kategori!);
+        await DBHelper().UPDATE(
+            table: 'beban_kategori_local',
+            data: DataJenisBeban(
+                    aktif: e.aktif,
+                    idLocal: e.idLocal,
+                    idToko: e.idToko,
+                    kategori: e.kategori,
+                    sync: 'Y')
+                .updateInit(),
+            id: e.idLocal);
+      }
+    });
 
     print('-------------------init beban local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
@@ -517,37 +513,6 @@ class bebanController extends GetxController {
                     namaKtrBeban: e.namaKtrBeban,
                     sync: 'Y',
                     aktif: e.aktif)
-                .updateInit(),
-            id: e.idLocal);
-      }
-    });
-
-    await Future.forEach(beban_kategori_local, (e) async {
-      var x = check_jenis_beban_local
-          .where((element) => element.idLocal == e.idLocal)
-          .firstOrNull;
-      if (x == null) {
-        print('insert ---------------------------------> ' + ' ' + e.kategori!);
-        await DBHelper().INSERT(
-            'beban_kategori_local',
-            DataJenisBeban(
-                    id: e.id,
-                    aktif: e.aktif,
-                    idLocal: e.idLocal,
-                    idToko: e.idToko,
-                    kategori: e.kategori,
-                    sync: 'Y')
-                .toMapForDb());
-      } else {
-        print('update ---------------------------------> ' + ' ' + e.kategori!);
-        await DBHelper().UPDATE(
-            table: 'beban_kategori_local',
-            data: DataJenisBeban(
-                    aktif: e.aktif,
-                    idLocal: e.idLocal,
-                    idToko: e.idToko,
-                    kategori: e.kategori,
-                    sync: 'Y')
                 .updateInit(),
             id: e.idLocal);
       }
@@ -647,7 +612,7 @@ class bebanController extends GetxController {
     var query = await DBHelper().INSERT(
         'beban_local',
         DataBeban(
-                idLocal: stringGenerator(10),
+                idLocal: nama.value.text + stringGenerator(10),
                 aktif: 'Y',
                 sync: 'N',
                 idToko: int.parse(id_toko),
@@ -766,80 +731,47 @@ class bebanController extends GetxController {
   fetchJenisBeban() async {
     print('-------------------fetchJenisbeban---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var jenis = await REST.bebanKategori(token, id_toko);
-      if (jenis != null) {
-        print('-------------------datajenisbeban---------------');
-        var dataJenis = ModelJenisBeban.fromJson(jenis);
+    var jenis = await REST.bebanKategori(token, id_toko);
+    if (jenis != null) {
+      print('-------------------datajenisbeban---------------');
+      var dataJenis = ModelJenisBeban.fromJson(jenis);
 
-        jenisbebanlist.value = dataJenis.data;
+      jenisbebanlist.value = dataJenis.data;
 
-        jenisbebanlist.value = dataJenis.data;
-        // totalpagejenis.value = dataJenis.meta.pagination.totalPages;
-        // totaldatajenis.value = dataJenis.meta.pagination.total;
-        // perpagejenis.value = dataJenis.meta.pagination.perPage;
-        // currentpagejenis.value = jenis['meta']['pagination']['current_page'];
-        // countjenis.value = dataJenis.meta.pagination.count;
-        // if (totalpagejenis > 1) {
-        //   nextdatajenis = jenis['meta']['pagination']['links']['next'];
-        // }
+      jenisbebanlist.value = dataJenis.data;
 
-        print('--------------------list jenis---------------');
-        print(jenisbebanlist);
+      print('--------------------list jenis---------------');
+      print(jenisbebanlist);
 
-        // Get.back(closeOverlays: true);
-
-        return jenisbebanlist;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal fecthjenisbeban'));
-      }
+      return jenisbebanlist;
     } else {
-      //Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+          toast().bottom_snackbar_error('Error', 'Gagal fecthjenisbeban'));
     }
+
     return [];
   }
 
   fetchDataBeban() async {
     print('-------------------fetch data beban---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var beban = await REST.bebanData(token, id_toko, search.value.text);
-      if (beban != null) {
-        print('-------------------data beban---------------');
-        var dataBeban = ModelBeban.fromJson(beban);
+    var beban = await REST.bebanData(token, id_toko, search.value.text);
+    if (beban != null) {
+      print('-------------------data beban---------------');
+      var dataBeban = ModelBeban.fromJson(beban);
 
-        databebanlist.value = dataBeban.data;
-        // totalpage.value = dataBeban.meta.pagination.totalPages;
-        // totaldata.value = dataBeban.meta.pagination.total;
-        // perpage.value = dataBeban.meta.pagination.perPage;
-        // currentpage.value = beban['meta']['pagination']['current_page'];
-        // count.value = dataBeban.meta.pagination.count;
-        // if (totalpage > 1) {
-        //   nextdata = beban['meta']['pagination']['links']['next'];
-        // }
+      databebanlist.value = dataBeban.data;
 
-        print('--------------------list data beban---------------');
-        print(databebanlist);
+      print('--------------------list data beban---------------');
+      print(databebanlist);
 
-        // Get.back(closeOverlays: true);
-
-        return databebanlist;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal fecthdatabeban'));
-      }
+      return databebanlist;
     } else {
-      //Get.back(closeOverlays: true);
+      // Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+          toast().bottom_snackbar_error('Error', 'Gagal fecth data beban'));
     }
+
     return [];
   }
 
@@ -924,7 +856,7 @@ class bebanController extends GetxController {
     var query = await DBHelper().INSERT(
         'beban_kategori_local',
         DataJenisBeban(
-                idLocal: stringGenerator(10),
+                idLocal: kategori.value.text + stringGenerator(10),
                 aktif: 'Y',
                 idToko: int.parse(id_toko),
                 kategori: kategori.value.text,

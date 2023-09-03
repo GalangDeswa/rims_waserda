@@ -111,41 +111,27 @@ class pelangganController extends GetxController {
   syncPelanggan(id_toko) async {
     print('-----------------SYNC PELANGGAN LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataPelanggan> pelanggan = await fetchDataPelanggansync(id_toko);
-      // list_pelanggan_local.refresh();
-      print(
-          'start up DB SYNC PELANGGAN--------------------------------------->');
-      var query = pelanggan.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        var p = await Future.forEach(query, (e) async {
-          await REST.syncpelanggan(token, e.idLocal, e.idToko.toString(),
-              e.namaPelanggan, e.noHp, e.aktif);
+    List<DataPelanggan> pelanggan = await fetchDataPelanggansync(id_toko);
+
+    print('start up DB SYNC PELANGGAN--------------------------------------->');
+    var query = pelanggan.where((x) => x.sync == 'N').toList();
+
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncpelanggan(token, e.idLocal, e.idToko.toString(),
+            e.namaPelanggan, e.noHp, e.aktif);
+        if (up != null) {
           print("PELANGGAN UP ----->   " +
               e.namaPelanggan.toString() +
               "------------------------------------------>");
-
           await DBHelper()
               .UPDATE(table: 'pelanggan_local', data: synclocal('Y'), id: e.id);
-        });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+        }
+      });
     }
   }
 
@@ -153,7 +139,6 @@ class pelangganController extends GetxController {
     List<DataPelanggan> pelanggan_local = await fetchDataPelanggan();
     List<DataPelanggan> check_pelanggan_local =
         await fetchDataPelanggansync(id_toko);
-    //List<DataDetailPenjualan> beban_detail_local = await fetchJenisBeban();
 
     print('-------------------init pelanggan local---------------------');
     //Get.dialog(showloading(), barrierDismissible: false);
@@ -331,36 +316,25 @@ class pelangganController extends GetxController {
     }
   }
 
-  //TODO : chek status hutang
-
   fetchDataPelanggan() async {
     print('-------------------fetch data beban---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var pelanggan = await REST.pelangganData(token, id_toko);
-      if (pelanggan != null) {
-        print('-------------------data beban---------------');
-        var dataPelanggan = ModelPelanggan.fromJson(pelanggan);
+    var pelanggan = await REST.pelangganData(token, id_toko);
+    if (pelanggan != null) {
+      print('-------------------data beban---------------');
+      var dataPelanggan = ModelPelanggan.fromJson(pelanggan);
 
-        list_pelanggan.value = dataPelanggan.data;
+      list_pelanggan.value = dataPelanggan.data;
 
-        print('--------------------list data beban---------------');
-        print(list_pelanggan);
+      print('--------------------list data beban---------------');
+      print(list_pelanggan);
 
-        // Get.back(closeOverlays: true);
-
-        return list_pelanggan;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal fecthdatabeban'));
-      }
+      return list_pelanggan;
     } else {
-      //Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+          toast().bottom_snackbar_error('Error', 'Gagal fecthdatabeban'));
     }
+
     return [];
   }
 
@@ -386,7 +360,7 @@ class pelangganController extends GetxController {
     var query = await DBHelper().INSERT(
         'pelanggan_local',
         DataPelanggan(
-                idLocal: stringGenerator(10),
+                idLocal: nama_pelanggan.value.text + stringGenerator(10),
                 idToko: int.parse(id_toko),
                 namaPelanggan: nama_pelanggan.value.text,
                 noHp: no_hp.value.text,

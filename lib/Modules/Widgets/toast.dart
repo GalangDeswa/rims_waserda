@@ -54,4 +54,31 @@ class toast {
       reverseAnimationCurve: Curves.easeOut,
     );
   }
+
+  bottom_snackbar_connection_error(
+    String title,
+    mesaage,
+  ) {
+    return GetSnackBar(
+      title: title,
+      message: mesaage,
+      icon: Container(
+          margin: EdgeInsets.only(
+            left: 6,
+          ),
+          padding: EdgeInsets.all(5),
+          decoration:
+              BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          child: Icon(Icons.error, color: color_template().tritadery)),
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.orange,
+      borderRadius: 20,
+      margin: EdgeInsets.all(15),
+      duration: Duration(seconds: 4),
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+      forwardAnimationCurve: Curves.elasticInOut,
+      reverseAnimationCurve: Curves.easeOut,
+    );
+  }
 }

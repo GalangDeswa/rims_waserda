@@ -258,7 +258,7 @@ class loginController extends GetxController {
               print(e);
               Get.back();
               Get.showSnackbar(
-                  toast().bottom_snackbar_error('Error', 'Error init databse'));
+                  toast().bottom_snackbar_error('Error', e.toString()));
             }
           }
 

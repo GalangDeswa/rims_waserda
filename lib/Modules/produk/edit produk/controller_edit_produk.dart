@@ -59,6 +59,7 @@ class editprodukController extends GetxController {
 
     jenisvalue.value = data.idJenis.toString();
     jenisstokval.value = data.idJenisStock.toString();
+    qtyval.value = data.qty;
 
     jumlahharga.value = int.parse(data.harga.toString());
     jumlahdiskon.value = data.diskonBarang.toDouble();
@@ -297,7 +298,7 @@ class editprodukController extends GetxController {
                 idToko: int.parse(id_toko),
                 idJenis: data.idJenis,
                 idUser: id_user,
-                qty: data.qty,
+                qty: qtyval.value,
                 deskripsi: desc.value.text,
                 diskonBarang: metode_diskon.value == 1
                     ? int.parse(jumlahdiskon.value.toInt().toString())
@@ -540,6 +541,7 @@ class editprodukController extends GetxController {
   var nama_jenis = TextEditingController().obs;
 
   var qty = TextEditingController().obs;
+  var qtyval = 0.obs;
   var image;
 
   deleteproduk(String id) async {

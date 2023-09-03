@@ -1,12 +1,17 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:blue_thermal_printer/blue_thermal_printer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rims_waserda/Modules/Widgets/loading.dart';
 import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
+import 'package:rims_waserda/Modules/history/controller_detail_penjualan.dart';
 import 'package:rims_waserda/Modules/history/model_penjualan.dart';
 import 'package:rims_waserda/Modules/kasir/controller_kasir.dart';
 import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
@@ -14,6 +19,7 @@ import 'package:rims_waserda/Modules/produk/data%20produk/model_produk.dart';
 import '../../Services/handler.dart';
 import '../../db_helper.dart';
 import '../Widgets/toast.dart';
+import '../base menu/controller_base_menu.dart';
 import '../pelanggan/data pelanggan/controller_data_pelanggan.dart';
 import '../pelanggan/hutang/controller_hutang.dart';
 import '../pelanggan/hutang/model_hutang.dart';
@@ -28,6 +34,8 @@ class historyController extends GetxController {
     super.onInit();
     await fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
     await fetchDataHutangDetaillocal(id_toko);
+    await initSavetoPath();
+    await initSavetoPathstruk();
   }
 
   var sort = false.obs;
@@ -185,59 +193,45 @@ class historyController extends GetxController {
   syncPenjualan(id_toko) async {
     print('-----------------SYNC PENJUALAN LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataPenjualan> penjualan = await fetchPenjualansync(id_toko);
-      //penjualan_list_local.refresh();
-      print(
-          'start up DB SYNC PELANGGAN--------------------------------------->');
-      var query = penjualan.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          await REST.syncpenjualan(
-              diskon_kasir: e.diskonKasir,
-              ppn: e.ppn,
-              token: token,
-              id_hutang: e.idHutang,
-              bayar: e.bayar,
-              id: e.idLocal,
-              id_pelanggan: e.idPelanggan,
-              status: e.status,
-              total: e.total,
-              meja: e.meja,
-              kembalian: e.kembalian,
-              aktif: e.aktif,
-              idtoko: e.idToko.toString(),
-              iduser: e.idUser.toString(),
-              diskon_total: e.diskonTotal,
-              metode_bayar: e.metodeBayar,
-              sub_total: e.subTotal,
-              tgl_penjualan: e.tglPenjualan,
-              total_item: e.totalItem);
+    List<DataPenjualan> penjualan = await fetchPenjualansync(id_toko);
+
+    print('start up DB SYNC PELANGGAN--------------------------------------->');
+    var query = penjualan.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncpenjualan(
+            diskon_kasir: e.diskonKasir,
+            ppn: e.ppn,
+            token: token,
+            id_hutang: e.idHutang,
+            bayar: e.bayar,
+            id: e.idLocal,
+            id_pelanggan: e.idPelanggan,
+            status: e.status,
+            total: e.total,
+            meja: e.meja,
+            kembalian: e.kembalian,
+            aktif: e.aktif,
+            idtoko: e.idToko.toString(),
+            iduser: e.idUser.toString(),
+            diskon_total: e.diskonTotal,
+            metode_bayar: e.metodeBayar,
+            sub_total: e.subTotal,
+            tgl_penjualan: e.tglPenjualan,
+            total_item: e.totalItem);
+        if (up != null) {
           print("PENJUALAN UP ---->   " +
               e.metodeBayar.toString() +
               "------------------------------------------>");
 
           await DBHelper().UPDATE(
               table: 'penjualan_local', data: synclocal('Y'), id: e.idLocal);
-        });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+        }
+      });
     }
   }
 
@@ -389,7 +383,7 @@ class historyController extends GetxController {
         '-------------------fetch Penjualan local lunas---------------------');
     //succ.value = false;
     List<Map<String, Object?>> query = await DBHelper().FETCH(
-        'SELECT bayar FROM hutang_detail_local INNER JOIN hutang_local ON hutang_detail_local.id_hutang = hutang_local.id_local WHERE hutang_local.status = 1 AND DATE(hutang_detail_local.tgl_bayar) = "2023-08-30" and DATE(hutang_local.tgl_hutang) = "2023-08-30"');
+        'SELECT bayar FROM hutang_detail_local INNER JOIN hutang_local ON hutang_detail_local.id_hutang = hutang_local.id_local WHERE hutang_detail_local.id_toko = $id_toko AND hutang_local.status = 1 AND DATE(hutang_detail_local.tgl_bayar) = "${dateFormatsearch.format(DateTime.now())}" and DATE(hutang_local.tgl_hutang) = "${dateFormatsearch.format(DateTime.now())}"');
     List<DataHutangDetail> penjualan = query.isNotEmpty
         ? query.map((e) => DataHutangDetail.fromJson(e)).toList()
         : [];
@@ -431,37 +425,25 @@ class historyController extends GetxController {
   fetchPenjualan() async {
     print('-------------------fetch penjualan---------------------');
     succ.value = false;
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var penjualan =
-          await REST.penjualanData(token, id_user, id_toko, search.value.text);
-      if (penjualan != null) {
-        succ.value = true;
-        print('-------------------data penjualan--------------------');
-        var dataPenjualan = ModelPenjualan.fromJson(penjualan);
+    var penjualan =
+        await REST.penjualanData(token, id_user, id_toko, search.value.text);
+    if (penjualan != null) {
+      succ.value = true;
+      print('-------------------data penjualan--------------------');
+      var dataPenjualan = ModelPenjualan.fromJson(penjualan);
 
-        penjualan_list.value = dataPenjualan.data;
+      penjualan_list.value = dataPenjualan.data;
 
-        //update();
-        print('--------------------list penjualan---------------');
-        print(penjualan_list);
+      print('--------------------list penjualan---------------');
+      print(penjualan_list);
 
-        // Get.back(closeOverlays: true);
-
-        return penjualan_list;
-      } else {
-        succ.value = true;
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Gagal fecth penjualan'));
-      }
+      return penjualan_list;
     } else {
       succ.value = true;
-      //Get.back(closeOverlays: true);
+
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+          toast().bottom_snackbar_error('Error', 'Gagal fecth penjualan'));
     }
-    return [];
   }
 
   fetchPenjualanHariIni() async {
@@ -530,6 +512,8 @@ class historyController extends GetxController {
           data: DataPenjualan(
                   aktif: 'N',
                   status: 4,
+                  ppn: select.ppn,
+                  diskonKasir: select.diskonKasir,
                   id: select.id,
                   idLocal: select.idLocal,
                   idUser: select.idUser,
@@ -605,6 +589,8 @@ class historyController extends GetxController {
           table: 'penjualan_local',
           data: DataPenjualan(
                   aktif: 'N',
+                  diskonKasir: select.diskonKasir,
+                  ppn: select.ppn,
                   status: 4,
                   id: select.id,
                   idLocal: select.idLocal,
@@ -725,5 +711,122 @@ class historyController extends GetxController {
       Get.showSnackbar(
           toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
     }
+  }
+
+  var pathImage = ''.obs;
+
+  initSavetoPath() async {
+    //read and write
+    //image max 300px X 300px
+    final filename = 'logoprintv2.png';
+    var bytes = await rootBundle.load("assets/icons/logoprintv2.png");
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    writeToFile(bytes, '$dir/$filename');
+
+    pathImage.value = '$dir/$filename';
+    print(pathImage);
+  }
+
+  var printstruklogo = ''.obs;
+
+  initSavetoPathstruk() async {
+    //read and write
+    //image max 300px X 300px
+    final filename = 'logoprintstruk.png';
+    var bytes = await rootBundle.load("assets/icons/logoprintstruk.png");
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    writeToFile(bytes, '$dir/$filename');
+
+    printstruklogo.value = '$dir/$filename';
+    print(pathImage);
+  }
+
+  Future<void> writeToFile(ByteData data, String path) {
+    final buffer = data.buffer;
+    return new File(path).writeAsBytes(
+        buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
+  }
+
+  var isConnected = Get.find<base_menuController>().isConnected;
+  var listPrinter = Get.find<base_menuController>().listPrinter;
+  BluetoothDevice? selectedPrinter =
+      Get.find<base_menuController>().selectedPrinter;
+  BlueThermalPrinter printer = Get.find<base_menuController>().printer;
+  var logo = GetStorage().read('logo_toko') ?? '-';
+  var namatoko = GetStorage().read('nama_toko');
+  var alamat_toko = GetStorage().read('alamat_toko');
+  DateFormat dateFormatprint = DateFormat("dd-MM-yyyy");
+
+  printstrukpembayaranulang(
+    DataPenjualan d,
+  ) async {
+    List<DataPenjualanDetailV2> detail = await detailpenjualanController()
+        .detailPenjualanById(d.idLocal, id_toko);
+
+    print('cetak struk local------------------------------->');
+    print(listPrinter.toString());
+    print(isConnected == true);
+
+    if (logo == '-') {
+      printer.printImage(pathImage.value);
+    } else {
+      printer.printImageBytes(base64Decode(logo));
+    }
+    printer.printCustom(namatoko, 3, 1);
+    printer.printCustom(alamat_toko, 0, 3);
+    printer.printCustom('-------------------------------', 1, 3);
+    printer.printLeftRight(
+        dateFormatprint.format(DateTime.parse(d.tglPenjualan!)),
+        d.namaUser!,
+        0);
+
+    printer.printLeftRight('Meja :', d.meja!, 0);
+    printer.printCustom('-------------------------------', 1, 3);
+    printer.printNewLine();
+    d.status == 2 ? printer.printCustom('--- Hutang ---', 2, 1) : print('zxc');
+    printer.printNewLine();
+
+    //item-------------------------------------------------
+    printer.print4Column('Produk', 'QTY', 'Harga', 'Subtotal', 0,
+        format: "%-17s %-4s %-10s %5s %n");
+    printer.printCustom('-------------------------------', 1, 3);
+    detail.forEach((e) {
+      String nama = e.namaBrg!;
+      if (nama.length > 15) {
+        nama = e.namaBrg!.substring(0, 15) + '...';
+      }
+      printer.print4Column(
+          nama,
+          e.qty.toString(),
+          format: "%-17s %-4s %-10s %5s %n",
+          nominal.format(e.hargaBrg),
+          nominal.format((e.hargaBrg! * e.qty!)),
+          0);
+      printer.printCustom('-------------------------------', 1, 2);
+    });
+
+    printer.printLeftRight('Subtotal :', nominal.format(d.subTotal), 0);
+
+    printer.printLeftRight('Diskon kasir :', nominal.format(d.diskonKasir), 0);
+
+    printer.printCustom('-------------------------------', 1, 1);
+
+    printer.printLeftRight('PPN :', nominal.format(d.ppn), 0);
+    printer.printLeftRight('Total :', nominal.format(d.total), 0);
+    printer.printLeftRight('Tunai :', nominal.format(d.bayar), 0);
+    printer.printLeftRight('Kembalian :', nominal.format(d.kembalian), 0);
+    printer.printCustom('-------------------------------', 1, 1);
+    printer.printCustom('-- Terima Kasih --', 0, 1);
+    printer.printCustom('-------------------------------', 1, 1);
+    printer.printImage(printstruklogo.value);
+    printer.printCustom('*** Powered by RIMS ***', 0, 1);
+    printer.printCustom('www.rims.co.id', 0, 1);
+    printer.printCustom('-------------------------------', 1, 1);
+    printer.printNewLine();
+    printer.paperCut();
+    Get.back();
+    Get.showSnackbar(
+        toast().bottom_snackbar_success('Sukses', 'Struk berhasil di cetak'));
+    //proses bayar local--------------------------
   }
 }

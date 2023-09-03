@@ -193,9 +193,6 @@ class base_menu extends GetView<base_menuController> {
                       if (controller.point_loading == 1.0) {
                         print(
                             'loading sync manual complete------------------>');
-                        Get.back(closeOverlays: true);
-                        Get.showSnackbar(toast().bottom_snackbar_success(
-                            'Sukses', 'Data berhasil di sinkron'));
                       }
                     },
                     child: ListTile(

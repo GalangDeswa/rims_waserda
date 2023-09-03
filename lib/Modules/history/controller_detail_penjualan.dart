@@ -43,61 +43,47 @@ class detailpenjualanController extends GetxController {
     print(
         '-----------------SYNC PENJUALAN DETAIL LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataPenjualanDetailV2> penjualandetail =
-          await fetchPenjualanDetailsync(id_toko);
-      // penjualan_list_detail_local.refresh();
-      print(
-          'start up DB SYNC PENJUALAN DETAIL--------------------------------------->');
-      var query = penjualandetail.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          await REST.syncpenjualandetail(
-              token: token,
-              iduser: e.idUser,
-              idtoko: id_toko.toString(),
-              aktif: e.aktif,
-              total: e.total,
-              id: e.idLocal,
-              qty: e.qty,
-              tgl: e.tgl,
-              id_kategori: e.idKategori,
-              id_jenis_stock: e.idJenisStock,
-              harga_modal: e.hargaModal,
-              diskon_brg: e.diskonBrg,
-              diskon_kasir: e.diskonKasir,
-              harga_brg: e.hargaBrg,
-              id_penjualan: e.idPenjualan,
-              id_produk: e.idProduk,
-              nama_brg: e.namaBrg);
+    List<DataPenjualanDetailV2> penjualandetail =
+        await fetchPenjualanDetailsync(id_toko);
+
+    print(
+        'start up DB SYNC PENJUALAN DETAIL--------------------------------------->');
+    var query = penjualandetail.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncpenjualandetail(
+            token: token,
+            iduser: e.idUser,
+            idtoko: id_toko.toString(),
+            aktif: e.aktif,
+            total: e.total,
+            id: e.idLocal,
+            qty: e.qty,
+            tgl: e.tgl,
+            id_kategori: e.idKategori,
+            id_jenis_stock: e.idJenisStock,
+            harga_modal: e.hargaModal,
+            diskon_brg: e.diskonBrg,
+            diskon_kasir: e.diskonKasir,
+            harga_brg: e.hargaBrg,
+            id_penjualan: e.idPenjualan,
+            id_produk: e.idProduk,
+            nama_brg: e.namaBrg);
+        if (up != null) {
           print("PENJUALAN DETAIL UP ---->   " +
               e.idPenjualan.toString() +
               e.namaBrg! +
               "------------------------------------------>");
-
           await DBHelper().UPDATE(
               table: 'penjualan_detail_local',
               data: synclocal('Y'),
               id: e.idLocal);
-        });
-
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+        }
+      });
     }
   }
 
@@ -106,8 +92,6 @@ class detailpenjualanController extends GetxController {
         await penjualanDetailALl();
     List<DataPenjualanDetailV2> check_penjualan_detail_local =
         await fetchPenjualanDetailsync(id_toko);
-
-    //List<DataDetailPenjualan> beban_detail_local = await fetchJenisBeban();
 
     print(
         '-------------------init detail penjualan local---------------------');
@@ -252,27 +236,21 @@ class detailpenjualanController extends GetxController {
   penjualanDetailALl() async {
     print('-------------------penjualan detail---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var penjualan = await REST.penjualanDataDetailAll(token, id_toko);
-      if (penjualan != null) {
-        var dataPenjualan = ModelDetailPenjualanV2.fromJson(penjualan);
+    var penjualan = await REST.penjualanDataDetailAll(token, id_toko);
+    if (penjualan != null) {
+      var dataPenjualan = ModelDetailPenjualanV2.fromJson(penjualan);
 
-        detail_list_all.value = dataPenjualan.data!;
+      detail_list_all.value = dataPenjualan.data!;
 
-        // detail_list.value = dataPenjualan.data.map((e) => e.detailItem).toList();
-        print(detail_list_all);
-        return detail_list_all;
-      } else {
-        // Get.back(closeOverlays: true);
-        Get.showSnackbar(toast()
-            .bottom_snackbar_error('Error', 'Gagal fecthc detail penjualan'));
-      }
+      // detail_list.value = dataPenjualan.data.map((e) => e.detailItem).toList();
+      print(detail_list_all);
+      return detail_list_all;
     } else {
-      //Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi'));
+      // Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_error('Error', 'Gagal fecthc detail penjualan'));
     }
+
     return [];
   }
 }

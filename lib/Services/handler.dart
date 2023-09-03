@@ -35,13 +35,13 @@ class check_conn {
         }
       } on SocketException catch (_) {
         print('not connected');
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
+        Get.showSnackbar(toast().bottom_snackbar_connection_error(
+            'Error', 'Periksa koneksi internet'));
       }
     } else {
       // AppAlert.getOnlyAlert(FAILED, NO_INTERNET_CONNECTION);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
+      Get.showSnackbar(toast().bottom_snackbar_connection_error(
+          'Error', 'Periksa koneksi internet'));
       //     backgroundColor: AppColor.APP_BUTTON, colorText: Colors.white);
     }
     return false;
@@ -339,40 +339,41 @@ class REST extends GetConnect {
 
   static Future<dynamic> produkAllv2(String token, idtoko) async {
     //Get.dialog(showloading());
-    try {
-      var response = await http.post(link().POST_produkall,
-          body: ({
-            'token': token,
-            'id_toko': idtoko,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'PRODUKALL V2 network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet ');
+    }
 
-        var data = await json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        // var l = [];
-        //data = l;
-        //print(l.length);
-        // print(data['data']);
-        print(response.statusCode);
-        //Get.back(closeOverlays: true);
-        return data;
-      } else {
-        var data = json.decode(response.body);
-        print(data['message']);
-        print(
-            'PRODUKALLnetwork handler----------------------------------------->');
-        print('gagal PRODUKALL');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Fetch produk all gagal');
-      }
-    } catch (e) {
-      print(e);
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    var response = await http.post(link().POST_produkall,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'PRODUKALL V2 network handler----------------------------------------->');
+
+      var data = await json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      // var l = [];
+      //data = l;
+      //print(l.length);
+      // print(data['data']);
+      print(response.statusCode);
+      //Get.back(closeOverlays: true);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print(data['message']);
+      print(
+          'PRODUKALLnetwork handler----------------------------------------->');
+      print('gagal PRODUKALL');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Fetch produk all gagal');
     }
   }
 
@@ -434,6 +435,11 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> produkJenis(String token, idtoko) async {
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet ');
+    }
     var response = await http.post(link().POST_produkjenis,
         body: ({
           'token': token,
@@ -441,7 +447,7 @@ class REST extends GetConnect {
         }));
     if (response.statusCode == 200) {
       print(
-          'PRODUKALL network handler----------------------------------------->');
+          'PRODUK JENIS network handler----------------------------------------->');
 
       var data = json.decode(response.body);
       //var data = response.body;
@@ -451,10 +457,11 @@ class REST extends GetConnect {
       return (data);
     } else {
       print(
-          'PRODUKALLnetwork handler----------------------------------------->');
-      print('gagal PRODUKALL');
+          'PRODUK JENIS network handler----------------------------------------->');
+      print('gagal PRODUk JENIS');
       print(response.statusCode);
       print(response.body);
+      return Future.error(response.statusCode);
     }
   }
 
@@ -536,49 +543,50 @@ class REST extends GetConnect {
     //updated_at,
     // deleted_at
   }) async {
-    try {
-      var response = http.MultipartRequest("POST", link().POST_produklocaltodb);
-      response.fields['token'] = token;
-      response.fields['image'] = image ?? '-';
-      response.fields['id_local'] = id.toString();
-      response.fields['barcode'] = barcode ?? '-';
-      response.fields['id_toko'] = id_toko.toString();
-      response.fields['id_user'] = id_user.toString();
-      response.fields['id_jenis'] = id_jenis.toString();
-      response.fields['id_kategori'] = id_kategori.toString();
-      response.fields['id_jenis_stock'] = id_jenis_stock.toString();
-      response.fields['nama_produk'] = nama_produk;
-      response.fields['deskripsi'] = deskripsi;
-      response.fields['qty'] = qty.toString();
-      response.fields['harga'] = harga.toString();
-      response.fields['harga_modal'] = harga_modal.toString();
-      response.fields['diskon_barang'] = diskon_barang.toString();
-      response.fields['status'] = status.toString();
-      //response.fields['aktif'] = aktif.toString();
-      // response.fields['created_at'] = created_at.toString();
-      // response.fields['updated_at'] = updated_at.toString();
-      // response.fields['deleted_at'] = deleted_at.toString();
-
-      //response.fields['diskon_barang'] = diskon_barang;
-
-      final streamedResponse = await response.send();
-      final datarespon = await http.Response.fromStream(streamedResponse);
-      if (datarespon.statusCode != 200) {
-        print(
-            'SYNC PRODUK handelr gagal-------------------------------------------');
-        print(datarespon.statusCode);
-        print(datarespon.body);
-        return Future.error(
-            datarespon.statusCode.toString() + ' - ' + 'Sync produk gagal');
-      }
-      var data = json.decode(datarespon.body);
-
-      print(data);
-      return data;
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC PRODUK ');
     }
+
+    var response = http.MultipartRequest("POST", link().POST_produklocaltodb);
+    response.fields['token'] = token;
+    response.fields['image'] = image ?? '-';
+    response.fields['id_local'] = id.toString();
+    response.fields['barcode'] = barcode ?? '-';
+    response.fields['id_toko'] = id_toko.toString();
+    response.fields['id_user'] = id_user.toString();
+    response.fields['id_jenis'] = id_jenis.toString();
+    response.fields['id_kategori'] = id_kategori.toString();
+    response.fields['id_jenis_stock'] = id_jenis_stock.toString();
+    response.fields['nama_produk'] = nama_produk;
+    response.fields['deskripsi'] = deskripsi;
+    response.fields['qty'] = qty.toString();
+    response.fields['harga'] = harga.toString();
+    response.fields['harga_modal'] = harga_modal.toString();
+    response.fields['diskon_barang'] = diskon_barang.toString();
+    response.fields['status'] = status.toString();
+    //response.fields['aktif'] = aktif.toString();
+    // response.fields['created_at'] = created_at.toString();
+    // response.fields['updated_at'] = updated_at.toString();
+    // response.fields['deleted_at'] = deleted_at.toString();
+
+    //response.fields['diskon_barang'] = diskon_barang;
+
+    final streamedResponse = await response.send();
+    final datarespon = await http.Response.fromStream(streamedResponse);
+    if (datarespon.statusCode != 200) {
+      print(
+          'SYNC PRODUK handelr gagal-------------------------------------------');
+      print(datarespon.statusCode);
+      print(datarespon.body);
+      return Future.error(
+          datarespon.statusCode.toString() + ' - ' + 'Sync produk gagal');
+    }
+    var data = json.decode(datarespon.body);
+
+    print(data);
+    return data;
   }
 
   static Future<dynamic> produkEdit(
@@ -660,36 +668,39 @@ class REST extends GetConnect {
 
   static Future<dynamic> syncProdukJenis(
       {required String token, idtoko, namajenis, aktif, id}) async {
-    try {
-      var response = await http.post(link().POST_syncprodukjenis,
-          body: ({
-            'token': token,
-            'id_local': id.toString(),
-            'id_toko': idtoko.toString(),
-            'nama_jenis': namajenis,
-            'aktif': aktif,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC PRODUK JENIS network handler----------------------------------------->');
+    print('<----------- jenis produk sync host -------->');
 
-        var data = json.decode(response.body);
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC PRODUK JENIS ');
+    }
+    var response = await http.post(link().POST_syncprodukjenis,
+        body: ({
+          'token': token,
+          'id_local': id.toString(),
+          'id_toko': idtoko.toString(),
+          'nama_jenis': namajenis,
+          'aktif': aktif,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC PRODUK JENIS network handler----------------------------------------->');
 
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'SYNC PRODUK JENIS network handler----------------------------------------->');
-        print('gagal SYNC PRODUK JENIS');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Sync produk jenis gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'SYNC PRODUK JENIS network handler----------------------------------------->');
+      print('gagal SYNC PRODUK JENIS');
+      print(response.statusCode);
+      print(response.body);
+      //throw Exception('gagal jenis produk');
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync produk jenis gagal');
     }
   }
 
@@ -849,110 +860,111 @@ class REST extends GetConnect {
       tgl,
       jumlah,
       aktif}) async {
-    try {
-      var response = await http.post(link().POST_syncbeban,
-          body: ({
-            'token': token,
-            'id_toko': idtoko.toString(),
-            'id_local': id.toString(),
-            'id_user': iduser.toString(),
-            'id_ktr_beban': idkatbeban.toString(),
-            'nama': nama,
-            'keterangan': keterangan,
-            'tgl': tgl.toString(),
-            'jumlah': jumlah.toString(),
-            'aktif': aktif,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC BEBAN network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC BEBAN ');
+    }
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'SYNC BEBAN network handler----------------------------------------->');
-        print('gagal SYNC BEBAN');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Sync beban gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    var response = await http.post(link().POST_syncbeban,
+        body: ({
+          'token': token,
+          'id_toko': idtoko.toString(),
+          'id_local': id.toString(),
+          'id_user': iduser.toString(),
+          'id_ktr_beban': idkatbeban.toString(),
+          'nama': nama,
+          'keterangan': keterangan,
+          'tgl': tgl.toString(),
+          'jumlah': jumlah.toString(),
+          'aktif': aktif,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'SYNC BEBAN network handler----------------------------------------->');
+      print('gagal SYNC BEBAN');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync beban gagal');
     }
   }
 
   static Future<dynamic> syncbebanJenis(
       String token, id, idtoko, kategori, aktif) async {
-    try {
-      var response = await http.post(link().POST_syncbebankategori,
-          body: ({
-            'token': token,
-            'id_toko': idtoko.toString(),
-            'id_local': id.toString(),
-            'kategori': kategori,
-            'aktif': aktif,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC KATEGORI BEBAN network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC beban JENIS ');
+    }
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'SYNC KATEGORI BEBAN network handler----------------------------------------->');
-        print('gagal SYNC KATEGORI BEBAN');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Sync beban jenis gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+    var response = await http.post(link().POST_syncbebankategori,
+        body: ({
+          'token': token,
+          'id_toko': idtoko.toString(),
+          'id_local': id.toString(),
+          'kategori': kategori,
+          'aktif': aktif,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC KATEGORI BEBAN network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'SYNC KATEGORI BEBAN network handler----------------------------------------->');
+      print('gagal SYNC KATEGORI BEBAN');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync beban jenis gagal');
     }
   }
 
   static Future<dynamic> bebanKategori(String token, idtoko) async {
-    try {
-      var response = await http.post(link().POST_bebankategori,
-          body: ({
-            'token': token,
-            'id_toko': idtoko,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'BEBAN KATEGORI network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> BEBAN KATEGORI ');
+    }
+    var response = await http.post(link().POST_bebankategori,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'BEBAN KATEGORI network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'BEBAN KATEGORI network handler----------------------------------------->');
-        print('gagal BEBAN KATEGORI');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + 'Error beban kategori');
-      }
-    } catch (e) {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'BEBAN KATEGORI network handler----------------------------------------->');
+      print('gagal BEBAN KATEGORI');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + 'Error beban kategori');
     }
   }
 
@@ -1042,34 +1054,34 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> bebanData(String token, idtoko, search) async {
-    try {
-      var response = await http.post(link().POST_bebadata,
-          body: ({
-            'token': token,
-            'id_toko': idtoko,
-            'search': search,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'BEBAN DATA network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> BEBAN DATA ');
+    }
+    var response = await http.post(link().POST_bebadata,
+        body: ({
+          'token': token,
+          'id_toko': idtoko,
+          'search': search,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'BEBAN DATA network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'BEBAN DATA network handler----------------------------------------->');
-        print('gagal BEBAN DATA');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error('error beban data');
-      }
-    } catch (e) {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'BEBAN DATA network handler----------------------------------------->');
+      print('gagal BEBAN DATA');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error('error beban data');
     }
   }
 
@@ -1378,51 +1390,49 @@ class REST extends GetConnect {
     diskon_kasir,
     ppn,
   }) async {
-    try {
-      var response = await http.post(link().POST_syncpenjualan,
-          body: ({
-            'token': token,
-            'id_local': id.toString(),
-            'id_user': iduser.toString(),
-            'id_toko': idtoko.toString(),
-            'aktif': aktif,
-            'id_pelanggan': id_pelanggan.toString(),
-            'meja': meja,
-            'id_hutang': id_hutang.toString(),
-            'total_item': total_item.toString(),
-            'diskon_total': diskon_total.toString(),
-            'sub_total': sub_total.toString(),
-            'total': total.toString(),
-            'bayar': bayar.toString(),
-            'kembalian': kembalian.toString(),
-            'tgl_penjualan': tgl_penjualan,
-            'metode_bayar': metode_bayar.toString(),
-            'status': status.toString(),
-            'diskon_kasir': diskon_kasir.toString(),
-            'ppn': ppn.toString(),
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC PENJUALAN network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC PENJUALAN ');
+    }
+    var response = await http.post(link().POST_syncpenjualan,
+        body: ({
+          'token': token,
+          'id_local': id.toString(),
+          'id_user': iduser.toString(),
+          'id_toko': idtoko.toString(),
+          'aktif': aktif,
+          'id_pelanggan': id_pelanggan.toString(),
+          'meja': meja,
+          'id_hutang': id_hutang.toString(),
+          'total_item': total_item.toString(),
+          'diskon_total': diskon_total.toString(),
+          'sub_total': sub_total.toString(),
+          'total': total.toString(),
+          'bayar': bayar.toString(),
+          'kembalian': kembalian.toString(),
+          'tgl_penjualan': tgl_penjualan,
+          'metode_bayar': metode_bayar.toString(),
+          'status': status.toString(),
+          'diskon_kasir': diskon_kasir.toString(),
+          'ppn': ppn.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC PENJUALAN network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        // print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'SYNC PENJUALAN network handler----------------------------------------->');
-        print('GAGAL SYNC PENJUALAN');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Sync penjualan gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'SYNC PENJUALAN network handler----------------------------------------->');
+      print('GAGAL SYNC PENJUALAN');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync penjualan gagal');
     }
   }
 
@@ -1445,84 +1455,83 @@ class REST extends GetConnect {
     total,
     tgl,
   }) async {
-    try {
-      var response = await http.post(link().POST_syncpenjualandetail,
-          body: ({
-            'token': token,
-            'id_local': id.toString(),
-            'id_user': iduser.toString(),
-            'id_toko': idtoko.toString(),
-            'aktif': aktif,
-            'id_penjualan': id_penjualan.toString(),
-            'id_produk': id_produk.toString(),
-            'id_kategori': id_kategori.toString(),
-            'id_jenis_stock': id_jenis_stock.toString(),
-            'nama_brg': nama_brg,
-            'harga_modal': harga_modal.toString(),
-            'harga_brg': harga_brg.toString(),
-            'qty': qty.toString(),
-            'diskon_brg': diskon_brg.toString(),
-            'diskon_kasir': diskon_kasir.toString(),
-            'total': total.toString(),
-            'tgl': tgl,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC PENJUALAN network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC PENJUALAN DETAIL ');
+    }
+    var response = await http.post(link().POST_syncpenjualandetail,
+        body: ({
+          'token': token,
+          'id_local': id.toString(),
+          'id_user': iduser.toString(),
+          'id_toko': idtoko.toString(),
+          'aktif': aktif,
+          'id_penjualan': id_penjualan.toString(),
+          'id_produk': id_produk.toString(),
+          'id_kategori': id_kategori.toString(),
+          'id_jenis_stock': id_jenis_stock.toString(),
+          'nama_brg': nama_brg,
+          'harga_modal': harga_modal.toString(),
+          'harga_brg': harga_brg.toString(),
+          'qty': qty.toString(),
+          'diskon_brg': diskon_brg.toString(),
+          'diskon_kasir': diskon_kasir.toString(),
+          'total': total.toString(),
+          'tgl': tgl,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC PENJUALAN network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'SYNC PENJUALAN network handler----------------------------------------->');
-        print('GAGAL SYNC PENJUALAN');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(response.statusCode.toString() +
-            ' - ' +
-            'Sync penjualan detail gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'SYNC PENJUALAN network handler----------------------------------------->');
+      print('GAGAL SYNC PENJUALAN');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(response.statusCode.toString() +
+          ' - ' +
+          'Sync penjualan detail gagal');
     }
   }
 
   static Future<dynamic> penjualanData(
       String token, iduser, idtoko, search) async {
-    try {
-      var response = await http.post(link().POST_penjualadata,
-          body: ({
-            'token': token,
-            'id_user': iduser.toString(),
-            'id_toko': idtoko,
-            'search': search,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'DATA PENJUALAN network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> PENJUALAN ');
+    }
+    var response = await http.post(link().POST_penjualadata,
+        body: ({
+          'token': token,
+          'id_user': iduser.toString(),
+          'id_toko': idtoko,
+          'search': search,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'DATA PENJUALAN network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        // print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'DATA PENJUALAN network handler----------------------------------------->');
-        print('GAGAL DATA PENJUALAN');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error('error fetch penjualan');
-      }
-    } catch (e) {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      // print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'DATA PENJUALAN network handler----------------------------------------->');
+      print('GAGAL DATA PENJUALAN');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error('error fetch penjualan');
     }
   }
 
@@ -1553,6 +1562,11 @@ class REST extends GetConnect {
   }
 
   static Future<dynamic> penjualanDataDetailAll(String token, idtoko) async {
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> PENJUALAN DETAIL ');
+    }
     var response = await http.post(link().POST_penjualadatadetailall,
         body: ({
           'token': token,
@@ -1563,8 +1577,7 @@ class REST extends GetConnect {
           'DATA PENJUALAN DETAIL ALL network handler----------------------------------------->');
 
       var data = json.decode(response.body);
-      //var data = response.body;
-      //var data = response;
+
       print(data);
       print(response.statusCode);
       return (data);
@@ -1574,6 +1587,8 @@ class REST extends GetConnect {
       print('GAGAL DATA PENJUALAN DETAIL ALL');
       print(response.statusCode);
       print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' error penjualan detail');
     }
   }
 
@@ -1841,42 +1856,47 @@ class REST extends GetConnect {
 
   static Future<dynamic> syncpelanggan(
       String token, id, id_toko, nama_pelanggan, no_hp, aktif) async {
-    try {
-      var response = await http.post(link().POST_syncpelanggan,
-          body: ({
-            'token': token,
-            'id_toko': id_toko.toString(),
-            'id_local': id.toString(),
-            'nama_pelanggan': nama_pelanggan,
-            'no_hp': no_hp,
-            'aktif': aktif,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC PELANGGAN ');
+    }
+    var response = await http.post(link().POST_syncpelanggan,
+        body: ({
+          'token': token,
+          'id_toko': id_toko.toString(),
+          'id_local': id.toString(),
+          'nama_pelanggan': nama_pelanggan,
+          'no_hp': no_hp,
+          'aktif': aktif,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return (data);
-      } else {
-        print(
-            'SYNC PELANGGAN TAMBAH network handler----------------------------------------->');
-        print('GAGAL SYNC PELANGGAN TAMBAH');
-        print(response.statusCode);
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Sync pelanggan gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return (data);
+    } else {
+      print(
+          'SYNC PELANGGAN network handler----------------------------------------->');
+      print('GAGAL SYNC PELANGGAN');
+      print(response.statusCode);
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync pelanggan gagal');
     }
   }
 
   static Future<dynamic> pelangganData(String token, idtoko) async {
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> DATA PELANGGAN ');
+    }
     var response = await http.post(link().POST_pelanggandata,
         body: ({
           'token': token,
@@ -1898,6 +1918,8 @@ class REST extends GetConnect {
       print('GAGAL DATA PELANGGAN');
       print(response.statusCode);
       print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' error data pelanggan');
     }
   }
 
@@ -2085,43 +2107,42 @@ class REST extends GetConnect {
       sisa_hutang,
       tgl_hutang,
       status}) async {
-    try {
-      var response = await http.post(link().POST_synchutang,
-          body: ({
-            'token': token,
-            'id_toko': id_toko.toString(),
-            'id_local': id.toString(),
-            'aktif': aktif,
-            'id_pelanggan': id_pelanggan.toString(),
-            'hutang': hutang.toString(),
-            'sisa_hutang': sisa_hutang.toString(),
-            'tgl_hutang': tgl_hutang.toString(),
-            'status': status.toString(),
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC HUTANG  network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC HUTANG');
+    }
+    var response = await http.post(link().POST_synchutang,
+        body: ({
+          'token': token,
+          'id_toko': id_toko.toString(),
+          'id_local': id.toString(),
+          'aktif': aktif,
+          'id_pelanggan': id_pelanggan.toString(),
+          'hutang': hutang.toString(),
+          'sisa_hutang': sisa_hutang.toString(),
+          'tgl_hutang': tgl_hutang.toString(),
+          'status': status.toString(),
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'SYNC HUTANG  network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return data;
-      } else {
-        var data = json.decode(response.body);
-        print(
-            'SYNC HUTANG network handler----------------------------------------->');
-        print('GAGAL SYNC HUTANG');
-        print(response.statusCode);
+      var data = json.decode(response.body);
 
-        print(response.body);
-        return Future.error(
-            response.statusCode.toString() + ' - ' + 'Sync hutang gagal');
-      }
-    } catch (e) {
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'SYNC HUTANG network handler----------------------------------------->');
+      print('GAGAL SYNC HUTANG');
+      print(response.statusCode);
+
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync hutang gagal');
     }
   }
 
@@ -2138,48 +2159,44 @@ class REST extends GetConnect {
     tgl_bayar,
     String? tgl_lunas,
   }) async {
-    try {
-      var response = await http.post(link().POST_synchutangdetail,
-          body: ({
-            'token': token,
-            'id_toko': id_toko.toString(),
-            'id_local': id.toString(),
-            'aktif': aktif,
-            'id_pelanggan': id_pelanggan.toString(),
-            'id_hutang': id_hutang.toString(),
-            'tgl_hutang': tgl_hutang,
-            'bayar': bayar.toString(),
-            'sisa': sisa.toString(),
-            'tgl_bayar': tgl_bayar,
-            'tgl_lunas': tgl_lunas ?? '-',
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'SYNC HUTANG DETAIL  network handler----------------------------------------->');
-
-        var data = json.decode(response.body);
-
-        print(data);
-        print(response.statusCode);
-        return data;
-      } else {
-        var data = json.decode(response.body);
-        print(
-            'SYNC HUTANG DETAIL network handler----------------------------------------->');
-        print('GAGAL SYNC HUTANG DETAIL');
-        print(response.statusCode);
-
-        print(response.body);
-        return Future.error(response.statusCode.toString() +
-            ' - ' +
-            'Sync hutang detail gagal');
-      }
-    } catch (e) {
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> SYNC HUTANG DETAIL');
+    }
+    var response = await http.post(link().POST_synchutangdetail,
+        body: ({
+          'token': token,
+          'id_toko': id_toko.toString(),
+          'id_local': id.toString(),
+          'aktif': aktif,
+          'id_pelanggan': id_pelanggan.toString(),
+          'id_hutang': id_hutang.toString(),
+          'tgl_hutang': tgl_hutang,
+          'bayar': bayar.toString(),
+          'sisa': sisa.toString(),
+          'tgl_bayar': tgl_bayar,
+          'tgl_lunas': tgl_lunas ?? '-',
+        }));
+    if (response.statusCode == 200) {
       print(
-          "<------------------------------------error----------------------------------->");
-      print(e);
-      Get.back();
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+          'SYNC HUTANG DETAIL  network handler----------------------------------------->');
+
+      var data = json.decode(response.body);
+
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print(
+          'SYNC HUTANG DETAIL network handler----------------------------------------->');
+      print('GAGAL SYNC HUTANG DETAIL');
+      print(response.statusCode);
+
+      print(response.body);
+      return Future.error(
+          response.statusCode.toString() + ' - ' + 'Sync hutang detail gagal');
     }
   }
 
@@ -2187,35 +2204,34 @@ class REST extends GetConnect {
     required String token,
     required String id_toko,
   }) async {
-    try {
-      var response = await http.post(link().POST_hutangall,
-          body: ({
-            'token': token,
-            'id_toko': id_toko,
-          }));
-      if (response.statusCode == 200) {
-        print(
-            'HUTANG ALL network handler----------------------------------------->');
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> DATA HUTANG');
+    }
+    var response = await http.post(link().POST_hutangall,
+        body: ({
+          'token': token,
+          'id_toko': id_toko,
+        }));
+    if (response.statusCode == 200) {
+      print(
+          'HUTANG ALL network handler----------------------------------------->');
 
-        var data = json.decode(response.body);
-        //var data = response.body;
-        //var data = response;
-        print(data);
-        print(response.statusCode);
-        return data;
-      } else {
-        var data = json.decode(response.body);
-        print(
-            'HUTANG network handler----------------------------------------->');
-        print('GAGAL DATA HUTANG ALL');
-        print(response.statusCode);
+      var data = json.decode(response.body);
+      //var data = response.body;
+      //var data = response;
+      print(data);
+      print(response.statusCode);
+      return data;
+    } else {
+      var data = json.decode(response.body);
+      print('HUTANG network handler----------------------------------------->');
+      print('GAGAL DATA HUTANG ALL');
+      print(response.statusCode);
 
-        print(response.body);
-        return Future.error('error fetch hutang');
-      }
-    } catch (e) {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      print(response.body);
+      return Future.error('error fetch hutang');
     }
   }
 
@@ -2223,6 +2239,11 @@ class REST extends GetConnect {
     required String token,
     required String id_toko,
   }) async {
+    var checkcon = await check_conn.check();
+    if (checkcon == false) {
+      print('noc connnn');
+      throw Exception('Periksa koneksi internet --> HUTANG DETAIL ');
+    }
     var response = await http.post(link().POST_hutangdetail,
         body: ({
           'token': token,
@@ -2246,7 +2267,8 @@ class REST extends GetConnect {
       print(response.statusCode);
 
       print(response.body);
-      return data;
+      return Future.error(
+          response.statusCode.toString() + ' error hutang detail');
     }
   }
 

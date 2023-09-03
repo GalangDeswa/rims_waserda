@@ -114,8 +114,8 @@ class DataPenjualan {
         sync: json["sync"],
         aktif: json["aktif"],
         idHutang: json["id_hutang"] ?? '0',
-        diskonKasir: json["diskon_kasir"],
-        ppn: json["ppn"],
+        diskonKasir: json["diskon_kasir"] ?? 0,
+        ppn: json["ppn"] ?? 0,
         // detailItem: List<DetailItem>.from(
         //     json["detail_item"].map((x) => DetailItem.fromJson(x))),
       );
@@ -168,8 +168,8 @@ class DataPenjualan {
     map['status'] = status;
     map['aktif'] = aktif;
     map['id_hutang'] = idHutang ?? '0';
-    map['diskon_kasir'] = diskonKasir;
-    map['ppn'] = ppn;
+    map['diskon_kasir'] = diskonKasir ?? 0;
+    map['ppn'] = ppn ?? 0;
 
     return map;
   }

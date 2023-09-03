@@ -116,7 +116,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                           )),
                                       title: Text(
                                         controller.bulan.format(DateTime.now()),
-                                        style: font().header_big,
+                                        style: font().header,
                                       ),
                                       subtitle: Text(
                                           controller.tahun
@@ -171,7 +171,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             subtitle: Text(
-                                              'Kas hari ini',
+                                              'Pendapatan hari ini',
                                               style:
                                                   font().header_black_nonbold,
                                             ),

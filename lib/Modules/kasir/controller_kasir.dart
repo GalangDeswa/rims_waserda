@@ -2577,7 +2577,7 @@ class kasirController extends GetxController {
           'penjualan_local',
           DataPenjualan(
                   aktif: 'Y',
-                  idLocal: id_localgenerator,
+                  idLocal: total.value.round().toString() + id_localgenerator,
                   sync: 'N',
                   idUser: id_user,
                   idToko: int.parse(id_toko),
@@ -2615,11 +2615,12 @@ class kasirController extends GetxController {
           await DBHelper().INSERT(
               'penjualan_detail_local',
               DataPenjualanDetailV2(
-                      idLocal: stringGenerator(10),
+                      idLocal: e.namaProduk! + stringGenerator(10),
                       aktif: 'Y',
                       sync: 'N',
                       idUser: id_user,
-                      idPenjualan: id_localgenerator,
+                      idPenjualan:
+                          total.value.round().toString() + id_localgenerator,
                       idJenisStock: e.idJenisStock,
                       idKategori: e.idKategori,
                       idProduk: e.idLocal,
@@ -2708,7 +2709,7 @@ class kasirController extends GetxController {
       var hutang = await DBHelper().INSERT(
           'hutang_local',
           DataHutang(
-            idLocal: id_hutang_generator,
+            idLocal: id_pelanggan.value + id_hutang_generator,
             idToko: int.parse(id_toko),
             idPelanggan: id_pelanggan.value,
             tglHutang: tgl_penjualan.value.isEmpty
@@ -2724,11 +2725,12 @@ class kasirController extends GetxController {
       var query = await DBHelper().INSERT(
           'penjualan_local',
           DataPenjualan(
-                  idLocal: id_penjualan_generator2,
+                  idLocal:
+                      total.value.round().toString() + id_penjualan_generator2,
                   aktif: 'Y',
                   sync: 'N',
                   idPelanggan: id_pelanggan.value,
-                  idHutang: id_hutang_generator,
+                  idHutang: id_pelanggan.value + id_hutang_generator,
                   idUser: id_user,
                   idToko: int.parse(id_toko),
                   total: total.value.round(),
@@ -2762,11 +2764,12 @@ class kasirController extends GetxController {
           await DBHelper().INSERT(
               'penjualan_detail_local',
               DataPenjualanDetailV2(
-                      idLocal: stringGenerator(10),
+                      idLocal: e.namaProduk! + stringGenerator(10),
                       aktif: 'Y',
                       sync: 'N',
                       idUser: id_user,
-                      idPenjualan: id_penjualan_generator2,
+                      idPenjualan: total.value.round().toString() +
+                          id_penjualan_generator2,
                       idJenisStock: e.idJenisStock,
                       idKategori: e.idKategori,
                       idProduk: e.idLocal,
@@ -2873,7 +2876,7 @@ class kasirController extends GetxController {
           'penjualan_local',
           DataPenjualan(
                   aktif: 'Y',
-                  idLocal: id_localgenerator,
+                  idLocal: total_prebill + id_localgenerator,
                   sync: 'N',
                   idUser: id_user,
                   idToko: int.parse(id_toko),
@@ -2913,7 +2916,7 @@ class kasirController extends GetxController {
           await DBHelper().INSERT(
               'penjualan_detail_local',
               DataPenjualanDetailV2(
-                      idLocal: stringGenerator(10),
+                      idLocal: e.namaProduk! + stringGenerator(10),
                       aktif: 'Y',
                       sync: 'N',
                       idUser: id_user,
@@ -3003,7 +3006,7 @@ class kasirController extends GetxController {
       var hutang = await DBHelper().INSERT(
           'hutang_local',
           DataHutang(
-            idLocal: id_hutang_generator,
+            idLocal: id_pelanggan.value + id_hutang_generator,
             idToko: int.parse(id_toko),
             idPelanggan: id_pelanggan.value,
             tglHutang: tgl_penjualan.value.isEmpty
@@ -3019,7 +3022,7 @@ class kasirController extends GetxController {
       var query = await DBHelper().INSERT(
           'penjualan_local',
           DataPenjualan(
-                  idLocal: id_penjualan_generator2,
+                  idLocal: total_prebill + id_penjualan_generator2,
                   aktif: 'Y',
                   sync: 'N',
                   idPelanggan: id_pelanggan.value,
@@ -3056,7 +3059,7 @@ class kasirController extends GetxController {
           await DBHelper().INSERT(
               'penjualan_detail_local',
               DataPenjualanDetailV2(
-                      idLocal: stringGenerator(10),
+                      idLocal: e.namaProduk! + stringGenerator(10),
                       aktif: 'Y',
                       sync: 'N',
                       idUser: id_user,

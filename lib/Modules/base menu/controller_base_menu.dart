@@ -12,8 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:rims_waserda/Modules/Widgets/buttons.dart';
 import 'package:rims_waserda/Modules/beban/data%20beban/view_beban_base.dart';
-import 'package:rims_waserda/Modules/dashboard/controller_dashboard.dart';
 import 'package:rims_waserda/Modules/dashboard/view_dashboard_base_v2.dart';
+import 'package:rims_waserda/Modules/history/model_penjualan.dart';
 import 'package:rims_waserda/Modules/pelanggan/data%20pelanggan/view_data_pelanggan_base.dart';
 import 'package:rims_waserda/Modules/user/data%20user/view_data_user_base.dart';
 import 'package:rims_waserda/db_helper.dart';
@@ -23,6 +23,7 @@ import '../../Templates/setting.dart';
 import '../Widgets/header.dart';
 import '../Widgets/toast.dart';
 import '../beban/data beban/controller_beban.dart';
+import '../dashboard/controller_dashboard.dart';
 import '../history/Controller_history.dart';
 import '../history/controller_detail_penjualan.dart';
 import '../history/view_history_base.dart';
@@ -265,59 +266,73 @@ class base_menuController extends GetxController {
   }
 
   syncAll(id_toko) async {
-    print("id toko---------------------------->");
-    print(id_toko);
+    try {
+      // var conn = await check_conn.check();
+      // if (conn == false) {
+      //   throw Exception('Periksa koneksi internet');
+      // }
 
-    print("sync produk jenis---------------------------->");
-    await produkController().syncProdukJenis(id_toko);
-    point_loading.value = 0.1;
+      print("id toko---------------------------->");
+      print(id_toko);
 
-    print("sync produk---------------------------->");
-    await produkController().syncProduk(id_toko);
-    //get.find membuat refresh ui?
-    await Get.find<produkController>().initProdukToLocal(id_toko);
-    point_loading.value = 0.2;
+      print("sync produk jenis---------------------------->");
+      await produkController().syncProdukJenis(id_toko);
+      point_loading.value = 0.1;
 
-    print("sync beban jenis--------------------------->");
-    await bebanController().syncBebanKategori(id_toko);
-    point_loading.value = 0.3;
+      print("sync produk---------------------------->");
+      await produkController().syncProduk(id_toko);
+      await Get.find<produkController>().initProdukToLocal(id_toko);
+      point_loading.value = 0.2;
 
-    print("sync beban---------------------------->");
-    await bebanController().syncBeban(id_toko);
-    await Get.find<bebanController>().initBebanToLocal(id_toko);
-    point_loading.value = 0.5;
+      print("sync beban jenis--------------------------->");
+      await bebanController().syncBebanKategori(id_toko);
+      point_loading.value = 0.3;
 
-    print("sync pelanggan---------------------------->");
-    await pelangganController().syncPelanggan(id_toko);
-    await Get.find<pelangganController>().initPelangganToLocal(id_toko);
-    point_loading.value = 0.6;
+      print("sync beban---------------------------->");
+      await bebanController().syncBeban(id_toko);
+      await Get.find<bebanController>().initBebanToLocal(id_toko);
+      point_loading.value = 0.5;
 
-    print("sync hutang---------------------------->");
-    await hutangController().syncHutang(id_toko);
-    await Get.find<hutangController>().initHutangToLocal(id_toko);
-    point_loading.value = 0.7;
+      print("sync pelanggan---------------------------->");
+      await pelangganController().syncPelanggan(id_toko);
+      await Get.find<pelangganController>().initPelangganToLocal(id_toko);
+      point_loading.value = 0.6;
 
-    print("sync hutang detail---------------------------->");
-    await hutangController().syncHutangDetail(id_toko);
-    await Get.find<hutangController>().initHutangDetailToLocal(id_toko);
-    point_loading.value = 0.8;
+      print("sync hutang---------------------------->");
+      await hutangController().syncHutang(id_toko);
+      await Get.find<hutangController>().initHutangToLocal(id_toko);
+      point_loading.value = 0.7;
 
-    print("sync penjualan---------------------------->");
-    await historyController().syncPenjualan(id_toko);
-    await Get.find<historyController>().initPenjualanToLocal(id_toko);
-    point_loading.value = 0.9;
+      print("sync hutang detail---------------------------->");
+      await hutangController().syncHutangDetail(id_toko);
+      await Get.find<hutangController>().initHutangDetailToLocal(id_toko);
+      point_loading.value = 0.8;
 
-    print("sync penjualan detail---------------------------->");
-    await detailpenjualanController().syncPenjualanDetail(id_toko);
-    await Get.find<detailpenjualanController>()
-        .initPenjualanDetailToLocal(id_toko);
+      print("sync penjualan---------------------------->");
+      await historyController().syncPenjualan(id_toko);
+      await Get.find<historyController>().initPenjualanToLocal(id_toko);
+      point_loading.value = 0.9;
 
-    await Get.find<historyController>()
-        .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
+      print("sync penjualan detail---------------------------->");
+      await detailpenjualanController().syncPenjualanDetail(id_toko);
+      await Get.find<detailpenjualanController>()
+          .initPenjualanDetailToLocal(id_toko);
 
-    await Get.find<dashboardController>().loadall();
+      await Get.find<historyController>()
+          .fetchPenjualanlocal(id_toko: id_toko, id_user: id_user, role: role);
 
-    point_loading.value = 1.0;
+      await Get.find<dashboardController>().loadall();
+
+      point_loading.value = 1.0;
+      Get.back(closeOverlays: true);
+      Get.showSnackbar(toast()
+          .bottom_snackbar_success('Sukses', 'Data berhasil di sinkron'));
+    } catch (e) {
+      Get.back(closeOverlays: true);
+      print('$e <-- error sync all base menu');
+      Get.showSnackbar(toast().bottom_snackbar_error('Error', e.toString()));
+      return null;
+    }
   }
 
   List<Widget> views_kasir = const [
@@ -460,6 +475,115 @@ class base_menuController extends GetxController {
                                   //   Get.showSnackbar(toast()
                                   //       .bottom_snackbar_success(
                                   //           'Sukses', 'Printer telah terhubung'));
+                                }
+                              }),
+                          subtitle: loading.value == ''
+                              ? Text('berlum terhubung')
+                              : loading.value == 'loading'
+                                  ? Container(
+                                      margin: EdgeInsets.only(right: 250),
+                                      width: 5,
+                                      height: 30,
+                                      child: CircularProgressIndicator())
+                                  : loading.value == 'done'
+                                      ? Text('Terhubung')
+                                      : Text('Printer tidak ditemukan')),
+                    ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 15),
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            if (printer.isConnected == true) {
+                              await printer.disconnect();
+                            }
+
+                            await getDevice();
+                            isConnected.value = false;
+                            loading.value = '';
+                          },
+                          child: Text('Cari printer')),
+                    ),
+                  ],
+                );
+              }));
+        },
+      ),
+    ));
+  }
+
+  popprinterulang(DataPenjualan d) {
+    Get.dialog(AlertDialog(
+      title: header(
+          title: 'Pilih printer',
+          icon: Icons.print,
+          iscenter: true,
+          icon_color: color_template().primary,
+          base_color: Colors.white),
+      contentPadding: EdgeInsets.all(10),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(12.0),
+        ),
+      ),
+      content: Builder(
+        builder: (context) {
+          return Container(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              width: context.width_query / 3,
+              height: context.height_query / 3,
+              child: Obx(() {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: ListTile(
+                          leading: Icon(Icons.print),
+                          title: DropdownButton<BluetoothDevice>(
+                              hint: listPrinter.value.isEmpty
+                                  ? Text(
+                                      'Cari bluetooth printer',
+                                      overflow: TextOverflow.ellipsis,
+                                    )
+                                  : Text(
+                                      'Pilih bluetooth printer',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                              value: selectedPrinter,
+                              items: listPrinter.value
+                                  .map((e) => DropdownMenuItem(
+                                        child: Text(e.name!),
+                                        value: e,
+                                      ))
+                                  .toList(),
+                              onChanged: (device) async {
+                                loading.value = 'loading';
+                                if (await printer.isConnected == true) {
+                                  await printer.disconnect();
+                                }
+                                isConnected.value = false;
+                                selectedPrinter = device;
+                                await printer.connect(device!);
+                                if (await printer.isConnected == true) {
+                                  isConnected.value = true;
+                                  loading.value = 'done';
+                                  print(
+                                      'connected printer----------------------------- > ' +
+                                          device.name!);
+                                } else {
+                                  print('beelum konek--------------->');
+                                }
+                                print(device.name.toString());
+                                if (await printer.isConnected == true) {
+                                  print('cetak ulang');
+                                  await Get.find<historyController>()
+                                      .printstrukpembayaranulang(d);
+
+                                  Get.back(closeOverlays: true);
+                                  Get.showSnackbar(toast()
+                                      .bottom_snackbar_success(
+                                          'Sukses', 'Struk berhasil di cetak'));
                                 }
                               }),
                           subtitle: loading.value == ''

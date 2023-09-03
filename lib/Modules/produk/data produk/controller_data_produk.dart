@@ -221,40 +221,23 @@ class produkController extends GetxController {
     print('-------------------fetchProduk---------------------');
     //succ.value = false;
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var produk = await REST.produkAllv2(token, id_toko);
-      if (produk != null) {
-        print('-------------------dataproduk---------------');
-        //   succ.value = true;
+    var produk = await REST.produkAllv2(token, id_toko);
+    if (produk != null) {
+      print('-------------------dataproduk---------------');
 
-        var dataProduk = ModelProduk.fromJson(produk);
-        // if (produk['success'] == false) {
-        //   succ.value = false;
-        //   print('faslese');
-        //   print(produk['messages']);
-        //   // produklist.value = [];
-        // } else {
-        //   succ.value = true;
-        // }
-        //produklist.value = dataProduk.data;
+      var dataProduk = ModelProduk.fromJson(produk);
 
-        produklist.value = dataProduk.data;
+      produklist.value = dataProduk.data;
 
-        print('--------------------list produk---------------');
-        print(produklist);
+      print('--------------------list produk---------------');
+      print(produklist);
 
-        return produklist;
-      } else {
-        Get.back(closeOverlays: true);
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
-        return Future.error('fetch produk gagal');
-      }
+      return produklist;
     } else {
       Get.back(closeOverlays: true);
       Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
+          toast().bottom_snackbar_error('Error', 'Produk gagal ditampilkan'));
+      return Future.error('fetch produk gagal');
     }
 
     // return [];
@@ -371,39 +354,33 @@ class produkController extends GetxController {
   }
 
   fetchjenis() async {
-    print('-------------------fetchJenis---------------------');
+    print('-------------------fetch Jenis---------------------');
 
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      var jenis = await REST.produkJenis(token, id_toko);
-      if (jenis != null) {
-        print('-------------------datajenis---------------');
-        var dataJenis = ModelJenis.fromJson(jenis);
+    var jenis = await REST.produkJenis(token, id_toko);
+    if (jenis != null) {
+      print('-------------------datajenis---------------');
+      var dataJenis = ModelJenis.fromJson(jenis);
 
-        jenislist.value = dataJenis.data;
-        // totalpagejenis.value = dataJenis.meta.pagination.totalPages;
-        // totaldatajenis.value = dataJenis.meta.pagination.total;
-        // perpagejenis.value = dataJenis.meta.pagination.perPage;
-        // currentpagejenis.value = jenis['meta']['pagination']['current_page'];
-        // countjenis.value = dataJenis.meta.pagination.count;
-        // if (totalpagejenis > 1) {
-        //   nextdatajenis = jenis['meta']['pagination']['links']['next'];
-        // }
-        print('--------------------list jenis---------------');
-        print(jenislist);
+      jenislist.value = dataJenis.data;
+      // totalpagejenis.value = dataJenis.meta.pagination.totalPages;
+      // totaldatajenis.value = dataJenis.meta.pagination.total;
+      // perpagejenis.value = dataJenis.meta.pagination.perPage;
+      // currentpagejenis.value = jenis['meta']['pagination']['current_page'];
+      // countjenis.value = dataJenis.meta.pagination.count;
+      // if (totalpagejenis > 1) {
+      //   nextdatajenis = jenis['meta']['pagination']['links']['next'];
+      // }
+      print('--------------------list jenis---------------');
+      print(jenislist);
 
-        return jenislist;
-      } else {
-        Get.back(closeOverlays: true);
-        Get.showSnackbar(toast().bottom_snackbar_error(
-            'Error', 'Terjadi kesalahan mohon coba lagi'));
-      }
+      return jenislist;
     } else {
       Get.back(closeOverlays: true);
-      Get.showSnackbar(toast().bottom_snackbar_error(
-          'Error', 'Terjadi kesalahan periksa koneksi internet'));
+      Get.showSnackbar(toast()
+          .bottom_snackbar_error('Error', 'Terjadi kesalahan mohon coba lagi'));
     }
-    return [];
+
+    //return [];
   }
 
   fetchjenissync(id_toko) async {
@@ -567,7 +544,7 @@ class produkController extends GetxController {
     var query = await DBHelper().INSERT(
         'produk_local',
         DataProduk(
-                idLocal: stringGenerator(10),
+                idLocal: nama_produk.value.text + stringGenerator(10),
                 idKategori: 1,
                 idToko: int.parse(id_toko),
                 idUser: id_user,
@@ -682,120 +659,113 @@ class produkController extends GetxController {
   }
 
   initProdukToLocal(id_toko) async {
-    //login -> sync -> init
+    List<DataProduk> produk_local = await fetchProduk();
+    List<DataJenis> produk_local_jenis = await fetchjenis();
+    List<DataProduk> check_produk_local = await fetchProduksync(id_toko);
+    List<DataJenis> check_jenis_local = await fetchjenissync(id_toko);
 
-    try {
-      List<DataProduk> produk_local = await fetchProduk();
-      List<DataJenis> produk_local_jenis = await fetchjenis();
-      List<DataProduk> check_produk_local = await fetchProduksync(id_toko);
-      List<DataJenis> check_jenis_local = await fetchjenissync(id_toko);
+    await Future.forEach(produk_local_jenis, (ex) async {
+      var x = check_jenis_local
+          .where((element) => element.idLocal == ex.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print('insert--------------------------------->' + ex.namaJenis!);
+        await DBHelper().INSERT(
+            'produk_jenis_local',
+            DataJenis(
+                    id: ex.id,
+                    aktif: ex.aktif,
+                    idLocal: ex.idLocal,
+                    idToko: ex.idToko,
+                    sync: 'Y',
+                    namaJenis: ex.namaJenis)
+                .toMapForDb());
+      } else {
+        print('update--------------------------------->' + ex.namaJenis!);
+        DBHelper().UPDATE(
+            table: 'produk_jenis_local',
+            data: DataJenis(
+                    aktif: ex.aktif,
+                    idLocal: ex.idLocal,
+                    idToko: ex.idToko,
+                    sync: 'Y',
+                    namaJenis: ex.namaJenis)
+                .updateInit(),
+            id: ex.idLocal);
+      }
+    });
 
-      print('-------------------init Produk local---------------------');
-      await Future.forEach(produk_local, (e) async {
-        var x = check_produk_local
-            .where((element) => element.idLocal == e.idLocal)
-            .firstOrNull;
-        if (x == null) {
-          print(x);
-          print('insert--------------------------------------------->' +
-              e.namaProduk);
-          await DBHelper().INSERT(
-              'produk_local',
-              DataProduk(
-                      idLocal: e.idLocal,
-                      id: e.id,
-                      idKategori: e.idKategori,
-                      idToko: e.idToko,
-                      idUser: e.idUser,
-                      idJenis: e.idJenis,
-                      idJenisStock: e.idJenisStock,
-                      namaProduk: e.namaProduk,
-                      deskripsi: e.deskripsi,
-                      qty: e.qty,
-                      harga: e.harga,
-                      hargaModal: e.hargaModal,
-                      diskonBarang: e.diskonBarang,
-                      barcode: e.barcode,
-                      image: e.image,
-                      //  createdAt: DateTime.now().toString(),
-                      status: e.status,
-                      sync: 'Y',
-                      namaJenis: e.namaJenis)
-                  .toMapForDb());
-        } else {
-          print('update--------------------------------------------->' +
-              e.namaProduk);
-          await DBHelper().UPDATE(
-              table: 'produk_local',
-              data: DataProduk(
-                      idLocal: e.idLocal,
-                      idKategori: e.idKategori,
-                      idToko: e.idToko,
-                      idUser: e.idUser,
-                      idJenis: e.idJenis,
-                      idJenisStock: e.idJenisStock,
-                      namaProduk: e.namaProduk,
-                      deskripsi: e.deskripsi,
-                      qty: e.qty,
-                      harga: e.harga,
-                      hargaModal: e.hargaModal,
-                      diskonBarang: e.diskonBarang,
-                      barcode: e.barcode,
-                      image: e.image,
-                      //  createdAt: DateTime.now().toString(),
-                      status: e.status,
-                      sync: 'Y',
-                      namaJenis: e.namaJenis)
-                  .updateInit(),
-              id: e.idLocal);
-        }
-      });
+    print('-------------------init Produk local---------------------');
+    await Future.forEach(produk_local, (e) async {
+      var x = check_produk_local
+          .where((element) => element.idLocal == e.idLocal)
+          .firstOrNull;
+      if (x == null) {
+        print(x);
+        print('insert--------------------------------------------->' +
+            e.namaProduk);
+        await DBHelper().INSERT(
+            'produk_local',
+            DataProduk(
+                    idLocal: e.idLocal,
+                    id: e.id,
+                    idKategori: e.idKategori,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    idJenis: e.idJenis,
+                    idJenisStock: e.idJenisStock,
+                    namaProduk: e.namaProduk,
+                    deskripsi: e.deskripsi,
+                    qty: e.qty,
+                    harga: e.harga,
+                    hargaModal: e.hargaModal,
+                    diskonBarang: e.diskonBarang,
+                    barcode: e.barcode,
+                    image: e.image,
+                    //  createdAt: DateTime.now().toString(),
+                    status: e.status,
+                    sync: 'Y',
+                    namaJenis: e.namaJenis)
+                .toMapForDb());
+      } else {
+        print('update--------------------------------------------->' +
+            e.namaProduk);
+        await DBHelper().UPDATE(
+            table: 'produk_local',
+            data: DataProduk(
+                    idLocal: e.idLocal,
+                    idKategori: e.idKategori,
+                    idToko: e.idToko,
+                    idUser: e.idUser,
+                    idJenis: e.idJenis,
+                    idJenisStock: e.idJenisStock,
+                    namaProduk: e.namaProduk,
+                    deskripsi: e.deskripsi,
+                    qty: e.qty,
+                    harga: e.harga,
+                    hargaModal: e.hargaModal,
+                    diskonBarang: e.diskonBarang,
+                    barcode: e.barcode,
+                    image: e.image,
+                    //  createdAt: DateTime.now().toString(),
+                    status: e.status,
+                    sync: 'Y',
+                    namaJenis: e.namaJenis)
+                .updateInit(),
+            id: e.idLocal);
+      }
+    });
 
-      await Future.forEach(produk_local_jenis, (ex) async {
-        var x = check_jenis_local
-            .where((element) => element.idLocal == ex.idLocal)
-            .firstOrNull;
-        if (x == null) {
-          print('insert--------------------------------->' + ex.namaJenis!);
-          await DBHelper().INSERT(
-              'produk_jenis_local',
-              DataJenis(
-                      id: ex.id,
-                      aktif: ex.aktif,
-                      idLocal: ex.idLocal,
-                      idToko: ex.idToko,
-                      sync: 'Y',
-                      namaJenis: ex.namaJenis)
-                  .toMapForDb());
-        } else {
-          print('update--------------------------------->' + ex.namaJenis!);
-          DBHelper().UPDATE(
-              table: 'produk_jenis_local',
-              data: DataJenis(
-                      aktif: ex.aktif,
-                      idLocal: ex.idLocal,
-                      idToko: ex.idToko,
-                      sync: 'Y',
-                      namaJenis: ex.namaJenis)
-                  .updateInit(),
-              id: ex.idLocal);
-        }
-      });
-
-      // if (up != null) {
-      //  print(up.toString());
-      print(
-          'init success---------------------------------------------------->');
-      await fetchProduklocal(id_toko);
-      await fetchjenislocal(id_toko);
-      // await Get.find<kasirController>().fetchProduklocal(id_toko);
-      // await Get.find<kasirController>().fetchjenislocal(id_toko);
-    } catch (e) {
-      print(e);
-      Get.back();
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'error init produk local'));
-    }
+    // if (up != null) {
+    //  print(up.toString());
+    print(
+        'init produk success---------------------------------------------------->');
+    await fetchProduklocal(id_toko);
+    await fetchjenislocal(id_toko);
+    //await Get.find<kasirController>().fetchProduklocal(id_toko);
+    // await Get.find<kasirController>().fetchjenislocal(id_toko);
+    // await Get.put(kasirController().fetchProduklocal(id_toko));
+    // await Get.put(kasirController().fetchjenislocal(id_toko));
   }
 
   // String idGenerator() {
@@ -832,51 +802,42 @@ class produkController extends GetxController {
   syncProduk(id_toko) async {
     print('-----------------SYNC PRODUK LOCAL TO HOST-------------------');
 
-    //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataProduk> produk = await fetchProduksync(id_toko);
-      //  produklistlocal.refresh();
-      print('start up DB SYNC PRODUK--------------------------------------->');
-      var query = produk.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'semua produk sync'));
-      } else {
-        await Future.forEach(query, (e) async {
-          await REST.syncproduk(
-            token: token,
-            image: e.image,
-            id: e.idLocal,
-            barcode: e.barcode,
-            harga: e.harga,
-            diskon_barang: e.diskonBarang,
-            deskripsi: e.deskripsi,
-            harga_modal: e.hargaModal,
-            id_jenis: e.idJenis,
-            id_jenis_stock: e.idJenisStock,
-            id_kategori: e.idKategori,
-            id_toko: e.idToko,
-            id_user: e.idUser,
-            nama_produk: e.namaProduk,
-            qty: e.qty,
-            status: e.status,
-          );
+    List<DataProduk> produk = await fetchProduksync(id_toko);
+    //  produklistlocal.refresh();
+    print('start up DB SYNC PRODUK--------------------------------------->');
+    var query = produk.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncproduk(
+          token: token,
+          image: e.image,
+          id: e.idLocal,
+          barcode: e.barcode,
+          harga: e.harga,
+          diskon_barang: e.diskonBarang,
+          deskripsi: e.deskripsi,
+          harga_modal: e.hargaModal,
+          id_jenis: e.idJenis,
+          id_jenis_stock: e.idJenisStock,
+          id_kategori: e.idKategori,
+          id_toko: e.idToko,
+          id_user: e.idUser,
+          nama_produk: e.namaProduk,
+          qty: e.qty,
+          status: e.status,
+        );
+        if (up != null) {
           print("PRODUK UP ------>    " +
               e.namaProduk +
               "------------------------------------------>");
-
           await DBHelper().UPDATE(
               table: 'produk_local', data: synclocal('Y'), id: e.idLocal);
-        });
-      }
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+        }
+      });
     }
   }
 
@@ -885,45 +846,42 @@ class produkController extends GetxController {
         '-----------------SYNC PRODUK JENIS LOCAL TO HOST-------------------');
 
     //Get.dialog(showloading(), barrierDismissible: false);
-    var checkconn = await check_conn.check();
-    if (checkconn == true) {
-      List<DataJenis> produkjenis = await fetchjenissync(id_toko);
-      //jenislistlocal.refresh();
-      print(
-          'start up DB SYNC PRODUK JENIS--------------------------------------->');
-      var query = produkjenis.where((x) => x.sync == 'N').toList();
-      if (query.isEmpty) {
-        print(query.toString() +
-            '----------------------------------------------->');
-        print(' all data sync -------------------------------->');
-      } else {
-        await Future.forEach(query, (e) async {
-          await REST.syncProdukJenis(
-              token: token,
-              id: e.idLocal,
-              aktif: e.aktif,
-              idtoko: e.idToko.toString(),
-              namajenis: e.namaJenis);
+    //var checkconn = await check_conn.check();
+
+    List<DataJenis> produkjenis = await fetchjenissync(id_toko);
+    //jenislistlocal.refresh();
+    print(
+        'start up DB SYNC PRODUK JENIS--------------------------------------->');
+    var query = produkjenis.where((x) => x.sync == 'N').toList();
+    if (query.isEmpty) {
+      print(query.toString() +
+          '----------------------------------------------->');
+      print(' all data sync -------------------------------->');
+    } else {
+      await Future.forEach(query, (e) async {
+        var up = await REST.syncProdukJenis(
+            token: token,
+            id: e.idLocal,
+            aktif: e.aktif,
+            idtoko: e.idToko.toString(),
+            namajenis: e.namaJenis);
+
+        if (up != null) {
           print("PRODUK JENIS UP ------>    " +
               e.namaJenis! +
               "------------------------------------------>");
-
           await DBHelper().UPDATE(
               table: 'produk_jenis_local', data: synclocal('Y'), id: e.idLocal);
-        });
+        }
+      });
 
-        // Get.showSnackbar(
-        //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
-      }
-
-      //Get.back(closeOverlays: true);
-
-      // return [];
-    } else {
-      Get.back(closeOverlays: true);
-      Get.showSnackbar(
-          toast().bottom_snackbar_error('Error', 'Periksa Koneksi Internet'));
+      // Get.showSnackbar(
+      //     toast().bottom_snackbar_success('Sukses', 'Produk  up DB'));
     }
+
+    //Get.back(closeOverlays: true);
+
+    // return [];
   }
 
   syncProdukv2() async {
@@ -1106,7 +1064,7 @@ class produkController extends GetxController {
         'produk_jenis_local',
         DataJenis(
                 aktif: 'Y',
-                idLocal: stringGenerator(10),
+                idLocal: nama_jenis.value.text + stringGenerator(10),
                 sync: 'N',
                 idToko: id_toko,
                 namaJenis: nama_jenis.value.text)

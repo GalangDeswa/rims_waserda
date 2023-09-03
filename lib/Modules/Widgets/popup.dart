@@ -1242,6 +1242,81 @@ class popscreen {
     );
   }
 
+  void popprintstrukulang(
+      BuildContext context, historyController controller, DataPenjualan d) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        //backgroundColor: Colors.red,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
+        ),
+        content: Builder(
+          builder: (context) {
+            return Container(
+              //  color: Colors.blue,
+              height: context.height_query / 4,
+              width: context.height_query * 0.6,
+              // color: Colors.red,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                        color: color_template().primary,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        'Cetak ulang struk ?',
+                        style: font().header,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      button_border_custom(
+                          onPressed: () async {
+                            Get.back();
+                          },
+                          child: Text(
+                            'Tidak',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          width: 100,
+                          height: 50),
+                      button_solid_custom(
+                          onPressed: () async {
+                            print(
+                                'cetak struk local------------------------------->');
+                            print(controller.listPrinter.toString());
+                            print(controller.isConnected.value == true);
+                            if ((await controller.printer.isConnected)!) {
+                              await controller.printstrukpembayaranulang(d);
+                              print('connn');
+                            } else {
+                              Get.find<base_menuController>()
+                                  .popprinterulang(d);
+                              print('noononon');
+                            }
+                          },
+                          child: Text('Cetak'),
+                          width: 100,
+                          height: 50),
+                    ],
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   void popprintstrukmeja(
       BuildContext context,
       kasirController controller,
