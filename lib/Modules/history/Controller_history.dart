@@ -49,7 +49,7 @@ class historyController extends GetxController {
   var liststatus = [
     {'id': 0, 'nama': 'status'},
     {'id': 1, 'nama': 'Selesai'},
-    {'id': 3, 'nama': 'Hutang'},
+    {'id': 2, 'nama': 'Hutang'},
     {'id': 4, 'nama': 'Reversal'}
   ].obs;
 

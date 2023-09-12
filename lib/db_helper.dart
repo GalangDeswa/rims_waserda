@@ -250,11 +250,12 @@ class DBHelper {
     }
   }
 
-  DELETEITEMMEJADETAIL(String table, String id) async {
+  DELETEITEMMEJADETAIL(String table, String idproduk, String idmeja) async {
     try {
       var dbClient = await db;
-      var query = await dbClient!
-          .delete(table, where: 'id_produk_local = ?', whereArgs: [id]);
+      var query = await dbClient!.delete(table,
+          where: 'id_produk_local = ? AND id_meja = ?',
+          whereArgs: [idproduk, idmeja]);
       return query;
     } catch (e) {
       Get.back(closeOverlays: true);

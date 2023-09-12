@@ -184,37 +184,134 @@ class edit_produk_form extends GetView<editprodukController> {
                               child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              controller.data.idJenisStock == 1
-                                  ? Expanded(
-                                      child: TextFormField(
-                                        keyboardType: TextInputType.number,
-                                        controller: controller.qty.value,
-                                        inputFormatters: [ThousandsFormatter()],
-                                        onChanged: ((String num) {
-                                          controller.qtyval.value =
-                                              int.parse(num);
-                                        }),
-                                        decoration: InputDecoration(
-                                          labelText: "Stock",
-                                          labelStyle: const TextStyle(
-                                            color: Colors.black87,
+                              controller.jenisstokval.value == '1'
+                                  ? Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              controller: controller.qty.value,
+                                              inputFormatters: [
+                                                ThousandsFormatter()
+                                              ],
+                                              onChanged: ((String num) {
+                                                controller.qtyval.value =
+                                                    int.parse(num);
+                                              }),
+                                              decoration: InputDecoration(
+                                                labelText: "Stock",
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.black87,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                              ),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  print('masukan stock');
+                                                  return 'Masukan stock';
+                                                }
+                                                return null;
+                                              },
+                                            ),
                                           ),
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return 'Masukan stock';
-                                          }
-                                          return null;
-                                        },
+                                          Switch(
+                                              activeColor:
+                                                  color_template().primary,
+                                              value:
+                                                  controller.switchstock.value,
+                                              onChanged: (x) {
+                                                controller.switchstock.value =
+                                                    x;
+                                                controller.switchstock.value ==
+                                                        true
+                                                    ? controller.jenisstokval
+                                                        .value = 1.toString()
+                                                    : controller.jenisstokval
+                                                        .value = 2.toString();
+                                                if (controller
+                                                        .switchstock.value ==
+                                                    false) {
+                                                  controller.qty.value.text =
+                                                      'Non Stock';
+                                                  controller.qtyval.value = 0;
+                                                } else {
+                                                  controller.qty.value.text =
+                                                      '0';
+                                                }
+
+                                                print(controller.jenisstokval);
+                                              })
+                                        ],
                                       ),
                                     )
-                                  : Container(),
+                                  : Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              enabled: false,
+                                              decoration: InputDecoration(
+                                                labelText: "Non Stock",
+                                                labelStyle: const TextStyle(
+                                                  color: Colors.black87,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10)),
+                                              ),
+                                            ),
+                                          ),
+                                          Switch(
+                                              activeColor:
+                                                  color_template().primary,
+                                              value:
+                                                  controller.switchstock.value,
+                                              onChanged: (x) {
+                                                controller.switchstock.value =
+                                                    x;
+                                                controller.switchstock.value ==
+                                                        true
+                                                    ? controller.jenisstokval
+                                                        .value = 1.toString()
+                                                    : controller.jenisstokval
+                                                        .value = 2.toString();
+
+                                                if (controller
+                                                        .switchstock.value ==
+                                                    false) {
+                                                  controller.qty.value.text =
+                                                      'Non Stock';
+                                                  controller.qtyval.value = 0;
+                                                } else {
+                                                  controller.qty.value.text =
+                                                      '0';
+                                                }
+                                                print(controller.jenisstokval);
+
+                                                print(controller.jenisstokval);
+                                                print(x);
+                                              })
+                                        ],
+                                      ),
+                                    ),
                               Expanded(
                                 child: TextFormField(
                                   keyboardType: TextInputType.number,

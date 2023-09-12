@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -159,7 +160,8 @@ class pelanggan_table extends GetView<pelangganController> {
                             //   label: Text('status', style: font().reguler),
                             // ),
                             DataColumn(
-                              label: Text('Aksi', style: font().reguler),
+                              label: Center(
+                                  child: Text('Aksi', style: font().reguler)),
                             ),
                           ],
                           source: source.value,
@@ -253,148 +255,137 @@ class pelangganTable extends DataTableSource {
         style: font().reguler,
         overflow: TextOverflow.ellipsis,
       )),
-      // DataCell(
-      //   con.statuspelanggan(
-      //     data[index].idLocal,
-      //   ),
-      // ),
-      DataCell(Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // IconButton(
-          //     onPressed: () {
-          //       Get.dialog(AlertDialog(
-          //         content: Container(
-          //           width:
-          //               context.width_query / 2,
-          //           height:
-          //               context.height_query / 2,
-          //           child: Column(
-          //             children: [
-          //               Container(
-          //                 width: context
-          //                         .width_query /
-          //                     2,
-          //                 height: context
-          //                         .height_query /
-          //                     2,
-          //                 child: DataTable2(
-          //                     columns: <
-          //                         DataColumn>[
-          //                       DataColumn(
-          //                         label: Center(
-          //                           child: Text(
-          //                             'total item',
-          //                             style: TextStyle(
-          //                                 fontStyle:
-          //                                     FontStyle.italic),
-          //                           ),
-          //                         ),
-          //                       ),
-          //                       DataColumn(
-          //                         label: Center(
-          //                           child: Text(
-          //                             'bayar',
-          //                             style: TextStyle(
-          //                                 fontStyle:
-          //                                     FontStyle.italic),
-          //                           ),
-          //                         ),
-          //                       ),
-          //                       DataColumn(
-          //                         label: Center(
-          //                           child: Text(
-          //                             'Tanggal transaksi',
-          //                             style: TextStyle(
-          //                                 fontStyle:
-          //                                     FontStyle.italic),
-          //                           ),
-          //                         ),
-          //                       ),
-          //                       DataColumn(
-          //                         label: Center(
-          //                           child: Text(
-          //                             'status',
-          //                             style: TextStyle(
-          //                                 fontStyle:
-          //                                     FontStyle.italic),
-          //                           ),
-          //                         ),
-          //                       ),
-          //                     ],
-          //                     rows: List.generate(
-          //                         controller
-          //                             .list_pelanggan_local[
-          //                                 index]
-          //                             .riwayatPembelian
-          //                             .length,
-          //                         (i) => DataRow(
-          //                                 cells: [
-          //                                   DataCell(
-          //                                       Center(child: Text(controller.list_pelanggan_local[index].riwayatPembelian[i].total.toString()))),
-          //                                   DataCell(
-          //                                       Center(child: Text(controller.list_pelanggan_local[index].riwayatPembelian[i].bayar.toString()))),
-          //                                   DataCell(
-          //                                       Center(child: Text(controller.list_pelanggan_local[index].riwayatPembelian[i].tglPenjualan.toString()))),
-          //                                   DataCell(Center(
-          //                                       child: controller.list_pelanggan_local[index].riwayatPembelian[i].status == 1
-          //                                           ? Container(
-          //                                               padding: EdgeInsets.all(6),
-          //                                               decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10)),
-          //                                               child: Text(
-          //                                                 'Lunas',
-          //                                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          //                                               ))
-          //                                           : controller.list_pelanggan_local[index].riwayatPembelian[i].status == 2
-          //                                               ? Container(
-          //                                                   padding: EdgeInsets.all(6),
-          //                                                   decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10)),
-          //                                                   child: Text(
-          //                                                     'Lunas',
-          //                                                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          //                                                   ))
-          //                                               : Container(
-          //                                                   padding: EdgeInsets.all(6),
-          //                                                   decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(10)),
-          //                                                   child: Text(
-          //                                                     'Hutang',
-          //                                                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          //                                                   ))))
-          //                                 ]))),
-          //               )
-          //             ],
-          //           ),
-          //         ),
-          //       ));
-          //     },
-          //     icon: Icon(
-          //       Icons.list,
-          //       size: 18,
-          //       color: color_template().secondary,
-          //     )),
-          IconButton(
-              onPressed: () {
-                Get.toNamed('/edit_pelanggan', arguments: data[index]);
-              },
-              icon: Icon(
-                Icons.edit,
-                size: 18,
-                color: color_template().secondary,
-              )),
-          con.statuspelangganhapus(data[index].id) == true
-              ? Container()
-              : IconButton(
-                  onPressed: () {
-                    popscreen().deletepelanggan(con, data[index]);
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    size: 18,
-                    color: color_template().tritadery,
-                  )),
-        ],
+      DataCell(Container(
+        child: Center(
+          child: Obx(() {
+            return con.statuspelangganhapus(data[index].id) == true
+                ? DropdownButton2(
+                    customButton: const Icon(
+                      Icons.list,
+                    ),
+                    items: [
+                      ...MenuItems.firstItems.map(
+                        (item) => DropdownMenuItem<MenuItem>(
+                          value: item,
+                          child: MenuItems.buildItem(item),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      MenuItems.onChanged(
+                          context, value! as MenuItem, data[index]);
+                    },
+                    dropdownStyleData: DropdownStyleData(
+                      width: 160,
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      offset: const Offset(0, 8),
+                    ),
+                  )
+                : DropdownButton2(
+                    customButton: const Icon(
+                      Icons.list,
+                    ),
+                    items: [
+                      ...MenuItems.firstItems.map(
+                        (item) => DropdownMenuItem<MenuItem>(
+                          value: item,
+                          child: MenuItems.buildItem(item),
+                        ),
+                      ),
+                      const DropdownMenuItem<Divider>(
+                          enabled: false, child: Divider()),
+                      ...MenuItems.secondItems.map(
+                        (item) => DropdownMenuItem<MenuItem>(
+                          value: item,
+                          child: MenuItems.buildItem(item),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      MenuItems.onChanged(
+                          context, value! as MenuItem, data[index]);
+                    },
+                    dropdownStyleData: DropdownStyleData(
+                      width: 160,
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      offset: const Offset(0, 8),
+                    ),
+                    menuItemStyleData: MenuItemStyleData(
+                      customHeights: [
+                        ...List<double>.filled(MenuItems.firstItems.length, 48),
+                        8,
+                        ...List<double>.filled(
+                            MenuItems.secondItems.length, 48),
+                      ],
+                      padding: const EdgeInsets.only(left: 16, right: 16),
+                    ),
+                  );
+          }),
+        ),
       )),
     ]);
+  }
+}
+
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+    this.iconcolor,
+  });
+
+  final String text;
+  final IconData icon;
+  final bool? iconcolor;
+}
+
+abstract class MenuItems {
+  static const List<MenuItem> firstItems = [edit];
+  static const List<MenuItem> secondItems = [hapus];
+
+  static const edit =
+      MenuItem(text: 'Edit pelanggan', icon: Icons.edit, iconcolor: false);
+  static const hapus =
+      MenuItem(text: 'Hapus pelanggan', icon: Icons.delete, iconcolor: true);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon,
+            color: item.iconcolor == false
+                ? color_template().primary_dark
+                : color_template().tritadery,
+            size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            item.text,
+            style: font().reguler,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static void onChanged(
+      BuildContext context, MenuItem item, DataPelanggan data) {
+    var con = Get.find<pelangganController>();
+    switch (item) {
+      case MenuItems.edit:
+        print('edit');
+        Get.toNamed('/edit_pelanggan', arguments: data);
+        break;
+      case MenuItems.hapus:
+        popscreen().deletepelanggan(con, data);
+        break;
+    }
   }
 }

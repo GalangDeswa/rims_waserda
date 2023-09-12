@@ -431,9 +431,11 @@ class history_table extends GetView<historyController> {
                               ),
                             ),
                             const DataColumn(
-                              label: Text(
-                                'Aksi',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                              label: Center(
+                                child: Text(
+                                  'Aksi',
+                                  style: TextStyle(fontStyle: FontStyle.italic),
+                                ),
                               ),
                             ),
                           ],
@@ -618,53 +620,146 @@ class penjualanTable extends DataTableSource {
                               style: font().reguler,
                               overflow: TextOverflow.ellipsis,
                             )),
-      DataCell(Row(
-        children: [
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  popscreen().popprintstrukulang(context, con, data[index]);
-                },
-                icon: const Icon(
-                  Icons.receipt_long,
-                  size: 18,
-                )),
-          ),
-          Expanded(
-            child: IconButton(
-                onPressed: () {
-                  Get.dialog(
-                      const AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0))),
-                        contentPadding: EdgeInsets.zero,
-                        content: detail_penjualan(),
+      DataCell(Container(
+        child: Center(
+          child: data[index].status == 4
+              ? DropdownButton2(
+                  customButton: const Icon(
+                    Icons.list,
+                  ),
+                  items: [
+                    ...MenuItems.firstItems.map(
+                      (item) => DropdownMenuItem<MenuItem>(
+                        value: item,
+                        child: MenuItems.buildItem(item),
                       ),
-                      arguments: data[index]);
-                  //popscreen().penjualandetail(con, data[index]);
-                  //Get.toNamed('/detail_penjualan', arguments: data[index]);
-                },
-                icon: const Icon(
-                  Icons.list,
-                  size: 18,
-                )),
-          ),
-          data[index].status == 4
-              ? Container()
-              : Expanded(
-                  child: IconButton(
-                      onPressed: () {
-                        popscreen().reversalpenjualan(con, data[index]);
-                      },
-                      icon: Icon(
-                        Icons.cancel,
-                        size: 18,
-                        color: color_template().tritadery,
-                      )),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    MenuItems.onChanged(
+                        context, value! as MenuItem, data[index]);
+                  },
+                  dropdownStyleData: DropdownStyleData(
+                    width: 160,
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    offset: const Offset(0, 8),
+                  ),
                 )
-        ],
+              : DropdownButton2(
+                  customButton: const Icon(
+                    Icons.list,
+                  ),
+                  items: [
+                    ...MenuItems.firstItems.map(
+                      (item) => DropdownMenuItem<MenuItem>(
+                        value: item,
+                        child: MenuItems.buildItem(item),
+                      ),
+                    ),
+                    const DropdownMenuItem<Divider>(
+                        enabled: false, child: Divider()),
+                    ...MenuItems.secondItems.map(
+                      (item) => DropdownMenuItem<MenuItem>(
+                        value: item,
+                        child: MenuItems.buildItem(item),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    MenuItems.onChanged(
+                        context, value! as MenuItem, data[index]);
+                  },
+                  dropdownStyleData: DropdownStyleData(
+                    width: 160,
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    offset: const Offset(0, 8),
+                  ),
+                  menuItemStyleData: MenuItemStyleData(
+                    customHeights: [
+                      ...List<double>.filled(MenuItems.firstItems.length, 48),
+                      8,
+                      ...List<double>.filled(MenuItems.secondItems.length, 48),
+                    ],
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                  ),
+                ),
+        ),
       )),
     ]);
+  }
+}
+
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+    this.iconcolor,
+  });
+
+  final String text;
+  final IconData icon;
+  final bool? iconcolor;
+}
+
+abstract class MenuItems {
+  static const List<MenuItem> firstItems = [cetak, detail];
+  static const List<MenuItem> secondItems = [hapus];
+
+  static const cetak =
+      MenuItem(text: 'Cetak struk', icon: Icons.receipt_long, iconcolor: false);
+  static const detail = MenuItem(
+      text: 'Detail penjualan', icon: Icons.table_rows, iconcolor: false);
+  static const hapus =
+      MenuItem(text: 'Reversal', icon: Icons.cancel, iconcolor: true);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon,
+            color: item.iconcolor == false
+                ? color_template().primary_dark
+                : color_template().tritadery,
+            size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            item.text,
+            style: font().reguler,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static void onChanged(
+      BuildContext context, MenuItem item, DataPenjualan data) {
+    var con = Get.find<historyController>();
+    switch (item) {
+      case MenuItems.cetak:
+        print('edit');
+        popscreen().popprintstrukulang(context, con, data);
+        break;
+      case MenuItems.detail:
+        Get.dialog(
+            const AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              contentPadding: EdgeInsets.zero,
+              content: detail_penjualan(),
+            ),
+            arguments: data);
+        break;
+      case MenuItems.hapus:
+        popscreen().reversalpenjualan(con, data);
+        break;
+    }
   }
 }

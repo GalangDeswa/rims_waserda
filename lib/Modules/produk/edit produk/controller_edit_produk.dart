@@ -61,6 +61,8 @@ class editprodukController extends GetxController {
     jenisstokval.value = data.idJenisStock.toString();
     qtyval.value = data.qty;
 
+    data.idJenisStock == 1 ? switchstock.value = true : false;
+
     jumlahharga.value = int.parse(data.harga.toString());
     jumlahdiskon.value = data.diskonBarang.toDouble();
 
@@ -83,6 +85,16 @@ class editprodukController extends GetxController {
 
   var barcode = TextEditingController().obs;
   var metode_diskon = 9.obs;
+
+  var jenisstokp = [
+    {'id': 1, 'nama': 'Stock'},
+    {
+      'id': 2,
+      'nama': 'Non stock',
+    }
+  ].obs;
+  var jjp = ''.obs;
+  String? jenisstokvalp;
 
   cekfoto() {
     print('---------------------------------------------------- chek foto-->');
@@ -282,6 +294,8 @@ class editprodukController extends GetxController {
     return x;
   }
 
+  var switchstock = false.obs;
+
   ProdukEditlocal() async {
     print('-------------------edit Produk local---------------------');
 
@@ -298,7 +312,7 @@ class editprodukController extends GetxController {
                 idToko: int.parse(id_toko),
                 idJenis: data.idJenis,
                 idUser: id_user,
-                qty: qtyval.value,
+                qty: switchstock.value == false ? 0 : qtyval.value,
                 deskripsi: desc.value.text,
                 diskonBarang: metode_diskon.value == 1
                     ? int.parse(jumlahdiskon.value.toInt().toString())

@@ -553,8 +553,8 @@ class popscreen {
                   ),
                   button_solid_custom(
                       onPressed: () async {
-                        await DBHelper().DELETEITEMMEJADETAIL(
-                            'meja_detail', arg.idProdukLocal!);
+                        await DBHelper().DELETEITEMMEJADETAIL('meja_detail',
+                            arg.idProdukLocal!, arg.idMeja.toString());
                         List<DataMeja> datadetail =
                             await controller.fetchmejadetail(arg.idMeja);
                         List<DataMeja> datameja = await controller.fetchmeja();

@@ -24,7 +24,8 @@ class pelangganController extends GetxController {
     // TODO: implement onInit
     super.onInit();
     await fetchDataPelangganlocal(id_toko);
-    // await fetchstatusPelangganlocal(id_toko);
+
+    await fetchstatusPelangganlocal(id_toko);
   }
 
   List<Widget> table = [
@@ -305,7 +306,7 @@ class pelangganController extends GetxController {
         .toList()
         .where((element) => element.id == id)
         .map((e) => e.status)
-        .contains(3);
+        .contains(2);
 
     print(xxx);
 

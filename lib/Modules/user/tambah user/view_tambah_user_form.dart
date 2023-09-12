@@ -96,6 +96,7 @@ class tambah_user_form extends GetView<datauserController> {
                                 margin: EdgeInsets.only(bottom: 10),
                                 //  width: context.width_query / 3.3,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.number,
                                   controller: controller.hp.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(

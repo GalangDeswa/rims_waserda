@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -108,7 +109,7 @@ class table_user extends GetView<datauserController> {
             // ),
             Expanded(
               child: Obx(() {
-                var source = userTable(controller.listUser.value).obs;
+                var source = userTable(controller.listUser.value, context).obs;
                 return Container(
                     // height: context.height_query * 0.46,
                     margin: EdgeInsets.only(top: 10),
@@ -160,9 +161,11 @@ class table_user extends GetView<datauserController> {
                                 ),
                               ),
                               DataColumn(
-                                label: Text(
-                                  'Aksi',
-                                  style: font().reguler,
+                                label: Center(
+                                  child: Text(
+                                    'Aksi',
+                                    style: font().reguler,
+                                  ),
                                 ),
                               ),
                             ],
@@ -222,8 +225,9 @@ class table_user extends GetView<datauserController> {
 
 class userTable extends DataTableSource {
   final List<DataUser> data;
+  final BuildContext context;
 
-  userTable(this.data);
+  userTable(this.data, this.context);
 
   var con = Get.find<datauserController>();
 
@@ -263,42 +267,110 @@ class userTable extends DataTableSource {
         style: font().reguler,
         overflow: TextOverflow.ellipsis,
       )),
-      DataCell(Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                Get.toNamed('/edit_user', arguments: data[index]);
-              },
-              icon: Icon(
-                Icons.edit,
-                size: 18,
-                color: color_template().secondary,
-              )),
-          IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                Get.toNamed('/edit_user_password', arguments: data[index]);
-              },
-              icon: Icon(
-                Icons.lock,
-                size: 18,
-                color: color_template().secondary,
-              )),
-          IconButton(
-              padding: EdgeInsets.zero,
-              onPressed: () {
-                popscreen().deleteuser(con, data[index]);
-              },
-              icon: Icon(
-                Icons.delete,
-                size: 18,
-                color: color_template().tritadery,
-              ))
-        ],
+      DataCell(Container(
+        child: Center(
+          child: DropdownButton2(
+            customButton: const Icon(
+              Icons.list,
+            ),
+            items: [
+              ...MenuItems.firstItems.map(
+                (item) => DropdownMenuItem<MenuItem>(
+                  value: item,
+                  child: MenuItems.buildItem(item),
+                ),
+              ),
+              const DropdownMenuItem<Divider>(enabled: false, child: Divider()),
+              ...MenuItems.secondItems.map(
+                (item) => DropdownMenuItem<MenuItem>(
+                  value: item,
+                  child: MenuItems.buildItem(item),
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              MenuItems.onChanged(context, value! as MenuItem, data[index]);
+            },
+            dropdownStyleData: DropdownStyleData(
+              width: 160,
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              offset: const Offset(0, 8),
+            ),
+            menuItemStyleData: MenuItemStyleData(
+              customHeights: [
+                ...List<double>.filled(MenuItems.firstItems.length, 48),
+                8,
+                ...List<double>.filled(MenuItems.secondItems.length, 48),
+              ],
+              padding: const EdgeInsets.only(left: 16, right: 16),
+            ),
+          ),
+        ),
       )),
     ]);
+  }
+}
+
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+    this.iconcolor,
+  });
+
+  final String text;
+  final IconData icon;
+  final bool? iconcolor;
+}
+
+abstract class MenuItems {
+  static const List<MenuItem> firstItems = [edit, editpass];
+  static const List<MenuItem> secondItems = [hapus];
+
+  static const edit =
+      MenuItem(text: 'Edit user', icon: Icons.edit, iconcolor: false);
+  static const editpass =
+      MenuItem(text: 'Edit password', icon: Icons.lock, iconcolor: false);
+  static const hapus =
+      MenuItem(text: 'Hapus user', icon: Icons.delete, iconcolor: true);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon,
+            color: item.iconcolor == false
+                ? color_template().primary_dark
+                : color_template().tritadery,
+            size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            item.text,
+            style: font().reguler,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static void onChanged(BuildContext context, MenuItem item, DataUser data) {
+    var con = Get.find<datauserController>();
+    switch (item) {
+      case MenuItems.edit:
+        print('edit');
+        Get.toNamed('/edit_user', arguments: data);
+        break;
+      case MenuItems.editpass:
+        Get.toNamed('/edit_user_password', arguments: data);
+        break;
+      case MenuItems.hapus:
+        popscreen().deleteuser(con, data);
+        break;
+    }
   }
 }

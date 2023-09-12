@@ -109,30 +109,7 @@ class kasir_produk extends GetView<kasirController> {
                         }),
                       ],
                     )
-                  : Stack(children: [
-                      Container(
-                        width: context.width_query / 11,
-                        child: Card_custom(
-                          border: false,
-                          child: Padding(
-                              padding: const EdgeInsets.all(3),
-                              child: IconButton(
-                                onPressed: () {
-                                  controller.listMejaKasir(controller);
-                                },
-                                icon: Icon(Icons.receipt_long),
-                              )),
-                        ),
-                      ),
-                      Container(
-                        width: context.width_query / 11,
-                        height: context.height_query / 11,
-                        decoration: BoxDecoration(
-                            color:
-                                color_template().primary_dark.withOpacity(0.6),
-                            borderRadius: border_radius().def_border),
-                      ),
-                    ]);
+                  : Container();
             })
           ],
         ),

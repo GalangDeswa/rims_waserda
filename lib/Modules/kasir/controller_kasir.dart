@@ -138,6 +138,8 @@ class kasirController extends GetxController {
     return t;
   }
 
+  //TODO : check hapus barang di list meja buat qty kurang tambah meja
+
   printstrukpembayaran() async {
     print('cetak struk local------------------------------->');
     print(listPrinter.toString());
@@ -1098,7 +1100,8 @@ class kasirController extends GetxController {
           .removeWhere((element) => element.idProdukLocal == idproduklocal);
       print('qty cache deldete ------------------------------------------');
 
-      await DBHelper().DELETEITEMMEJADETAIL('meja_detail', idproduklocal);
+      await DBHelper().DELETEITEMMEJADETAIL(
+          'meja_detail', idproduklocal, id_meja.toString());
       cachemejadetail.refresh();
       //  await fetchmejadetail(id_meja);
     } else {

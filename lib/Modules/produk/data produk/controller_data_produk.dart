@@ -425,6 +425,26 @@ class produkController extends GetxController {
   var jj = ''.obs;
   String? jenisstokval;
 
+  var aksi = <Widget>[
+    GestureDetector(
+      onTap: () {},
+      child: Row(
+        children: [
+          Icon(Icons.edit, color: color_template().primary_dark, size: 22),
+          const SizedBox(
+            width: 10,
+          ),
+          Expanded(
+            child: Text(
+              'Edit produk',
+              style: font().reguler,
+            ),
+          )
+        ],
+      ),
+    )
+  ].obs;
+
   var desc = TextEditingController().obs;
   var nama_produk = TextEditingController().obs;
   var harga = TextEditingController().obs;

@@ -1,4 +1,5 @@
 import 'package:data_table_2/data_table_2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -275,9 +276,11 @@ class produk_table extends GetView<produkController> {
                             //   ),
                             // ),
                             DataColumn(
-                              label: Text(
-                                'Aksi',
-                                style: font().reguler,
+                              label: Center(
+                                child: Text(
+                                  'Aksi',
+                                  style: font().reguler,
+                                ),
                               ),
                             ),
                           ],
@@ -451,35 +454,46 @@ class produkTable extends DataTableSource {
               ],
             )),
       DataCell(Container(
-        // color: Colors.cyan,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: IconButton(
-                  padding: EdgeInsets.zero,
-                  onPressed: () {
-                    Get.toNamed('/edit_produk', arguments: data[index]);
-                  },
-                  icon: Icon(
-                    Icons.edit,
-                    size: 18,
-                    color: color_template().secondary,
-                  )),
+        child: Center(
+          child: DropdownButton2(
+            customButton: const Icon(
+              Icons.list,
             ),
-            IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {
-                  popscreen().deleteproduklocal(con, data[index]);
-                },
-                icon: Icon(
-                  Icons.delete,
-                  size: 18,
-                  color: color_template().tritadery,
-                ))
-          ],
+            items: [
+              ...MenuItems.firstItems.map(
+                (item) => DropdownMenuItem<MenuItem>(
+                  value: item,
+                  child: MenuItems.buildItem(item),
+                ),
+              ),
+              const DropdownMenuItem<Divider>(enabled: false, child: Divider()),
+              ...MenuItems.secondItems.map(
+                (item) => DropdownMenuItem<MenuItem>(
+                  value: item,
+                  child: MenuItems.buildItem(item),
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              MenuItems.onChanged(context, value! as MenuItem, data[index]);
+            },
+            dropdownStyleData: DropdownStyleData(
+              width: 160,
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              offset: const Offset(0, 8),
+            ),
+            menuItemStyleData: MenuItemStyleData(
+              customHeights: [
+                ...List<double>.filled(MenuItems.firstItems.length, 48),
+                8,
+                ...List<double>.filled(MenuItems.secondItems.length, 48),
+              ],
+              padding: const EdgeInsets.only(left: 16, right: 16),
+            ),
+          ),
         ),
       )),
     ]);
@@ -532,3 +546,59 @@ class produkTable extends DataTableSource {
 //     }
 //   }
 // }
+
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+    this.iconcolor,
+  });
+
+  final String text;
+  final IconData icon;
+  final bool? iconcolor;
+}
+
+abstract class MenuItems {
+  static const List<MenuItem> firstItems = [edit];
+  static const List<MenuItem> secondItems = [hapus];
+
+  static const edit =
+      MenuItem(text: 'Edit produk', icon: Icons.edit, iconcolor: false);
+  static const hapus =
+      MenuItem(text: 'Hapus produk', icon: Icons.delete, iconcolor: true);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon,
+            color: item.iconcolor == false
+                ? color_template().primary_dark
+                : color_template().tritadery,
+            size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            item.text,
+            style: font().reguler,
+          ),
+        ),
+      ],
+    );
+  }
+
+  static void onChanged(BuildContext context, MenuItem item, DataProduk data) {
+    var con = Get.find<produkController>();
+    switch (item) {
+      case MenuItems.edit:
+        print('edit');
+        Get.toNamed('/edit_produk', arguments: data);
+        break;
+      case MenuItems.hapus:
+        popscreen().deleteproduklocal(con, data);
+        break;
+    }
+  }
+}
