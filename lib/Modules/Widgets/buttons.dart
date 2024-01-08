@@ -19,7 +19,16 @@ class button_solid_custom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(borderRadius: border_radius().header_border),
+      decoration: BoxDecoration(
+          borderRadius: border_radius().header_border,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 2,
+              blurRadius: 4,
+              offset: Offset(2, 3), // changes position of shadow
+            ),
+          ]),
       width: width,
       height: height,
       child: ElevatedButton(
@@ -48,6 +57,7 @@ class button_border_custom extends StatelessWidget {
   final Widget child;
   final double height;
   final double width;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,7 +99,8 @@ class icon_button_custom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40, height: 40,
+      width: 40,
+      height: 40,
       //padding: EdgeInsets.all(5),
       margin: EdgeInsets.all(3),
       decoration: BoxDecoration(
@@ -130,7 +141,8 @@ class icon_button_circle_custom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40, height: 40,
+      width: 40,
+      height: 40,
       //padding: EdgeInsets.all(5),
       margin: EdgeInsets.all(3),
       decoration: BoxDecoration(shape: BoxShape.circle, color: container_color),

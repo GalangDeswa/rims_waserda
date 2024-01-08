@@ -52,10 +52,10 @@ class edit_beban_form extends GetView<editbebanController> {
                                     controller: controller.nama.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Nama beban",
-                                      labelStyle: const TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -78,10 +78,10 @@ class edit_beban_form extends GetView<editbebanController> {
                                     controller: controller.keterangan.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Deskripsi",
-                                      labelStyle: const TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -247,10 +247,10 @@ class edit_beban_form extends GetView<editbebanController> {
                                   controller: controller.tanggal.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     labelText: "Tanggal",
-                                    labelStyle: const TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -277,10 +277,10 @@ class edit_beban_form extends GetView<editbebanController> {
                                   print(controller.jumlahbeban.value);
                                 }),
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
                                   labelText: "Jumlah",
-                                  labelStyle: const TextStyle(
-                                    color: Colors.black87,
-                                  ),
+                                  labelStyle: font().reguler,
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                   focusedBorder: OutlineInputBorder(
@@ -320,8 +320,7 @@ class edit_beban_form extends GetView<editbebanController> {
                   child: Text(
                     'edit beban'.toUpperCase(),
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   width: double.infinity,
                   height: 60)

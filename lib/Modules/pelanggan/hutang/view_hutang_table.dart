@@ -303,7 +303,7 @@ class hutangTable extends DataTableSource {
               decoration: BoxDecoration(
                   color: Colors.teal, borderRadius: BorderRadius.circular(10)),
               child: Text(
-                'Sudah bayar sebagian',
+                'bayar sebagian',
                 style: font().reguler_white,
                 overflow: TextOverflow.ellipsis,
               ))
@@ -341,45 +341,53 @@ class hutangTable extends DataTableSource {
                       ))),
       DataCell(data[index].status == 3
           ? Container()
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Get.dialog(
-                          arguments: data[index],
-                          AlertDialog(content: hutang_detail()));
-                    },
-                    icon: Icon(
-                      Icons.calendar_month,
-                      size: 18,
-                      color: color_template().secondary,
-                    )),
+          : Container(
+              // color: Colors.red,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      padding: EdgeInsets.zero,
+                      alignment: Alignment.centerLeft,
+                      onPressed: () {
+                        Get.dialog(
+                            arguments: data[index],
+                            AlertDialog(content: hutang_detail()));
+                      },
+                      icon: Icon(
+                        Icons.calendar_month,
+                        size: 18,
+                        color: color_template().secondary,
+                      )),
 
-                data[index].sisaHutang == 0
-                    ? Container()
-                    : Expanded(
-                        child: ElevatedButton(
-                            onPressed: () {
-                              con.bayarhutangpop(data[index].idLocal!,
-                                  data[index].sisaHutang.toString());
-                            },
-                            child: Text('Bayar')),
-                      ),
-                // IconButton(
-                //     onPressed: () {
-                //       // popscreen().deletepelanggan(
-                //       //     controller,
-                //       //     controller
-                //       //         .list_pelanggan[index]);
-                //     },
-                //     icon: Icon(
-                //       Icons.delete,
-                //       size: 18,
-                //       color: color_template().tritadery,
-                //     ))
-              ],
+                  data[index].sisaHutang == 0
+                      ? Container()
+                      : Expanded(
+                          child: ElevatedButton(
+                              onPressed: () {
+                                con.bayarhutangpop(data[index].idLocal!,
+                                    data[index].sisaHutang.toString());
+                              },
+                              child: Text(
+                                'Bayar',
+                                style: font().reguler,
+                              )),
+                        ),
+                  // IconButton(
+                  //     onPressed: () {
+                  //       // popscreen().deletepelanggan(
+                  //       //     controller,
+                  //       //     controller
+                  //       //         .list_pelanggan[index]);
+                  //     },
+                  //     icon: Icon(
+                  //       Icons.delete,
+                  //       size: 18,
+                  //       color: color_template().tritadery,
+                  //     ))
+                ],
+              ),
             )),
     ]);
   }

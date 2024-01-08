@@ -804,6 +804,7 @@ class kasirController extends GetxController {
   popeditqty(index) {
     editqty.value.clear();
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -911,6 +912,7 @@ class kasirController extends GetxController {
   popeditqtyprebill(index, id_meja) {
     editqtyprebill.value.clear();
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -1155,6 +1157,7 @@ class kasirController extends GetxController {
   editDiskonKasir(kasirController controller) {
     Get.dialog(
         AlertDialog(
+          surfaceTintColor: Colors.white,
           contentPadding: EdgeInsets.all(10),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
@@ -1276,14 +1279,14 @@ class kasirController extends GetxController {
                                     options: GroupButtonOptions(
                                       selectedShadow: const [],
                                       selectedTextStyle: const TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 15,
                                         color: Colors.white,
                                       ),
                                       selectedColor: color_template().select,
                                       unselectedShadow: const [],
                                       unselectedColor: Colors.white,
                                       unselectedTextStyle: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 12,
                                         color: Colors.black,
                                       ),
                                       //selectedBorderColor: Colors.pink[900],
@@ -1380,6 +1383,7 @@ class kasirController extends GetxController {
 
   editMejaKasir(kasirController controller) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -1653,6 +1657,7 @@ class kasirController extends GetxController {
 
   editnomormejaprebill(id, nomor_meja) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -1838,8 +1843,9 @@ class kasirController extends GetxController {
 
   listMejaKasir(kasirController controller) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
-          title: 'List meja open bill',
+          title: 'Daftar meja open bill',
           icon: Icons.table_restaurant,
           iscenter: true,
           icon_color: color_template().primary,
@@ -1930,6 +1936,9 @@ class kasirController extends GetxController {
                               ),
                               Expanded(
                                 child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            EdgeInsets.zero)),
                                     onPressed: () {
                                       // Get.dialog(
                                       //     Stack(
@@ -1983,7 +1992,7 @@ class kasirController extends GetxController {
                                     },
                                     child: Icon(
                                       FontAwesomeIcons.cashRegister,
-                                      color: Colors.white,
+                                      color: color_template().select,
                                     )),
                               )
                             ],
@@ -1999,6 +2008,7 @@ class kasirController extends GetxController {
 
   listMejaDetailKasir(kasirController controller) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
           title: 'Detail meja',
           icon: Icons.table_restaurant,
@@ -3723,6 +3733,7 @@ class kasirController extends GetxController {
 
   tambahpelangganpembayaran() {
     AlertDialog(
+        surfaceTintColor: Colors.white,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0))),
         contentPadding: EdgeInsets.zero,

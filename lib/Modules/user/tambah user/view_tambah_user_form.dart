@@ -48,9 +48,9 @@ class tambah_user_form extends GetView<datauserController> {
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
                                     labelText: "Nama user",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -74,9 +74,9 @@ class tambah_user_form extends GetView<datauserController> {
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
                                     labelText: "Email",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -101,9 +101,9 @@ class tambah_user_form extends GetView<datauserController> {
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
                                     labelText: "No.HP",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -141,6 +141,8 @@ class tambah_user_form extends GetView<datauserController> {
                                 controller: controller.password.value,
                                 onChanged: ((String pass) {}),
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
                                   suffixIcon: IconButton(
                                     icon: controller.show == false
                                         ? Icon(Icons.visibility_off)
@@ -152,9 +154,7 @@ class tambah_user_form extends GetView<datauserController> {
                                     },
                                   ),
                                   labelText: "Password",
-                                  labelStyle: TextStyle(
-                                    color: Colors.black87,
-                                  ),
+                                  labelStyle: font().reguler,
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                   focusedBorder: OutlineInputBorder(
@@ -176,6 +176,8 @@ class tambah_user_form extends GetView<datauserController> {
                                 controller: controller.konfirmasipassword.value,
                                 onChanged: ((String pass) {}),
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
                                   suffixIcon: IconButton(
                                     icon: controller.showkon == false
                                         ? Icon(Icons.visibility_off)
@@ -187,9 +189,7 @@ class tambah_user_form extends GetView<datauserController> {
                                     },
                                   ),
                                   labelText: "Konfirmasi password",
-                                  labelStyle: TextStyle(
-                                    color: Colors.black87,
-                                  ),
+                                  labelStyle: font().reguler,
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                   focusedBorder: OutlineInputBorder(
@@ -208,11 +208,16 @@ class tambah_user_form extends GetView<datauserController> {
                               return DropdownButtonFormField2(
                                 isExpanded: true,
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
-                                hint: Text('Role'),
+                                hint: Text(
+                                  'Role',
+                                  style: font().reguler,
+                                ),
                                 validator: (value) {
                                   if (value == null) {
                                     return 'Pilih role user';
@@ -228,7 +233,10 @@ class tambah_user_form extends GetView<datauserController> {
                                     : controller.role[controller.roleval.value],
                                 items: controller.role.map((item) {
                                   return DropdownMenuItem(
-                                    child: Text(item),
+                                    child: Text(
+                                      item,
+                                      style: font().reguler,
+                                    ),
                                     value: item,
                                   );
                                 }).toList(),
@@ -257,8 +265,7 @@ class tambah_user_form extends GetView<datauserController> {
                 child: Text(
                   'tambah user'.toUpperCase(),
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 width: double.infinity,
                 height: 60)

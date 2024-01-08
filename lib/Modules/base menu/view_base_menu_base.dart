@@ -24,7 +24,7 @@ class base_menu extends GetView<base_menuController> {
     return SafeArea(
       child: WillPopScope(
         onWillPop: () async {
-          if (controller.selectedIndex != 0) {
+          if (controller.selectedIndex.value != 0) {
             print('tidak 0');
             controller.selectedIndex(0);
             return false;
@@ -34,6 +34,7 @@ class base_menu extends GetView<base_menuController> {
               context: context,
               builder: (context) {
                 return AlertDialog(
+                  surfaceTintColor: Colors.white,
                   title: const Text('Keluar aplikasi?'),
                   actionsAlignment: MainAxisAlignment.spaceBetween,
                   actions: [
@@ -65,7 +66,10 @@ class base_menu extends GetView<base_menuController> {
                             onPressed: () {
                               Navigator.pop(context, true);
                             },
-                            child: Text('Keluar'),
+                            child: Text(
+                              'Keluar',
+                              style: TextStyle(color: Colors.white),
+                            ),
                             width: 100,
                             height: 50),
                         // ElevatedButton(
@@ -124,7 +128,7 @@ class base_menu extends GetView<base_menuController> {
                                   radius: 40,
                                 ),
                           SizedBox(
-                            height: 10,
+                            height: 5,
                           ),
                           Text(
                             controller.namauser.value,
@@ -132,7 +136,7 @@ class base_menu extends GetView<base_menuController> {
                           ),
                           Text(
                             controller.role == 1 ? 'Kasir' : 'Admin',
-                            style: font().reguler,
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       )),
@@ -197,6 +201,10 @@ class base_menu extends GetView<base_menuController> {
                     },
                     child: ListTile(
                       title: Text('Sinkronkan data'),
+                      subtitle: Text(
+                        '(Butuh koneksi internet)',
+                        style: font().reguler,
+                      ),
                       leading: Icon(Icons.sync),
                     ),
                   ),
@@ -458,7 +466,6 @@ class base_menu extends GetView<base_menuController> {
                                 ),
                               ),
                               Container(
-                                width: 50,
                                 margin: EdgeInsets.symmetric(horizontal: 15),
                                 child: ElevatedButton(
                                     onPressed: () async {

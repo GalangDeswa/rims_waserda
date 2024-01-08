@@ -94,6 +94,8 @@ class tambah_beban extends GetView<bebanController> {
                                         return null;
                                       },
                                       decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0, horizontal: 10),
                                         border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -105,7 +107,10 @@ class tambah_beban extends GetView<bebanController> {
                                                   BorderRadius.circular(10),
                                               color: Colors.white)),
                                       isExpanded: true,
-                                      hint: Text('Pilih Beban'),
+                                      hint: Text(
+                                        'Pilih Beban',
+                                        style: font().reguler,
+                                      ),
                                       value: controller.databebanlistlocalval,
                                       items: controller
                                           .databebanlistlocalv2.value
@@ -187,10 +192,10 @@ class tambah_beban extends GetView<bebanController> {
                                         print(controller.jumlahbeban.value);
                                       }),
                                       decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0, horizontal: 10),
                                         labelText: "Jumlah",
-                                        labelStyle: TextStyle(
-                                          color: Colors.black87,
-                                        ),
+                                        labelStyle: font().reguler,
                                         border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10)),
@@ -258,10 +263,10 @@ class tambah_beban extends GetView<bebanController> {
                                       controller: controller.tanggal.value,
                                       onChanged: ((String pass) {}),
                                       decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 0, horizontal: 10),
                                         labelText: "Tanggal",
-                                        labelStyle: TextStyle(
-                                          color: Colors.black87,
-                                        ),
+                                        labelStyle: font().reguler,
                                         border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10)),
@@ -302,10 +307,12 @@ class tambah_beban extends GetView<bebanController> {
                                                     controller.nama.value,
                                                 onChanged: ((String pass) {}),
                                                 decoration: InputDecoration(
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 10),
                                                   labelText: "Nama beban",
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.black87,
-                                                  ),
+                                                  labelStyle: font().reguler,
                                                   border: OutlineInputBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -335,9 +342,11 @@ class tambah_beban extends GetView<bebanController> {
                                                 onChanged: ((String pass) {}),
                                                 decoration: InputDecoration(
                                                   labelText: "Deskripsi",
-                                                  labelStyle: TextStyle(
-                                                    color: Colors.black87,
-                                                  ),
+                                                  labelStyle: font().reguler,
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 10),
                                                   border: OutlineInputBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -371,6 +380,12 @@ class tambah_beban extends GetView<bebanController> {
                                                       },
                                                       decoration:
                                                           InputDecoration(
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    vertical: 0,
+                                                                    horizontal:
+                                                                        10),
                                                         border:
                                                             OutlineInputBorder(
                                                           borderRadius:
@@ -388,7 +403,9 @@ class tambah_beban extends GetView<bebanController> {
                                                                   .white)),
                                                       isExpanded: true,
                                                       hint: Text(
-                                                          'Pilih Kategori'),
+                                                        'Pilih Kategori',
+                                                        style: font().reguler,
+                                                      ),
                                                       value: controller
                                                           .jenisbebanval,
                                                       items: controller
@@ -529,10 +546,12 @@ class tambah_beban extends GetView<bebanController> {
                                                   controller.tanggal.value,
                                               onChanged: ((String pass) {}),
                                               decoration: InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 0,
+                                                        horizontal: 10),
                                                 labelText: "Tanggal",
-                                                labelStyle: TextStyle(
-                                                  color: Colors.black87,
-                                                ),
+                                                labelStyle: font().reguler,
                                                 border: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -566,10 +585,12 @@ class tambah_beban extends GetView<bebanController> {
                                                   controller.jumlahbeban.value);
                                             }),
                                             decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 0,
+                                                      horizontal: 10),
                                               labelText: "Jumlah",
-                                              labelStyle: TextStyle(
-                                                color: Colors.black87,
-                                              ),
+                                              labelStyle: font().reguler,
                                               border: OutlineInputBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
@@ -624,8 +645,8 @@ class tambah_beban extends GetView<bebanController> {
                             child: Text(
                               'tambah beban'.toUpperCase(),
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             width: double.infinity,
                             height: 60)
@@ -639,8 +660,8 @@ class tambah_beban extends GetView<bebanController> {
                             child: Text(
                               'tambah beban harian'.toUpperCase(),
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             width: double.infinity,
                             height: 60);

@@ -54,10 +54,10 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                     controller: controller.nama_toko.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Nama toko",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -80,10 +80,10 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                     controller: controller.jenis_usaha.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Jenis usaha",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -108,9 +108,9 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
                                       labelText: "Alamat toko",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -147,10 +147,10 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                   controller: controller.email.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     labelText: "Email",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -174,10 +174,10 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                   controller: controller.no_hp.value,
                                   onChanged: ((String pass) {}),
                                   decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     labelText: "Nomor hp",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -456,7 +456,7 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                                                         Container(
                                                           margin:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   left: 10,
                                                                   right: 5),
                                                           padding:
@@ -551,8 +551,7 @@ class edit_tokov2_form extends GetView<edittokov2Controller> {
                   child: Text(
                     'edit toko'.toUpperCase(),
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   width: double.infinity,
                   height: 60)

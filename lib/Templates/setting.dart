@@ -16,10 +16,13 @@ class color_template {
 }
 
 class font {
-  var primary_dark =
-      TextStyle(color: color_template().primary_dark, fontSize: 20);
+  var primary_dark = TextStyle(
+      color: color_template().primary_dark,
+      fontSize: 20,
+      fontWeight: FontWeight.bold);
   var primary_black = TextStyle(color: Colors.black, fontSize: 18);
-  var primary_black_20 = TextStyle(color: Colors.black, fontSize: 20);
+  var primary_black_20 =
+      TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold);
   var primary_white = TextStyle(color: Colors.white, fontSize: 20);
   var primary_white_datacard = TextStyle(color: Colors.white, fontSize: 15);
 
@@ -30,9 +33,9 @@ class font {
       fontWeight: FontWeight.bold);
 
   var header =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
+      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white);
   var header_blue = TextStyle(
-      fontSize: 20,
+      fontSize: 15,
       fontWeight: FontWeight.bold,
       color: color_template().primary);
   var header_big =
@@ -42,30 +45,30 @@ class font {
       fontWeight: FontWeight.bold,
       color: color_template().primary);
   var header_big_black =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black);
+      TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.black);
   var header_datacard =
       TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white);
   var header_xl =
       TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.white);
   var header_black =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black);
-  var header_black_nonbold = TextStyle(fontSize: 18, color: Colors.black);
+      TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black);
+  var header_black_nonbold = TextStyle(fontSize: 15, color: Colors.black);
 
   var table_header = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
   var reguler = TextStyle(
-    fontSize: 15,
+    fontSize: 13,
   );
-  var reguler_bold = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
+  var reguler_bold = TextStyle(fontSize: 13, fontWeight: FontWeight.bold);
 
-  var reguler_white = TextStyle(fontSize: 15, color: Colors.white);
+  var reguler_white = TextStyle(fontSize: 13, color: Colors.white);
   var reguler_white_bold =
-      TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.bold);
   var reguler_white_datacard = TextStyle(fontSize: 15, color: Colors.white);
 
   var produktitle =
-      TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold);
   var produkharga = TextStyle(
-    fontSize: 15,
+    fontSize: 12,
     color: Colors.black,
   );
 }

@@ -41,7 +41,8 @@ class kasir_produk extends GetView<kasirController> {
                                   .searchproduklocal(controller.id_toko);
                             }),
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 10),
                               labelText: "Cari produk",
                               hintText: 'nama produk',
                               border: InputBorder.none,
@@ -207,17 +208,17 @@ class ProductTilev2 extends GetView<kasirController> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(15),
+      padding: EdgeInsets.all(10),
       height: context.height_query,
       child: GridView.builder(
           //controller: controller.scroll.value,
           scrollDirection: Axis.vertical,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              mainAxisExtent: context.height_query / 3.2,
-              maxCrossAxisExtent: context.width_query / 5.3,
+              mainAxisExtent: context.height_query / 3.0,
+              maxCrossAxisExtent: context.width_query / 5.0,
               childAspectRatio: 1 / 1,
               crossAxisSpacing: 3,
-              mainAxisSpacing: 2),
+              mainAxisSpacing: 3),
           itemCount: controller.produklistlocal.length,
           itemBuilder: (BuildContext context, index) {
             var hargadiskon = controller.produklistlocal[index].harga! -
@@ -286,7 +287,7 @@ class ProductTilev2 extends GetView<kasirController> {
                                 Container(
                                   padding: EdgeInsets.all(10),
                                   width: context.width_query,
-                                  height: context.height_query / 8.5,
+                                  height: context.height_query / 9,
                                   decoration: BoxDecoration(
                                       //  color: Colors.red,
                                       borderRadius: BorderRadius.only(
@@ -324,21 +325,28 @@ class ProductTilev2 extends GetView<kasirController> {
                                               )
                                             : Row(
                                                 children: [
-                                                  Text('Rp. ' +
-                                                      controller.nominal
-                                                          .format(hargadiskon)),
+                                                  Text(
+                                                    'Rp. ' +
+                                                        controller.nominal
+                                                            .format(
+                                                                hargadiskon),
+                                                    style: font().produkharga,
+                                                  ),
                                                   const SizedBox(
                                                     width: 10,
                                                   ),
                                                   Container(
-                                                    padding:
-                                                        const EdgeInsets.all(6),
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        vertical: 3,
+                                                        horizontal: 5),
                                                     child: Text(
                                                       display_diskon + '%',
                                                       style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Colors.white),
+                                                          color: Colors.white,
+                                                          fontSize: 12),
                                                     ),
                                                     decoration: BoxDecoration(
                                                         color: color_template()
@@ -413,15 +421,16 @@ class ProductTilev2 extends GetView<kasirController> {
                                               base64Decode(controller
                                                   .produklistlocal[index]
                                                   .image!),
-                                              fit: BoxFit.contain,
+                                              fit: BoxFit.cover,
                                             ),
                                           ))),
                             Container(
                               padding: EdgeInsets.all(10),
                               width: context.width_query,
-                              height: context.height_query / 8.5,
+                              height: context.height_query / 9,
                               decoration: BoxDecoration(
-                                  //  color: Colors.red,
+
+                                  // color: Colors.red,
                                   borderRadius: BorderRadius.only(
                                       topLeft: Radius.circular(0),
                                       topRight: Radius.circular(0),
@@ -455,21 +464,27 @@ class ProductTilev2 extends GetView<kasirController> {
                                           )
                                         : Row(
                                             children: [
-                                              Text('Rp. ' +
-                                                  controller.nominal
-                                                      .format(hargadiskon)),
+                                              Text(
+                                                'Rp. ' +
+                                                    controller.nominal
+                                                        .format(hargadiskon),
+                                                style: font().produkharga,
+                                              ),
                                               const SizedBox(
                                                 width: 10,
                                               ),
                                               Container(
                                                 padding:
-                                                    const EdgeInsets.all(6),
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3,
+                                                        horizontal: 5),
                                                 child: Text(
                                                   display_diskon + '%',
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: Colors.white),
+                                                      color: Colors.white,
+                                                      fontSize: 12),
                                                 ),
                                                 decoration: BoxDecoration(
                                                     color: color_template()

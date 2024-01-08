@@ -22,8 +22,8 @@ class check_conn {
         }
       } on SocketException catch (_) {
         print('not connected');
-        Get.showSnackbar(
-            toast().bottom_snackbar_error('Error', 'Periksa koneksi internet'));
+        Get.showSnackbar(toast().bottom_snackbar_error(
+            'Error', 'Periksa koneksi internet' + _.toString()));
       }
     } else if (connectivityResult == ConnectivityResult.wifi) {
       //Get.snackbar('conn', 'wifi');

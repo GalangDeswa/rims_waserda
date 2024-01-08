@@ -1,7 +1,6 @@
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rims_waserda/Modules/Widgets/card_custom.dart';
 import 'package:rims_waserda/Modules/history/controller_detail_penjualan.dart';
 
 import '../../Templates/setting.dart';
@@ -14,10 +13,11 @@ class detail_penjualan extends GetView<detailpenjualanController> {
     var subtotal = controller.data.subTotal - controller.data.diskonTotal;
     var ppn = 11 / 100 * subtotal;
     return Container(
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
       width: context.width_query / 1.8,
-      height: context.height_query,
-      child: Card_custom(
-        border: false,
+      // height: context.height_query,
+      child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(

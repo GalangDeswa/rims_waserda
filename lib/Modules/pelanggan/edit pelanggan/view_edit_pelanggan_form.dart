@@ -37,10 +37,10 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
                     controller: controller.nama_pelanggan.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                       labelText: "Nama pelanggan",
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
+                      labelStyle: font().reguler,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       focusedBorder: OutlineInputBorder(
@@ -61,10 +61,10 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
                     controller: controller.no_hp.value,
                     onChanged: ((String pass) {}),
                     decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                       labelText: "Nomor HP",
-                      labelStyle: TextStyle(
-                        color: Colors.black87,
-                      ),
+                      labelStyle: font().reguler,
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10)),
                       focusedBorder: OutlineInputBorder(
@@ -91,8 +91,7 @@ class edit_pelanggan_form extends GetView<editpelangganController> {
                       child: Text(
                         'edit pelanggan'.toUpperCase(),
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                       width: double.infinity,
                       height: 65)

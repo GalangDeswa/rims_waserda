@@ -1319,6 +1319,7 @@ class produkController extends GetxController {
 
   addqty(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: const EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -1393,7 +1394,7 @@ class produkController extends GetxController {
                                 editqtylocal(arg.idLocal);
                               },
                               child: Text(
-                                'Tambah Stock',
+                                'Tambah',
                                 style: font().primary_white,
                               ),
                               width: context.width_query,

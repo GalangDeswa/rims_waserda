@@ -241,6 +241,7 @@ class list_kasir extends GetView<kasirController> {
         ),
         Expanded(
           child: Card(
+              surfaceTintColor: Colors.white,
               elevation: elevation().def_elevation,
               shape: RoundedRectangleBorder(
                 borderRadius: border_radius().def_border,

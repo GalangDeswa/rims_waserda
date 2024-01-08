@@ -148,7 +148,7 @@ class base_menuController extends GetxController {
     print(listPrinter.map((element) => element.name));
   }
 
-  DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+  DateFormat dateFormat = DateFormat("dd-MM-yyyy - hh:mm");
 
   loadtoko() async {
     namatoko.value = await GetStorage().read('nama_toko');

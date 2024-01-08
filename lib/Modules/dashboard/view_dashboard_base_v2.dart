@@ -134,6 +134,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                               children: [
                                 Expanded(
                                   child: Card(
+                                    surfaceTintColor: Colors.white,
                                     elevation: elevation().def_elevation,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: border_radius().def_border,
@@ -142,9 +143,23 @@ class dashboard_v2 extends GetView<dashboardController> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          color: Colors.green,
                                           width: 15,
                                           height: context.height_query / 7,
+                                          decoration: BoxDecoration(
+                                              color: Colors.green,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.greenAccent,
+                                                  blurRadius: 6.0,
+                                                  spreadRadius: 0.0,
+                                                  offset: const Offset(
+                                                    0.0,
+                                                    3.0,
+                                                  ),
+                                                ),
+                                              ],
+                                              borderRadius:
+                                                  border_radius().def_border),
                                         ),
                                         Expanded(
                                           child: ListTile(
@@ -183,6 +198,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                 ),
                                 Expanded(
                                   child: Card(
+                                    surfaceTintColor: Colors.white,
                                     elevation: elevation().def_elevation,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: border_radius().def_border,
@@ -191,9 +207,23 @@ class dashboard_v2 extends GetView<dashboardController> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          color: color_template().tritadery,
                                           width: 15,
                                           height: context.height_query / 7,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.redAccent,
+                                                  blurRadius: 6.0,
+                                                  spreadRadius: 0.0,
+                                                  offset: const Offset(
+                                                    0.0,
+                                                    3.0,
+                                                  ),
+                                                ),
+                                              ],
+                                              color: color_template().tritadery,
+                                              borderRadius:
+                                                  border_radius().def_border),
                                         ),
                                         Expanded(
                                           child: ListTile(
@@ -232,6 +262,7 @@ class dashboard_v2 extends GetView<dashboardController> {
                                 ),
                                 Expanded(
                                   child: Card(
+                                    surfaceTintColor: Colors.white,
                                     elevation: elevation().def_elevation,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: border_radius().def_border,
@@ -240,7 +271,21 @@ class dashboard_v2 extends GetView<dashboardController> {
                                     child: Row(
                                       children: [
                                         Container(
-                                          color: color_template().primary,
+                                          decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.blueAccent,
+                                                  blurRadius: 6.0,
+                                                  spreadRadius: 0.0,
+                                                  offset: const Offset(
+                                                    0.0,
+                                                    3.0,
+                                                  ),
+                                                ),
+                                              ],
+                                              color: color_template().primary,
+                                              borderRadius:
+                                                  border_radius().def_border),
                                           width: 15,
                                           height: context.height_query / 7,
                                         ),
@@ -313,6 +358,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                   child: ListView(
                                                 children: [
                                                   Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
                                                     shape:
@@ -359,6 +406,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     ),
                                                   ),
                                                   Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
                                                     shape:
@@ -451,6 +500,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                   //   ),
                                                   // ),
                                                   Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
                                                     shape:
@@ -496,6 +547,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     ),
                                                   ),
                                                   Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
                                                     shape:
@@ -541,6 +594,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     ),
                                                   ),
                                                   Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
                                                     shape:
@@ -587,6 +642,8 @@ class dashboard_v2 extends GetView<dashboardController> {
                                                     ),
                                                   ),
                                                   Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
                                                     margin: EdgeInsets.only(
                                                         bottom: 10),
                                                     shape:

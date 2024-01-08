@@ -64,10 +64,11 @@ class kasir_detail extends GetView<kasirController> {
                                     controller.cache[index].idLocal)
                                 .first;
                             return Card(
+                                surfaceTintColor: Colors.white,
                                 elevation: elevation().def_elevation,
                                 child: Container(
                                   padding: EdgeInsets.all(5),
-                                  height: context.height_query / 8,
+                                  height: context.height_query / 7,
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -171,7 +172,7 @@ class kasir_detail extends GetView<kasirController> {
                                                               Container(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                        .all(6),
+                                                                        .all(3),
                                                                 child: Text(
                                                                   display_diskon +
                                                                       '%',
@@ -179,6 +180,8 @@ class kasir_detail extends GetView<kasirController> {
                                                                       TextOverflow
                                                                           .ellipsis,
                                                                   style: const TextStyle(
+                                                                      fontSize:
+                                                                          12,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
@@ -228,10 +231,10 @@ class kasir_detail extends GetView<kasirController> {
                                                           .popeditqty(index);
                                                     },
                                                     child: Container(
-                                                      width: 55,
+                                                      width: 45,
                                                       padding:
                                                           EdgeInsets.symmetric(
-                                                              horizontal: 10,
+                                                              horizontal: 5,
                                                               vertical: 5),
                                                       decoration: BoxDecoration(
                                                           borderRadius:
@@ -330,8 +333,8 @@ class kasir_detail extends GetView<kasirController> {
                 return Container(
                   //margin: EdgeInsets.only(top: 40),
                   height: context.height_query / 5.0,
-                  // color: Colors.red,
-                  width: double.infinity,
+
+                  width: context.width_query,
                   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   // decoration: BoxDecoration(
                   //     color: color_template().primary,
@@ -380,28 +383,43 @@ class kasir_detail extends GetView<kasirController> {
                                   style: font().reguler,
                                 ),
                               ),
-                              controller.ppnSwitch.value == true
-                                  ? Text(
-                                      "Rp." +
-                                          controller.nominal
-                                              .format(controller.ppn.value),
-                                      style: font().reguler_bold,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  : Text(
-                                      "-",
-                                      style: font().reguler_bold,
-                                      overflow: TextOverflow.ellipsis,
+                              Expanded(
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    controller.ppnSwitch.value == true
+                                        ? Expanded(
+                                            child: Text(
+                                              "Rp." +
+                                                  controller.nominal.format(
+                                                      controller.ppn.value),
+                                              style: font().reguler_bold,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
+                                        : Expanded(
+                                            child: Text(
+                                              "-",
+                                              style: font().reguler_bold,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                    Transform.scale(
+                                      scale: 0.65,
+                                      child: Switch(
+                                          activeColor: color_template().primary,
+                                          value: controller.ppnSwitch.value,
+                                          onChanged: (x) {
+                                            controller.ppnSwitch.value = x;
+                                            print(controller.ppnSwitch);
+                                            print(controller.ppn);
+                                            controller.totalval();
+                                          }),
                                     ),
-                              Switch(
-                                  activeColor: color_template().primary,
-                                  value: controller.ppnSwitch.value,
-                                  onChanged: (x) {
-                                    controller.ppnSwitch.value = x;
-                                    print(controller.ppnSwitch);
-                                    print(controller.ppn);
-                                    controller.totalval();
-                                  }),
+                                  ],
+                                ),
+                              )
                             ],
                           ),
                         );
@@ -415,37 +433,92 @@ class kasir_detail extends GetView<kasirController> {
                           children: [
                             Expanded(
                                 child: Text('Diskon :', style: font().reguler)),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                controller.metode_diskon == 1
-                                    ? Text(
-                                        controller.displaydiskon
-                                                .toStringAsFixed(0) +
-                                            '%',
-                                        style: font().reguler_bold,
-                                        overflow: TextOverflow.ellipsis,
-                                      )
-                                    : Text(
-                                        'Rp. ' +
-                                            controller.nominal.format(
-                                                controller.displaydiskon.value),
-                                        style: font().reguler_bold,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  width: 100,
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        controller.editDiskonKasir(controller);
-                                      },
-                                      child: Text(
-                                        'Diskon kasir',
-                                        style: TextStyle(fontSize: 12),
-                                      )),
-                                )
-                              ],
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  controller.metode_diskon == 1
+                                      ? Text(
+                                          controller.displaydiskon
+                                                  .toStringAsFixed(0) +
+                                              '%',
+                                          style: font().reguler_bold,
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      : Text(
+                                          'Rp. ' +
+                                              controller.nominal.format(
+                                                  controller
+                                                      .displaydiskon.value),
+                                          style: font().reguler_bold,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                  controller.displaydiskon.value == 0
+                                      ? InkWell(
+                                          splashColor: color_template().select,
+                                          onTap: () {
+                                            controller
+                                                .editDiskonKasir(controller);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: color_template().select,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 2,
+                                                    offset: Offset(0,
+                                                        2), // changes position of shadow
+                                                  ),
+                                                ]),
+                                            child: Text(
+                                              'Diskon',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        )
+                                      : InkWell(
+                                          splashColor: color_template().select,
+                                          onTap: () {
+                                            controller
+                                                .editDiskonKasir(controller);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: color_template().primary,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.2),
+                                                    spreadRadius: 1,
+                                                    blurRadius: 2,
+                                                    offset: Offset(0,
+                                                        2), // changes position of shadow
+                                                  ),
+                                                ]),
+                                            child: Text(
+                                              'Diskon',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        )
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -497,8 +570,8 @@ class kasir_detail extends GetView<kasirController> {
               }),
               Obx(() {
                 return Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    width: context.width_query,
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: border_radius().header_border,

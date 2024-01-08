@@ -30,6 +30,7 @@ import 'header.dart';
 class popscreen {
   deletepelanggan(pelangganController controller, DataPelanggan arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       titlePadding: EdgeInsets.all(10),
       title: header(
         title: 'Hapus Pelanggan',
@@ -84,6 +85,7 @@ class popscreen {
 
   reversalpenjualan(historyController controller, DataPenjualan arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         iscenter: true,
         title: 'Batalkan Transaksi',
@@ -142,6 +144,7 @@ class popscreen {
         context: context,
         builder: (_) {
           return AlertDialog(
+            surfaceTintColor: Colors.white,
             title: header(
               title: 'Hapus Beban',
               icon: Icons.warning,
@@ -196,6 +199,7 @@ class popscreen {
 
   deletebebanv2(bebanController controller, DataBeban arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         title: 'Hapus Beban',
         icon: Icons.warning,
@@ -257,6 +261,7 @@ class popscreen {
         context: context,
         builder: (_) {
           return AlertDialog(
+            surfaceTintColor: Colors.white,
             title: header(
               title: 'Hapus keranjang',
               icon: Icons.warning,
@@ -311,6 +316,7 @@ class popscreen {
 
   deletejenisbeban(bebanController controller, DataJenisBeban arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         title: 'Hapus Kategori',
         icon: Icons.warning,
@@ -364,6 +370,7 @@ class popscreen {
 
   void deletejenis(produkController controller, DataJenis arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         title: 'Hapus Data',
         icon: Icons.warning,
@@ -417,6 +424,7 @@ class popscreen {
 
   deleteprodukv2(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         title: 'Hapus Data',
         icon: Icons.warning,
@@ -469,6 +477,7 @@ class popscreen {
 
   deleteproduklocal(produkController controller, DataProduk arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         title: 'Hapus Data',
         icon: Icons.warning,
@@ -527,6 +536,7 @@ class popscreen {
 
   deletemejadetail(kasirController controller, DataMeja arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -630,6 +640,7 @@ class popscreen {
 
   deletemeja(kasirController controller, DataMeja arg) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -695,6 +706,7 @@ class popscreen {
 
   lupapassword() {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       title: header(
         title: 'Lupa Password',
         icon: Icons.warning,
@@ -712,7 +724,7 @@ class popscreen {
               margin: EdgeInsets.all(10),
               // color: Colors.red,
               width: context.width_query / 2.6,
-              height: context.height_query / 5.6,
+              height: context.height_query / 4.5,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -720,16 +732,19 @@ class popscreen {
                     "Hubungi admin untuk mereset password anda",
                     style: font().header_black,
                   ),
-                  button_solid_custom(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: Text(
-                        'Kembali',
-                        style: font().primary_white,
-                      ),
-                      width: context.width_query,
-                      height: context.height_query / 10)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: button_solid_custom(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          'Kembali',
+                          style: font().primary_white,
+                        ),
+                        width: context.width_query,
+                        height: context.height_query / 15),
+                  )
                 ],
               ));
         },
@@ -743,6 +758,7 @@ class popscreen {
         context: context,
         builder: (_) {
           return AlertDialog(
+            surfaceTintColor: Colors.white,
             title: header(
               title: 'Hapus Data',
               icon: Icons.warning,
@@ -798,6 +814,7 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        surfaceTintColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -956,9 +973,12 @@ class popscreen {
                                 'bayar local------------------------------->');
                             popprintstruk(context, controller);
                           },
-                          child: Text(controller.groupindex.value != 2
-                              ? 'Bayar'
-                              : 'Hutang'),
+                          child: Text(
+                            controller.groupindex.value != 2
+                                ? 'Bayar'
+                                : 'Hutang',
+                            style: TextStyle(color: Colors.white),
+                          ),
                           width: 100,
                           height: 50),
                     ],
@@ -991,6 +1011,7 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        surfaceTintColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -1169,6 +1190,7 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        surfaceTintColor: Colors.white,
         //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -1226,9 +1248,12 @@ class popscreen {
                               print('noononon');
                             }
                           },
-                          child: Text(controller.groupindex.value != 2
-                              ? 'Cetak'
-                              : 'Cetak'),
+                          child: Text(
+                            controller.groupindex.value != 2
+                                ? 'Cetak'
+                                : 'Cetak',
+                            style: TextStyle(color: Colors.white),
+                          ),
                           width: 100,
                           height: 50),
                     ],
@@ -1247,6 +1272,7 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        surfaceTintColor: Colors.white,
         //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -1303,7 +1329,10 @@ class popscreen {
                               print('noononon');
                             }
                           },
-                          child: Text('Cetak'),
+                          child: Text(
+                            'Cetak',
+                            style: TextStyle(color: Colors.white),
+                          ),
                           width: 100,
                           height: 50),
                     ],
@@ -1330,6 +1359,7 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        surfaceTintColor: Colors.white,
         //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -1718,6 +1748,7 @@ class popscreen {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
+        surfaceTintColor: Colors.white,
         //backgroundColor: Colors.red,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
@@ -1965,6 +1996,7 @@ class popscreen {
   void deleteuser(datauserController controller, DataUser arg) {
     Get.dialog(
       AlertDialog(
+        surfaceTintColor: Colors.white,
         title: header(
           title: 'Hapus Data User',
           icon: Icons.warning,

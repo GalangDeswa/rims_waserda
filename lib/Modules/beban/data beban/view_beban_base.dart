@@ -32,7 +32,7 @@ class beban extends GetView<bebanController> {
                     child: GroupButton(
                       options: GroupButtonOptions(
                         selectedTextStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                         selectedColor: Colors.white,
@@ -40,7 +40,7 @@ class beban extends GetView<bebanController> {
                         unselectedShadow: const [],
                         unselectedColor: color_template().primary,
                         unselectedTextStyle: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           color: Colors.white,
                         ),
                         // selectedBorderColor: color_template().primary,

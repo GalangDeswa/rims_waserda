@@ -28,7 +28,7 @@ class intro extends GetView<splashController> {
               backgroundColor: MaterialStatePropertyAll<Color>(Colors.white)),
           listContentConfig: [
             ContentConfig(
-              title: "RIMS WASERDA",
+              title: "RIMS KASIR",
               styleTitle: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -53,7 +53,7 @@ class intro extends GetView<splashController> {
                   color: Colors.white),
               title: "Fitur lengkap",
               pathImage: "assets/images/intro2.png",
-              description: "Nikmati berbagai fitur menarik RIMS WASERDA",
+              description: "Nikmati berbagai fitur menarik RIMS KASIR",
               backgroundImage: "assets/images/bg_login.png",
               backgroundColor: Colors.white,
             ),
@@ -68,7 +68,7 @@ class intro extends GetView<splashController> {
                   color: Colors.white),
               title: "Digitalisasi UMKM",
               pathImage: "assets/images/intro3.png",
-              description: "Mari beralih ke UMKM digital bersama RIMS WASERDA",
+              description: "Mari beralih ke UMKM digital bersama RIMS KASIR",
               backgroundImage: "assets/images/bg_login.png",
               backgroundColor: Colors.white,
             ),

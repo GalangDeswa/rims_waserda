@@ -57,10 +57,10 @@ class edit_produk_form extends GetView<editprodukController> {
                                     controller: controller.nama_produk.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Nama produk",
-                                      labelStyle: const TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -83,10 +83,10 @@ class edit_produk_form extends GetView<editprodukController> {
                                     controller: controller.desc.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Deskripsi",
-                                      labelStyle: const TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -105,33 +105,61 @@ class edit_produk_form extends GetView<editprodukController> {
                                 Expanded(
                                   child: Row(
                                     children: [
-                                      Expanded(
-                                        child: Container(
-                                          child: CheckboxListTile(
-                                            subtitle: const Text("opsional"),
-                                            title: const Text("Barcode?"),
-
-                                            checkColor: Colors.white,
-                                            //  fillColor: MaterialStateProperty.resolveWith(getColor),
-                                            value:
-                                                controller.checkbarcode.value,
-                                            onChanged: (bool? value) {
-                                              controller.checkbarcode.value =
-                                                  value!;
-                                              if (controller
-                                                      .checkbarcode.value ==
-                                                  false) {
-                                                controller.barcode.value.text =
-                                                    '-';
-                                              }
-                                              print(controller
-                                                  .checkbarcode.value);
-                                              // controller.check == true;
-                                            },
-                                          ),
-                                        ),
-                                      ),
                                       controller.checkbarcode.value == false
+                                          ? Expanded(
+                                              child: Container(
+                                                child: CheckboxListTile(
+                                                  subtitle: Text(
+                                                    "opsional",
+                                                    style: font().reguler,
+                                                  ),
+                                                  title: Text(
+                                                    "Barcode?",
+                                                    style: font().reguler_bold,
+                                                  ),
+
+                                                  checkColor: Colors.white,
+                                                  //  fillColor: MaterialStateProperty.resolveWith(getColor),
+                                                  value: controller
+                                                      .checkbarcode.value,
+                                                  onChanged: (bool? value) {
+                                                    controller.checkbarcode
+                                                        .value = value!;
+                                                    if (controller.checkbarcode
+                                                            .value ==
+                                                        false) {
+                                                      controller.barcode.value
+                                                          .text = '-';
+                                                    }
+                                                    print(controller
+                                                        .checkbarcode.value);
+                                                    // controller.check == true;
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              width: 40,
+                                              //color: Colors.red,
+                                              child: Checkbox(
+                                                value: controller
+                                                    .checkbarcode.value,
+                                                onChanged: (bool? value) {
+                                                  controller.checkbarcode
+                                                      .value = value!;
+                                                  if (controller
+                                                          .checkbarcode.value ==
+                                                      false) {
+                                                    controller.barcode.value
+                                                        .text = '-';
+                                                  }
+                                                  print(controller
+                                                      .checkbarcode.value);
+                                                  // controller.check == true;
+                                                },
+                                              ),
+                                            ),
+                                      controller.checkbarcode == false
                                           ? Container()
                                           : Expanded(
                                               child: Container(
@@ -143,10 +171,12 @@ class edit_produk_form extends GetView<editprodukController> {
                                                       controller.barcode.value,
                                                   onChanged: ((String pass) {}),
                                                   decoration: InputDecoration(
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 0,
+                                                            horizontal: 10),
                                                     labelText: "Barcode",
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.black87,
-                                                    ),
+                                                    labelStyle: font().reguler,
                                                     border: OutlineInputBorder(
                                                         borderRadius:
                                                             BorderRadius
@@ -202,10 +232,12 @@ class edit_produk_form extends GetView<editprodukController> {
                                                     int.parse(num);
                                               }),
                                               decoration: InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 0,
+                                                        horizontal: 10),
                                                 labelText: "Stock",
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.black87,
-                                                ),
+                                                labelStyle: font().reguler,
                                                 border: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -225,33 +257,38 @@ class edit_produk_form extends GetView<editprodukController> {
                                               },
                                             ),
                                           ),
-                                          Switch(
-                                              activeColor:
-                                                  color_template().primary,
-                                              value:
-                                                  controller.switchstock.value,
-                                              onChanged: (x) {
-                                                controller.switchstock.value =
-                                                    x;
-                                                controller.switchstock.value ==
-                                                        true
-                                                    ? controller.jenisstokval
-                                                        .value = 1.toString()
-                                                    : controller.jenisstokval
-                                                        .value = 2.toString();
-                                                if (controller
-                                                        .switchstock.value ==
-                                                    false) {
-                                                  controller.qty.value.text =
-                                                      'Non Stock';
-                                                  controller.qtyval.value = 0;
-                                                } else {
-                                                  controller.qty.value.text =
-                                                      '0';
-                                                }
+                                          Transform.scale(
+                                            scale: 0.65,
+                                            child: Switch(
+                                                activeColor:
+                                                    color_template().primary,
+                                                value: controller
+                                                    .switchstock.value,
+                                                onChanged: (x) {
+                                                  controller.switchstock.value =
+                                                      x;
+                                                  controller.switchstock
+                                                              .value ==
+                                                          true
+                                                      ? controller.jenisstokval
+                                                          .value = 1.toString()
+                                                      : controller.jenisstokval
+                                                          .value = 2.toString();
+                                                  if (controller
+                                                          .switchstock.value ==
+                                                      false) {
+                                                    controller.qty.value.text =
+                                                        'Non Stock';
+                                                    controller.qtyval.value = 0;
+                                                  } else {
+                                                    controller.qty.value.text =
+                                                        '0';
+                                                  }
 
-                                                print(controller.jenisstokval);
-                                              })
+                                                  print(
+                                                      controller.jenisstokval);
+                                                }),
+                                          )
                                         ],
                                       ),
                                     )
@@ -263,10 +300,12 @@ class edit_produk_form extends GetView<editprodukController> {
                                             child: TextFormField(
                                               enabled: false,
                                               decoration: InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        vertical: 0,
+                                                        horizontal: 10),
                                                 labelText: "Non Stock",
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.black87,
-                                                ),
+                                                labelStyle: font().reguler,
                                                 border: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -279,68 +318,77 @@ class edit_produk_form extends GetView<editprodukController> {
                                               ),
                                             ),
                                           ),
-                                          Switch(
-                                              activeColor:
-                                                  color_template().primary,
-                                              value:
-                                                  controller.switchstock.value,
-                                              onChanged: (x) {
-                                                controller.switchstock.value =
-                                                    x;
-                                                controller.switchstock.value ==
-                                                        true
-                                                    ? controller.jenisstokval
-                                                        .value = 1.toString()
-                                                    : controller.jenisstokval
-                                                        .value = 2.toString();
+                                          Transform.scale(
+                                            scale: 0.65,
+                                            child: Switch(
+                                                activeColor:
+                                                    color_template().primary,
+                                                value: controller
+                                                    .switchstock.value,
+                                                onChanged: (x) {
+                                                  controller.switchstock.value =
+                                                      x;
+                                                  controller.switchstock
+                                                              .value ==
+                                                          true
+                                                      ? controller.jenisstokval
+                                                          .value = 1.toString()
+                                                      : controller.jenisstokval
+                                                          .value = 2.toString();
 
-                                                if (controller
-                                                        .switchstock.value ==
-                                                    false) {
-                                                  controller.qty.value.text =
-                                                      'Non Stock';
-                                                  controller.qtyval.value = 0;
-                                                } else {
-                                                  controller.qty.value.text =
-                                                      '0';
-                                                }
-                                                print(controller.jenisstokval);
+                                                  if (controller
+                                                          .switchstock.value ==
+                                                      false) {
+                                                    controller.qty.value.text =
+                                                        'Non Stock';
+                                                    controller.qtyval.value = 0;
+                                                  } else {
+                                                    controller.qty.value.text =
+                                                        '0';
+                                                  }
+                                                  print(
+                                                      controller.jenisstokval);
 
-                                                print(controller.jenisstokval);
-                                                print(x);
-                                              })
+                                                  print(
+                                                      controller.jenisstokval);
+                                                  print(x);
+                                                }),
+                                          )
                                         ],
                                       ),
                                     ),
-                              Expanded(
-                                child: TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  controller: controller.hargamodal.value,
-                                  inputFormatters: [ThousandsFormatter()],
-                                  onChanged: ((String num) {
-                                    controller.jumlahhargamodal.value =
-                                        int.parse(
-                                            num.toString().replaceAll(',', ''));
-                                    print(controller.jumlahhargamodal.value);
-                                  }),
-                                  decoration: InputDecoration(
-                                    labelText: "Harga modal",
-                                    labelStyle: const TextStyle(
-                                      color: Colors.black87,
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: Expanded(
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    controller: controller.hargamodal.value,
+                                    inputFormatters: [ThousandsFormatter()],
+                                    onChanged: ((String num) {
+                                      controller.jumlahhargamodal.value =
+                                          int.parse(num.toString()
+                                              .replaceAll(',', ''));
+                                      print(controller.jumlahhargamodal.value);
+                                    }),
+                                    decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
+                                      labelText: "Harga modal",
+                                      labelStyle: font().reguler,
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                     ),
-                                    border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Masukan harga modal';
+                                      }
+                                      return null;
+                                    },
                                   ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return 'Masukan harga modal';
-                                    }
-                                    return null;
-                                  },
                                 ),
                               ),
                               Expanded(
@@ -354,10 +402,10 @@ class edit_produk_form extends GetView<editprodukController> {
                                     print(controller.jumlahharga.value);
                                   }),
                                   decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     labelText: "Harga jual",
-                                    labelStyle: const TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -385,9 +433,15 @@ class edit_produk_form extends GetView<editprodukController> {
                                                     //color: Colors.green,
                                                     //  width: 80,
                                                     child: ListTile(
-                                                      title: Text('Diskon'),
-                                                      subtitle:
-                                                          Text('opsional'),
+                                                      title: Text(
+                                                        'Diskon',
+                                                        style:
+                                                            font().reguler_bold,
+                                                      ),
+                                                      subtitle: Text(
+                                                        'opsional',
+                                                        style: font().reguler,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -426,6 +480,9 @@ class edit_produk_form extends GetView<editprodukController> {
                                             child: Container(
                                               margin: EdgeInsets.only(left: 10),
                                               child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   controller.metode_diskon == 9
                                                       ? Text(
@@ -460,15 +517,19 @@ class edit_produk_form extends GetView<editprodukController> {
                                                                 }),
                                                                 decoration:
                                                                     InputDecoration(
+                                                                  contentPadding:
+                                                                      EdgeInsets.symmetric(
+                                                                          vertical:
+                                                                              0,
+                                                                          horizontal:
+                                                                              10),
                                                                   suffix:
                                                                       Text('%'),
                                                                   labelText:
                                                                       "Persentase diskon",
                                                                   labelStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black87,
-                                                                  ),
+                                                                      font()
+                                                                          .reguler,
                                                                   border: OutlineInputBorder(
                                                                       borderRadius:
                                                                           BorderRadius.circular(
@@ -516,15 +577,19 @@ class edit_produk_form extends GetView<editprodukController> {
                                                                 }),
                                                                 decoration:
                                                                     InputDecoration(
+                                                                  contentPadding:
+                                                                      EdgeInsets.symmetric(
+                                                                          vertical:
+                                                                              0,
+                                                                          horizontal:
+                                                                              10),
                                                                   prefixText:
                                                                       'Rp.',
                                                                   labelText:
                                                                       "Potongan harga",
                                                                   labelStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black87,
-                                                                  ),
+                                                                      font()
+                                                                          .reguler,
                                                                   border: OutlineInputBorder(
                                                                       borderRadius:
                                                                           BorderRadius.circular(
@@ -575,10 +640,12 @@ class edit_produk_form extends GetView<editprodukController> {
                                                           selectedShadow: const [],
                                                           selectedTextStyle:
                                                               TextStyle(
-                                                                  fontSize: 15,
+                                                                  fontSize: 12,
                                                                   fontWeight:
                                                                       FontWeight
-                                                                          .bold),
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
                                                           selectedColor:
                                                               color_template()
                                                                   .select,
@@ -587,7 +654,7 @@ class edit_produk_form extends GetView<editprodukController> {
                                                               Colors.white,
                                                           unselectedTextStyle:
                                                               const TextStyle(
-                                                            fontSize: 12,
+                                                            fontSize: 10,
                                                             color: Colors.black,
                                                           ),
                                                           //selectedBorderColor: Colors.pink[900],
@@ -656,8 +723,14 @@ class edit_produk_form extends GetView<editprodukController> {
                                     child: Container(
                                       //width: 200,
                                       child: CheckboxListTile(
-                                        subtitle: const Text("opsional"),
-                                        title: const Text("Foto produk?"),
+                                        subtitle: Text(
+                                          "opsional",
+                                          style: font().reguler,
+                                        ),
+                                        title: Text(
+                                          "Foto produk?",
+                                          style: font().reguler_bold,
+                                        ),
                                         checkColor: Colors.white,
                                         //  fillColor: MaterialStateProperty.resolveWith(getColor),
                                         value: controller.checkfoto.value,
@@ -1079,8 +1152,7 @@ class edit_produk_form extends GetView<editprodukController> {
                   child: Text(
                     'edit produk'.toUpperCase(),
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   width: double.infinity,
                   height: 60)

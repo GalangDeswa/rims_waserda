@@ -32,7 +32,7 @@ class laporan extends GetView<laporanController> {
                     child: GroupButton(
                       options: GroupButtonOptions(
                         selectedTextStyle: TextStyle(
-                            fontSize: 14,
+                            fontSize: 12,
                             color: Colors.black,
                             fontWeight: FontWeight.bold),
                         selectedColor: Colors.white,
@@ -40,7 +40,7 @@ class laporan extends GetView<laporanController> {
                         unselectedShadow: const [],
                         unselectedColor: color_template().primary,
                         unselectedTextStyle: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           color: Colors.white,
                         ),
                         //selectedBorderColor: color_template().primary,

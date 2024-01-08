@@ -674,6 +674,7 @@ class hutangController extends GetxController {
 
   bayarhutangpop(String id_local, hutang) {
     Get.dialog(AlertDialog(
+      surfaceTintColor: Colors.white,
       contentPadding: EdgeInsets.all(10),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
@@ -714,6 +715,8 @@ class hutangController extends GetxController {
                       }),
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         prefixText: 'Rp. ',
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10)),

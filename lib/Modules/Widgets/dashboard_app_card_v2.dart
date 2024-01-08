@@ -33,6 +33,7 @@ class dashboard_app_card_v2 extends StatelessWidget {
               // color: color_template().primary,
             ),
             child: Card(
+              surfaceTintColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: border_radius().icon_border,
                 // side: BorderSide(color: color_template().primary, width: 3.5),
@@ -49,7 +50,7 @@ class dashboard_app_card_v2 extends StatelessWidget {
                     ),
                     Text(
                       label,
-                      style: font().header_black,
+                      style: font().reguler_bold,
                     )
                   ],
                 ),

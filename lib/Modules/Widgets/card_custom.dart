@@ -13,6 +13,7 @@ class Card_custom extends StatelessWidget {
   Widget build(BuildContext context) {
     return border == false
         ? Card(
+            surfaceTintColor: Colors.white,
             elevation: elevation().def_elevation,
             //margin: EdgeInsets.all(30),
             shape: RoundedRectangleBorder(
@@ -22,6 +23,7 @@ class Card_custom extends StatelessWidget {
             ),
             child: child)
         : Card(
+            surfaceTintColor: Colors.white,
             elevation: elevation().def_elevation,
             //margin: EdgeInsets.all(30),
             shape: RoundedRectangleBorder(

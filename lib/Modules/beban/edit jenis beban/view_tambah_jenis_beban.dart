@@ -50,10 +50,10 @@ class tambah_jenis_beban extends GetView<bebanController> {
                               controller: controller.kategori.value,
                               onChanged: ((String pass) {}),
                               decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 10),
                                 labelText: "Kategori beban",
-                                labelStyle: TextStyle(
-                                  color: Colors.black87,
-                                ),
+                                labelStyle: font().reguler,
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)),
                                 focusedBorder: OutlineInputBorder(
@@ -77,8 +77,8 @@ class tambah_jenis_beban extends GetView<bebanController> {
                             child: Text(
                               'Tambah Kategori',
                               style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
                             width: double.infinity,
                             height: 50)

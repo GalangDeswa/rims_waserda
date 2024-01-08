@@ -53,10 +53,10 @@ class tambah_jenis extends GetView<produkController> {
                                 controller: controller.nama_jenis.value,
                                 onChanged: ((String pass) {}),
                                 decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 0, horizontal: 10),
                                   labelText: "Nama Kategori",
-                                  labelStyle: TextStyle(
-                                    color: Colors.black87,
-                                  ),
+                                  labelStyle: font().reguler,
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10)),
                                   focusedBorder: OutlineInputBorder(

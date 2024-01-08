@@ -30,7 +30,7 @@ class login_card extends GetView<loginController> {
               'RIMS WASERDA',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 25,
+                  fontSize: 18,
                   color: Colors.white),
             ),
           ),

@@ -22,7 +22,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
             color: color_template().primary,
             icon: SvgPicture.asset(
               'assets/icons/cashier.svg',
-              height: context.width_query / 16,
+              height: context.width_query / 18,
               placeholderBuilder: (context) => showloading(),
             ),
             label: 'POS'),
@@ -34,7 +34,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 color: color_template().primary,
                 icon: SvgPicture.asset(
                   'assets/icons/money.svg',
-                  height: context.width_query / 16,
+                  height: context.width_query / 18,
                   placeholderBuilder: (context) => showloading(),
                 ),
                 label: 'Beban')
@@ -45,7 +45,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 color: color_template().primary,
                 icon: SvgPicture.asset(
                   'assets/icons/produk.svg',
-                  height: context.width_query / 16,
+                  height: context.width_query / 18,
                   placeholderBuilder: (context) => showloading(),
                 ),
                 label: 'Produk'),
@@ -79,7 +79,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 color: color_template().primary,
                 icon: SvgPicture.asset(
                   'assets/icons/history.svg',
-                  height: context.width_query / 16,
+                  height: context.width_query / 18,
                   placeholderBuilder: (context) => showloading(),
                 ),
                 label: 'Penjualan')
@@ -90,7 +90,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 color: color_template().primary,
                 icon: SvgPicture.asset(
                   'assets/icons/history.svg',
-                  height: context.width_query / 16,
+                  height: context.width_query / 18,
                   placeholderBuilder: (context) => showloading(),
                 ),
                 label: 'Penjualan'),
@@ -102,7 +102,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 color: color_template().primary,
                 icon: SvgPicture.asset(
                   'assets/icons/laporan.svg',
-                  height: context.width_query / 16,
+                  height: context.width_query / 18,
                   placeholderBuilder: (context) => showloading(),
                 ),
                 label: 'Laporan')
@@ -113,7 +113,7 @@ class dashboard_app_v2 extends GetView<base_menuController> {
                 color: color_template().primary,
                 icon: SvgPicture.asset(
                   'assets/icons/laporan.svg',
-                  height: context.width_query / 16,
+                  height: context.width_query / 18,
                   placeholderBuilder: (context) => showloading(),
                 ),
                 label: 'Laporan'),

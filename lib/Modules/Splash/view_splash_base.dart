@@ -36,7 +36,7 @@ class splash extends GetView<splashController> {
                 ),
               ),
               Text(
-                'RIMS WASERDA',
+                'RIMS KASIR',
                 style: TextStyle(
                     fontSize: 25,
                     color: color_template().primary_dark,
@@ -46,18 +46,16 @@ class splash extends GetView<splashController> {
                 height: 20,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: CircularProgressIndicator(),
-              ),
-              SizedBox(
-                height: 50,
               ),
               Text(
                 'Powered by',
                 style: font().header_blue,
               ),
               Container(
-                width: 150,
+                width: 140,
                 height: 50,
                 child: Image.asset('assets/images/powered.png'),
               ),

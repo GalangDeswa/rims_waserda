@@ -59,10 +59,10 @@ class tambah_produk_form extends GetView<produkController> {
                                     controller: controller.nama_produk.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Nama produk",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -85,10 +85,10 @@ class tambah_produk_form extends GetView<produkController> {
                                     controller: controller.desc.value,
                                     onChanged: ((String pass) {}),
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.symmetric(
+                                          vertical: 0, horizontal: 10),
                                       labelText: "Deskripsi",
-                                      labelStyle: TextStyle(
-                                        color: Colors.black87,
-                                      ),
+                                      labelStyle: font().reguler,
                                       border: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(10)),
@@ -120,9 +120,14 @@ class tambah_produk_form extends GetView<produkController> {
                                                         // width: 80,
                                                         child: ListTile(
                                                           title: Text(
-                                                              'Foto produk'),
-                                                          subtitle:
-                                                              Text('opsional'),
+                                                              'Foto produk',
+                                                              style: font()
+                                                                  .reguler_bold),
+                                                          subtitle: Text(
+                                                            'opsional',
+                                                            style:
+                                                                font().reguler,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -388,6 +393,8 @@ class tambah_produk_form extends GetView<produkController> {
 
                                       child: DropdownButtonFormField2(
                                         decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 0, horizontal: 10),
                                           border: OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(15),
@@ -405,13 +412,16 @@ class tambah_produk_form extends GetView<produkController> {
                                                 borderRadius:
                                                     BorderRadius.circular(10),
                                                 color: Colors.white)),
-                                        hint: Text('Pilih kategori produk'),
+                                        hint: Text('Pilih kategori produk',
+                                            style: font().reguler),
                                         value: controller.jenisvalue,
                                         items: controller.jenislistlocal
                                             .map((DataJenis item) {
                                           return DropdownMenuItem(
-                                            child:
-                                                Text(item.namaJenis.toString()),
+                                            child: Text(
+                                              item.namaJenis.toString(),
+                                              style: font().reguler,
+                                            ),
                                             value: item.idLocal.toString(),
                                           );
                                         }).toList(),
@@ -424,8 +434,9 @@ class tambah_produk_form extends GetView<produkController> {
                                     ),
                                   ),
                                   Container(
+                                    width: 40,
                                     margin: EdgeInsets.only(
-                                      left: 10,
+                                      left: 15,
                                     ),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
@@ -478,6 +489,10 @@ class tambah_produk_form extends GetView<produkController> {
                                           builder: (logic) {
                                         return DropdownButtonFormField2(
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 10),
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(15),
@@ -495,13 +510,18 @@ class tambah_produk_form extends GetView<produkController> {
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   color: Colors.white)),
-                                          hint: Text('Pilih jenis produk'),
+                                          hint: Text(
+                                            'Pilih jenis produk',
+                                            style: font().reguler,
+                                          ),
                                           value: logic.jenisstokval,
                                           items:
                                               logic.jenisstok.value.map((item) {
                                             return DropdownMenuItem(
-                                              child:
-                                                  Text(item['nama'].toString()),
+                                              child: Text(
+                                                item['nama'].toString(),
+                                                style: font().reguler,
+                                              ),
                                               value: item['id'].toString(),
                                             );
                                           }).toList(),
@@ -574,7 +594,8 @@ class tambah_produk_form extends GetView<produkController> {
                                                     child: ListTile(
                                                       title: Text(
                                                         'Barcode',
-                                                        style: font().reguler,
+                                                        style:
+                                                            font().reguler_bold,
                                                       ),
                                                       subtitle: Text(
                                                         'opsional',
@@ -647,10 +668,15 @@ class tambah_produk_form extends GetView<produkController> {
                                                           ((String pass) {}),
                                                       decoration:
                                                           InputDecoration(
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    vertical: 0,
+                                                                    horizontal:
+                                                                        10),
                                                         labelText: "Barcode",
-                                                        labelStyle: TextStyle(
-                                                          color: Colors.black87,
-                                                        ),
+                                                        labelStyle:
+                                                            font().reguler,
                                                         border: OutlineInputBorder(
                                                             borderRadius:
                                                                 BorderRadius
@@ -723,10 +749,10 @@ class tambah_produk_form extends GetView<produkController> {
                                     print(controller.jumlahhargamodal.value);
                                   }),
                                   decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     labelText: "Harga modal",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -753,10 +779,10 @@ class tambah_produk_form extends GetView<produkController> {
                                     print(controller.jumlahharga.value);
                                   }),
                                   decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 10),
                                     labelText: "Harga jual",
-                                    labelStyle: TextStyle(
-                                      color: Colors.black87,
-                                    ),
+                                    labelStyle: font().reguler,
                                     border: OutlineInputBorder(
                                         borderRadius:
                                             BorderRadius.circular(10)),
@@ -783,8 +809,15 @@ class tambah_produk_form extends GetView<produkController> {
                                                   //color: Colors.green,
                                                   //  width: 80,
                                                   child: ListTile(
-                                                    title: Text('Diskon'),
-                                                    subtitle: Text('opsional'),
+                                                    title: Text(
+                                                      'Diskon',
+                                                      style:
+                                                          font().reguler_bold,
+                                                    ),
+                                                    subtitle: Text(
+                                                      'opsional',
+                                                      style: font().reguler,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -822,6 +855,9 @@ class tambah_produk_form extends GetView<produkController> {
                                           child: Container(
                                             margin: EdgeInsets.only(left: 10),
                                             child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 controller.metode_diskon == 9
                                                     ? Text(
@@ -855,15 +891,19 @@ class tambah_produk_form extends GetView<produkController> {
                                                               }),
                                                               decoration:
                                                                   InputDecoration(
+                                                                contentPadding:
+                                                                    EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            0,
+                                                                        horizontal:
+                                                                            10),
                                                                 suffix:
                                                                     Text('%'),
                                                                 labelText:
                                                                     "Persentase diskon",
                                                                 labelStyle:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black87,
-                                                                ),
+                                                                    font()
+                                                                        .reguler,
                                                                 border: OutlineInputBorder(
                                                                     borderRadius:
                                                                         BorderRadius.circular(
@@ -910,15 +950,19 @@ class tambah_produk_form extends GetView<produkController> {
                                                               }),
                                                               decoration:
                                                                   InputDecoration(
+                                                                contentPadding:
+                                                                    EdgeInsets.symmetric(
+                                                                        vertical:
+                                                                            0,
+                                                                        horizontal:
+                                                                            10),
                                                                 prefixText:
                                                                     'Rp.',
                                                                 labelText:
                                                                     "Potongan harga",
                                                                 labelStyle:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black87,
-                                                                ),
+                                                                    font()
+                                                                        .reguler,
                                                                 border: OutlineInputBorder(
                                                                     borderRadius:
                                                                         BorderRadius.circular(
@@ -958,10 +1002,12 @@ class tambah_produk_form extends GetView<produkController> {
                                                       selectedShadow: const [],
                                                       selectedTextStyle:
                                                           TextStyle(
-                                                              fontSize: 15,
+                                                              fontSize: 12,
                                                               fontWeight:
                                                                   FontWeight
-                                                                      .bold),
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
                                                       selectedColor:
                                                           color_template()
                                                               .select,
@@ -970,7 +1016,7 @@ class tambah_produk_form extends GetView<produkController> {
                                                           Colors.white,
                                                       unselectedTextStyle:
                                                           const TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize: 10,
                                                         color: Colors.black,
                                                       ),
                                                       //selectedBorderColor: Colors.pink[900],
@@ -1041,8 +1087,7 @@ class tambah_produk_form extends GetView<produkController> {
                   child: Text(
                     'tambah produk'.toUpperCase(),
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   width: double.infinity,
                   height: 60)
